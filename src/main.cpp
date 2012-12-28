@@ -32,17 +32,11 @@ bool App::OnInit()
 	_shortcut->Create();
 	_shortcut->Run();
 	
-	int id = _shortcut->creat(KeyModifier::WIN, 'a');
+	int id = _shortcut->creat((KeyModifier)(KeyModifier::SHIFT|KeyModifier::ALT), 'f');
 	Bind(EVT_SHORTCUT, &App::OnShortcut, this, id);
 	
-	id = _shortcut->creat(KeyModifier::WIN, 'b');
+	id = _shortcut->creat((KeyModifier)(KeyModifier::SHIFT|KeyModifier::ALT), 'd');
 	Bind(EVT_SHORTCUT, &App::OnShortcut, this, id);
-	
-	id = _shortcut->creat((KeyModifier)(KeyModifier::WIN|KeyModifier::CONTROL), 'a');
-	Bind(EVT_SHORTCUT, &App::OnShortcut, this, id);
-	
-	_shortcut->remove(KeyModifier::WIN, 'b');
-	
 
 	return true;
 }
@@ -88,7 +82,6 @@ void App::deleteMenuItem()
 
 void App::OnPreferences(wxCommandEvent&)
 {	
-	translateClipBoard();
 }
 
 void App::OnEnable(wxCommandEvent&)
@@ -102,11 +95,16 @@ void App::OnExit(wxCommandEvent&)
 
 void App::OnShortcut(ShortcutEvent& event)
 {
-	wxString res;
-	res << "OnShortcut -> " << event.GetId() << " : " << event.getCharKey() << " : " << event.getModifiers();
+	translateClipBoard();
 	
-	NotifyNotification * notifi = notify_notification_new("OnShortcut :", res.fn_str(), "dialog-information");
-	notify_notification_show(notifi, NULL);
+	if(event.getCharKey() == 'f')
+	{
+		_word.showNotify();
+	}
+	else if(event.getCharKey() == 'd')
+	{
+		_word.say();
+	}
 		
 }
 
@@ -143,8 +141,6 @@ void App::translateClipBoard()
 	word.Replace("\n", " ");
 	
 	_word.setWord(word, lgsrc, lgto);
-	_word.showNotify();
-	_word.say();
 }
 
 void App::soveTranslateClipBoard()
