@@ -1,5 +1,7 @@
 //! \file **********************************************************************
-//! - Compilateur : GCC
+//! Gestion des raccourcis globaux.
+//!
+//! - Compilateur : GCC,MinGW
 //!
 //! \author Maleyrie Antoine
 //! \version 0.1
@@ -97,6 +99,16 @@ wxThread::ExitCode Shortcut::Entry()
 
 void Shortcut::remove(KeyModifier modifiers, char charKey)
 {
+    #if defined(__UNIX__)
+    //Convertie charKey vers KeyCode
+    KeyCode key = XKeysymToKeycode(_display, XStringToKeysym(&charKey));
+    
+    //ungrab le raccourci
+    XUngrabKey(_display, key, (unsigned int)modifiers, _root);
+    #endif
+    
+    //supprime le lien
+    _bind.erase(((long int)charKey<<(sizeof(long int)*7))|(long int)modifiers); 
 }
 
 int Shortcut::getId(KeyModifier modifiers, char charKey)

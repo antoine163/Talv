@@ -41,6 +41,8 @@ bool App::OnInit()
 	id = _shortcut->creat((KeyModifier)(KeyModifier::WIN|KeyModifier::CONTROL), 'a');
 	Bind(EVT_SHORTCUT, &App::OnShortcut, this, id);
 	
+	_shortcut->remove(KeyModifier::WIN, 'b');
+	
 
 	return true;
 }
