@@ -1,0 +1,96 @@
+################################################################################
+#
+#	Makfile.
+#
+# - author 	:	Maleyrie Antoine : antoine.maleyrie@gmail.com
+# - version	:	0.2
+# - date 	:	24/11/2012
+#
+################################################################################
+
+#Compilateur
+CXX=g++
+#option de compilation
+CXXFLAGSO=-W -Wall -Wextra -std=gnu++11 \
+-IC:\wxWidgets-2.9.4\lib\gcc_dll\mswu -IC:\wxWidgets-2.9.4\include -DHAVE_W32API_H -DWXUSINGDLL -D__WXMSW__ -pthread
+#Option de linkage
+LDFLAGS= -pthread -LC:\wxWidgets-2.9.4\lib\gcc_dll\
+-lwxbase294u_gcc_custom\
+-lwxbase294u_net_gcc_custom\
+-lwxbase294u_xml_gcc_custom\
+-lwxmsw294u_adv_gcc_custom\
+-lwxmsw294u_aui_gcc_custom\
+-lwxmsw294u_core_gcc_custom\
+-lwxmsw294u_gl_gcc_custom\
+-lwxmsw294u_html_gcc_custom\
+-lwxmsw294u_media_gcc_custom\
+-lwxmsw294u_propgrid_gcc_custom\
+-lwxmsw294u_ribbon_gcc_custom\
+-lwxmsw294u_richtext_gcc_custom\
+-lwxmsw294u_stc_gcc_custom\
+-lwxmsw294u_webview_gcc_custom\
+-lwxmsw294u_xrc_gcc_custom\
+
+#Non de l'exécutable.
+EXEC_NAME=..\flydocs.exe
+
+#Endroit où stoker les fichiers binaire.
+OBJDIR=obj
+
+#flage en plus pour la compilation en release.
+CXXFLAGSR=-s -O2
+#flage en plus pour la compilation en debug.
+CXXFLAGSD=-g
+
+#Compilation avec tts (yes par défaut)
+TTS=yes
+ifeq ($(TTS),yes)
+CXXFLAGTTS=-D__USE_TTS__
+SRCTTS=../src/tts.cpp
+endif
+
+#Liste des fichiers source C++
+SRCO=	../src/shortcut.cpp\
+		../src/word.cpp\
+		../src/menuIcon.cpp\
+		../src/main.cpp
+SRC=$(SRCO) $(SRCTTS)
+OBJS=$(patsubst ../%.cpp,$(OBJDIR)/%.o, $(SRC))
+
+#Dossier à inclure
+UINCDIRS =	../src		\
+			../gui
+UINCDIR = $(patsubst %,-I%, $(UINCDIRS))
+
+
+#Construire le projet en release
+all:release
+
+#Construire les options du projet pour la compilation en release
+.PHONY: release
+release:CXXFLAGS=$(CXXFLAGSO) $(CXXFLAGTTS) $(CXXFLAGSR)
+release:build
+
+#Construire les options du projet pour la compilation en debug
+.PHONY: debug
+debug:CXXFLAGS=$(CXXFLAGSO) $(CXXFLAGTTS) $(CXXFLAGSD)
+debug:build
+
+#Construction du projet
+build: $(OBJS)
+	$(CXX) -o $(EXEC_NAME) $^ $(LDFLAGS)
+	
+$(OBJDIR)/%.o: ../%.cpp	
+	@-if not exist $(@D) md "$(@D)"
+	$(CXX) -o $@ -c $<  $(UINCDIR) $(CXXFLAGS)
+
+#Exécute le programme
+.PHONY: run
+run:
+	@cd .. && msw\$(EXEC_NAME)
+
+#Nettoyage du projet
+.PHONY: clean
+clean:
+	@-if exist $(OBJDIR) rd $(OBJDIR) /s /q
+	@-if exist $(EXEC_NAME) del $(EXEC_NAME)

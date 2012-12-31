@@ -1,7 +1,9 @@
 //10/12/12
 
 #include "word.hpp"
+#if defined(__USE_TTS__)
 #include "tts.hpp"
+#endif
 
 #include <wx/url.h>
 #include <iostream>
@@ -78,6 +80,7 @@ void Word::showNotify()
 	#endif
 }
 
+#if defined(__USE_TTS__)
 void Word::say()
 {
 	if(_word.IsEmpty())
@@ -96,6 +99,7 @@ void Word::say()
 	else
 		new Tts(_lgsrc, _word);
 }
+#endif
 
 wxString Word::translateFromGoole()const
 {

@@ -15,7 +15,9 @@ class Word
 		
 		void setWord(const wxString& word, const wxString& lgsrc, const wxString& lgto);
 		void showNotify();
+		#if defined(__USE_TTS__)
 		void say();
+		#endif
 
 	private:
 		wxString translateFromGoole()const;

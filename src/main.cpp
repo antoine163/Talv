@@ -3,7 +3,10 @@
 #include "main.hpp"
 
 #include <wx/clipbrd.h>
+
+#if defined(__USE_TTS__)
 #include <gst/gst.h>
+#endif
 
 #include <iostream>
 
@@ -19,24 +22,25 @@ bool App::OnInit()
 	#if defined(__UNIX__)
 	notify_init("flydocs");
 	#endif
+	#if defined(__USE_TTS__)
 	gst_init(NULL, NULL);
+	#endif
 	
 	//Init général
 	wxInitAllImageHandlers();
 	SetExitOnFrameDelete(false);
 	
 	creatMenuItem();
-	
-	
+
 	_shortcut = new Shortcut(this);	
-	_shortcut->Create();
-	_shortcut->Run();
 	
 	int id = _shortcut->creat((KeyModifier)(KeyModifier::SHIFT|KeyModifier::ALT), 'f');
 	Bind(EVT_SHORTCUT, &App::OnShortcut, this, id);
 	
+	#if defined(__USE_TTS__)
 	id = _shortcut->creat((KeyModifier)(KeyModifier::SHIFT|KeyModifier::ALT), 'd');
 	Bind(EVT_SHORTCUT, &App::OnShortcut, this, id);
+	#endif
 
 	return true;
 }
@@ -49,8 +53,6 @@ int App::OnExit()
 	
 	deleteMenuItem();
 	//Unbind(EVT_SHORTCUT, &App::OnPreferences, this, _shortcut->_id);
-	
-	_shortcut->Kill();
 	
 	return 0;
 }
@@ -101,11 +103,12 @@ void App::OnShortcut(ShortcutEvent& event)
 	{
 		_word.showNotify();
 	}
+	#if defined(__USE_TTS__)
 	else if(event.getCharKey() == 'd')
 	{
 		_word.say();
 	}
-		
+	#endif
 }
 
 wxString App::getClipboard()const

@@ -16,12 +16,14 @@
 #ifndef SHORTCUT_H
 #define SHORTCUT_H
 
-#include <wx/thread.h>
+//#include <wx/thread.h>
 #include <wx/event.h>
 #include <map>
 
 #if defined(__UNIX__)
 #include <X11/Xlib.h>
+#elif defined(__WXMSW__)
+#include <windows.h>
 #endif
 
 //! \brief Les modificateurs de touche.
@@ -30,7 +32,7 @@ enum KeyModifier
 	#if defined(__DOXYGEN__)
 	ALT,		//!< Touche Alt
 	CONTROL,	//!< Touche Ctrl
-	ALTGR,		//!< Touche Alt Gr
+	ALTGR,		//!< Touche Alt Gr (Pas definie sou windows)
 	SHIFT,		//!< Touche Shift
 	WIN			//!< Touche Win
 	#elif defined(__UNIX__)
@@ -39,6 +41,11 @@ enum KeyModifier
 	ALTGR 	= Mod5Mask,
 	SHIFT 	= ShiftMask,
 	WIN 	= Mod4Mask
+	#elif defined(__WXMSW__)
+	ALT 	= MOD_ALT,
+	CONTROL = MOD_CONTROL,
+	SHIFT 	= MOD_SHIFT,
+	WIN 	= MOD_WIN
 	#endif
 };
 
@@ -114,7 +121,7 @@ wxDECLARE_EVENT(EVT_SHORTCUT, ShortcutEvent);
 //! }
 //! \endcode
 
-class Shortcut : public wxThread
+class Shortcut : public wxEvtHandler
 {
 	public:
 		//! \brief Constructeur.
@@ -147,7 +154,8 @@ class Shortcut : public wxThread
 		
 	protected:
 		//! \brief Surcharge, code du thread.
-		wxThread::ExitCode Entry();
+		//wxThread::ExitCode Entry();
+		void OnIdle(wxIdleEvent& event);
 
 	private:
 	
@@ -156,8 +164,8 @@ class Shortcut : public wxThread
 		
 		//! \brief Table de lien entre les modifiers le charKey est l'id du raccourci.
 		//! 
-		//! - Le premier chant (long int) est consacrée aux modifiers et au charKey.
-		//! La représentation mémoire peut ce faire comme suit (sur un système 64 bit par exemple) :\n
+		//! - Le premier chant (long long int) est consacrée aux modifiers et au charKey.
+		//! La représentation mémoire peut ce faire comme suit (sur un système 32 bit par exemple) :\n
 		//! <table> 
 		//! <tr> <td>8bit</td><td>3*8bit</td><td>4*8bit</td> </tr> 
 		//! <tr> <td>charKey</td><td>3*8bit</td><td>modifiers</td> </tr> 
@@ -173,13 +181,15 @@ class Shortcut : public wxThread
 		//! //Création d'un lien et ajout de l'id
 		//! _bind[((long int)charKey<<(sizeof(long int)*7))|(long int)modifiers] = id;
 		//! \endcode		
-		std::map<long int, int> _bind;
+		std::map<long long int, int> _bind;
 
 		
 		#if defined(__UNIX__)
 		Display *_display;
 		Window _root;
 		XEvent _event;
+		#elif defined(__WXMSW__)
+		MSG _msgEvent;
 		#endif
 };
 
