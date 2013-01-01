@@ -10,15 +10,13 @@
 //! ****************************************************************************
 
 /*
-*	Copyright © 2011 - Antoine Maleyrie.
+*	Copyright © 2012 - Antoine Maleyrie.
 */
 
 #include "shortcut.hpp"
 #if defined(__UNIX__)
 #include <X11/XKBlib.h>
 #endif
-
-#include <iostream>
 
 ShortcutEvent::ShortcutEvent(int id, wxEventType eventType, KeyModifier modifiers, char charKey)
     : wxEvent(id, eventType), _modifiers(modifiers), _charKey(charKey)
@@ -111,25 +109,23 @@ void Shortcut::OnIdle(wxIdleEvent& event)
 	#elif defined(__WXMSW__)
 	//Si un événement est présent
 	if(GetMessage(&_msgEvent, NULL, 0, 0) != 0)
-    {
+	{
 		//On le récupère
-        if (_msgEvent.message == WM_HOTKEY)
-        {
+		if (_msgEvent.message == WM_HOTKEY)
+		{
 			//Recherche du modifiers et du charKey
 			for(auto &it: _bind)
 			{
 				if(it.second == (int)_msgEvent.wParam)
 				{
 					//Envoi de l'événement
-					ShortcutEvent *event = new ShortcutEvent(it.second, EVT_SHORTCUT,
-															(KeyModifier)it.first,
-															(char)(it.first>>(sizeof(long long int)*7)));
+					ShortcutEvent *event = new ShortcutEvent	(it.second, EVT_SHORTCUT,
+																(KeyModifier)it.first,
+																(char)(it.first>>(sizeof(long long int)*7)));
 					wxQueueEvent(_owner, event);
-					
 					break;
 				}
 			}
-
 		}
 	}
 	#endif

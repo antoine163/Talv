@@ -10,7 +10,7 @@
 //! ****************************************************************************
 
 /*
-*	Copyright © 2011 - Antoine Maleyrie.
+*	Copyright © 2012 - Antoine Maleyrie.
 */
 
 #ifndef SHORTCUT_H
