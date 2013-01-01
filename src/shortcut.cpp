@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Maleyrie Antoine
-//! \version 0.1
+//! \version 0.2
 //! \date 13/12/12
 //!
 //! ****************************************************************************
@@ -43,7 +43,7 @@ KeyModifier ShortcutEvent::getModifiers()const
 wxDEFINE_EVENT(EVT_SHORTCUT, ShortcutEvent);
 
 
-Shortcut::Shortcut(wxEvtHandler *owner) : _owner(owner)
+Shortcut::Shortcut(wxApp *owner) : _owner(owner)
 {
     #if defined(__UNIX__)
     _display = XOpenDisplay(0);
@@ -76,8 +76,10 @@ int Shortcut::creat(KeyModifier modifiers, char charKey)
     //grab le raccourci
     XGrabKey(_display, key, (unsigned int)modifiers, _root, True, GrabModeAsync, GrabModeAsync);
 	#elif defined(__WXMSW__)
+	//Capitalise le charKey
 	wxString charKeyCapital(charKey);
 	charKeyCapital.MakeCapitalized();
+	//Enregistre le raccourci
 	RegisterHotKey(nullptr, id, (UINT)modifiers, *charKeyCapital.fn_str());
 	#endif
     
@@ -86,10 +88,34 @@ int Shortcut::creat(KeyModifier modifiers, char charKey)
 
 void Shortcut::OnIdle(wxIdleEvent& event)
 {
+	#if defined(__UNIX__)	
+	//Si un événement est présent
+	if(XPending(_display) > 0)
+	{
+		//On le récupère
+		XNextEvent(_display, &_event);
+		if(_event.type == KeyPress)
+		{ 
+			//Convertie le KeyCode en char
+			const char charKey = *(XKeysymToString(XkbKeycodeToKeysym(_display, _event.xkey.keycode, 0, 0)));
+			//Recherche de l'id
+			int id = getId((KeyModifier)_event.xkey.state, charKey);
+			//Envoi de l'événement
+			ShortcutEvent *event = new ShortcutEvent(id, EVT_SHORTCUT, (KeyModifier)_event.xkey.state, charKey);
+			wxQueueEvent(_owner, event);
+		}
+	}
+	//Sinon on attend un peur pour éviter de prends trop de temps cpu.
+	else
+		usleep(10);
+	#elif defined(__WXMSW__)
+	//Si un événement est présent
 	if(GetMessage(&_msgEvent, NULL, 0, 0) != 0)
     {
+		//On le récupère
         if (_msgEvent.message == WM_HOTKEY)
         {
+			//Recherche du modifiers et du charKey
 			for(auto &it: _bind)
 			{
 				if(it.second == (int)_msgEvent.wParam)
@@ -106,59 +132,11 @@ void Shortcut::OnIdle(wxIdleEvent& event)
 
 		}
 	}
+	#endif
 	
-	// render continuously, not only once on idle
+	//Appeler en continue.
 	event.RequestMore(); 
 }
-
-//wxThread::ExitCode Shortcut::Entry()
-//{
-	//#if defined(__UNIX__)
-    //while(1)
-    //{
-		//XNextEvent(_display, &_event);
-		//if(_event.type == KeyPress)
-		//{ 
-			////Convertie le KeyCode en char
-			//const char charKey = *(XKeysymToString(XkbKeycodeToKeysym(_display, _event.xkey.keycode, 0, 0)));
-			////Recherche de l'id
-			//int id = getId((KeyModifier)_event.xkey.state, charKey);
-			////Envoi de l'événement
-			//ShortcutEvent *event = new ShortcutEvent(id, EVT_SHORTCUT, (KeyModifier)_event.xkey.state, charKey);
-			//wxQueueEvent(_owner, event);
-		//}
-    //}
-	//#elif defined(__WXMSW__)
-	
-	//for(auto &it: _bind)
-	//{
-		//std::cout << ((char)(it.first>>(sizeof(long long int)*7))) << std::endl;
-		//RegisterHotKey(NULL, it.second, (UINT)it.first, ((char)(it.first>>(sizeof(long long int)*7))));
-	//}
-
-    //MSG msg;
-    //while (GetMessage(&msg, NULL, 0, 0) != 0)
-    //{
-		//std::cout << "GetMessage" << std::endl;
-        //if (msg.message == WM_HOTKEY)
-        //{
-			//std::cout << "WM_HOTKEY received : " << std::endl;
-			//std::cout << "msg.hwnd : " << msg.hwnd << std::endl;
-			//std::cout << "msg.message : " << msg.message << std::endl;
-			//std::cout << "msg.wParam : " << msg.wParam << std::endl;
-			//std::cout << "msg.lParam : " << msg.lParam << std::endl;
-			//std::cout << "msg.time : " << msg.time << std::endl;
-			//std::cout << "msg.pt.x : " << msg.pt.x << std::endl;
-			//std::cout << "msg.pt.y : " << msg.pt.y << std::endl;
-			
-			////wxCommandEvent *event = new wxCommandEvent(wxEVT_COMMAND_MENU_SELECTED, 12);
-			////wxQueueEvent(_owner, event);
-        //}
-    //}
-	//#endif
-    
-    //return (wxThread::ExitCode)0;
-//}
 
 void Shortcut::remove(KeyModifier modifiers, char charKey)
 {
@@ -168,8 +146,10 @@ void Shortcut::remove(KeyModifier modifiers, char charKey)
     //ungrab le raccourci
     XUngrabKey(_display, key, (unsigned int)modifiers, _root);
     #elif defined(__WXMSW__)
+    //Capitalise le charKey
     wxString charKeyCapital(charKey);
 	charKeyCapital.MakeCapitalized();
+	//Supprimer le raccourci
     UnregisterHotKey(nullptr, getId(modifiers, *charKeyCapital.fn_str()));
     #endif
     

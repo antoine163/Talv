@@ -52,7 +52,8 @@ int App::OnExit()
 	#endif
 	
 	deleteMenuItem();
-	//Unbind(EVT_SHORTCUT, &App::OnPreferences, this, _shortcut->_id);
+	
+	delete _shortcut;
 	
 	return 0;
 }

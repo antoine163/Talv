@@ -3,7 +3,7 @@
 #	Makfile.
 #
 # - author 	:	Maleyrie Antoine : antoine.maleyrie@gmail.com
-# - version	:	0.2
+# - version	:	0.3
 # - date 	:	24/11/2012
 #
 ################################################################################
@@ -12,9 +12,9 @@
 CXX=g++
 OBJDUMP	= objdump
 #option de compilation
-CXXFLAGSO=-W -Wall -Wextra -std=gnu++11 `wx-config-2.9 --cflags` `pkg-config --cflags libnotify gstreamer-1.0`
+CXXFLAGSO=-W -Wall -Wextra -std=gnu++11 `wx-config-2.9 --cflags` `pkg-config --cflags libnotify `
 #Option de linkage
-LDFLAGS=`wx-config-2.9 --libs` `pkg-config --libs libnotify gstreamer-1.0` -lX11
+LDFLAGSO=`wx-config-2.9 --libs` `pkg-config --libs libnotify` -lX11
 #Non de l'exécutable.
 EXEC_NAME=flydocs
 
@@ -26,12 +26,21 @@ CXXFLAGSR=-s -O2
 #flage en plus pour la compilation en debug.
 CXXFLAGSD=-g
 
+#Compilation avec tts (yes par défaut)
+TTS=yes
+ifeq ($(TTS),yes)
+CXXFLAGTTS=-D__USE_TTS__
+SRCTTS=src/tts.cpp
+CXXFLAGSTTS=`pkg-config --cflags gstreamer-1.0`
+LDFLAGSTTS=`pkg-config --libs gstreamer-1.0`
+endif
+
 #Liste des fichiers source C++
-SRC=	src/shortcut.cpp\
-		src/tts.cpp\
+SRCO=	src/shortcut.cpp\
 		src/word.cpp\
 		src/menuIcon.cpp\
-		src/main.cpp		
+		src/main.cpp	
+SRC=$(SRCO) $(SRCTTS)	
 OBJS=$(patsubst %.cpp,$(OBJDIR)/%.o, $(SRC))
 
 #Dossier à inclure
@@ -45,12 +54,14 @@ all:release
 
 #Construire les options du projet pour la compilation en release
 .PHONY: release
-release:CXXFLAGS=$(CXXFLAGSO) $(CXXFLAGSR)
+release:CXXFLAGS=$(CXXFLAGSO) $(CXXFLAGTTS) $(CXXFLAGSR) $(CXXFLAGSTTS)
+release:LDFLAGS=$(LDFLAGSO) $(LDFLAGSTTS)
 release:build
 
 #Construire les options du projet pour la compilation en debug
 .PHONY: debug
-debug:CXXFLAGS=$(CXXFLAGSO) $(CXXFLAGSD)
+debug:CXXFLAGS=$(CXXFLAGSO) $(CXXFLAGTTS) $(CXXFLAGSD) $(CXXFLAGSTTS)
+debug:LDFLAGS=$(LDFLAGSO) $(LDFLAGSTTS)
 debug:build
 
 #Construction du projet

@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Maleyrie Antoine
-//! \version 0.1
+//! \version 0.2
 //! \date 13/12/12
 //!
 //! ****************************************************************************
@@ -16,8 +16,7 @@
 #ifndef SHORTCUT_H
 #define SHORTCUT_H
 
-//#include <wx/thread.h>
-#include <wx/event.h>
+#include <wx/app.h>
 #include <map>
 
 #if defined(__UNIX__)
@@ -90,10 +89,8 @@ wxDECLARE_EVENT(EVT_SHORTCUT, ShortcutEvent);
 //! \code
 //! bool App::OnInit()
 //! {
-//! 	//Création et lancement du thread.
+//! 	//Création d'un objet Shortcut.
 //! 	_shortcut = new Shortcut(this);	
-//! 	_shortcut->Create();
-//! 	_shortcut->Run();
 //! 	
 //! 	//Création d'un raccourci, touche win+a 
 //! 	int id = _shortcut->creat(KeyModifier::WIN, 'a');
@@ -121,12 +118,12 @@ wxDECLARE_EVENT(EVT_SHORTCUT, ShortcutEvent);
 //! }
 //! \endcode
 
-class Shortcut : public wxEvtHandler
+class Shortcut
 {
 	public:
 		//! \brief Constructeur.
 		//! \param owner est un wxEvtHandler qui est utiliser pour générer les événements.
-		Shortcut(wxEvtHandler *owner);
+		Shortcut(wxApp *owner);
 		
 		//! \brief Destructeur.
 		~Shortcut();
@@ -153,8 +150,7 @@ class Shortcut : public wxEvtHandler
 		int getId(KeyModifier modifiers, char charKey);
 		
 	protected:
-		//! \brief Surcharge, code du thread.
-		//wxThread::ExitCode Entry();
+		//! \brief Méthode traitent les événement lier au raccourci 
 		void OnIdle(wxIdleEvent& event);
 
 	private:

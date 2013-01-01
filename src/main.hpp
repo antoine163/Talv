@@ -21,7 +21,6 @@ class App : public wxApp
 		//Menu Item Event Methode
 		void OnPreferences(wxCommandEvent&);
 		void OnEnable(wxCommandEvent&);
-		//! \bug Ne quitte pas correctement.
 		void OnExit(wxCommandEvent&);
 		void OnShortcut(ShortcutEvent& event);
 
