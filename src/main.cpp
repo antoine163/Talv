@@ -3,6 +3,7 @@
 #include "main.hpp"
 
 #include <wx/clipbrd.h>
+#include <wx/aboutdlg.h>
 
 #if defined(__USE_TTS__)
 #include <gst/gst.h>
@@ -71,6 +72,7 @@ void App::creatMenuItem()
 		
 		Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnPreferences, this, _menuIcon->getIdMenuItemPreferences());
 		Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnEnable, this, _menuIcon->getIdMenuItemEnable());
+		Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnAbout, this, _menuIcon->getIdMenuItemAbout());
 		Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnExit, this, _menuIcon->getIdMenuItemExit());
 	}
 }
@@ -81,6 +83,7 @@ void App::deleteMenuItem()
 	{
 		Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::OnPreferences, this, _menuIcon->getIdMenuItemPreferences());
 		Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::OnEnable, this, _menuIcon->getIdMenuItemEnable());
+		Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::OnAbout, this, _menuIcon->getIdMenuItemAbout());
 		Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::OnExit, this, _menuIcon->getIdMenuItemExit());
 		
 		delete _menuIcon;
@@ -95,6 +98,37 @@ void App::OnPreferences(wxCommandEvent&)
 void App::OnEnable(wxCommandEvent& event)
 {
 	_shortcut->enable(event.IsChecked());
+}
+
+void App::OnAbout(wxCommandEvent&)
+{
+	wxAboutDialogInfo info;
+
+	info.SetName("Flydocs");
+	info.SetVersion("0.1");
+	
+	wxString msg;
+	msg << _("This software using google translate for translate a word or sentence from your clipboard.");
+	msg << _("\n\nBuild on ");
+	#if defined(__UNIX__)
+	msg << _("Unix ");
+	#elif defined(__WXMSW__)
+	msg << _("Windows ");
+	#endif
+	#ifdef __i386
+	msg << _("in i386\n");
+	#elif __amd64
+	msg << _("in x86_64\n");
+	#endif
+	msg << _("Date : ") << __DATE__;
+	
+	info.SetDescription(msg);
+	info.SetCopyright("(C) 2012");
+	info.SetWebSite("http://antoine163.github.com/flydocs/");
+	info.AddDeveloper("Maleyrie Antoine <antoine.maleyrie@gmail.com>");
+	info.AddDocWriter("Maleyrie Antoine <antoine.maleyrie@gmail.com>");
+	
+	wxAboutBox(info);
 }
 
 void App::OnExit(wxCommandEvent&)

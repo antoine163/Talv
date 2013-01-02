@@ -21,6 +21,7 @@ class App : public wxApp
 		//Menu Item Event Methode
 		void OnPreferences(wxCommandEvent&);
 		void OnEnable(wxCommandEvent& event);
+		void OnAbout(wxCommandEvent&);
 		void OnExit(wxCommandEvent&);
 		void OnShortcut(ShortcutEvent& event);
 

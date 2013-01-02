@@ -4,6 +4,7 @@
 
 #include <wx/event.h>
 #include <wx/icon.h>
+#include <wx/artprov.h>
 
 MenuIcon::MenuIcon()
 {
@@ -11,14 +12,17 @@ MenuIcon::MenuIcon()
 	_menuTaskBarIcon = new wxMenu();
 	
 	//Menu Item
-	_menuItemPreferences = new wxMenuItem(_menuTaskBarIcon, wxID_ANY, _("Preferences"), _("Open Preferences"), wxITEM_NORMAL);
+	_menuItemPreferences = new wxMenuItem(_menuTaskBarIcon, wxID_PREFERENCES, _("Preferences"), _("Open Preferences"), wxITEM_NORMAL);
 	_menuTaskBarIcon->Append(_menuItemPreferences);
 	
 	_menuItemEnable = new wxMenuItem(_menuTaskBarIcon, wxID_ANY, _("Enable"), _("Activate shortcut"), wxITEM_CHECK);
 	_menuTaskBarIcon->Append(_menuItemEnable);
 	_menuItemEnable->Check(true);
 	
-	_menuItemExit = new wxMenuItem(_menuTaskBarIcon, wxID_ANY, _("Exit"), _("Exit Flydocs"), wxITEM_NORMAL);
+	_menuItemAbout = new wxMenuItem(_menuTaskBarIcon, wxID_ABOUT, _("About"), _("About Flydocs"), wxITEM_NORMAL);
+	_menuTaskBarIcon->Append(_menuItemAbout);
+	
+	_menuItemExit = new wxMenuItem(_menuTaskBarIcon, wxID_EXIT, _("Exit"), _("Exit Flydocs"), wxITEM_NORMAL);
 	_menuTaskBarIcon->Append(_menuItemExit);
 	
 	//Task Icon
@@ -35,9 +39,6 @@ MenuIcon::~MenuIcon()
 	
 	delete _taskBarIcon;
 	delete _menuTaskBarIcon;
-	//delete _menuItemPreferences;
-	//delete _menuItemEnable;
-	//delete _menuItemExit;
 }
 
 int MenuIcon::getIdMenuItemPreferences()
@@ -48,6 +49,11 @@ int MenuIcon::getIdMenuItemPreferences()
 int MenuIcon::getIdMenuItemEnable()
 {
 	return _menuItemEnable->GetId();
+}
+
+int MenuIcon::getIdMenuItemAbout()
+{
+	return _menuItemAbout->GetId();
 }
 
 int MenuIcon::getIdMenuItemExit()

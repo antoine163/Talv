@@ -14,6 +14,7 @@ class MenuIcon
 		
 		int getIdMenuItemPreferences();
 		int getIdMenuItemEnable();
+		int getIdMenuItemAbout();
 		int getIdMenuItemExit();
 
 	private:
@@ -23,6 +24,7 @@ class MenuIcon
 		wxMenu* _menuTaskBarIcon;
 		wxMenuItem* _menuItemPreferences;
 		wxMenuItem* _menuItemEnable;
+		wxMenuItem* _menuItemAbout;
 		wxMenuItem* _menuItemExit;
 };
 
