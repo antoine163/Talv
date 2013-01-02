@@ -34,11 +34,13 @@ bool App::OnInit()
 
 	_shortcut = new Shortcut(this);	
 	
-	int id = _shortcut->creat((KeyModifier)(KeyModifier::SHIFT|KeyModifier::ALT), 'f');
+	_shif_alt_f = new ShortcutKey((KeyModifier)(KeyModifier::SHIFT|KeyModifier::ALT), 'f');
+	int id = _shortcut->creat(*_shif_alt_f);
 	Bind(EVT_SHORTCUT, &App::OnShortcut, this, id);
 	
 	#if defined(__USE_TTS__)
-	id = _shortcut->creat((KeyModifier)(KeyModifier::SHIFT|KeyModifier::ALT), 'd');
+	_shif_alt_d = new ShortcutKey((KeyModifier)(KeyModifier::SHIFT|KeyModifier::ALT), 'd');
+	id = _shortcut->creat(*_shif_alt_d);
 	Bind(EVT_SHORTCUT, &App::OnShortcut, this, id);
 	#endif
 
@@ -54,6 +56,9 @@ int App::OnExit()
 	deleteMenuItem();
 	
 	delete _shortcut;
+	
+	delete _shif_alt_f;
+	delete _shif_alt_d;
 	
 	return 0;
 }
@@ -87,8 +92,9 @@ void App::OnPreferences(wxCommandEvent&)
 {	
 }
 
-void App::OnEnable(wxCommandEvent&)
+void App::OnEnable(wxCommandEvent& event)
 {
+	_shortcut->enable(event.IsChecked());
 }
 
 void App::OnExit(wxCommandEvent&)
@@ -100,12 +106,12 @@ void App::OnShortcut(ShortcutEvent& event)
 {
 	translateClipBoard();
 	
-	if(event.getCharKey() == 'f')
+	if(event.getShortcutKey() == *_shif_alt_f)
 	{
 		_word.showNotify();
 	}
 	#if defined(__USE_TTS__)
-	else if(event.getCharKey() == 'd')
+	else if(event.getShortcutKey() == *_shif_alt_d)
 	{
 		_word.say();
 	}

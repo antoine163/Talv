@@ -11,7 +11,7 @@
 
 class App : public wxApp
 {
-	public:		
+	public:				
 		virtual bool OnInit();
 		virtual int OnExit();
 		
@@ -20,7 +20,7 @@ class App : public wxApp
 		void deleteMenuItem();
 		//Menu Item Event Methode
 		void OnPreferences(wxCommandEvent&);
-		void OnEnable(wxCommandEvent&);
+		void OnEnable(wxCommandEvent& event);
 		void OnExit(wxCommandEvent&);
 		void OnShortcut(ShortcutEvent& event);
 
@@ -34,6 +34,10 @@ class App : public wxApp
 		Shortcut *_shortcut;
 		MenuIcon *_menuIcon;
 		Word _word;	
+		
+		//test
+		ShortcutKey* _shif_alt_f;
+		ShortcutKey* _shif_alt_d;
 };
 
 #endif //MAIN_H

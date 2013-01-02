@@ -11,13 +11,14 @@ MenuIcon::MenuIcon()
 	_menuTaskBarIcon = new wxMenu();
 	
 	//Menu Item
-	_menuItemPreferences = new wxMenuItem(_menuTaskBarIcon, wxID_ANY, wxString(_("Preferences")), wxEmptyString, wxITEM_NORMAL);
+	_menuItemPreferences = new wxMenuItem(_menuTaskBarIcon, wxID_ANY, _("Preferences"), _("Open Preferences"), wxITEM_NORMAL);
 	_menuTaskBarIcon->Append(_menuItemPreferences);
 	
-	_menuItemEnable = new wxMenuItem(_menuTaskBarIcon, wxID_ANY, wxString(_("Enable")), wxEmptyString, wxITEM_CHECK);
+	_menuItemEnable = new wxMenuItem(_menuTaskBarIcon, wxID_ANY, _("Enable"), _("Activate shortcut"), wxITEM_CHECK);
 	_menuTaskBarIcon->Append(_menuItemEnable);
+	_menuItemEnable->Check(true);
 	
-	_menuItemExit = new wxMenuItem(_menuTaskBarIcon, wxID_ANY, wxString(_("Exit")), wxEmptyString, wxITEM_NORMAL);
+	_menuItemExit = new wxMenuItem(_menuTaskBarIcon, wxID_ANY, _("Exit"), _("Exit Flydocs"), wxITEM_NORMAL);
 	_menuTaskBarIcon->Append(_menuItemExit);
 	
 	//Task Icon

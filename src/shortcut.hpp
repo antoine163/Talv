@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Maleyrie Antoine
-//! \version 0.2
+//! \version 0.3
 //! \date 13/12/12
 //!
 //! ****************************************************************************
@@ -48,21 +48,18 @@ enum KeyModifier
 	#endif
 };
 
-//! \brief Événement lier au raccourci clavier.
-//! \see Shortcut
-class ShortcutEvent: public wxEvent
+//! \brief représente un raccourci clavier.
+class ShortcutKey
 {
 	public:
 		//! \brief Constructeur.
-		//! \param id l'identifiant de l'objet.
-		//! \param eventType le type de l'événement. Si vous en crée pas de nouveau, \a EVT_SHORTCUT devait être passer.
 		//! \param modifiers peut être combiner avec tout les valeur de \ref KeyModifier ex:(KeyModifier)(KeyModifier::WIN|KeyModifier::CONTROL)
 		//! \param charKey le caractère, c'est une valeur ASCII.
-		ShortcutEvent(int id, wxEventType eventType, KeyModifier modifiers, char charKey);
+		ShortcutKey(KeyModifier modifiers, char charKey);
 		
-		//! \brief Clone.
-		//! \return une nouvelle instance.
-		virtual wxEvent* Clone()const;
+		bool operator<(ShortcutKey const& ins)const;
+		bool operator==(ShortcutKey const& ins)const;
+		bool operator!=(ShortcutKey const& ins)const;
 		
 		//! \brief Obtenir la valeur ASCII.
 		//! \return La valeur ASCII.
@@ -77,6 +74,45 @@ class ShortcutEvent: public wxEvent
 		KeyModifier _modifiers;
 		//! \brief La valeur ASCII.
 		char _charKey;
+};
+
+//! \brief Événement lier au raccourci clavier.
+//! \see Shortcut
+class ShortcutEvent: public wxEvent
+{
+	public:
+		//! \brief Constructeur.
+		//! \param id l'identifiant de l'objet.
+		//! \param eventType le type de l'événement. Si vous en crée pas de nouveau, \a EVT_SHORTCUT devait être passer.
+		//! \param modifiers peut être combiner avec tout les valeur de \ref KeyModifier ex:(KeyModifier)(KeyModifier::WIN|KeyModifier::CONTROL)
+		//! \param charKey le caractère, c'est une valeur ASCII.
+		ShortcutEvent(int id, wxEventType eventType, KeyModifier modifiers, char charKey);
+		
+		//! \brief Constructeur.
+		//! \param id l'identifiant de l'objet.
+		//! \param eventType le type de l'événement. Si vous en crée pas de nouveau, \a EVT_SHORTCUT devait être passer.
+		//! \param shortcutKey le raccourci.
+		ShortcutEvent(int id, wxEventType eventType, ShortcutKey const& shortcutKey);
+		
+		//! \brief Clone.
+		//! \return une nouvelle instance.
+		virtual wxEvent* Clone()const;
+		
+		//! \brief Obtenir la valeur ASCII.
+		//! \return La valeur ASCII.
+		char getCharKey()const;
+		
+		//! \brief Obtenir le modificateur.
+		//! \return C'est une valeur combiner de \ref KeyModifier.
+		KeyModifier getModifiers()const;
+		
+		//! \brief Obtenir le raccourci.
+		//! \return Le raccourci.
+		ShortcutKey const& getShortcutKey()const;
+		
+	private:
+		//! \brief Le raccourci.
+		ShortcutKey _shortcutKey;
 };
 
 //! \brief Déclaration de l'événement EVT_SHORTCUT.
@@ -117,7 +153,6 @@ wxDECLARE_EVENT(EVT_SHORTCUT, ShortcutEvent);
 //! 						std::cout << event.getModifiers() << std::endl;		
 //! }
 //! \endcode
-
 class Shortcut
 {
 	public:
@@ -138,46 +173,51 @@ class Shortcut
 		//! \return un nouveau id lier au raccourci. L'id est générer avec wxNewId().
 		int creat(KeyModifier modifiers, char charKey);
 		
+		//! \brief Créé un nouveau raccourci.
+		//! \param shortcutKey Le raccourci.
+		//! \return un nouveau id lier au raccourci. L'id est générer avec wxNewId().
+		int creat(ShortcutKey const& shortcutKey);
+		
 		//! \brief Supprimer un raccourci.
 		//! \param modifiers Le modificateur lier au raccourci, peut être une combinaison de \ref KeyModifier.
 		//! \param charKey la touche (un caractère ASCII) du raccourci.
 		void remove(KeyModifier modifiers, char charKey);
 		
+		//! \brief Supprimer un raccourci.
+		//! \param shortcutKey Le raccourci a supprimer
+		void remove(ShortcutKey const& shortcutKey);
+		
 		//! \brief Obtenir l'id d'un raccourci.
-		//! \param modifiers Le modificateur lier au raccourci, peut être une combinaison de \ref KeyModifier.
-		//! \param charKey la touche (un caractère ASCII) du raccourci.
+		//! \param shortcutKey Le raccourci.
 		//! \return id
-		int getId(KeyModifier modifiers, char charKey);
+		int getId(ShortcutKey const& shortcutKey);
+		
+		//! \brief Active ou désactive les raccourcis.
+		//! \param vale true pour activer et false pour désactiver.
+		void enable(bool vale);
 		
 	protected:
 		//! \brief Méthode traitent les événement lier au raccourci 
 		void OnIdle(wxIdleEvent& event);
 
+		//! \brief enregistre le raccourci clavier auprès du système.
+		//! \param shortcutKey Le raccourci.
+		void registerShortcut(ShortcutKey const& shortcutKey);
+		
+		//! \brief supprime le raccourci clavier auprès du système.
+		//! \param shortcutKey Le raccourci.
+		void unRegisterShortcut(ShortcutKey const& shortcutKey);
+		
 	private:
-	
 		//! \brief utiliser pour générer les événements.
 		wxEvtHandler *_owner; 
 		
-		//! \brief Table de lien entre les modifiers le charKey est l'id du raccourci.
-		//! 
-		//! - Le premier chant (long long int) est consacrée aux modifiers et au charKey.
-		//! La représentation mémoire peut ce faire comme suit (sur un système 32 bit par exemple) :\n
-		//! <table> 
-		//! <tr> <td>8bit</td><td>3*8bit</td><td>4*8bit</td> </tr> 
-		//! <tr> <td>charKey</td><td>3*8bit</td><td>modifiers</td> </tr> 
-		//! </table>
-		//!
-		//! - Le deuxième chant est l'id du raccourci.
-		//!
-		//! - Exemple pour ajouter une élément:
-		//! \code
-		//! //création d'un nouveau id
-		//! int id = wxNewId();
-		//! 
-		//! //Création d'un lien et ajout de l'id
-		//! _bind[((long int)charKey<<(sizeof(long int)*7))|(long int)modifiers] = id;
-		//! \endcode		
-		std::map<long long int, int> _bind;
+		//! \brief Table de lien entre les raccourci est les id.
+		std::map<ShortcutKey, int> _bind;
+		
+		//! \brief Raccourci activer ou pas.
+		//! \see creat()
+		bool _enable;
 
 		
 		#if defined(__UNIX__)
