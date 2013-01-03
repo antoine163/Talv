@@ -15,6 +15,9 @@
 #include <libnotify/notify.h>
 #endif
 
+#include "dialogPreferences.hpp"
+
+
 IMPLEMENT_APP(App);
 
 bool App::OnInit()
@@ -93,6 +96,9 @@ void App::deleteMenuItem()
 
 void App::OnPreferences(wxCommandEvent&)
 {	
+	DialogPreferences *dlg = new DialogPreferences();
+    dlg->ShowModal();
+    dlg->Destroy();
 }
 
 void App::OnEnable(wxCommandEvent& event)

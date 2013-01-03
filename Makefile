@@ -39,13 +39,14 @@ endif
 SRCO=	src/shortcut.cpp\
 		src/word.cpp\
 		src/menuIcon.cpp\
+		src/gui/guiDialogPreferences.cpp\
+		src/dialogPreferences.cpp\
 		src/main.cpp	
 SRC=$(SRCO) $(SRCTTS)	
 OBJS=$(patsubst %.cpp,$(OBJDIR)/%.o, $(SRC))
 
 #Dossier à inclure
-UINCDIRS =	src		\
-			gui
+UINCDIRS = src
 UINCDIR = $(patsubst %,-I%, $(UINCDIRS))
 
 

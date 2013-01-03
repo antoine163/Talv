@@ -58,8 +58,7 @@ SRC=$(SRCO) $(SRCTTS)
 OBJS=$(patsubst ../%.cpp,$(OBJDIR)/%.o, $(SRC))
 
 #Dossier à inclure
-UINCDIRS =	../src		\
-			../gui
+UINCDIRS = ../src
 UINCDIR = $(patsubst %,-I%, $(UINCDIRS))
 
 
