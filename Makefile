@@ -13,7 +13,7 @@ CXX=g++
 OBJDUMP	= objdump
 #option de compilation
 CXXFLAGSO=-W -Wall -Wextra -std=gnu++11 `wx-config-2.9 --cflags` `pkg-config --cflags libnotify `\
-			-DPROJECT_NAME=\"Flydocs\" -DPROJECT_VERSION=\"0.1\"
+			-DPROJECT_NAME=\"flydocs\" -DPROJECT_VERSION=\"0.1\"
 #Option de linkage
 LDFLAGSO=`wx-config-2.9 --libs` `pkg-config --libs libnotify` -lX11
 #Non de l'exécutable.

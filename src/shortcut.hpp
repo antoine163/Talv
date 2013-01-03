@@ -187,6 +187,9 @@ class Shortcut
 		//! \param shortcutKey Le raccourci a supprimer
 		void remove(ShortcutKey const& shortcutKey);
 		
+		//! \brief Supprimer touts les raccourcis.
+		void removeAll();
+		
 		//! \brief Obtenir l'id d'un raccourci.
 		//! \param shortcutKey Le raccourci.
 		//! \return id

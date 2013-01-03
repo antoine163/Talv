@@ -242,6 +242,19 @@ void Shortcut::remove(ShortcutKey const& shortcutKey)
     _bind.erase(shortcutKey); 
 }
 
+void Shortcut::removeAll()
+{
+	if(_enable)
+	{
+		//supprimer les raccourci coter système
+		for(auto &it: _bind)
+			unRegisterShortcut(it.first);
+	}
+	
+	//supprime les liens
+	_bind.clear();
+}
+
 int Shortcut::getId(ShortcutKey const& shortcutKey)
 {
     return _bind[shortcutKey];

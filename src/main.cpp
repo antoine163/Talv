@@ -4,12 +4,11 @@
 
 #include <wx/clipbrd.h>
 #include <wx/aboutdlg.h>
+#include <wx/fileconf.h>
 
 #if defined(__USE_TTS__)
 #include <gst/gst.h>
 #endif
-
-#include <iostream>
 
 #if defined(__UNIX__)
 #include <libnotify/notify.h>
@@ -17,6 +16,8 @@
 
 #include "dialogPreferences.hpp"
 
+#include <iostream>
+#include <wx/utils.h> 
 
 IMPLEMENT_APP(App);
 
@@ -34,7 +35,16 @@ bool App::OnInit()
 	wxInitAllImageHandlers();
 	SetExitOnFrameDelete(false);
 	
-	creatMenuItem();
+	//Chargement de la config
+	wxFileConfig fileConfig(	PROJECT_NAME,
+								wxEmptyString,
+								wxGetUserHome()+"/."+PROJECT_NAME);
+	bool showMenu = true;
+	fileConfig.Read("show_menu", &showMenu);
+	
+	//Création du menu ou pas.
+	if(showMenu)
+		creatMenuItem();
 
 	_shortcut = new Shortcut(this);	
 	
@@ -47,6 +57,7 @@ bool App::OnInit()
 	id = _shortcut->creat(*_shif_alt_d);
 	Bind(EVT_SHORTCUT, &App::OnShortcut, this, id);
 	#endif
+	
 
 	return true;
 }
