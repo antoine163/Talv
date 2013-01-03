@@ -3,7 +3,7 @@
 #	Makfile.
 #
 # - author 	:	Maleyrie Antoine : antoine.maleyrie@gmail.com
-# - version	:	0.3
+# - version	:	0.4
 # - date 	:	24/11/2012
 #
 ################################################################################
@@ -12,7 +12,8 @@
 CXX=g++
 OBJDUMP	= objdump
 #option de compilation
-CXXFLAGSO=-W -Wall -Wextra -std=gnu++11 `wx-config-2.9 --cflags` `pkg-config --cflags libnotify `
+CXXFLAGSO=-W -Wall -Wextra -std=gnu++11 `wx-config-2.9 --cflags` `pkg-config --cflags libnotify `\
+			-DPROJECT_NAME=\"Flydocs\" -DPROJECT_VERSION=\"0.1\"
 #Option de linkage
 LDFLAGSO=`wx-config-2.9 --libs` `pkg-config --libs libnotify` -lX11
 #Non de l'exécutable.
@@ -39,6 +40,7 @@ endif
 SRCO=	src/shortcut.cpp\
 		src/word.cpp\
 		src/menuIcon.cpp\
+		src/conf.cpp\
 		src/gui/guiDialogPreferences.cpp\
 		src/dialogPreferences.cpp\
 		src/main.cpp	

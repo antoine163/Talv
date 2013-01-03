@@ -24,7 +24,7 @@ bool App::OnInit()
 {
 	//Init des bibliothèques.
 	#if defined(__UNIX__)
-	notify_init("flydocs");
+	notify_init(PROJECT_NAME);
 	#endif
 	#if defined(__USE_TTS__)
 	gst_init(NULL, NULL);
@@ -110,8 +110,8 @@ void App::OnAbout(wxCommandEvent&)
 {
 	wxAboutDialogInfo info;
 
-	info.SetName("Flydocs");
-	info.SetVersion("0.1");
+	info.SetName(PROJECT_NAME);
+	info.SetVersion(PROJECT_VERSION);
 	
 	wxString msg;
 	msg << _("This software using google translate for translate a word or sentence from your clipboard.");
