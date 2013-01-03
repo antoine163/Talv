@@ -40,7 +40,6 @@ endif
 SRCO=	src/shortcut.cpp\
 		src/word.cpp\
 		src/menuIcon.cpp\
-		src/conf.cpp\
 		src/gui/guiDialogPreferences.cpp\
 		src/dialogPreferences.cpp\
 		src/main.cpp	
