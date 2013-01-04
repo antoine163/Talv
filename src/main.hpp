@@ -31,7 +31,8 @@ class App : public wxApp
 		void OnShortcut(ShortcutEvent& event);
 		
 		//Shortcut
-		void loadShortcut(wxFileConfig const& fileConfig);
+		void setupShortcut(wxFileConfig const& fileConfig);
+		void uninstallShortcut();
 	
 	private:
 		Shortcut *_shortcut;

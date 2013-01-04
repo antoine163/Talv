@@ -46,7 +46,7 @@ bool App::OnInit()
 
 	//Création est chargement des raccourci clavier
 	_shortcut = new Shortcut(this);	
-	loadShortcut(fileConfig);
+	setupShortcut(fileConfig);
 
 	return true;
 }
@@ -60,16 +60,8 @@ int App::OnExit()
 	//Suppression du menue
 	deleteMenuItem();
 	
-	//Unbind les événement lier au raccourci et supprime les actions.
-	for(auto &it: _shortcutAction)
-	{
-		int id = _shortcut->getId(it.first);
-		Unbind(EVT_SHORTCUT, &App::OnShortcut, this, id);
-			
-		delete it.second;
-	}
-	
 	//supprime les raccourcis;
+	uninstallShortcut();
 	delete _shortcut;
 
 	return 0;
@@ -164,7 +156,7 @@ void App::OnShortcut(ShortcutEvent& event)
 	_shortcutAction[event.getShortcutKey()]->execute();
 }
 
-void App::loadShortcut(wxFileConfig const& fileConfig)
+void App::setupShortcut(wxFileConfig const& fileConfig)
 {
 	wxString shortcutRaw;
 	
@@ -213,4 +205,19 @@ void App::loadShortcut(wxFileConfig const& fileConfig)
 		}
 		#endif
 	}
+}
+
+void App::uninstallShortcut()
+{
+	//Unbind les événement lier au raccourci et supprime les actions.
+	for(auto &it: _shortcutAction)
+	{
+		int id = _shortcut->getId(it.first);
+		Unbind(EVT_SHORTCUT, &App::OnShortcut, this, id);
+			
+		delete it.second;
+	}
+	
+	//Supprime touts les raccourcis
+	_shortcut->removeAll();
 }

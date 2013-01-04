@@ -252,6 +252,8 @@ Shortcut::~Shortcut()
     #endif
 
 	_owner->Unbind(wxEVT_IDLE, &Shortcut::OnIdle, this);
+	
+	removeAll();
 }
 
 int Shortcut::creat(KeyModifier modifiers, char charKey)
