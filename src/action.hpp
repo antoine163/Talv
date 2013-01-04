@@ -10,7 +10,7 @@ class Action
 {
 	public:				
 		Action(wxString const& name = wxEmptyString);
-		~Action();
+		virtual ~Action();
 		
 		void setName(wxString const& name);
 		wxString const& getWord();

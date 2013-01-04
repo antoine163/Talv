@@ -48,17 +48,6 @@ bool App::OnInit()
 	_shortcut = new Shortcut(this);	
 	loadShortcut(fileConfig);
 
-	//_shif_alt_f = new ShortcutKey((KeyModifier)(KeyModifier::SHIFT|KeyModifier::ALT), 'f');
-	//int id = _shortcut->creat(*_shif_alt_f);
-	//Bind(EVT_SHORTCUT, &App::OnShortcut, this, id);
-	
-	//#if defined(__USE_TTS__)
-	//_shif_alt_d = new ShortcutKey((KeyModifier)(KeyModifier::SHIFT|KeyModifier::ALT), 'd');
-	//id = _shortcut->creat(*_shif_alt_d);
-	//Bind(EVT_SHORTCUT, &App::OnShortcut, this, id);
-	//#endif
-	
-
 	return true;
 }
 
@@ -72,8 +61,13 @@ int App::OnExit()
 	
 	delete _shortcut;
 	
-	//delete _shif_alt_f;
-	//delete _shif_alt_d;
+	for(auto &it: _shortcutAction)
+	{
+		int id = _shortcut->getId(it.first);
+		Unbind(EVT_SHORTCUT, &App::OnShortcut, this, id);
+			
+		delete it.second;
+	}
 	
 	return 0;
 }
@@ -155,34 +149,56 @@ void App::OnExit(wxCommandEvent&)
 
 void App::OnShortcut(ShortcutEvent& event)
 {
-	//translateClipBoard();
-	
-	//if(event.getShortcutKey() == *_shif_alt_f)
-	//{
-		//_word.showNotify();
-	//}
-	//#if defined(__USE_TTS__)
-	//else if(event.getShortcutKey() == *_shif_alt_d)
-	//{
-		//_word.say();
-	//}
-	//#endif
+	_shortcutAction[event.getShortcutKey()]->execute();
 }
 
 void App::loadShortcut(wxFileConfig const& fileConfig)
 {
-	wxString stringShortcutConfig;
+	wxString shortcutRaw;
 	
 	unsigned int i = 1;
 	
-	while(fileConfig.Read(wxString("shortcut")<<i, &stringShortcutConfig))
-	{		
-		wxString stringAct;
-		wxString stringShortcut = stringShortcutConfig.BeforeFirst(' ', &stringAct);
-		
-		std::cout << stringShortcut << std::endl;
-		std::cout << stringAct << std::endl;
-		
+	while(fileConfig.Read(wxString("shortcut")<<i, &shortcutRaw))
+	{
 		i++;
+		
+		//Extraction du raccourci dans sa forme string
+		wxString actRaw;
+		wxString stringShortcut = shortcutRaw.BeforeFirst(' ', &actRaw);
+		
+		//Extraction de l'action
+		wxString actSettings;
+		wxString act = actRaw.BeforeFirst(' ', &actSettings);
+		
+		//Extraction des paramétrés de l'action
+		wxString setTwo;
+		wxString setOne = actSettings.BeforeFirst(' ', &setTwo);
+		
+		//Conversion du raccourci;
+		ShortcutKey shortcutKey(ShortcutKey::stringToShortcutKey(stringShortcut));
+		
+		//Association du raccourci à son actions
+		if(act == "tr")
+		{
+			//lien le raccourci à une action
+			ActTranslation *action = new ActTranslation(&_word, setOne, setTwo);
+			_shortcutAction[shortcutKey] = action;
+			
+			//Ajout et active le raccourci
+			int id = _shortcut->creat(shortcutKey);
+			Bind(EVT_SHORTCUT, &App::OnShortcut, this, id);
+		}
+		#if defined(__USE_TTS__)
+		else if(act == "ts")
+		{
+			//lien le raccourci à une action
+			ActSay *action = new ActSay(&_word, setOne);
+			_shortcutAction[shortcutKey] = action;
+			
+			//Ajout et active le raccourci
+			int id = _shortcut->creat(shortcutKey);
+			Bind(EVT_SHORTCUT, &App::OnShortcut, this, id);
+		}
+		#endif
 	}
 }

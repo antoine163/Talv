@@ -151,13 +151,11 @@ wxString ShortcutKey::shortcutKeyToString(ShortcutKey const& shortcut)
 	
 	return ret;
 }
-		
+#include <iostream>
 ShortcutKey ShortcutKey::stringToShortcutKey(wxString const& shortcut)
 {
 	KeyModifier modifiers = KeyModifier::NONE;
 	char charKey = '\0';
-	
-	
 	
 	//Avent ou rapper le premier '+'
 	wxString before;
@@ -173,6 +171,8 @@ ShortcutKey ShortcutKey::stringToShortcutKey(wxString const& shortcut)
 	//Conversion du modificateur
 	while(!before.IsEmpty())
 	{
+		charKey = *before.fn_str();
+		
 		if(before == "ctrl")
 			modifiers = (KeyModifier)(modifiers|KeyModifier::CONTROL);
 		else if(before == "alt")
@@ -190,8 +190,6 @@ ShortcutKey ShortcutKey::stringToShortcutKey(wxString const& shortcut)
 		tmp = after;
 		before = tmp.BeforeFirst('+', &after);
 	}
-	
-	charKey = *tmp.fn_str();
 	
 	return ShortcutKey(modifiers, charKey);
 }
