@@ -76,10 +76,10 @@ void Word::showNotify()
 	}
 	
 	#if defined(__WXMSW__) || defined(__WXMAC__)
-	wxNotificationMessage notifi(_T("Translate clipboard in french :"), res);
+	wxNotificationMessage notifi(_T("Translate clipboard :"), res);
 	notifi.Show();
 	#elif defined(__UNIX__)
-	NotifyNotification * notifi = notify_notification_new("Translate clipboard in french :", res.fn_str(), "dialog-information");
+	NotifyNotification * notifi = notify_notification_new("Translate clipboard :", res.fn_str(), "dialog-information");
 	notify_notification_show(notifi, NULL);
 	#endif
 }
