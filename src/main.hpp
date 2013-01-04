@@ -27,7 +27,7 @@ class App : public wxApp
 		void OnPreferences(wxCommandEvent&);
 		void OnEnable(wxCommandEvent& event);
 		void OnAbout(wxCommandEvent&);
-		void OnExit(wxCommandEvent&);
+		void OnExit(wxCommandEvent&);//!< \todo Segmentation fault
 		void OnShortcut(ShortcutEvent& event);
 		
 		//Shortcut
@@ -38,8 +38,8 @@ class App : public wxApp
 		MenuIcon *_menuIcon;
 		Word _word;
 		
-		//Association des recousis à des actions
-		std::map<ShortcutKey, Action &> _shortcutAction;
+		//Association des raccourci à des actions
+		std::map<ShortcutKey, Action*> _shortcutAction;
 };
 
 #endif //MAIN_H
