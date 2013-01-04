@@ -101,9 +101,18 @@ void App::deleteMenuItem()
 
 void App::OnPreferences(wxCommandEvent&)
 {	
-	DialogPreferences *dlg = new DialogPreferences();
-    dlg->ShowModal();
-    dlg->Destroy();
+	static bool isRun = false;
+	
+	if(!isRun)
+	{
+		isRun = true;
+		
+		DialogPreferences *dlg = new DialogPreferences();
+		dlg->ShowModal();
+		dlg->Destroy();
+		
+		isRun = false;
+	}
 }
 
 void App::OnEnable(wxCommandEvent& event)
@@ -113,33 +122,33 @@ void App::OnEnable(wxCommandEvent& event)
 
 void App::OnAbout(wxCommandEvent&)
 {
-	wxAboutDialogInfo info;
+		wxAboutDialogInfo info;
 
-	info.SetName(PROJECT_NAME);
-	info.SetVersion(PROJECT_VERSION);
-	
-	wxString msg;
-	msg << _("This software using google translate for translate a word or sentence from your clipboard.");
-	msg << _("\n\nBuild on ");
-	#if defined(__UNIX__)
-	msg << _("Unix ");
-	#elif defined(__WXMSW__)
-	msg << _("Windows ");
-	#endif
-	#ifdef __i386
-	msg << _("in i386\n");
-	#elif __amd64
-	msg << _("in x86_64\n");
-	#endif
-	msg << _("Date : ") << __DATE__;
-	
-	info.SetDescription(msg);
-	info.SetCopyright("(C) 2012");
-	info.SetWebSite("http://antoine163.github.com/flydocs/");
-	info.AddDeveloper("Maleyrie Antoine <antoine.maleyrie@gmail.com>");
-	info.AddDocWriter("Maleyrie Antoine <antoine.maleyrie@gmail.com>");
-	
-	wxAboutBox(info);
+		info.SetName(PROJECT_NAME);
+		info.SetVersion(PROJECT_VERSION);
+		
+		wxString msg;
+		msg << _("This software using google translate for translate a word or sentence from your clipboard.");
+		msg << _("\n\nBuild on ");
+		#if defined(__UNIX__)
+		msg << _("Unix ");
+		#elif defined(__WXMSW__)
+		msg << _("Windows ");
+		#endif
+		#ifdef __i386
+		msg << _("in i386\n");
+		#elif __amd64
+		msg << _("in x86_64\n");
+		#endif
+		msg << _("Date : ") << __DATE__;
+		
+		info.SetDescription(msg);
+		info.SetCopyright("(C) 2012");
+		info.SetWebSite("http://antoine163.github.com/flydocs/");
+		info.AddDeveloper("Maleyrie Antoine <antoine.maleyrie@gmail.com>");
+		info.AddDocWriter("Maleyrie Antoine <antoine.maleyrie@gmail.com>");
+		
+		wxAboutBox(info);
 }
 
 void App::OnExit(wxCommandEvent&)
