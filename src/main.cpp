@@ -32,21 +32,12 @@ bool App::OnInit()
 	//Init général
 	wxInitAllImageHandlers();
 	SetExitOnFrameDelete(false);
-	
-	//Chargement de la config
-	wxFileConfig fileConfig(	PROJECT_NAME,
-								wxEmptyString,
-								wxGetUserHome()+"/."+PROJECT_NAME);
-	bool showMenu = true;
-	fileConfig.Read("show_menu", &showMenu);
-	
-	//Création du menu ou pas.
-	if(showMenu)
-		creatMenuItem();
 
-	//Création est chargement des raccourci clavier
+	//Création du gestionnaire de raccourci clavier
 	_shortcut = new Shortcut(this);	
-	setupShortcut(fileConfig);
+	
+	//Chargement de le config
+	loadAndSetupConfig();
 
 	return true;
 }
@@ -102,9 +93,13 @@ void App::OnPreferences(wxCommandEvent&)
 	{
 		isRun = true;
 		
+		//Création est affcichage du fialog
 		DialogPreferences *dlg = new DialogPreferences();
 		dlg->ShowModal();
 		dlg->Destroy();
+		
+		//Chargement de le config avec le nouveau fichier
+		loadAndSetupConfig();
 		
 		isRun = false;
 	}
@@ -156,10 +151,30 @@ void App::OnShortcut(ShortcutEvent& event)
 	_shortcutAction[event.getShortcutKey()]->execute();
 }
 
+void App::loadAndSetupConfig()
+{
+	//Chargement de la config
+	wxFileConfig fileConfig(	PROJECT_NAME,
+								wxEmptyString,
+								wxGetUserHome()+"/."+PROJECT_NAME);
+	bool showMenu = true;
+	fileConfig.Read("show_menu", &showMenu);
+	
+	//Création du menu ou pas.
+	if(showMenu)
+		creatMenuItem();
+	else
+		deleteMenuItem();
+
+	//Désinstallation préalable des raccourcis
+	uninstallShortcut();
+	//Chargement des raccourci clavier
+	setupShortcut(fileConfig);
+}
+
 void App::setupShortcut(wxFileConfig const& fileConfig)
 {
 	wxString shortcutRaw;
-	
 	unsigned int i = 1;
 	
 	while(fileConfig.Read(wxString("shortcut")<<i, &shortcutRaw))

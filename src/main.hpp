@@ -30,6 +30,9 @@ class App : public wxApp
 		void OnExit(wxCommandEvent&);
 		void OnShortcut(ShortcutEvent& event);
 		
+		//configuration
+		void loadAndSetupConfig();
+		
 		//Shortcut
 		void setupShortcut(wxFileConfig const& fileConfig);
 		void uninstallShortcut();
