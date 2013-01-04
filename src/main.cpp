@@ -57,10 +57,10 @@ int App::OnExit()
 	notify_uninit();
 	#endif
 	
+	//Suppression du menue
 	deleteMenuItem();
 	
-	delete _shortcut;
-	
+	//Unbind les événement lier au raccourci et supprime les actions.
 	for(auto &it: _shortcutAction)
 	{
 		int id = _shortcut->getId(it.first);
@@ -69,6 +69,9 @@ int App::OnExit()
 		delete it.second;
 	}
 	
+	//supprime les raccourcis;
+	delete _shortcut;
+
 	return 0;
 }
 

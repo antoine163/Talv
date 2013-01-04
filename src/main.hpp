@@ -27,7 +27,7 @@ class App : public wxApp
 		void OnPreferences(wxCommandEvent&);
 		void OnEnable(wxCommandEvent& event);
 		void OnAbout(wxCommandEvent&);
-		void OnExit(wxCommandEvent&);//!< \todo Segmentation fault
+		void OnExit(wxCommandEvent&);
 		void OnShortcut(ShortcutEvent& event);
 		
 		//Shortcut
