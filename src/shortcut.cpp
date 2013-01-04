@@ -66,6 +66,136 @@ KeyModifier ShortcutKey::getModifiers()const
 	return _modifiers;
 }
 
+wxString ShortcutKey::shortcutKeyToString(ShortcutKey const& shortcut)
+{
+	wxString ret;
+	
+	// ShortcutKey valide ?
+	if(!(shortcut._modifiers&KeyModifier::ALT ||
+		shortcut._modifiers&KeyModifier::CONTROL ||
+		#if defined(__WXMSW__)
+		shortcut._modifiers&KeyModifier::ALTGR ||
+		#endif
+		shortcut._modifiers&KeyModifier::SHIFT ||
+		shortcut._modifiers&KeyModifier::WIN) &&
+		shortcut._charKey == '\0')
+	{
+		return wxEmptyString;
+	}
+	
+	//Conversion du modificateur
+	KeyModifier statut = KeyModifier::CONTROL;
+	for(unsigned int i = 0; i < NB_KEY_MODIFIER; i++)
+	{
+		switch(statut)
+		{
+			case KeyModifier::CONTROL:
+			{
+				if(shortcut._modifiers&KeyModifier::CONTROL)
+					ret << "ctrl";
+				
+				statut = KeyModifier::ALT;
+			}break;
+			
+			case KeyModifier::ALT:
+			{
+				if(shortcut._modifiers&KeyModifier::ALT)
+					ret << "alt";
+				
+				#if defined(__UNIX__)
+				statut = KeyModifier::ALTGR;
+				#elif defined(__WXMSW__)
+				statut = KeyModifier::SHIFT;
+				#endif
+			}break;
+			
+			#if defined(__UNIX__)
+			case KeyModifier::ALTGR:
+			{
+				if(shortcut._modifiers&KeyModifier::ALTGR)
+					ret << "altgr";
+				
+				statut = KeyModifier::SHIFT;
+			}break;
+			#endif
+			
+			case KeyModifier::SHIFT:
+			{
+				if(shortcut._modifiers&KeyModifier::SHIFT)
+					ret << "shift";
+				
+				statut = KeyModifier::WIN;
+			}break;
+			
+			case KeyModifier::WIN:
+			{
+				if(shortcut._modifiers&KeyModifier::WIN)
+					ret << "win";
+				
+				statut = KeyModifier::NONE;
+			}break;
+			
+			default:
+			return wxEmptyString;
+			break;
+		}
+		
+		ret << "+";
+	}
+	
+	//Ajout du charKey
+	ret << shortcut._charKey;
+	
+	//Minimalise
+	ret.MakeLower();
+	
+	return ret;
+}
+		
+ShortcutKey ShortcutKey::stringToShortcutKey(wxString const& shortcut)
+{
+	KeyModifier modifiers = KeyModifier::NONE;
+	char charKey = '\0';
+	
+	
+	
+	//Avent ou rapper le premier '+'
+	wxString before;
+	wxString after;
+	
+	//Minimalise
+	wxString tmp = shortcut;
+	tmp.MakeLower();
+	
+	
+	//Obtenir avent ou rapper le premier '+'
+	before = tmp.BeforeFirst('+', &after);
+	//Conversion du modificateur
+	while(!before.IsEmpty())
+	{
+		if(before == "ctrl")
+			modifiers = (KeyModifier)(modifiers|KeyModifier::CONTROL);
+		else if(before == "alt")
+			modifiers = (KeyModifier)(modifiers|KeyModifier::ALT);
+		#if defined(__UNIX__)
+		else if(before == "altgr")
+			modifiers = (KeyModifier)(modifiers|KeyModifier::ALTGR);
+		#endif
+		else if(before == "shift")
+			modifiers = (KeyModifier)(modifiers|KeyModifier::SHIFT);
+		else if(before == "win")
+		modifiers = (KeyModifier)(modifiers|KeyModifier::WIN);
+		
+		//Obtenir le nouveau avent ou rapper le premier '+'
+		tmp = after;
+		before = tmp.BeforeFirst('+', &after);
+	}
+	
+	charKey = *tmp.fn_str();
+	
+	return ShortcutKey(modifiers, charKey);
+}
+
 //! ****************************************************************************
 //! Class ShortcutEvent
 //! ****************************************************************************

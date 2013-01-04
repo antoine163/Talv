@@ -25,26 +25,37 @@
 #include <windows.h>
 #endif
 
+#if defined(__UNIX__)
+#define NB_KEY_MODIFIER 5
+#elif defined(__WXMSW__)
+#define NB_KEY_MODIFIER 4
+#endif
+
 //! \brief Les modificateurs de touche.
 enum KeyModifier
 {
 	#if defined(__DOXYGEN__)
-	ALT,		//!< Touche Alt
-	CONTROL,	//!< Touche Ctrl
-	ALTGR,		//!< Touche Alt Gr (Pas definie sou windows)
-	SHIFT,		//!< Touche Shift
-	WIN			//!< Touche Win
+	CONTROL,	//!< Touche Ctrl, (version string : "ctrl").
+	ALT,		//!< Touche Alt, (version string : "alt").
+	ALTGR,		//!< Touche Alt Gr, (version string : "altgr"). \note Pas definie sou windows.
+	SHIFT,		//!< Touche Shift, (version string : "alt").
+	WIN			//!< Touche Win, (version string : "win").
 	#elif defined(__UNIX__)
-	ALT 	= Mod1Mask,
 	CONTROL = ControlMask,
+	ALT 	= Mod1Mask,
 	ALTGR 	= Mod5Mask,
 	SHIFT 	= ShiftMask,
-	WIN 	= Mod4Mask
+	WIN 	= Mod4Mask,
 	#elif defined(__WXMSW__)
-	ALT 	= MOD_ALT,
 	CONTROL = MOD_CONTROL,
+	ALT 	= MOD_ALT,
 	SHIFT 	= MOD_SHIFT,
-	WIN 	= MOD_WIN
+	WIN 	= MOD_WIN,
+	#endif
+	#if !defined(__DOXYGEN__)
+	//Valeur utile pour ShortcutKey::shortcutKeyToString() et ShortcutKey::stringToShortcutKey()
+	//Ne devrai pas être utiliser autre par !
+	NONE 	= 0 
 	#endif
 };
 
@@ -68,6 +79,16 @@ class ShortcutKey
 		//! \brief Obtenir le modificateur.
 		//! \return C'est une valeur combiner de \ref KeyModifier.
 		KeyModifier getModifiers()const;
+		
+		//! \brief Converti un \ref ShortcutKey en string.
+		//! \param shortcut le raccourci en version \ref ShortcutKey.
+		//! \return Le raccourci en version string.
+		static wxString shortcutKeyToString(ShortcutKey const& shortcut);
+		
+		//! \brief Converti un raccourci, de sa version string en \ref ShortcutKey.
+		//! \param shortcut le raccourci en version string.
+		//! \return Le raccourci en version \ref ShortcutKey.
+		static ShortcutKey stringToShortcutKey(wxString const& shortcut);
 		
 	private:
 		//! \brief Le modificateur.
