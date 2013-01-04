@@ -13,7 +13,8 @@ class Word
 		Word();
 		~Word();
 		
-		void setWord(const wxString& word, const wxString& lgsrc, const wxString& lgto);
+		void setWord(const wxString& word, const wxString& lgsrc, const wxString& lgto = wxEmptyString);
+		void translate();
 		void showNotify();
 		#if defined(__USE_TTS__)
 		void say();

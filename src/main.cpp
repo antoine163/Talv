@@ -2,9 +2,7 @@
 
 #include "main.hpp"
 
-#include <wx/clipbrd.h>
 #include <wx/aboutdlg.h>
-#include <wx/fileconf.h>
 
 #if defined(__USE_TTS__)
 #include <gst/gst.h>
@@ -46,17 +44,19 @@ bool App::OnInit()
 	if(showMenu)
 		creatMenuItem();
 
+	//Création est chargement des raccourci clavier
 	_shortcut = new Shortcut(this);	
+	loadShortcut(fileConfig);
+
+	//_shif_alt_f = new ShortcutKey((KeyModifier)(KeyModifier::SHIFT|KeyModifier::ALT), 'f');
+	//int id = _shortcut->creat(*_shif_alt_f);
+	//Bind(EVT_SHORTCUT, &App::OnShortcut, this, id);
 	
-	_shif_alt_f = new ShortcutKey((KeyModifier)(KeyModifier::SHIFT|KeyModifier::ALT), 'f');
-	int id = _shortcut->creat(*_shif_alt_f);
-	Bind(EVT_SHORTCUT, &App::OnShortcut, this, id);
-	
-	#if defined(__USE_TTS__)
-	_shif_alt_d = new ShortcutKey((KeyModifier)(KeyModifier::SHIFT|KeyModifier::ALT), 'd');
-	id = _shortcut->creat(*_shif_alt_d);
-	Bind(EVT_SHORTCUT, &App::OnShortcut, this, id);
-	#endif
+	//#if defined(__USE_TTS__)
+	//_shif_alt_d = new ShortcutKey((KeyModifier)(KeyModifier::SHIFT|KeyModifier::ALT), 'd');
+	//id = _shortcut->creat(*_shif_alt_d);
+	//Bind(EVT_SHORTCUT, &App::OnShortcut, this, id);
+	//#endif
 	
 
 	return true;
@@ -72,8 +72,8 @@ int App::OnExit()
 	
 	delete _shortcut;
 	
-	delete _shif_alt_f;
-	delete _shif_alt_d;
+	//delete _shif_alt_f;
+	//delete _shif_alt_d;
 	
 	return 0;
 }
@@ -101,7 +101,7 @@ void App::deleteMenuItem()
 		Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::OnExit, this, _menuIcon->getIdMenuItemExit());
 		
 		delete _menuIcon;
-		_menuIcon = 0;
+		_menuIcon = nullptr;
 	}
 }
 
@@ -155,56 +155,34 @@ void App::OnExit(wxCommandEvent&)
 
 void App::OnShortcut(ShortcutEvent& event)
 {
-	translateClipBoard();
+	//translateClipBoard();
 	
-	if(event.getShortcutKey() == *_shif_alt_f)
-	{
-		_word.showNotify();
-	}
-	#if defined(__USE_TTS__)
-	else if(event.getShortcutKey() == *_shif_alt_d)
-	{
-		_word.say();
-	}
-	#endif
+	//if(event.getShortcutKey() == *_shif_alt_f)
+	//{
+		//_word.showNotify();
+	//}
+	//#if defined(__USE_TTS__)
+	//else if(event.getShortcutKey() == *_shif_alt_d)
+	//{
+		//_word.say();
+	//}
+	//#endif
 }
 
-wxString App::getClipboard()const
+void App::loadShortcut(wxFileConfig const& fileConfig)
 {
-	wxString word;
+	wxString stringShortcutConfig;
 	
-	//Lire le text ce trouvent dans la presse papier
-	if (wxTheClipboard->Open())
-	{
-		#if defined(__UNIX__)
-		wxTheClipboard->UsePrimarySelection(true);
-		#endif
-		if(wxTheClipboard->IsSupported(wxDF_TEXT))
-		{
-			wxTextDataObject data;
-			wxTheClipboard->GetData(data);
-			word = data.GetText();
-		}
-		wxTheClipboard->Close();
+	unsigned int i = 1;
+	
+	while(fileConfig.Read(wxString("shortcut")<<i, &stringShortcutConfig))
+	{		
+		wxString stringAct;
+		wxString stringShortcut = stringShortcutConfig.BeforeFirst(' ', &stringAct);
+		
+		std::cout << stringShortcut << std::endl;
+		std::cout << stringAct << std::endl;
+		
+		i++;
 	}
-	
-	return word;
 }
-
-void App::translateClipBoard()
-{
-	wxString lgsrc = "en";
-	wxString lgto = "fr";
-	
-	wxString word = getClipboard();
-	
-	//Suppression des '\n'
-	word.Replace("\n", " ");
-	
-	_word.setWord(word, lgsrc, lgto);
-}
-
-void App::soveTranslateClipBoard()
-{
-}
-

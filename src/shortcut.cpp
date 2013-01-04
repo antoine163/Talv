@@ -23,7 +23,7 @@
 //! ****************************************************************************
 
 ShortcutKey::ShortcutKey(KeyModifier modifiers, char charKey)
-	: _modifiers(modifiers), _charKey(charKey)
+: _modifiers(modifiers), _charKey(charKey)
 {
 }
 

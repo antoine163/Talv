@@ -31,7 +31,11 @@ void Word::setWord(const wxString& word, const wxString& lgsrc, const wxString& 
 	_word = word;
 	_lgsrc = lgsrc;
 	_lgto = lgto;
-	
+
+}
+
+void Word::translate()
+{
 	//Traduction a partir de google
 	wxString res = translateFromGoole();
 	//Mise en forme du résulta

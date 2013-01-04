@@ -219,7 +219,7 @@ class Shortcut
 		std::map<ShortcutKey, int> _bind;
 		
 		//! \brief Raccourci activer ou pas.
-		//! \see creat()
+		//! \see enable()
 		bool _enable;
 
 		

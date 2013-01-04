@@ -4,10 +4,14 @@
 #define MAIN_H
 
 #include <wx/app.h>
+#include <wx/fileconf.h>
+
+#include <map>
 
 #include "shortcut.hpp"
 #include "menuIcon.hpp"
 #include "word.hpp"
+#include "action.hpp"
 
 class App : public wxApp
 {
@@ -18,27 +22,24 @@ class App : public wxApp
 		//Menu Item Methode
 		void creatMenuItem();
 		void deleteMenuItem();
+		
 		//Menu Item Event Methode
 		void OnPreferences(wxCommandEvent&);
 		void OnEnable(wxCommandEvent& event);
 		void OnAbout(wxCommandEvent&);
 		void OnExit(wxCommandEvent&);
 		void OnShortcut(ShortcutEvent& event);
-
-		//--
-		wxString getClipboard()const;
 		
-		void translateClipBoard();	
-		void soveTranslateClipBoard();
+		//Shortcut
+		void loadShortcut(wxFileConfig const& fileConfig);
 	
 	private:
 		Shortcut *_shortcut;
 		MenuIcon *_menuIcon;
-		Word _word;	
+		Word _word;
 		
-		//test
-		ShortcutKey* _shif_alt_f;
-		ShortcutKey* _shif_alt_d;
+		//Association des recousis à des actions
+		std::map<ShortcutKey, Action &> _shortcutAction;
 };
 
 #endif //MAIN_H

@@ -38,6 +38,7 @@ endif
 
 #Liste des fichiers source C++
 SRCO=	src/shortcut.cpp\
+		src/action.cpp\
 		src/word.cpp\
 		src/menuIcon.cpp\
 		src/gui/guiDialogPreferences.cpp\
