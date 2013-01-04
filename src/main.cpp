@@ -233,6 +233,9 @@ void App::uninstallShortcut()
 		delete it.second;
 	}
 	
+	//Supprime les Association
+	_shortcutAction.clear();
+	
 	//Supprime touts les raccourcis
 	_shortcut->removeAll();
 }
