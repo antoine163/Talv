@@ -14,6 +14,20 @@ class DialogPreferences : public GuiDialogPreferences
 		DialogPreferences(std::map<ShortcutKey, Action*> const& shortcutAction);
 		~DialogPreferences();
 		
+		void OnButtonClickDelete(wxCommandEvent&);
+		void OnButtonClickSetting(wxCommandEvent&);
+		void OnButtonClickAdd(wxCommandEvent&);
+		
+	private:
+};
+
+class DialogShurtcut : public GuiDialogShurtcut 
+{
+	public:
+		
+		DialogShurtcut(wxWindow* parent, const wxString& title);
+		~DialogShurtcut();
+		
 	private:
 };
 

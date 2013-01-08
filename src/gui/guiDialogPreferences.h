@@ -28,6 +28,8 @@
 #include <wx/button.h>
 #include <wx/notebook.h>
 #include <wx/dialog.h>
+#include <wx/textctrl.h>
+#include <wx/choice.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -57,11 +59,39 @@ class GuiDialogPreferences : public wxDialog
 		wxButton* _sdbSizerOK;
 		wxButton* _sdbSizerApply;
 		wxButton* _sdbSizerCancel;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void OnButtonClickDelete( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnButtonClickSetting( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnButtonClickAdd( wxCommandEvent& event ) { event.Skip(); }
+		
 	
 	public:
 		
-		GuiDialogPreferences( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 400,300 ), long style = wxDEFAULT_DIALOG_STYLE );
+		GuiDialogPreferences( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 400,300 ), long style = wxDEFAULT_DIALOG_STYLE|wxDIALOG_NO_PARENT );
 		~GuiDialogPreferences();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class GuiDialogShurtcut
+///////////////////////////////////////////////////////////////////////////////
+class GuiDialogShurtcut : public wxDialog 
+{
+	private:
+	
+	protected:
+		wxStaticText* _staticTextShortcut;
+		wxTextCtrl* _textCtrlShortcut;
+		wxStaticText* _staticTextAction;
+		wxChoice* _choiceAction;
+		wxStaticText* _staticTextSetting;
+		wxPanel* _panelSetting;
+	
+	public:
+		
+		GuiDialogShurtcut( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Shurtcut"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 300,200 ), long style = wxDEFAULT_DIALOG_STYLE );
+		~GuiDialogShurtcut();
 	
 };
 
