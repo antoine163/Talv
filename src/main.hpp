@@ -46,4 +46,6 @@ class App : public wxApp
 		std::map<ShortcutKey, Action*> _shortcutAction;
 };
 
+DECLARE_APP(App);
+
 #endif //MAIN_H

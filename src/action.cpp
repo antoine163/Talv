@@ -39,7 +39,7 @@ void Action::setName(wxString const& name)
 	_name = name;
 }
 
-wxString const& Action::getWord()
+wxString const& Action::getName()const
 {
 	return _name;
 }
@@ -74,9 +74,19 @@ void ActTranslation::execute()
 	_word->showNotify();
 }
 
+wxString const& ActTranslation::getLanguageScr()const
+{
+	return _lgsrc;
+}
+
+wxString const& ActTranslation::getLanguageTo()const
+{
+	return _lgto;
+}
+
 #if defined(__USE_TTS__)
 ActSay::ActSay(	Word* word,	wxString const& lg)
-: Action("tr"), _word(word), _lg(lg)
+: Action("ts"), _word(word), _lg(lg)
 {
 }
 
@@ -99,5 +109,10 @@ void ActSay::execute()
 	
 	_word->setWord(word, _lg);
 	_word->say();
+}
+
+wxString const& ActSay::getLanguage()const
+{
+	return _lg;
 }
 #endif

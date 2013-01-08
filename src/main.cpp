@@ -2,7 +2,11 @@
 
 #include "main.hpp"
 
+#include <unistd.h>
+
 #include <wx/aboutdlg.h>
+#include <wx/utils.h> 
+#include <wx/process.h>
 
 #if defined(__USE_TTS__)
 #include <gst/gst.h>
@@ -14,13 +18,11 @@
 
 #include "dialogPreferences.hpp"
 
-#include <iostream>
-#include <wx/utils.h> 
 
 IMPLEMENT_APP(App);
 
 bool App::OnInit()
-{
+{  	
 	//Init des bibliothèques.
 	#if defined(__UNIX__)
 	notify_init(PROJECT_NAME);
@@ -43,7 +45,7 @@ bool App::OnInit()
 }
 
 int App::OnExit()
-{
+{	
 	#if defined(__UNIX__)
 	notify_uninit();
 	#endif
@@ -94,7 +96,7 @@ void App::OnPreferences(wxCommandEvent&)
 		isRun = true;
 		
 		//Création est affcichage du fialog
-		DialogPreferences *dlg = new DialogPreferences();
+		DialogPreferences *dlg = new DialogPreferences(_shortcutAction);
 		dlg->ShowModal();
 		dlg->Destroy();
 		
@@ -233,7 +235,7 @@ void App::uninstallShortcut()
 		delete it.second;
 	}
 	
-	//Supprime les Association
+	//Supprime les Associations
 	_shortcutAction.clear();
 	
 	//Supprime touts les raccourcis

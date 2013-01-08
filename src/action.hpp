@@ -13,7 +13,7 @@ class Action
 		virtual ~Action();
 		
 		void setName(wxString const& name);
-		wxString const& getWord();
+		wxString const& getName()const;
 		
 		virtual void execute()=0;
 		
@@ -34,6 +34,9 @@ class ActTranslation : public Action
 		
 		void settings(Word* word, wxString const& lgsrc, wxString const& lgto);
 		void execute();
+		
+		wxString const& getLanguageScr()const;
+		wxString const& getLanguageTo()const;
 	
 	private:
 		Word* _word;
@@ -50,6 +53,8 @@ class ActSay : public Action
 		
 		void settings(Word* word, wxString const& lg);
 		void execute();
+		
+		wxString const& getLanguage()const;
 	
 	private:
 		Word* _word;

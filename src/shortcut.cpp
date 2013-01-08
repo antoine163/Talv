@@ -92,7 +92,7 @@ wxString ShortcutKey::shortcutKeyToString(ShortcutKey const& shortcut)
 			case KeyModifier::CONTROL:
 			{
 				if(shortcut._modifiers&KeyModifier::CONTROL)
-					ret << "ctrl";
+					ret << "ctrl+";
 				
 				statut = KeyModifier::ALT;
 			}break;
@@ -100,7 +100,7 @@ wxString ShortcutKey::shortcutKeyToString(ShortcutKey const& shortcut)
 			case KeyModifier::ALT:
 			{
 				if(shortcut._modifiers&KeyModifier::ALT)
-					ret << "alt";
+					ret << "alt+";
 				
 				#if defined(__UNIX__)
 				statut = KeyModifier::ALTGR;
@@ -113,7 +113,7 @@ wxString ShortcutKey::shortcutKeyToString(ShortcutKey const& shortcut)
 			case KeyModifier::ALTGR:
 			{
 				if(shortcut._modifiers&KeyModifier::ALTGR)
-					ret << "altgr";
+					ret << "altgr+";
 				
 				statut = KeyModifier::SHIFT;
 			}break;
@@ -122,7 +122,7 @@ wxString ShortcutKey::shortcutKeyToString(ShortcutKey const& shortcut)
 			case KeyModifier::SHIFT:
 			{
 				if(shortcut._modifiers&KeyModifier::SHIFT)
-					ret << "shift";
+					ret << "shift+";
 				
 				statut = KeyModifier::WIN;
 			}break;
@@ -130,7 +130,7 @@ wxString ShortcutKey::shortcutKeyToString(ShortcutKey const& shortcut)
 			case KeyModifier::WIN:
 			{
 				if(shortcut._modifiers&KeyModifier::WIN)
-					ret << "win";
+					ret << "win+";
 				
 				statut = KeyModifier::NONE;
 			}break;
@@ -139,8 +139,6 @@ wxString ShortcutKey::shortcutKeyToString(ShortcutKey const& shortcut)
 			return wxEmptyString;
 			break;
 		}
-		
-		ret << "+";
 	}
 	
 	//Ajout du charKey
@@ -151,7 +149,7 @@ wxString ShortcutKey::shortcutKeyToString(ShortcutKey const& shortcut)
 	
 	return ret;
 }
-#include <iostream>
+
 ShortcutKey ShortcutKey::stringToShortcutKey(wxString const& shortcut)
 {
 	KeyModifier modifiers = KeyModifier::NONE;
@@ -166,7 +164,7 @@ ShortcutKey ShortcutKey::stringToShortcutKey(wxString const& shortcut)
 	tmp.MakeLower();
 	
 	
-	//Obtenir avent ou rapper le premier '+'
+	//Obtenir avent ou après le premier '+'
 	before = tmp.BeforeFirst('+', &after);
 	//Conversion du modificateur
 	while(!before.IsEmpty())
@@ -186,7 +184,7 @@ ShortcutKey ShortcutKey::stringToShortcutKey(wxString const& shortcut)
 		else if(before == "win")
 		modifiers = (KeyModifier)(modifiers|KeyModifier::WIN);
 		
-		//Obtenir le nouveau avent ou rapper le premier '+'
+		//Obtenir le nouveau avent ou après le premier '+'
 		tmp = after;
 		before = tmp.BeforeFirst('+', &after);
 	}

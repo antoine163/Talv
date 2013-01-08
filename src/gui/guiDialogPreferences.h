@@ -10,18 +10,21 @@
 
 #include <wx/intl.h>
 
-#include <wx/sizer.h>
+#include <wx/string.h>
+#include <wx/stattext.h>
 #include <wx/gdicmn.h>
-#include <wx/panel.h>
 #include <wx/font.h>
 #include <wx/colour.h>
 #include <wx/settings.h>
-#include <wx/string.h>
+#include <wx/checkbox.h>
+#include <wx/statline.h>
+#include <wx/tglbtn.h>
+#include <wx/sizer.h>
+#include <wx/panel.h>
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/icon.h>
 #include <wx/listctrl.h>
-#include <wx/statline.h>
 #include <wx/button.h>
 #include <wx/notebook.h>
 #include <wx/dialog.h>
@@ -38,16 +41,22 @@ class GuiDialogPreferences : public wxDialog
 	
 	protected:
 		wxPanel* _panelGeneral;
-		wxPanel* _panelShortcut;
-		wxListCtrl* m_listCtrl1;
-		wxStaticLine* m_staticline1;
+		wxStaticText* _staticTextSartup;
+		wxCheckBox* _checkBoxShowMenu;
 		
+		wxStaticText* _staticTextShutdown;
+		wxToggleButton* _toggleBtnTurnOff;
+		wxPanel* _panelShortcut;
+		wxStaticText* _staticTextShortcut;
+		wxListCtrl* _listCtrlShortcut;
 		wxButton* _buttonDelete;
-		wxButton* _addShortCut;
-		wxStdDialogButtonSizer* m_sdbSizer1;
-		wxButton* m_sdbSizer1OK;
-		wxButton* m_sdbSizer1Apply;
-		wxButton* m_sdbSizer1Cancel;
+		wxButton* _buttonSetting;
+		
+		wxButton* _buttonAdd;
+		wxStdDialogButtonSizer* _sdbSizer;
+		wxButton* _sdbSizerOK;
+		wxButton* _sdbSizerApply;
+		wxButton* _sdbSizerCancel;
 	
 	public:
 		
