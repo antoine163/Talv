@@ -15,7 +15,7 @@ OBJDUMP	= objdump
 CXXFLAGSO=-W -Wall -Wextra -std=gnu++11 `wx-config-2.9 --cflags` `pkg-config --cflags libnotify `\
 			-DPROJECT_NAME=\"flydocs\" -DPROJECT_VERSION=\"0.1\"
 #Option de linkage
-LDFLAGSO=`wx-config-2.9 --libs` `pkg-config --libs libnotify` -lX11
+LDFLAGSO=`wx-config-2.9 --libs base,core,adv,net,propgrid` `pkg-config --libs libnotify` -lX11
 #Non de l'exécutable.
 EXEC_NAME=flydocs
 
@@ -23,11 +23,11 @@ EXEC_NAME=flydocs
 OBJDIR = obj
 
 #flage en plus pour la compilation en release.
-CXXFLAGSR=-s -O2
+CXXFLAGSR=-s -O2 `wx-config-2.9 --debug=no`
 #flage en plus pour la compilation en debug.
 CXXFLAGSD=-g
 
-#Compilation avec tts (yes par défaut)
+#Compilation avec tts (yes par F)
 TTS=yes
 ifeq ($(TTS),yes)
 CXXFLAGTTS=-D__USE_TTS__
@@ -79,7 +79,7 @@ $(OBJDIR)/%.o: %.cpp
 	
 #Exécute le programme
 .PHONY: run
-run: release
+run:
 	@echo "run : $(EXEC_NAME)"
 	@./$(EXEC_NAME)
 	

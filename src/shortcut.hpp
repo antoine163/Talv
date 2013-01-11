@@ -86,6 +86,7 @@ class ShortcutKey
 		static wxString shortcutKeyToString(ShortcutKey const& shortcut);
 		
 		//! \brief Converti un raccourci, de sa version string en \ref ShortcutKey.
+		//! Cette méthode ne vérifie pas la valider du raccourci, il devra être de la forme (ex:"alt+shift+f").
 		//! \param shortcut le raccourci en version string.
 		//! \return Le raccourci en version \ref ShortcutKey.
 		static ShortcutKey stringToShortcutKey(wxString const& shortcut);
