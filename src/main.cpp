@@ -95,9 +95,13 @@ void App::OnPreferences(wxCommandEvent&)
 	{
 		isRun = true;
 		
+		_shortcut->enable(false);
+		
 		//Création est affcichage du fialog
 		DialogPreferences dlg(_shortcutAction);
 		dlg.ShowModal();
+		
+		_shortcut->enable(true);
 		
 		//Chargement de le config avec le nouveau fichier
 		loadAndSetupConfig();
