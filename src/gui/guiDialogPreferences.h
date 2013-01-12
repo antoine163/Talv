@@ -60,6 +60,7 @@ class GuiDialogPreferences : public wxDialog
 		virtual void OnButtonClickDelete( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnButtonClickAdd( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnApplyButtonClick( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnOkButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:

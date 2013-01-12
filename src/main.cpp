@@ -101,6 +101,10 @@ void App::OnPreferences(wxCommandEvent&)
 		DialogPreferences dlg(_shortcutAction);
 		dlg.ShowModal();
 		
+		//On vérifie si on doit quitter l'application ou pas
+		if(dlg.shutdown())
+			ExitMainLoop();
+		
 		_shortcut->enable(true);
 		
 		//Chargement de le config avec le nouveau fichier

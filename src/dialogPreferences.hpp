@@ -23,16 +23,25 @@ class DialogPreferences : public GuiDialogPreferences
 		void OnDoubleClick(wxPropertyGridEvent& event);
 		void OnChanged(wxPropertyGridEvent& event);
 		
-		void OnApplyButtonClick(wxCommandEvent&);
+		void OnOkButtonClick(wxCommandEvent& event);
+		void OnApplyButtonClick(wxCommandEvent& event);
 		void OnUpdateUIPropertyGridShortcut(wxUpdateUIEvent& event);
 		
+		void changedAction(wxPGProperty* property, wxString const& action);
+		void soveInFileConfig()const;
+		bool shutdown()const;
+		
 	protected:
+		//ex:fr -> French
+		wxString const& longLangToShortLang(wxString const& longLang)const;
+	
 		std::map<wxString, wxString> _lang;
 		
 		wxPGChoices _actChs;
 		wxPGChoices _lanChs;
 		
 		bool _firstUpdate;
+		bool _oKButtonWasClick;
 };
 
 enum RawKeyCodeModifier_e

@@ -38,6 +38,7 @@ MenuIcon::~MenuIcon()
 	_taskBarIcon->Unbind(wxEVT_TASKBAR_LEFT_DCLICK, &MenuIcon::OnShow, this);
 	
 	delete _taskBarIcon;
+	//! \todo Libérais la mémoire sans Segmentation fault
 	delete _menuTaskBarIcon;
 }
 

@@ -3,6 +3,7 @@
 #include "dialogPreferences.hpp"
 
 #include <wx/msgdlg.h>
+#include <wx/fileconf.h>
 
 #include <iostream>
 
@@ -11,7 +12,7 @@
 //! ****************************************************************************
 
 DialogPreferences::DialogPreferences(std::map<ShortcutKey, Action*> const& shortcutAction)
-: GuiDialogPreferences(nullptr), _firstUpdate(true)
+: GuiDialogPreferences(nullptr), _firstUpdate(true), _oKButtonWasClick(false)
 {	
 	//Liste des langues
 	_lang["af"] = _("Afrikaans");
@@ -184,7 +185,10 @@ void DialogPreferences::OnButtonClickAdd(wxCommandEvent&)
 		}
 		//Création d'un nouveau wxPGProperty
 		else 
-			_propertyGridShortcut->Append(new wxEnumProperty(dlg.GetShortcut(), wxPG_LABEL, actChs));
+		{
+			wxPGProperty* prop = _propertyGridShortcut->Append(new wxEnumProperty(dlg.GetShortcut(), wxPG_LABEL, actChs));
+			changedAction(prop, prop->GetDisplayedString());
+		}
 	}
 }
 
@@ -235,41 +239,21 @@ void DialogPreferences::OnChanged(wxPropertyGridEvent& event)
 	wxPGProperty* slectProp = event.GetProperty();
 	
 	if(slectProp != nullptr)
-	{	
-		wxString displayedString = slectProp->GetDisplayedString();
-			
-		//Quelle action ?
-		if(displayedString == _("Translation"))
-		{
-			//Ranplaser le raccourci (paramètre) au PropertyGrid.
-			wxPGProperty* actProp = new wxEnumProperty(slectProp->GetLabel(), wxPG_LABEL, _actChs);
-			actProp->SetValueFromString(displayedString);
-			_propertyGridShortcut->ReplaceProperty(slectProp, actProp);
-		
-			//Ajouter les paramètre dans la PropertyGrid.
-			wxPGProperty* srcLanProp = new wxEnumProperty(_("Source language"), wxPG_LABEL, _lanChs);
-			_propertyGridShortcut->AppendIn(actProp, srcLanProp);
-			wxPGProperty* destLanProp = new wxEnumProperty(_("to"), wxPG_LABEL, _lanChs);
-			_propertyGridShortcut->AppendIn(actProp, destLanProp);
-		}
-		#if defined(__USE_TTS__)
-		else if(displayedString == _("Say"))
-		{
-			//Ranplaser le raccourci (paramètre) au PropertyGrid.
-			wxPGProperty* actProp = new wxEnumProperty(slectProp->GetLabel(), wxPG_LABEL, _actChs);
-			actProp->SetValueFromString(displayedString);
-			_propertyGridShortcut->ReplaceProperty(slectProp, actProp);
-		
-			//Ajouter les paramètre dans la PropertyGrid.
-			wxPGProperty* lanProp = new wxEnumProperty(_("Language"), wxPG_LABEL, _lanChs);
-			_propertyGridShortcut->AppendIn(actProp, lanProp);
-		}
-		#endif
-	}
+		changedAction(slectProp, slectProp->GetDisplayedString());
 }
 
-void DialogPreferences::OnApplyButtonClick(wxCommandEvent&)
+void DialogPreferences::OnOkButtonClick(wxCommandEvent& event)
 {	
+	_oKButtonWasClick = true;
+	
+	soveInFileConfig();
+	event.Skip();
+}
+
+void DialogPreferences::OnApplyButtonClick(wxCommandEvent& event)
+{	
+	soveInFileConfig();	
+	event.Skip();
 }
 
 void DialogPreferences::OnUpdateUIPropertyGridShortcut(wxUpdateUIEvent& event)
@@ -280,6 +264,116 @@ void DialogPreferences::OnUpdateUIPropertyGridShortcut(wxUpdateUIEvent& event)
 		_firstUpdate = false;
 	}
 	event.Skip();
+}
+
+void DialogPreferences::changedAction(wxPGProperty* property, wxString const& action)
+{		
+	//Quelle action ?
+	if(action == _("Translation"))
+	{
+		//Ranplaser le raccourci (paramètre) au PropertyGrid.
+		wxPGProperty* actProp = new wxEnumProperty(property->GetLabel(), wxPG_LABEL, _actChs);
+		actProp->SetValueFromString(action);
+		_propertyGridShortcut->ReplaceProperty(property, actProp);
+	
+		//Ajouter les paramètre dans la PropertyGrid.
+		wxPGProperty* srcLanProp = new wxEnumProperty(_("Source language"), wxPG_LABEL, _lanChs);
+		_propertyGridShortcut->AppendIn(actProp, srcLanProp);
+		wxPGProperty* destLanProp = new wxEnumProperty(_("to"), wxPG_LABEL, _lanChs);
+		_propertyGridShortcut->AppendIn(actProp, destLanProp);
+	}
+	#if defined(__USE_TTS__)
+	else if(action == _("Say"))
+	{
+		//Ranplaser le raccourci (paramètre) au PropertyGrid.
+		wxPGProperty* actProp = new wxEnumProperty(property->GetLabel(), wxPG_LABEL, _actChs);
+		actProp->SetValueFromString(action);
+		_propertyGridShortcut->ReplaceProperty(property, actProp);
+	
+		//Ajouter les paramètre dans la PropertyGrid.
+		wxPGProperty* lanProp = new wxEnumProperty(_("Language"), wxPG_LABEL, _lanChs);
+		_propertyGridShortcut->AppendIn(actProp, lanProp);
+	}
+	#endif
+}
+
+void DialogPreferences::soveInFileConfig()const
+{
+	//Chargement de la config
+	wxFileConfig fileConfig(	PROJECT_NAME,
+								wxEmptyString,
+								wxGetUserHome()+"/."+PROJECT_NAME);
+	fileConfig.DeleteAll();
+	
+	//Ajout du menu dans le fichier de config
+	fileConfig.Write("show_menu", _checkBoxShowMenu->GetValue());
+
+
+	//Parcour la liste des raccourcis
+	wxPropertyGridIterator it = _propertyGridShortcut->GetIterator();
+	wxString varShortcut;
+	int i = 1;
+	while(!it.AtEnd())
+	{
+		//Récupération du wxPGProperty
+		wxPGProperty* prop = it.GetProperty();
+	
+		//std::cout << prop->GetLabel() << " : " << prop->GetDisplayedString() << std::endl;
+		varShortcut.Clear();
+		varShortcut << prop->GetLabel();
+		
+		if(prop->GetDisplayedString() == _("Translation"))
+		{
+			varShortcut << " tr ";
+			//Récupération des paramètres.
+			it.Next();
+			prop = it.GetProperty();
+			varShortcut << longLangToShortLang(prop->GetDisplayedString()) << " ";
+			it.Next();
+			prop = it.GetProperty();
+			varShortcut << longLangToShortLang(prop->GetDisplayedString());
+		}
+		#if defined(__USE_TTS__)
+		else if(prop->GetDisplayedString() == _("Say"))
+		{
+			//Récupération des paramètres.
+			varShortcut << " ts ";
+			it.Next();
+			prop = it.GetProperty();
+			varShortcut << longLangToShortLang(prop->GetDisplayedString());
+		}
+		#endif
+		
+		//Ajout du raccourci dans le fichier de config
+		fileConfig.Write(wxString("shortcut")<<i, varShortcut);
+		
+		//Raccourci suivent
+		it.Next();
+		i++;
+	}
+	
+	
+}
+
+wxString const& DialogPreferences::longLangToShortLang(wxString const& longLang)const
+{
+	for(auto &it: _lang)
+	{
+		if(it.second == longLang)
+			return it.first;
+	}
+	
+	return "";
+}
+
+bool DialogPreferences::shutdown()const
+{
+	if(_oKButtonWasClick)
+	{
+		return _toggleBtnTurnOff->GetValue();
+	}
+		
+	return false;
 }
 
 //! ****************************************************************************

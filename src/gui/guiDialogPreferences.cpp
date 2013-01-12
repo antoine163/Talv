@@ -55,7 +55,7 @@ GuiDialogPreferences::GuiDialogPreferences( wxWindow* parent, wxWindowID id, con
 	_panelGeneral->SetSizer( bSizer2 );
 	_panelGeneral->Layout();
 	bSizer2->Fit( _panelGeneral );
-	_notebook->AddPage( _panelGeneral, _("General"), false );
+	_notebook->AddPage( _panelGeneral, _("General"), true );
 	_panelShortcut = new wxPanel( _notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	bSizer4 = new wxBoxSizer( wxVERTICAL );
 	
@@ -81,7 +81,7 @@ GuiDialogPreferences::GuiDialogPreferences( wxWindow* parent, wxWindowID id, con
 	_panelShortcut->SetSizer( bSizer4 );
 	_panelShortcut->Layout();
 	bSizer4->Fit( _panelShortcut );
-	_notebook->AddPage( _panelShortcut, _("Shortcut"), true );
+	_notebook->AddPage( _panelShortcut, _("Shortcut"), false );
 	
 	bSizer1->Add( _notebook, 1, wxEXPAND | wxALL, 5 );
 	
@@ -105,6 +105,7 @@ GuiDialogPreferences::GuiDialogPreferences( wxWindow* parent, wxWindowID id, con
 	_buttonDelete->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickDelete ), NULL, this );
 	_buttonAdd->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickAdd ), NULL, this );
 	_sdbSizerApply->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnApplyButtonClick ), NULL, this );
+	_sdbSizerOK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnOkButtonClick ), NULL, this );
 }
 
 GuiDialogPreferences::~GuiDialogPreferences()
@@ -114,6 +115,7 @@ GuiDialogPreferences::~GuiDialogPreferences()
 	_buttonDelete->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickDelete ), NULL, this );
 	_buttonAdd->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickAdd ), NULL, this );
 	_sdbSizerApply->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnApplyButtonClick ), NULL, this );
+	_sdbSizerOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnOkButtonClick ), NULL, this );
 	
 }
 
