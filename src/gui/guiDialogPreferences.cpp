@@ -57,7 +57,6 @@ GuiDialogPreferences::GuiDialogPreferences( wxWindow* parent, wxWindowID id, con
 	bSizer2->Fit( _panelGeneral );
 	_notebook->AddPage( _panelGeneral, _("General"), false );
 	_panelShortcut = new wxPanel( _notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	wxBoxSizer* bSizer4;
 	bSizer4 = new wxBoxSizer( wxVERTICAL );
 	
 	_propertyGridShortcut = new wxPropertyGrid(_panelShortcut);
@@ -86,10 +85,6 @@ GuiDialogPreferences::GuiDialogPreferences( wxWindow* parent, wxWindowID id, con
 	
 	bSizer1->Add( _notebook, 1, wxEXPAND | wxALL, 5 );
 	
-	wxStdDialogButtonSizer* _sdbSizer;
-	wxButton* _sdbSizerOK;
-	wxButton* _sdbSizerApply;
-	wxButton* _sdbSizerCancel;
 	_sdbSizer = new wxStdDialogButtonSizer();
 	_sdbSizerOK = new wxButton( this, wxID_OK );
 	_sdbSizer->AddButton( _sdbSizerOK );
@@ -106,15 +101,19 @@ GuiDialogPreferences::GuiDialogPreferences( wxWindow* parent, wxWindowID id, con
 	this->Centre( wxBOTH );
 	
 	// Connect Events
+	_propertyGridShortcut->Connect( wxEVT_UPDATE_UI, wxUpdateUIEventHandler( GuiDialogPreferences::OnUpdateUIPropertyGridShortcut ), NULL, this );
 	_buttonDelete->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickDelete ), NULL, this );
 	_buttonAdd->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickAdd ), NULL, this );
+	_sdbSizerApply->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnApplyButtonClick ), NULL, this );
 }
 
 GuiDialogPreferences::~GuiDialogPreferences()
 {
 	// Disconnect Events
+	_propertyGridShortcut->Disconnect( wxEVT_UPDATE_UI, wxUpdateUIEventHandler( GuiDialogPreferences::OnUpdateUIPropertyGridShortcut ), NULL, this );
 	_buttonDelete->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickDelete ), NULL, this );
 	_buttonAdd->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickAdd ), NULL, this );
+	_sdbSizerApply->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnApplyButtonClick ), NULL, this );
 	
 }
 

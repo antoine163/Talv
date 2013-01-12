@@ -296,7 +296,7 @@ void Shortcut::OnIdle(wxIdleEvent& event)
 	}
 	//Sinon on attend un peur pour éviter de prends trop de temps cpu.
 	else
-		usleep(10);
+		usleep(10000);
 	#elif defined(__WXMSW__)
 	//Si un événement est présent
 	if(GetMessage(&_msgEvent, NULL, 0, 0) != 0)

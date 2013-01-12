@@ -21,7 +21,6 @@ class Action
 	
 	private:
 		wxString _name;
-
 };
 
 class ActTranslation : public Action

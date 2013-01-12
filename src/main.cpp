@@ -96,9 +96,8 @@ void App::OnPreferences(wxCommandEvent&)
 		isRun = true;
 		
 		//Création est affcichage du fialog
-		DialogPreferences *dlg = new DialogPreferences(_shortcutAction);
-		dlg->ShowModal();
-		dlg->Destroy();
+		DialogPreferences dlg(_shortcutAction);
+		dlg.ShowModal();
 		
 		//Chargement de le config avec le nouveau fichier
 		loadAndSetupConfig();
@@ -120,7 +119,7 @@ void App::OnAbout(wxCommandEvent&)
 		info.SetVersion(PROJECT_VERSION);
 		
 		wxString msg;
-		msg << _("This software using google translate for translate a word or sentence from your clipboard.");
+		msg << _("This software using google translate to translate a word or sentence from your clipboard.");
 		msg << _("\n\nBuild on ");
 		#if defined(__UNIX__)
 		msg << _("Unix ");
@@ -135,7 +134,7 @@ void App::OnAbout(wxCommandEvent&)
 		msg << _("Date : ") << __DATE__;
 		
 		info.SetDescription(msg);
-		info.SetCopyright("(C) 2012");
+		info.SetCopyright("(C) 2012-1013");
 		info.SetWebSite("http://antoine163.github.com/flydocs/");
 		info.AddDeveloper("Maleyrie Antoine <antoine.maleyrie@gmail.com>");
 		info.AddDocWriter("Maleyrie Antoine <antoine.maleyrie@gmail.com>");

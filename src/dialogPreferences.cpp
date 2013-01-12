@@ -10,7 +10,8 @@
 //! Class DialogPreferences
 //! ****************************************************************************
 
-DialogPreferences::DialogPreferences(std::map<ShortcutKey, Action*> const& shortcutAction) : GuiDialogPreferences(nullptr)
+DialogPreferences::DialogPreferences(std::map<ShortcutKey, Action*> const& shortcutAction)
+: GuiDialogPreferences(nullptr), _firstUpdate(true)
 {	
 	//Liste des langues
 	_lang["af"] = _("Afrikaans");
@@ -80,28 +81,25 @@ DialogPreferences::DialogPreferences(std::map<ShortcutKey, Action*> const& short
 	_lang["yi"] = _("Yiddish");
 	
 	//Chois des actions
-	wxPGChoices actChs;
-	actChs.Add(_("Translation"));
+	_actChs.Add(_("Translation"));
 	#if defined(__USE_TTS__)
-	actChs.Add(_("Say"));
+	_actChs.Add(_("Say"));
 	#endif
 	
 	//Chois des langues
-	wxPGChoices lanChs;
 	for(auto &it: _lang)
-		lanChs.Add(it.second);
+		_lanChs.Add(it.second);
     
     //Magnifier 
     _staticTextSartup->SetLabelMarkup("<b>"+_("Option")+"</b>");
 	_staticTextShutdown->SetLabelMarkup("<b>"+_("Shutdown this application")+"</b>");
-	
     
     //Remplissage des ligne avec les raccourcis connue
 	for(auto &it: shortcutAction)
 	{
 		//Obtenir le raccourci en string et l'ajouter au PropertyGrid.
 		wxString stringShortcut = ShortcutKey::shortcutKeyToString(it.first);
-		wxPGProperty* actProp = _propertyGridShortcut->Append(new wxEnumProperty(stringShortcut, wxPG_LABEL, actChs));
+		wxPGProperty* actProp = _propertyGridShortcut->Append(new wxEnumProperty(stringShortcut, wxPG_LABEL, _actChs));
 		
 		//Action du raccourcit
 		Action const& action = *it.second;
@@ -110,12 +108,12 @@ DialogPreferences::DialogPreferences(std::map<ShortcutKey, Action*> const& short
 		{
 			ActTranslation const& actTranslation = static_cast<ActTranslation const&>(action);
 			
-			//Ajouter les paramétré dans la PropertyGrid.
+			//Ajouter les paramètre dans la PropertyGrid.
 			actProp->SetValueFromString(_("Translation"));
-			wxPGProperty* srcLanProp = new wxEnumProperty(_("Source language"), wxPG_LABEL, lanChs);
+			wxPGProperty* srcLanProp = new wxEnumProperty(_("Source language"), wxPG_LABEL, _lanChs);
 			srcLanProp->SetValueFromString(_lang[actTranslation.getLanguageScr()]);
 			_propertyGridShortcut->AppendIn(actProp, srcLanProp);
-			wxPGProperty* destLanProp = new wxEnumProperty(_("to"), wxPG_LABEL, lanChs);
+			wxPGProperty* destLanProp = new wxEnumProperty(_("to"), wxPG_LABEL, _lanChs);
 			destLanProp->SetValueFromString(_lang[actTranslation.getLanguageTo()]);
 			_propertyGridShortcut->AppendIn(actProp, destLanProp);
 		}
@@ -124,9 +122,9 @@ DialogPreferences::DialogPreferences(std::map<ShortcutKey, Action*> const& short
 		{
 			ActSay const& actSay = static_cast<ActSay const&>(action);
 			
-			//Ajouter les paramétré dans la PropertyGrid.
+			//Ajouter les paramètre dans la PropertyGrid.
 			actProp->SetValueFromString(_("Say"));
-			wxPGProperty* lanProp = new wxEnumProperty(_("Language"), wxPG_LABEL, lanChs);
+			wxPGProperty* lanProp = new wxEnumProperty(_("Language"), wxPG_LABEL, _lanChs);
 			lanProp->SetValueFromString(_lang[actSay.getLanguage()]);
 			_propertyGridShortcut->AppendIn(actProp, lanProp);
 		}
@@ -139,6 +137,7 @@ DialogPreferences::DialogPreferences(std::map<ShortcutKey, Action*> const& short
 	//Événement
 	Bind(wxEVT_PG_SELECTED, &DialogPreferences::OnSelected, this);
 	Bind(wxEVT_PG_DOUBLE_CLICK, &DialogPreferences::OnDoubleClick, this);
+	Bind(wxEVT_PG_CHANGED, &DialogPreferences::OnChanged, this);
 }
 
 DialogPreferences::~DialogPreferences()
@@ -154,6 +153,8 @@ void DialogPreferences::OnButtonClickDelete(wxCommandEvent&)
 		//Suppression de la wxPGProperty
 		wxPGProperty* slectProp = _propertyGridShortcut->GetSelectedProperty();
 		_propertyGridShortcut->DeleteProperty(slectProp);
+		
+		_buttonDelete->Enable(false);
 	}
 }
 
@@ -165,7 +166,6 @@ void DialogPreferences::OnButtonClickAdd(wxCommandEvent&)
 	{
 		//Chois des actions
 		wxPGChoices actChs;
-		actChs.Add("");
 		actChs.Add(_("Translation"));
 		#if defined(__USE_TTS__)
 		actChs.Add(_("Say"));
@@ -179,7 +179,7 @@ void DialogPreferences::OnButtonClickAdd(wxCommandEvent&)
 		{
 			_propertyGridShortcut->SelectProperty(prop);
 
-			wxMessageDialog dlg(this, _("This shortcut already exist?"),  wxMessageBoxCaptionStr, wxOK|wxCENTRE|wxICON_INFORMATION);
+			wxMessageDialog dlg(this, _("This shortcut already exist !"),  wxMessageBoxCaptionStr, wxOK|wxCENTRE|wxICON_INFORMATION);
 			dlg.ShowModal();
 		}
 		//Création d'un nouveau wxPGProperty
@@ -227,6 +227,59 @@ void DialogPreferences::OnDoubleClick(wxPropertyGridEvent& event)
 		if(dlg.ShowModal() == wxID_OK)
 			slectProp->SetLabel(dlg.GetShortcut());
 	}
+}
+
+void DialogPreferences::OnChanged(wxPropertyGridEvent& event)
+{	
+	//Obtenir le wxPGProperty sélectionner
+	wxPGProperty* slectProp = event.GetProperty();
+	
+	if(slectProp != nullptr)
+	{	
+		wxString displayedString = slectProp->GetDisplayedString();
+			
+		//Quelle action ?
+		if(displayedString == _("Translation"))
+		{
+			//Ranplaser le raccourci (paramètre) au PropertyGrid.
+			wxPGProperty* actProp = new wxEnumProperty(slectProp->GetLabel(), wxPG_LABEL, _actChs);
+			actProp->SetValueFromString(displayedString);
+			_propertyGridShortcut->ReplaceProperty(slectProp, actProp);
+		
+			//Ajouter les paramètre dans la PropertyGrid.
+			wxPGProperty* srcLanProp = new wxEnumProperty(_("Source language"), wxPG_LABEL, _lanChs);
+			_propertyGridShortcut->AppendIn(actProp, srcLanProp);
+			wxPGProperty* destLanProp = new wxEnumProperty(_("to"), wxPG_LABEL, _lanChs);
+			_propertyGridShortcut->AppendIn(actProp, destLanProp);
+		}
+		#if defined(__USE_TTS__)
+		else if(displayedString == _("Say"))
+		{
+			//Ranplaser le raccourci (paramètre) au PropertyGrid.
+			wxPGProperty* actProp = new wxEnumProperty(slectProp->GetLabel(), wxPG_LABEL, _actChs);
+			actProp->SetValueFromString(displayedString);
+			_propertyGridShortcut->ReplaceProperty(slectProp, actProp);
+		
+			//Ajouter les paramètre dans la PropertyGrid.
+			wxPGProperty* lanProp = new wxEnumProperty(_("Language"), wxPG_LABEL, _lanChs);
+			_propertyGridShortcut->AppendIn(actProp, lanProp);
+		}
+		#endif
+	}
+}
+
+void DialogPreferences::OnApplyButtonClick(wxCommandEvent&)
+{	
+}
+
+void DialogPreferences::OnUpdateUIPropertyGridShortcut(wxUpdateUIEvent& event)
+{
+	if(_firstUpdate)
+	{
+		_propertyGridShortcut->SetSplitterPosition(_propertyGridShortcut->GetSize().GetWidth()/2, 0);
+		_firstUpdate = false;
+	}
+	event.Skip();
 }
 
 //! ****************************************************************************

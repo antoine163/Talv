@@ -46,13 +46,20 @@ class GuiDialogPreferences : public wxDialog
 		wxStaticText* _staticTextShutdown;
 		wxToggleButton* _toggleBtnTurnOff;
 		wxPanel* _panelShortcut;
+		wxBoxSizer* bSizer4;
 		wxPropertyGrid* _propertyGridShortcut;
 		wxButton* _buttonDelete;
 		wxButton* _buttonAdd;
+		wxStdDialogButtonSizer* _sdbSizer;
+		wxButton* _sdbSizerOK;
+		wxButton* _sdbSizerApply;
+		wxButton* _sdbSizerCancel;
 		
 		// Virtual event handlers, overide them in your derived class
+		virtual void OnUpdateUIPropertyGridShortcut( wxUpdateUIEvent& event ) { event.Skip(); }
 		virtual void OnButtonClickDelete( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnButtonClickAdd( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnApplyButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:

@@ -21,9 +21,18 @@ class DialogPreferences : public GuiDialogPreferences
 		
 		void OnSelected(wxPropertyGridEvent& event);
 		void OnDoubleClick(wxPropertyGridEvent& event);
+		void OnChanged(wxPropertyGridEvent& event);
+		
+		void OnApplyButtonClick(wxCommandEvent&);
+		void OnUpdateUIPropertyGridShortcut(wxUpdateUIEvent& event);
 		
 	protected:
 		std::map<wxString, wxString> _lang;
+		
+		wxPGChoices _actChs;
+		wxPGChoices _lanChs;
+		
+		bool _firstUpdate;
 };
 
 enum RawKeyCodeModifier_e
