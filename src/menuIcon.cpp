@@ -6,6 +6,9 @@
 #include <wx/icon.h>
 #include <wx/artprov.h>
 
+
+#include "../ft.xpm"
+
 MenuIcon::MenuIcon()
 {
 	//Menu
@@ -27,7 +30,7 @@ MenuIcon::MenuIcon()
 	
 	//Task Icon
 	_taskBarIcon = new wxTaskBarIcon;
-	_taskBarIcon->SetIcon(wxIcon("ft.png", wxBITMAP_TYPE_PNG), "flying translation");
+	_taskBarIcon->SetIcon(wxIcon(ft_xpm), "flying translation");
 	
 	//bind les événement
 	_taskBarIcon->Bind(wxEVT_TASKBAR_LEFT_DCLICK, &MenuIcon::OnShow, this);
