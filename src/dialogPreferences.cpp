@@ -408,11 +408,13 @@ DialogChoiceShortcut::~DialogChoiceShortcut()
 }
 
 void DialogChoiceShortcut::OnKeyUp(wxKeyEvent& event)
-{
-	std::cout << "OnKeyUp" << std::endl;
-	
+{	
 	//Mise à jour des touches modifier
+	#if defined(__UNIX__)
 	switch(event.GetRawKeyFlags())
+	#elif defined(__WXMSW__)
+	switch(event.GetRawKeyCode())
+	#endif
 	{
 		case RAW_KEY_CODE_MODIFIER_CONTROL:
 		_keyCtrlIsPressed = false;
@@ -436,9 +438,12 @@ void DialogChoiceShortcut::OnKeyUp(wxKeyEvent& event)
 
 void DialogChoiceShortcut::OnKeyDown(wxKeyEvent& event)
 {	
-	std::cout << "OnKeyDown" << std::endl;
 	//Mise a jour des touches modifier
+	#if defined(__UNIX__)
 	switch(event.GetRawKeyFlags())
+	#elif defined(__WXMSW__)
+	switch(event.GetRawKeyCode())
+	#endif
 	{
 		case RAW_KEY_CODE_MODIFIER_CONTROL:
 		_keyCtrlIsPressed = true;
