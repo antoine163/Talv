@@ -355,7 +355,7 @@ void DialogPreferences::soveInFileConfig()const
 	
 }
 
-wxString const& DialogPreferences::longLangToShortLang(wxString const& longLang)const
+wxString DialogPreferences::longLangToShortLang(wxString const& longLang)const
 {
 	for(auto &it: _lang)
 	{
@@ -407,9 +407,10 @@ DialogChoiceShortcut::~DialogChoiceShortcut()
 {
 }
 
-	
 void DialogChoiceShortcut::OnKeyUp(wxKeyEvent& event)
 {
+	std::cout << "OnKeyUp" << std::endl;
+	
 	//Mise à jour des touches modifier
 	switch(event.GetRawKeyFlags())
 	{
@@ -435,6 +436,7 @@ void DialogChoiceShortcut::OnKeyUp(wxKeyEvent& event)
 
 void DialogChoiceShortcut::OnKeyDown(wxKeyEvent& event)
 {	
+	std::cout << "OnKeyDown" << std::endl;
 	//Mise a jour des touches modifier
 	switch(event.GetRawKeyFlags())
 	{

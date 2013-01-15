@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Jan 10 2013)
+// C++ code generated with wxFormBuilder (version Sep  8 2010)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -121,7 +121,7 @@ GuiDialogPreferences::~GuiDialogPreferences()
 
 GuiDialogChoiceShortcut::GuiDialogChoiceShortcut( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
 {
-	this->SetSizeHints( wxSize( 350,80 ), wxDefaultSize );
+	this->SetSizeHints( wxSize( 350,-1 ), wxDefaultSize );
 	
 	wxBoxSizer* bSizer6;
 	bSizer6 = new wxBoxSizer( wxVERTICAL );

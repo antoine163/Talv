@@ -33,7 +33,7 @@ class DialogPreferences : public GuiDialogPreferences
 		
 	protected:
 		//ex:fr -> French
-		wxString const& longLangToShortLang(wxString const& longLang)const;
+		wxString longLangToShortLang(wxString const& longLang)const;
 	
 		std::map<wxString, wxString> _lang;
 		
@@ -52,10 +52,10 @@ enum RawKeyCodeModifier_e
 	RAW_KEY_CODE_MODIFIER_SHIFT 	= 50,
 	RAW_KEY_CODE_MODIFIER_WIN 		= 133,
 	#elif defined(__WXMSW__)
-	RAW_KEY_CODE_MODIFIER_CONTROL 	= ,
-	RAW_KEY_CODE_MODIFIER_ALT 		= ,
-	RAW_KEY_CODE_MODIFIER_SHIFT 	= ,
-	RAW_KEY_CODE_MODIFIER_WIN 		= ,
+	RAW_KEY_CODE_MODIFIER_CONTROL 	= 1900545,
+	RAW_KEY_CODE_MODIFIER_ALT 		= 540540929,
+	RAW_KEY_CODE_MODIFIER_SHIFT 	= 2752513,
+	RAW_KEY_CODE_MODIFIER_WIN 		= 22740993,
 	#endif
 };
 	

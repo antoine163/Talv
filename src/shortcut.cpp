@@ -73,7 +73,7 @@ wxString ShortcutKey::shortcutKeyToString(ShortcutKey const& shortcut)
 	// ShortcutKey valide ?
 	if(!(shortcut._modifiers&KeyModifier::ALT ||
 		shortcut._modifiers&KeyModifier::CONTROL ||
-		#if defined(__WXMSW__)
+		#if defined(__UNIX__)
 		shortcut._modifiers&KeyModifier::ALTGR ||
 		#endif
 		shortcut._modifiers&KeyModifier::SHIFT ||
@@ -240,7 +240,7 @@ Shortcut::Shortcut(wxApp *owner) : _owner(owner), _enable(true)
     _root = XDefaultRootWindow(_display);
     #endif
     
-    _owner->Bind(wxEVT_IDLE, &Shortcut::OnIdle, this);
+    //_owner->Bind(wxEVT_IDLE, &Shortcut::OnIdle, this);
 }
 
 Shortcut::~Shortcut()
@@ -249,7 +249,7 @@ Shortcut::~Shortcut()
     XCloseDisplay(_display);
     #endif
 
-	_owner->Unbind(wxEVT_IDLE, &Shortcut::OnIdle, this);
+	//_owner->Unbind(wxEVT_IDLE, &Shortcut::OnIdle, this);
 	
 	removeAll();
 }
@@ -272,7 +272,7 @@ int Shortcut::creat(ShortcutKey const& shortcutKey)
     
     return id;
 }
-
+#include <iostream>
 void Shortcut::OnIdle(wxIdleEvent& event)
 {
 	#if defined(__UNIX__)	
@@ -299,27 +299,30 @@ void Shortcut::OnIdle(wxIdleEvent& event)
 		usleep(10000);
 	#elif defined(__WXMSW__)
 	//Si un événement est présent
-	if(GetMessage(&_msgEvent, NULL, 0, 0) != 0)
-	{
-		//On le récupère
-		if (_msgEvent.message == WM_HOTKEY)
-		{
-			//Recherche du modifiers et du charKey
-			for(auto &it: _bind)
-			{
-				//Compare des id
-				if(it.second == (int)_msgEvent.wParam)
-				{
-					//Envoi de l'événement
-					ShortcutEvent *event = new ShortcutEvent(it.second, EVT_SHORTCUT, it.first);
-					wxQueueEvent(_owner, event);
-					break;
-				}
-			}
-		}
-	}
+	//if(GetMessage(&_msgEvent, NULL, 0, 0) != 0)
+	//if(PeekMessage(&_msgEvent, NULL, 0, 0, PM_REMOVE) != 0)
+	//{
+		////On le récupère
+		//if (_msgEvent.message == WM_HOTKEY)
+		//{
+			////Recherche du modifiers et du charKey
+			//for(auto &it: _bind)
+			//{
+				////Compare des id
+				//if(it.second == (int)_msgEvent.wParam)
+				//{
+					////Envoi de l'événement
+					//ShortcutEvent *event = new ShortcutEvent(it.second, EVT_SHORTCUT, it.first);
+					//wxQueueEvent(_owner, event);
+					//break;
+				//}
+			//}
+		//}
+	//}
+	//else
+		//Sleep(10);
 	#endif
-	
+	std::cout << "test" << std::endl;
 	//Appeler en continue.
 	event.RequestMore(); 
 }
@@ -338,7 +341,7 @@ void Shortcut::registerShortcut(ShortcutKey const& shortcutKey)
 	wxString charKeyCapital(charKey);
 	charKeyCapital.MakeCapitalized();
 	//Enregistre le raccourci
-	RegisterHotKey(nullptr, id, (UINT)shortcutKey.getModifiers(), *charKeyCapital.fn_str());
+	RegisterHotKey(nullptr, getId(shortcutKey), (UINT)shortcutKey.getModifiers(), *charKeyCapital.fn_str());
 	#endif
 }
 

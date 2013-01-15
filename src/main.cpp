@@ -34,6 +34,7 @@ bool App::OnInit()
 	//Init général
 	wxInitAllImageHandlers();
 	SetExitOnFrameDelete(false);
+	_menuIcon = nullptr;
 
 	//Création du gestionnaire de raccourci clavier
 	_shortcut = new Shortcut(this);	

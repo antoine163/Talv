@@ -27,7 +27,7 @@ CXXFLAGSR=-s -O2 `wx-config-2.9 --debug=no`
 #flage en plus pour la compilation en debug.
 CXXFLAGSD=-g
 
-#Compilation avec tts (yes par F)
+#Compilation avec tts (yes par défaut)
 TTS=yes
 ifeq ($(TTS),yes)
 CXXFLAGTTS=-D__USE_TTS__
@@ -50,7 +50,6 @@ OBJS=$(patsubst %.cpp,$(OBJDIR)/%.o, $(SRC))
 #Dossier à inclure
 UINCDIRS = src
 UINCDIR = $(patsubst %,-I%, $(UINCDIRS))
-
 
 #Construire le projet en release
 all:release
