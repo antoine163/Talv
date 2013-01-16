@@ -5,8 +5,6 @@
 #include <wx/msgdlg.h>
 #include <wx/fileconf.h>
 
-#include <iostream>
-
 //! ****************************************************************************
 //! Class DialogPreferences
 //! ****************************************************************************
@@ -351,8 +349,6 @@ void DialogPreferences::soveInFileConfig()const
 		it.Next();
 		i++;
 	}
-	
-	
 }
 
 wxString DialogPreferences::longLangToShortLang(wxString const& longLang)const

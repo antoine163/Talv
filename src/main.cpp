@@ -230,6 +230,7 @@ void App::setupShortcut(wxFileConfig const& fileConfig)
 		}
 		#endif
 	}
+	_shortcut->enable();
 }
 
 void App::uninstallShortcut()

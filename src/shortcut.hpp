@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Maleyrie Antoine
-//! \version 0.3
+//! \version 1.0.0
 //! \date 13/12/12
 //!
 //! ****************************************************************************
@@ -17,6 +17,8 @@
 #define SHORTCUT_H
 
 #include <wx/app.h>
+#include <wx/thread.h>
+
 #include <map>
 
 #if defined(__UNIX__)
@@ -140,6 +142,42 @@ class ShortcutEvent: public wxEvent
 //! \brief Déclaration de l'événement EVT_SHORTCUT.
 wxDECLARE_EVENT(EVT_SHORTCUT, ShortcutEvent);
 
+class ShortcutThread : public wxThread
+{
+	public:
+		//! \brief Constructeur.
+		//! \param owner est un wxEvtHandler qui est utiliser pour générer les événements.
+		ShortcutThread(wxApp *owner, std::map<ShortcutKey, int> & bind);
+		
+		//! \brief Destructeur.
+		~ShortcutThread();
+		
+		void halt();
+		
+		//! \brief Obtenir l'id d'un raccourci.
+		//! \param shortcutKey Le raccourci.
+		//! \return id
+		int getId(ShortcutKey const& shortcutKey);
+		
+	protected:
+		wxThread::ExitCode Entry();
+    
+	private:
+		//! \brief utiliser pour générer les événements.
+		wxEvtHandler *_owner; 
+		
+		//! \brief Table de lien entre les raccourci est les id.
+		std::map<ShortcutKey, int> & _bind;
+
+		
+		#if defined(__UNIX__)
+		Display *_display;
+		Window _root;
+		XEvent _event;
+		#elif defined(__WXMSW__)
+		MSG _msgEvent;
+		#endif
+};
 
 //! \brief Permet de générais des événements à partir de raccourcies globaux.
 //!
@@ -219,39 +257,17 @@ class Shortcut
 		
 		//! \brief Active ou désactive les raccourcis.
 		//! \param vale true pour activer et false pour désactiver.
-		void enable(bool vale);
-		
-	protected:
-		//! \brief Méthode traitent les événement lier au raccourci 
-		void OnIdle(wxIdleEvent& event);
-
-		//! \brief enregistre le raccourci clavier auprès du système.
-		//! \param shortcutKey Le raccourci.
-		void registerShortcut(ShortcutKey const& shortcutKey);
-		
-		//! \brief supprime le raccourci clavier auprès du système.
-		//! \param shortcutKey Le raccourci.
-		void unRegisterShortcut(ShortcutKey const& shortcutKey);
+		void enable(bool vale = true);
 		
 	private:
-		//! \brief utiliser pour générer les événements.
-		wxEvtHandler *_owner; 
-		
 		//! \brief Table de lien entre les raccourci est les id.
 		std::map<ShortcutKey, int> _bind;
+		
+		ShortcutThread* _thread;
 		
 		//! \brief Raccourci activer ou pas.
 		//! \see enable()
 		bool _enable;
-
-		
-		#if defined(__UNIX__)
-		Display *_display;
-		Window _root;
-		XEvent _event;
-		#elif defined(__WXMSW__)
-		MSG _msgEvent;
-		#endif
 };
 
 #endif //SHORTCUT_H
