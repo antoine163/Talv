@@ -147,7 +147,7 @@ class ShortcutThread : public wxThread
 	public:
 		//! \brief Constructeur.
 		//! \param owner est un wxEvtHandler qui est utiliser pour générer les événements.
-		ShortcutThread(wxApp *owner, std::map<ShortcutKey, int> & bind);
+		ShortcutThread(wxEvtHandler *owner, std::map<ShortcutKey, int> & bind);
 		
 		//! \brief Destructeur.
 		~ShortcutThread();
@@ -218,7 +218,7 @@ class Shortcut
 	public:
 		//! \brief Constructeur.
 		//! \param owner est un wxEvtHandler qui est utiliser pour générer les événements.
-		Shortcut(wxApp *owner);
+		Shortcut(wxEvtHandler *owner);
 		
 		//! \brief Destructeur.
 		~Shortcut();
@@ -256,14 +256,17 @@ class Shortcut
 		int getId(ShortcutKey const& shortcutKey);
 		
 		//! \brief Active ou désactive les raccourcis.
-		//! \param vale true pour activer et false pour désactiver.
-		void enable(bool vale = true);
+		//! \param val true pour activer et false pour désactiver.
+		void enable(bool val = true);
 		
 	private:
 		//! \brief Table de lien entre les raccourci est les id.
 		std::map<ShortcutKey, int> _bind;
 		
 		ShortcutThread* _thread;
+		
+		//! \brief utiliser pour générer les événements.
+		wxEvtHandler *_owner;
 		
 		//! \brief Raccourci activer ou pas.
 		//! \see enable()
