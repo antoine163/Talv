@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Sep  8 2010)
+// C++ code generated with wxFormBuilder (version Jan 10 2013)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -149,10 +149,11 @@ GuiDialogChoiceShortcut::GuiDialogChoiceShortcut( wxWindow* parent, wxWindowID i
 	_sdbSizerCancel = new wxButton( this, wxID_CANCEL );
 	_sdbSizer->AddButton( _sdbSizerCancel );
 	_sdbSizer->Realize();
-	bSizer6->Add( _sdbSizer, 0, wxEXPAND, 5 );
+	bSizer6->Add( _sdbSizer, 0, wxEXPAND|wxBOTTOM, 5 );
 	
 	this->SetSizer( bSizer6 );
 	this->Layout();
+	bSizer6->Fit( this );
 	
 	this->Centre( wxBOTH );
 	

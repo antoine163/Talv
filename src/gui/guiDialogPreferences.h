@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Sep  8 2010)
+// C++ code generated with wxFormBuilder (version Jan 10 2013)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -90,7 +90,7 @@ class GuiDialogChoiceShortcut : public wxDialog
 	
 	public:
 		
-		GuiDialogChoiceShortcut( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Choice your shortcut"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 350,-1 ), long style = wxDEFAULT_DIALOG_STYLE );
+		GuiDialogChoiceShortcut( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Choice your shortcut"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE );
 		~GuiDialogChoiceShortcut();
 	
 };

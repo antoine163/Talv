@@ -254,7 +254,22 @@ void ShortcutThread::halt()
 {
 	if(IsAlive())
 	{
+		#if defined(__UNIX__)
+		//Supprimer des raccourcis
+		for(auto &it: _bind)	
+		{
+			//Convertie charKey vers KeyCode
+			char charKey[2] = {it.first.getCharKey(), '\0'};
+			KeyCode key = XKeysymToKeycode(_display, XStringToKeysym(charKey));
+			//ungrab le raccourci
+			XUngrabKey(_display, key, (unsigned int)it.first.getModifiers(), _root);
+		}
+		XEvent exit;
+		exit.type = 0;
+		XPutBackEvent(_display, &exit);
+		#elif defined(__WXMSW__)
 		PostThreadMessage(GetId(), WM_QUIT, 0, 0);
+		#endif
 		while(IsAlive());
 	}
 }
@@ -279,20 +294,25 @@ wxThread::ExitCode ShortcutThread::Entry()
 		#endif
 	}
 	
-	#if defined(__UNIX__)	
-	//Si un événement est présent on le récupère
-	XNextEvent(_display, &_event);
-	if(_event.type == KeyPress)
-	{ 
-		//Convertie le KeyCode en char
-		const char charKey = *(XKeysymToString(XkbKeycodeToKeysym(_display, _event.xkey.keycode, 0, 0)));
-		//mise en forme du raccourci
-		ShortcutKey shortcutKey((KeyModifier)_event.xkey.state, charKey);
-		//Recherche de l'id
-		int id = getId(shortcutKey);
-		//Envoi de l'événement
-		ShortcutEvent *event = new ShortcutEvent(id, EVT_SHORTCUT, shortcutKey);
-		wxQueueEvent(_owner, event);
+	#if defined(__UNIX__)
+	while(1)
+	{
+		//Si un événement est présent on le récupère
+		XNextEvent(_display, &_event);
+		if(_event.type == KeyPress)
+		{ 
+			//Convertie le KeyCode en char
+			const char charKey = *(XKeysymToString(XkbKeycodeToKeysym(_display, _event.xkey.keycode, 0, 0)));
+			//mise en forme du raccourci
+			ShortcutKey shortcutKey((KeyModifier)_event.xkey.state, charKey);
+			//Recherche de l'id
+			int id = getId(shortcutKey);
+			//Envoi de l'événement
+			ShortcutEvent *event = new ShortcutEvent(id, EVT_SHORTCUT, shortcutKey);
+			wxQueueEvent(_owner, event);
+		}
+		else if(_event.type == 0)
+			return (wxThread::ExitCode)0;
 	}
 	#elif defined(__WXMSW__)
 	//Si un événement est présent
@@ -315,7 +335,10 @@ wxThread::ExitCode ShortcutThread::Entry()
 			}
 		}
 	}
-
+	#endif
+	
+		
+	#if defined(__WXMSW__)
 	//Supprimer des raccourcis
 	for(auto &it: _bind)	
 		UnregisterHotKey(nullptr, getId(it.first));
