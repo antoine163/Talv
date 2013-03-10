@@ -9,5 +9,5 @@
 @rem ############################################################################
 
 @echo build in release ...
-mingw32-make.exe -f Makefile.win release TTS=no
+mingw32-make.exe -f Makefile release
 @pause

@@ -9,5 +9,5 @@
 @rem ############################################################################
 
 @echo run ...
-mingw32-make.exe -f Makefile.win run
+mingw32-make.exe -f Makefile run
 @pause

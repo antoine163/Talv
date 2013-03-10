@@ -8,85 +8,117 @@
 #
 ################################################################################
 
-##Compilateur
-#CXX=g++
-##option de compilation
-#CXXFLAGSO=-W -Wall -Wextra -std=gnu++11 -mthreads\
-	#-IC:\wxWidgets-2.9.4\include\
-	#-IC:\wxWidgets-2.9.4\lib\gcc_dll\mswu\
-	#-D__GNUWIN32__ -D__WXMSW__ -DWXUSINGDLL -DwxUSE_UNICODE\
-	#-DPROJECT_NAME=\"flydocs\" -DPROJECT_VERSION=\"0.1\"
-##Option de linkage
-#LDFLAGSO= -mthreads -LC:\wxWidgets-2.9.4\lib\gcc_dll\
-#-lwxbase29u -lwxmsw29u_core -lwxmsw29u_adv -lwxbase29u_net -lwxmsw29u_propgrid
+########################################################################
+# Non de l'exécutable
+########################################################################
+EXEC_NAME=$(PROJECT_NAME).exe
 
-##Non de l'exécutable.
-#EXEC_NAME=..\flydocs.exe
 
-##Endroit où stoker les fichiers binaire.
-#OBJDIR=obj
+########################################################################
+# Flags de compilation pour les libs
+########################################################################
+# Flags pour wxWidgets
+CXX_FLAGS+=-mthreads
+CXX_FLAGS+=-IC:\wxWidgets-2.9.4\include\
+CXX_FLAGS+=-IC:\wxWidgets-2.9.4\lib\gcc_dll\mswu\
+CXX_FLAGS+=-D__GNUWIN32__ -D__WXMSW__ -DWXUSINGDLL -DwxUSE_UNICODE\
 
-##flage en plus pour la compilation en release.
-#CXXFLAGSR=-O2
-##flage en plus pour la compilation en debug.
-#CXXFLAGSD=-g
 
-##Compilation avec tts (yes par défaut)
-#TTS=yes
-#ifeq ($(TTS),yes)
-#CXXFLAGTTS=-D__USE_TTS__
-#SRCTTS=../src/tts.cpp
-#CXXFLAGSTTS=
-#LDFLAGSTTS=
-#endif
+########################################################################
+# Flags de linkage pour les libs
+########################################################################
+# Flags pour wxWidgets
+LD_FLAGS+=mthreads -LC:\wxWidgets-2.9.4\lib\gcc_dll\
+LD_FLAGS+=-lwxbase29u -lwxmsw29u_core -lwxmsw29u_adv -lwxbase29u_net
+LD_FLAGS+=-lwxmsw29u_propgrid
 
-##Liste des fichiers source C++
-#SRCO=	../src/shortcut.cpp\
-		#../src/action.cpp\
-		#../src/word.cpp\
-		#../src/menuIcon.cpp\
-		#../src/gui/guiDialogPreferences.cpp\
-		#../src/dialogPreferences.cpp\
-		#../src/main.cpp
-#SRC=$(SRCO) $(SRCTTS)
-#OBJS=$(patsubst ../%.cpp,$(OBJDIR)/%.o, $(SRC))
 
-##Dossier à inclure
-#UINCDIRS = ../src
-#UINCDIR = $(patsubst %,-I%, $(UINCDIRS))
+########################################################################
+# Define à ajouter.
+########################################################################
+# Non du projet
+DEFINE=PROJECT_NAME=\"$(PROJECT_NAME)\"
+# Numéro de version
+DEFINE+=PROJECT_VERSION=\"$(PROJECT_VERSION)\"
 
-##Construire le projet en release
-#all:release
 
-##Construire les options du projet pour la compilation en release
-#.PHONY: release
-#release:CXXFLAGS=$(CXXFLAGSO) $(CXXFLAGTTS) $(CXXFLAGSR) $(CXXFLAGSTTS)
-#release:LDFLAGS=$(LDFLAGSO) $(LDFLAGSTTS)
-#release:build
+########################################################################
+# Dossier pour les binaires.
+########################################################################
+OBJ_DIR = obj
 
-##Construire les options du projet pour la compilation en debug
-#.PHONY: debug
-#debug:CXXFLAGS=$(CXXFLAGSO) $(CXXFLAGTTS) $(CXXFLAGSD) $(CXXFLAGSTTS)
-#debug:LDFLAGS=$(LDFLAGSO) $(LDFLAGSTTS)
-#debug:build
 
-##Construction du projet
-#build: resource.o $(OBJS) 
-	#$(CXX) -o $(EXEC_NAME) $^ $(LDFLAGS)
+########################################################################
+# Liste des fichiers source C++.
+########################################################################
+SRC=../src/main.cpp	
+SRC+=../src/menuIcon.cpp
+
+
+########################################################################
+# Création de la liste des objets.
+########################################################################
+OBJS=$(patsubst ../%.cpp,$(OBJ_DIR)/%.o, $(SRC))
+
+
+########################################################################
+# Dossier a inclure.
+########################################################################
+DIR = ../include
+INCLUDE_DIRS = $(patsubst %,-I%, $(DIR))
+
+
+########################################################################
+# Par défaut la compilation release est active.
+########################################################################
+all:release
+
+
+########################################################################
+# Compilation en release.
+########################################################################
+.PHONY: release
+release: CXX_FLAGS+=$(CXX_FLAGS_RELESE)
+release: build
+
+
+########################################################################
+# Compilation en debug.
+########################################################################
+.PHONY: debug
+release: CXX_FLAGS+=$(CXX_FLAGS_DEBUG)
+release: build
+
+
+########################################################################
+# Linkage des sources.
+########################################################################
+build: resource.o $(OBJS)
+	$(CXX) -o $(EXEC_NAME) $^ $(LD_FLAGS)
 	
-#$(OBJDIR)/%.o: ../%.cpp	
-	#@-if not exist $(@D) md "$(@D)"
-	#$(CXX) -o $@ -c $<  $(UINCDIR) $(CXXFLAGS)
 	
-#resource.o:resource.rc
-	#windres -IC:\wxWidgets-2.9.4\include -o $@ -i $<
+########################################################################
+# Compilation des sources.
+########################################################################
+$(OBJ_DIR)/%.o: ../%.cpp
+	@-if not exist $(@D) md "$(@D)"
+	$(CXX) -o $@ -c $< $(INCLUDE_DIRS) $(CXX_FLAGS) $(DEFINES)
+	
+	
+########################################################################
+# Compilation des ressources.
+########################################################################
+resource.o:resource.rc
+	windres -IC:\wxWidgets-2.9.4\include -o $@ -i $<
+
 
 ########################################################################
 # Exécute le programme
 ########################################################################
 .PHONY: run
 run:
-	@cd .. && msw\$(EXEC_NAME)
+	@echo "run : $(EXEC_NAME)"
+	@$(EXEC_NAME)
 
 ########################################################################
 # Nettoyage du projet
@@ -96,7 +128,4 @@ clean:
 	@-if exist $(OBJDIR) rd $(OBJDIR) /s /q
 	@-if exist $(EXEC_NAME) del $(EXEC_NAME)
 	@-if exist resource.o del resource.o
-
-
-release:
-	@echo "good"
+	@echo "The project is clean."

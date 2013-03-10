@@ -9,5 +9,5 @@
 @rem ############################################################################
 
 @echo clean ...
-mingw32-make.exe -f Makefile.win clean
+mingw32-make.exe -f Makefile clean
 @pause

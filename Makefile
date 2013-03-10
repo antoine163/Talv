@@ -13,9 +13,9 @@
 # Paramètre généraux.
 ########################################################################
 #Non du projet
-PROJECT_NAME=\"flydocs\"
+PROJECT_NAME=flydocs
 #Numéro de version
-PROJECT_VERSION=\"1.0\"
+PROJECT_VERSION=1.0
 
 
 ########################################################################
