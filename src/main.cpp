@@ -1,4 +1,5 @@
 //30/11/12
+//version : 1.0
 
 #include "main.hpp"
 
@@ -8,55 +9,25 @@
 #include <wx/utils.h> 
 #include <wx/process.h>
 
-#if defined(__USE_TTS__)
-#include <gst/gst.h>
-#endif
-
-#if defined(__UNIX__)
-#include <libnotify/notify.h>
-#endif
-
-#include "dialogPreferences.hpp"
-
 
 IMPLEMENT_APP(App);
 
 bool App::OnInit()
 {  	
-	//Init des bibliothèques.
-	#if defined(__UNIX__)
-	notify_init(PROJECT_NAME);
-	#endif
-	#if defined(__USE_TTS__)
-	gst_init(NULL, NULL);
-	#endif
-	
 	//Init général
 	wxInitAllImageHandlers();
 	SetExitOnFrameDelete(false);
 	_menuIcon = nullptr;
-
-	//Création du gestionnaire de raccourci clavier
-	_shortcut = new Shortcut(this);	
 	
-	//Chargement de le config
-	loadAndSetupConfig();
+	creatMenuItem();
 
 	return true;
 }
 
 int App::OnExit()
 {	
-	#if defined(__UNIX__)
-	notify_uninit();
-	#endif
-	
-	//Suppression du menue
+	//Suppression du menu
 	deleteMenuItem();
-	
-	//supprime les raccourcis;
-	uninstallShortcut();
-	delete _shortcut;
 
 	return 0;
 }
@@ -90,34 +61,10 @@ void App::deleteMenuItem()
 
 void App::OnPreferences(wxCommandEvent&)
 {	
-	static bool isRun = false;
-	
-	if(!isRun)
-	{
-		isRun = true;
-		
-		_shortcut->enable(false);
-		
-		//Création est affcichage du fialog
-		DialogPreferences dlg(_shortcutAction);
-		dlg.ShowModal();
-		
-		//On vérifie si on doit quitter l'application ou pas
-		if(dlg.shutdown())
-			ExitMainLoop();
-		
-		_shortcut->enable(true);
-		
-		//Chargement de le config avec le nouveau fichier
-		loadAndSetupConfig();
-		
-		isRun = false;
-	}
 }
 
 void App::OnEnable(wxCommandEvent& event)
 {
-	_shortcut->enable(event.IsChecked());
 }
 
 void App::OnAbout(wxCommandEvent&)
@@ -154,99 +101,4 @@ void App::OnAbout(wxCommandEvent&)
 void App::OnExit(wxCommandEvent&)
 {		
 	ExitMainLoop();
-}
-
-void App::OnShortcut(ShortcutEvent& event)
-{
-	_shortcutAction[event.getShortcutKey()]->execute();
-}
-
-void App::loadAndSetupConfig()
-{
-	//Chargement de la config
-	wxFileConfig fileConfig(	PROJECT_NAME,
-								wxEmptyString,
-								wxGetUserHome()+"/."+PROJECT_NAME);
-	bool showMenu = true;
-	fileConfig.Read("show_menu", &showMenu);
-	
-	//Création du menu ou pas.
-	if(showMenu)
-		creatMenuItem();
-	else
-		deleteMenuItem();
-
-	//Désinstallation préalable des raccourcis
-	uninstallShortcut();
-	//Chargement des raccourci clavier
-	setupShortcut(fileConfig);
-}
-
-void App::setupShortcut(wxFileConfig const& fileConfig)
-{
-	wxString shortcutRaw;
-	unsigned int i = 1;
-	
-	while(fileConfig.Read(wxString("shortcut")<<i, &shortcutRaw))
-	{
-		i++;
-		
-		//Extraction du raccourci dans sa forme string
-		wxString actRaw;
-		wxString stringShortcut = shortcutRaw.BeforeFirst(' ', &actRaw);
-		
-		//Extraction de l'action
-		wxString actSettings;
-		wxString act = actRaw.BeforeFirst(' ', &actSettings);
-		
-		//Extraction des paramétrés de l'action
-		wxString setTwo;
-		wxString setOne = actSettings.BeforeFirst(' ', &setTwo);
-		
-		//Conversion du raccourci;
-		ShortcutKey shortcutKey(ShortcutKey::stringToShortcutKey(stringShortcut));
-		
-		//Association du raccourci à son actions
-		if(act == "tr")
-		{
-			//lien le raccourci à une action
-			ActTranslation *action = new ActTranslation(&_word, setOne, setTwo);
-			_shortcutAction[shortcutKey] = action;
-			
-			//Ajout et active le raccourci
-			int id = _shortcut->creat(shortcutKey);
-			Bind(EVT_SHORTCUT, &App::OnShortcut, this, id);
-		}
-		#if defined(__USE_TTS__)
-		else if(act == "ts")
-		{
-			//lien le raccourci à une action
-			ActSay *action = new ActSay(&_word, setOne);
-			_shortcutAction[shortcutKey] = action;
-			
-			//Ajout et active le raccourci
-			int id = _shortcut->creat(shortcutKey);
-			Bind(EVT_SHORTCUT, &App::OnShortcut, this, id);
-		}
-		#endif
-	}
-	_shortcut->enable();
-}
-
-void App::uninstallShortcut()
-{
-	//Unbind les événement lier au raccourci et supprime les actions.
-	for(auto &it: _shortcutAction)
-	{
-		int id = _shortcut->getId(it.first);
-		Unbind(EVT_SHORTCUT, &App::OnShortcut, this, id);
-			
-		delete it.second;
-	}
-	
-	//Supprime les Associations
-	_shortcutAction.clear();
-	
-	//Supprime touts les raccourcis
-	_shortcut->removeAll();
 }

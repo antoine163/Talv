@@ -1,17 +1,12 @@
 //12/12/12
+//version : 1.0
 
 #ifndef MAIN_H
 #define MAIN_H
 
 #include <wx/app.h>
-#include <wx/fileconf.h>
 
-#include <map>
-
-#include "shortcut.hpp"
 #include "menuIcon.hpp"
-#include "word.hpp"
-#include "action.hpp"
 
 class App : public wxApp
 {
@@ -28,22 +23,9 @@ class App : public wxApp
 		void OnEnable(wxCommandEvent& event);
 		void OnAbout(wxCommandEvent&);
 		void OnExit(wxCommandEvent&);
-		void OnShortcut(ShortcutEvent& event);
-		
-		//configuration
-		void loadAndSetupConfig();
-		
-		//Shortcut
-		void setupShortcut(wxFileConfig const& fileConfig);
-		void uninstallShortcut();
 	
 	private:
-		Shortcut *_shortcut;
 		MenuIcon *_menuIcon;
-		Word _word;
-		
-		//Association des raccourci à des actions
-		std::map<ShortcutKey, Action*> _shortcutAction;
 };
 
 DECLARE_APP(App);

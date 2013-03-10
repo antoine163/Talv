@@ -7,7 +7,7 @@
 #include <wx/artprov.h>
 
 
-#include "../ft.xpm"
+#include "../icons/ft.xpm"
 
 MenuIcon::MenuIcon()
 {
@@ -22,15 +22,15 @@ MenuIcon::MenuIcon()
 	_menuTaskBarIcon->Append(_menuItemEnable);
 	_menuItemEnable->Check(true);
 	
-	_menuItemAbout = new wxMenuItem(_menuTaskBarIcon, wxID_ABOUT, _("About"), _("About Flydocs"), wxITEM_NORMAL);
+	_menuItemAbout = new wxMenuItem(_menuTaskBarIcon, wxID_ABOUT, _("About"), _("About")+" "+PROJECT_NAME, wxITEM_NORMAL);
 	_menuTaskBarIcon->Append(_menuItemAbout);
 	
-	_menuItemExit = new wxMenuItem(_menuTaskBarIcon, wxID_EXIT, _("Exit"), _("Exit Flydocs"), wxITEM_NORMAL);
+	_menuItemExit = new wxMenuItem(_menuTaskBarIcon, wxID_EXIT, _("Exit"), _("Exit")+" "+PROJECT_NAME, wxITEM_NORMAL);
 	_menuTaskBarIcon->Append(_menuItemExit);
 	
 	//Task Icon
 	_taskBarIcon = new wxTaskBarIcon;
-	_taskBarIcon->SetIcon(wxIcon(ft_xpm), "flying translation");
+	_taskBarIcon->SetIcon(wxIcon(ft_xpm), PROJECT_NAME);
 	
 	//bind les événement
 	_taskBarIcon->Bind(wxEVT_TASKBAR_LEFT_DCLICK, &MenuIcon::OnShow, this);
