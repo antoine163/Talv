@@ -21,7 +21,7 @@
 //! Documentation du code de flydocs.
 //!
 //! \author Maleyrie Antoine : antoine.maleyrie@gmail.com
-//! \version  0.1
+//! \version  1.x
 
 #endif // MAIN_PAGE_H
 

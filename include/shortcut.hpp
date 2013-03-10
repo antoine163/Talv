@@ -40,7 +40,7 @@ enum KeyModifier
 	CONTROL,	//!< Touche Ctrl, (version string : "ctrl").
 	ALT,		//!< Touche Alt, (version string : "alt").
 	ALTGR,		//!< Touche Alt Gr, (version string : "altgr"). \note Pas definie sou windows.
-	SHIFT,		//!< Touche Shift, (version string : "alt").
+	SHIFT,		//!< Touche Shift, (version string : "shift").
 	WIN			//!< Touche Win, (version string : "win").
 	#elif defined(__UNIX__)
 	CONTROL = ControlMask,
