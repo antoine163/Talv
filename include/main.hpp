@@ -7,6 +7,7 @@
 #include <wx/app.h>
 
 #include "menuIcon.hpp"
+#include "shortcut.hpp"
 
 class App : public wxApp
 {
@@ -23,9 +24,11 @@ class App : public wxApp
 		void OnEnable(wxCommandEvent& event);
 		void OnAbout(wxCommandEvent&);
 		void OnExit(wxCommandEvent&);
+		void OnShortcut(ShortcutEvent& event);
 	
 	private:
 		MenuIcon *_menuIcon;
+		Shortcut *_shortcut;
 };
 
 DECLARE_APP(App);

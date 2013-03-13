@@ -9,6 +9,7 @@
 #include <wx/utils.h> 
 #include <wx/process.h>
 
+#include <iostream>
 
 IMPLEMENT_APP(App);
 
@@ -19,6 +20,14 @@ bool App::OnInit()
 	SetExitOnFrameDelete(false);
 	_menuIcon = nullptr;
 	
+	//Création du gestionnaire de raccourci clavier
+	_shortcut = new Shortcut(this);	
+	
+	ShortcutKey shortcutKey(ShortcutKey::stringToShortcutKey("alt+shift+f"));
+	int id = _shortcut->creat(shortcutKey);
+	Bind(EVT_SHORTCUT, &App::OnShortcut, this, id);
+	_shortcut->enable();
+	
 	creatMenuItem();
 
 	return true;
@@ -28,6 +37,8 @@ int App::OnExit()
 {	
 	//Suppression du menu
 	deleteMenuItem();
+	
+	delete _shortcut;
 
 	return 0;
 }
@@ -101,4 +112,10 @@ void App::OnAbout(wxCommandEvent&)
 void App::OnExit(wxCommandEvent&)
 {		
 	ExitMainLoop();
+}
+
+void App::OnShortcut(ShortcutEvent& event)
+{
+	
+	std::cout << ShortcutKey::shortcutKeyToString(event.getShortcutKey()) << std::endl;
 }
