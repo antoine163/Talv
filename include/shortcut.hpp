@@ -163,14 +163,9 @@ class ShortcutThread : public wxThread
 		//! \brief Désactive tout les raccourcis.
 		void unregisterAllShortcut();
 		
-		void halt();
-		
 	protected:
 		wxThread::ExitCode Entry();
-		
-		#if defined(__WXMSW__)
 		void halt();
-		#endif
     
 	private:
 		//! \brief utiliser pour générer les événements.
