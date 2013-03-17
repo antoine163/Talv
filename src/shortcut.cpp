@@ -79,7 +79,7 @@ wxString ShortcutKey::shortcutKeyToString(ShortcutKey const& shortcut)
 		shortcut._modifiers&KeyModifier::ALTGR ||
 		#endif
 		shortcut._modifiers&KeyModifier::SHIFT ||
-		shortcut._modifiers&KeyModifier::WIN) &&
+		shortcut._modifiers&KeyModifier::SUPER) &&
 		shortcut._charKey == '\0')
 	{
 		return wxEmptyString;
@@ -126,13 +126,13 @@ wxString ShortcutKey::shortcutKeyToString(ShortcutKey const& shortcut)
 				if(shortcut._modifiers&KeyModifier::SHIFT)
 					ret << "shift+";
 				
-				statut = KeyModifier::WIN;
+				statut = KeyModifier::SUPER;
 			}break;
 			
-			case KeyModifier::WIN:
+			case KeyModifier::SUPER:
 			{
-				if(shortcut._modifiers&KeyModifier::WIN)
-					ret << "win+";
+				if(shortcut._modifiers&KeyModifier::SUPER)
+					ret << "super+";
 				
 				statut = KeyModifier::NONE;
 			}break;
@@ -183,8 +183,8 @@ ShortcutKey ShortcutKey::stringToShortcutKey(wxString const& shortcut)
 		#endif
 		else if(before == "shift")
 			modifiers = (KeyModifier)(modifiers|KeyModifier::SHIFT);
-		else if(before == "win")
-		modifiers = (KeyModifier)(modifiers|KeyModifier::WIN);
+		else if(before == "super")
+		modifiers = (KeyModifier)(modifiers|KeyModifier::SUPER);
 		
 		//Obtenir le nouveau avent ou après le premier '+'
 		tmp = after;
@@ -235,67 +235,125 @@ wxDEFINE_EVENT(EVT_SHORTCUT, ShortcutEvent);
 //! ****************************************************************************
 
 ShortcutThread::ShortcutThread(wxEvtHandler *owner, std::map<ShortcutKey, int> & bind)
-: wxThread(wxTHREAD_JOINABLE), _owner(owner), _bind(bind)
+: wxThread(wxTHREAD_JOINABLE), _owner(owner), _bind(bind), _mutexCommunicationThread(false), _shortcutKeyCommunicationThread(nullptr), _communicationThread(NONE)
 {
     #if defined(__UNIX__)
+    static bool isXInitThreads = false;
+    if(!isXInitThreads)
+    {
+		XInitThreads();
+		isXInitThreads = true;
+	}
+    
     _display = XOpenDisplay(0);
     _root = XDefaultRootWindow(_display);
+	_interCommunication = XCreateSimpleWindow(_display, _root, 0, 0, 1, 1, 0, 0, 0);
+	XSelectInput(_display, _interCommunication, StructureNotifyMask);
     #endif
 }
 
 ShortcutThread::~ShortcutThread()
 {
+	if(IsAlive())
+		halt();
+		
     #if defined(__UNIX__)
     XCloseDisplay(_display);
     #endif
 }
 
+void ShortcutThread::registerShortcut(ShortcutKey const& shortcutKey)
+{
+	//Si les donner de communication avec le thread sont utiliser,
+	//alors on attente.
+	while(_mutexCommunicationThread);
+	_mutexCommunicationThread=true;
+	
+	//Indique les valeurs à communiquer au thread
+	_communicationThread=REGISTER;
+	_shortcutKeyCommunicationThread=&shortcutKey;
+	
+	#if defined(__UNIX__)
+	//Déverrouille le XNextEvent
+	XClientMessageEvent sendEvent;
+	memset(&sendEvent, 0, sizeof(XClientMessageEvent));
+	sendEvent.type = ClientMessage;
+	sendEvent.window = _interCommunication;
+	sendEvent.format = 32;
+	
+	XSendEvent(_display, _interCommunication, 0, 0, (XEvent*)&sendEvent);
+	XFlush(_display);
+	#elif defined(__WXMSW__)
+	#endif
+}
+
+void ShortcutThread::unregisterShortcut(ShortcutKey const& shortcutKey)
+{
+	//Si les donner de communication avec le thread sont utiliser,
+	//alors on attente.
+	while(_mutexCommunicationThread);
+	_mutexCommunicationThread=true;
+	
+	//Indique les valeurs à communiquer au thread
+	_communicationThread=UNREGISTER;
+	_shortcutKeyCommunicationThread=&shortcutKey;
+	
+	#if defined(__UNIX__)
+	//Déverrouille le XNextEvent
+	XClientMessageEvent sendEvent;
+	memset(&sendEvent, 0, sizeof(XClientMessageEvent));
+	sendEvent.type = ClientMessage;
+	sendEvent.window = _interCommunication;
+	sendEvent.format = 32;
+	
+	XSendEvent(_display, _interCommunication, 0, 0, (XEvent*)&sendEvent);
+	XFlush(_display);
+	#elif defined(__WXMSW__)
+	#endif
+}
+
+void ShortcutThread::unregisterAllShortcut()
+{
+	for(auto &it: _bind)
+		unregisterShortcut(it.first);
+}
+
 void ShortcutThread::halt()
 {
-	if(IsAlive())
-	{
-		#if defined(__UNIX__)
-		//Supprimer des raccourcis
-		for(auto &it: _bind)	
-		{
-			//Convertie charKey vers KeyCode
-			char charKey[2] = {it.first.getCharKey(), '\0'};
-			KeyCode key = XKeysymToKeycode(_display, XStringToKeysym(charKey));
-			//ungrab le raccourci
-			XUngrabKey(_display, key, (unsigned int)it.first.getModifiers(), _root);
-		}
-		XEvent exit;
-		exit.type = 0;
-		XPutBackEvent(_display, &exit);
-		#elif defined(__WXMSW__)
-		PostThreadMessage(GetId(), WM_QUIT, 0, 0);
-		#endif
-		while(IsAlive());
-	}
+	//désactive touts les raccourcis
+	unregisterAllShortcut();
+	
+	//Si les donner de communication avec le thread sont utiliser,
+	//alors on attente.
+	while(_mutexCommunicationThread);
+	_mutexCommunicationThread=true;
+	
+	//Indique les valeurs à communiquer au thread
+	_communicationThread=QUIT;
+	_shortcutKeyCommunicationThread=nullptr;
+	
+	#if defined(__UNIX__)
+	//Déverrouille le XNextEvent
+	XClientMessageEvent sendEvent;
+	memset(&sendEvent, 0, sizeof(XClientMessageEvent));
+	sendEvent.type = ClientMessage;
+	sendEvent.window = _interCommunication;
+	sendEvent.format = 32;
+	
+	XSendEvent(_display, _interCommunication, 0, 0, (XEvent*)&sendEvent);
+	XFlush(_display);
+	#elif defined(__WXMSW__)
+	#endif
+	
+	//Attend la fin du thread
+	while(IsAlive());
 }
 
 wxThread::ExitCode ShortcutThread::Entry()
 {
-	for(auto &it: _bind)	
-	{		
-		char charKey[2] = {it.first.getCharKey(), '\0'};
-		
-		#if defined(__UNIX__)
-		//Convertie charKey vers KeyCode
-		KeyCode key = XKeysymToKeycode(_display, XStringToKeysym(charKey));
-		//grab le raccourci
-		XGrabKey(_display, key, (unsigned int)it.first.getModifiers(), _root, True, GrabModeAsync, GrabModeAsync);
-		#elif defined(__WXMSW__)
-		//Capitalise le charKey
-		wxString charKeyCapital(charKey);
-		charKeyCapital.MakeCapitalized();
-		//Enregistre le raccourci
-		RegisterHotKey(nullptr, getId(it.first), (UINT)it.first.getModifiers(), *charKeyCapital.fn_str());
-		#endif
-	}
-	
+	bool run = true;
 	#if defined(__UNIX__)
-	while(1)
+	while(run)
 	{
 		//Si un événement est présent on le récupère
 		XNextEvent(_display, &_event);
@@ -306,20 +364,52 @@ wxThread::ExitCode ShortcutThread::Entry()
 			//mise en forme du raccourci
 			ShortcutKey shortcutKey((KeyModifier)_event.xkey.state, charKey);
 			//Recherche de l'id
-			int id = getId(shortcutKey);
+			int id = _bind[shortcutKey];
 			//Envoi de l'événement
 			ShortcutEvent *event = new ShortcutEvent(id, EVT_SHORTCUT, shortcutKey);
 			wxQueueEvent(_owner, event);
 		}
-		else if(_event.type == 0)
-			return (wxThread::ExitCode)0;
+		else if(_event.type == ClientMessage)
+		{
+			char charKey[2] = {'\0', '\0'};
+			KeyCode key;
+			switch(_communicationThread)
+			{
+				//Enregistre le raccourci
+				case CommunicationThread::REGISTER:
+					charKey[0]=_shortcutKeyCommunicationThread->getCharKey();
+					key = XKeysymToKeycode(_display, XStringToKeysym(charKey));
+					XGrabKey(_display, key, (unsigned int)_shortcutKeyCommunicationThread->getModifiers(), _root, True, GrabModeAsync, GrabModeAsync);
+				break;
+				
+				//Désenregistrer le raccourci
+				case CommunicationThread::UNREGISTER:
+					charKey[0]=_shortcutKeyCommunicationThread->getCharKey();
+					key = XKeysymToKeycode(_display, XStringToKeysym(charKey));
+					XUngrabKey(_display, key, (unsigned int)_shortcutKeyCommunicationThread->getModifiers(), _root);
+				break;
+				
+				//Quit le thread
+				case CommunicationThread::QUIT:
+					run = false;
+				break;
+				
+				case CommunicationThread::NONE:
+				default:
+				break;
+			}
+
+			//Fin d'utilisation des données de communication.
+			_shortcutKeyCommunicationThread = nullptr;
+			_mutexCommunicationThread = false;
+		}
 	}
 	#elif defined(__WXMSW__)
 	//Si un événement est présent
 	while(GetMessage(&_msgEvent, nullptr, 0, 0) != 0)
 	{
 		//On le récupère
-		if (_msgEvent.message == WM_HOTKEY)
+		if(_msgEvent.message == WM_HOTKEY)
 		{
 			//Recherche du modifiers et du charKey
 			for(auto &it: _bind)
@@ -335,21 +425,13 @@ wxThread::ExitCode ShortcutThread::Entry()
 			}
 		}
 	}
-	#endif
-	
-		
-	#if defined(__WXMSW__)
+
 	//Supprimer des raccourcis
 	for(auto &it: _bind)	
-		UnregisterHotKey(nullptr, getId(it.first));
+		UnregisterHotKey(nullptr, _bind[it.first]));
 	#endif
 
 	return (wxThread::ExitCode)0;
-}
-
-int ShortcutThread::getId(ShortcutKey const& shortcutKey)
-{
-    return _bind[shortcutKey];
 }
 
 //! ****************************************************************************
@@ -357,18 +439,17 @@ int ShortcutThread::getId(ShortcutKey const& shortcutKey)
 //! ****************************************************************************
 
 Shortcut::Shortcut(wxEvtHandler *owner)
-: _thread(nullptr), _owner(owner), _enable(false)
+: _thread(nullptr), _owner(owner), _enable(true)
 {
+	_thread = new ShortcutThread(_owner, _bind);
+	_thread->Create();
+	_thread->Run();
 }
 
 Shortcut::~Shortcut()
 {
-	removeAll();
 	if(_thread != nullptr)
-	{
-		_thread->halt();
 		delete _thread;
-	}
 }
 
 int Shortcut::creat(KeyModifier modifiers, char charKey)
@@ -378,12 +459,16 @@ int Shortcut::creat(KeyModifier modifiers, char charKey)
 
 int Shortcut::creat(ShortcutKey const& shortcutKey)
 {
-	//création d'un nouveau id
+	//Création d'un nouveau id
     int id = wxNewId();
     
     //Création d'un lien et ajout de l'id
     _bind[shortcutKey] = id;
     
+    //Si les raccourcis sont activé, on active le raccourci au prés du thread.
+    if(_enable)
+		_thread->registerShortcut(shortcutKey);
+		
     return id;
 }
 
@@ -394,12 +479,20 @@ void Shortcut::remove(KeyModifier modifiers, char charKey)
 
 void Shortcut::remove(ShortcutKey const& shortcutKey)
 {
+	//Si les raccourcis sont activé, on désactive le raccourci au prés du thread.
+    if(_enable)
+		_thread->unregisterShortcut(shortcutKey);
+		
     //Supprime le lien
     _bind.erase(shortcutKey); 
 }
 
 void Shortcut::removeAll()
 {
+	//Si les raccourcis sont activé, on désactive tout les raccourcis au prés du thread.
+    if(_enable)
+		_thread->unregisterAllShortcut();
+		
 	//Supprime les liens
 	_bind.clear();
 }
@@ -414,7 +507,7 @@ void Shortcut::enable(bool val)
 	//si on doit désactiver
 	if(_enable == true && val == false)
 	{
-		_thread->halt();
+		//Désactive tout les raccourcis au prés du thread.
 		delete _thread;
 		_thread = nullptr;
 	}
@@ -424,6 +517,10 @@ void Shortcut::enable(bool val)
 		_thread = new ShortcutThread(_owner, _bind);
 		_thread->Create();
 		_thread->Run();
+		//Active les raccourcis au prés du thread.
+		for(auto &it: _bind)			
+			_thread->registerShortcut(it.first);
+		
 	}
 	
 	_enable = val;

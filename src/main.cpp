@@ -23,10 +23,13 @@ bool App::OnInit()
 	//Création du gestionnaire de raccourci clavier
 	_shortcut = new Shortcut(this);	
 	
-	ShortcutKey shortcutKey(ShortcutKey::stringToShortcutKey("alt+shift+f"));
-	int id = _shortcut->creat(shortcutKey);
-	Bind(EVT_SHORTCUT, &App::OnShortcut, this, id);
-	_shortcut->enable();
+	ShortcutKey shortcutKey1(ShortcutKey::stringToShortcutKey("alt+shift+f"));
+	int id1 = _shortcut->creat(shortcutKey1);
+	Bind(EVT_SHORTCUT, &App::OnShortcut, this, id1);
+	
+	ShortcutKey shortcutKey2(ShortcutKey::stringToShortcutKey("shift+super+a"));
+	int id2 = _shortcut->creat(shortcutKey2);
+	Bind(EVT_SHORTCUT, &App::OnShortcut, this, id2);
 	
 	creatMenuItem();
 
@@ -76,6 +79,7 @@ void App::OnPreferences(wxCommandEvent&)
 
 void App::OnEnable(wxCommandEvent& event)
 {
+	_shortcut->enable(event.IsChecked());
 }
 
 void App::OnAbout(wxCommandEvent&)
@@ -116,6 +120,5 @@ void App::OnExit(wxCommandEvent&)
 
 void App::OnShortcut(ShortcutEvent& event)
 {
-	
 	std::cout << ShortcutKey::shortcutKeyToString(event.getShortcutKey()) << std::endl;
 }

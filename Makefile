@@ -27,8 +27,6 @@ ACT_TRANSLATION=yes
 ACT_SAVE_TRANSLATION=no
 #Dire le mot/phrase
 ACT_SAY=no
-#Lance une application
-ACT_RUN=no
 
 ########################################################################
 # Utiliser libnotify pour les notifications. (Option réserver pour unix)
@@ -74,6 +72,7 @@ all:release
 ########################################################################
 release:
 	@cd $(OS_NAME) && $(MAKE) release
+	
 	
 ########################################################################
 # Compilation en debug.

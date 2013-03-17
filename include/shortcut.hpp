@@ -41,18 +41,18 @@ enum KeyModifier
 	ALT,		//!< Touche Alt, (version string : "alt").
 	ALTGR,		//!< Touche Alt Gr, (version string : "altgr"). \note Pas definie sou windows.
 	SHIFT,		//!< Touche Shift, (version string : "shift").
-	WIN			//!< Touche Win, (version string : "win").
+	SUPER		//!< Touche Super(Win), (version string : "super").
 	#elif defined(__UNIX__)
 	CONTROL = ControlMask,
 	ALT 	= Mod1Mask,
 	ALTGR 	= Mod5Mask,
 	SHIFT 	= ShiftMask,
-	WIN 	= Mod4Mask,
+	SUPER 	= Mod4Mask,
 	#elif defined(__WXMSW__)
 	CONTROL = MOD_CONTROL,
 	ALT 	= MOD_ALT,
 	SHIFT 	= MOD_SHIFT,
-	WIN 	= MOD_WIN,
+	SUPER 	= MOD_WIN,
 	#endif
 	#if !defined(__DOXYGEN__)
 	//Valeur utile pour ShortcutKey::shortcutKeyToString() et ShortcutKey::stringToShortcutKey()
@@ -66,7 +66,7 @@ class ShortcutKey
 {
 	public:
 		//! \brief Constructeur.
-		//! \param modifiers peut être combiner avec tout les valeur de \ref KeyModifier ex:(KeyModifier)(KeyModifier::WIN|KeyModifier::CONTROL)
+		//! \param modifiers peut être combiner avec tout les valeur de \ref KeyModifier ex:(KeyModifier)(KeyModifier::SUPER|KeyModifier::CONTROL)
 		//! \param charKey le caractère, c'est une valeur ASCII.
 		ShortcutKey(KeyModifier modifiers, char charKey);
 		
@@ -108,7 +108,7 @@ class ShortcutEvent: public wxEvent
 		//! \brief Constructeur.
 		//! \param id l'identifiant de l'objet.
 		//! \param eventType le type de l'événement. Si vous en crée pas de nouveau, \a EVT_SHORTCUT devait être passer.
-		//! \param modifiers peut être combiner avec tout les valeur de \ref KeyModifier ex:(KeyModifier)(KeyModifier::WIN|KeyModifier::CONTROL)
+		//! \param modifiers peut être combiner avec tout les valeur de \ref KeyModifier ex:(KeyModifier)(KeyModifier::SUPER|KeyModifier::CONTROL)
 		//! \param charKey le caractère, c'est une valeur ASCII.
 		ShortcutEvent(int id, wxEventType eventType, KeyModifier modifiers, char charKey);
 		
@@ -152,27 +152,42 @@ class ShortcutThread : public wxThread
 		//! \brief Destructeur.
 		~ShortcutThread();
 		
-		void halt();
+		void registerShortcut(ShortcutKey const& shortcutKey);
+		void unregisterShortcut(ShortcutKey const& shortcutKey);
+		void unregisterAllShortcut();
 		
-		//! \brief Obtenir l'id d'un raccourci.
-		//! \param shortcutKey Le raccourci.
-		//! \return id
-		int getId(ShortcutKey const& shortcutKey);
+		void halt();
 		
 	protected:
 		wxThread::ExitCode Entry();
+		
+		#if defined(__WXMSW__)
+		void halt();
+		#endif
     
 	private:
 		//! \brief utiliser pour générer les événements.
 		wxEvtHandler *_owner; 
 		
 		//! \brief Table de lien entre les raccourci est les id.
-		std::map<ShortcutKey, int> & _bind;
-
+		std::map<ShortcutKey, int>& _bind;
+		
+		volatile bool _mutexCommunicationThread;
+		ShortcutKey const* _shortcutKeyCommunicationThread;
+		enum CommunicationThread
+		{
+			REGISTER,
+			UNREGISTER,
+			QUIT,
+			NONE
+		};
+		volatile CommunicationThread _communicationThread;
+		
 		
 		#if defined(__UNIX__)
 		Display *_display;
 		Window _root;
+		Window _interCommunication;
 		XEvent _event;
 		#elif defined(__WXMSW__)
 		MSG _msgEvent;
@@ -188,18 +203,18 @@ class ShortcutThread : public wxThread
 //! 	//Création d'un objet Shortcut.
 //! 	_shortcut = new Shortcut(this);	
 //! 	
-//! 	//Création d'un raccourci, touche win+a 
-//! 	int id = _shortcut->creat(KeyModifier::WIN, 'a');
+//! 	//Création d'un raccourci, touche super+a 
+//! 	int id = _shortcut->creat(KeyModifier::SUPER, 'a');
+//! 	//lie l'événement à la méthode de callBack.
+//! 	Bind(EVT_SHORTCUT, &App::OnShortcut, this, id);
+//! 	
+//! 	//Création d'un raccourci, touche super+b
+//! 	id = _shortcut->creat(KeyModifier::SUPER, 'b');
 //! 	//lie lie l'événement à la méthode de callBack.
 //! 	Bind(EVT_SHORTCUT, &App::OnShortcut, this, id);
 //! 	
-//! 	//Création d'un raccourci, touche win+b
-//! 	id = _shortcut->creat(KeyModifier::WIN, 'b');
-//! 	//lie lie l'événement à la méthode de callBack.
-//! 	Bind(EVT_SHORTCUT, &App::OnShortcut, this, id);
-//! 	
-//! 	//Création d'un raccourci, touche win+Ctrl+a 
-//! 	id = _shortcut->creat((KeyModifier)(KeyModifier::WIN|KeyModifier::CONTROL), 'a');
+//! 	//Création d'un raccourci, touche super+ctrl+a 
+//! 	id = _shortcut->creat((KeyModifier)(KeyModifier::SUPER|KeyModifier::CONTROL), 'a');
 //! 	//lie lie l'événement à la méthode de callBack.
 //! 	Bind(EVT_SHORTCUT, &App::OnShortcut, this, id);
 //! 
@@ -225,8 +240,8 @@ class Shortcut
 		
 		//! \brief Créé un nouveau raccourci.
 		//! \code
-		//! //Création d'un raccourci, touche win+Ctrl+a 
-		//! 	id = _shortcut->creat((KeyModifier)(KeyModifier::WIN|KeyModifier::CONTROL), 'a');
+		//! //Création d'un raccourci, touche super+Ctrl+a 
+		//! 	id = _shortcut->creat((KeyModifier)(KeyModifier::SUPER|KeyModifier::CONTROL), 'a');
 		//! \endcode
 		//! \param modifiers Le modificateur lier au raccourci, peut être une combinaison de \ref KeyModifier.
 		//! \param charKey la touche (un caractère ASCII) du racourci.
