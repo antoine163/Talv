@@ -10,7 +10,7 @@
 //! ****************************************************************************
 
 /*
-*	Copyright © 2012 - Antoine Maleyrie.
+*	Copyright © 2012-2013 - Antoine Maleyrie.
 */
 
 #ifndef SHORTCUT_H
@@ -66,7 +66,7 @@ class ShortcutKey
 {
 	public:
 		//! \brief Constructeur.
-		//! \param modifiers peut être combiner avec tout les valeur de \ref KeyModifier ex:(KeyModifier)(KeyModifier::SUPER|KeyModifier::CONTROL)
+		//! \param modifiers peut être combiner avec tout les valeurs de \ref KeyModifier ex:(KeyModifier)(KeyModifier::SUPER|KeyModifier::CONTROL)
 		//! \param charKey le caractère, c'est une valeur ASCII.
 		ShortcutKey(KeyModifier modifiers, char charKey);
 		
@@ -88,7 +88,7 @@ class ShortcutKey
 		static wxString shortcutKeyToString(ShortcutKey const& shortcut);
 		
 		//! \brief Converti un raccourci, de sa version string en \ref ShortcutKey.
-		//! Cette méthode ne vérifie pas la valider du raccourci, il devra être de la forme (ex:"alt+shift+f").
+		//! Cette méthode ne vérifie pas la validité du raccourci, il devra être de la forme modificateur+caractère (ex:"alt+shift+f").
 		//! \param shortcut le raccourci en version string.
 		//! \return Le raccourci en version \ref ShortcutKey.
 		static ShortcutKey stringToShortcutKey(wxString const& shortcut);
@@ -168,7 +168,7 @@ class ShortcutThread : public wxThread
 		void halt();
     
 	private:
-		//! \brief utiliser pour générer les événements.
+		//! \brief Utiliser pour générer les événements.
 		wxEvtHandler *_owner; 
 		
 		//! \brief Table de lien entre les raccourci est les id.
@@ -252,7 +252,7 @@ class Shortcut
 		
 		//! \brief Créé un nouveau raccourci.
 		//! \code
-		//! //Création d'un raccourci, touche super+Ctrl+a 
+		//! //Création d'un raccourci, touche "super+ctrl+a" 
 		//! 	id = _shortcut->creat((KeyModifier)(KeyModifier::SUPER|KeyModifier::CONTROL), 'a');
 		//! \endcode
 		//! \param modifiers Le modificateur lier au raccourci, peut être une combinaison de \ref KeyModifier.
@@ -271,7 +271,7 @@ class Shortcut
 		void remove(KeyModifier modifiers, char charKey);
 		
 		//! \brief Supprimer un raccourci.
-		//! \param shortcutKey Le raccourci a supprimer
+		//! \param shortcutKey Le raccourci à supprimer.
 		void remove(ShortcutKey const& shortcutKey);
 		
 		//! \brief Supprimer touts les raccourcis.
