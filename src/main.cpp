@@ -41,6 +41,7 @@ int App::OnExit()
 	//Suppression du menu
 	deleteMenuItem();
 	
+	//Suppression des raccourci.
 	delete _shortcut;
 
 	return 0;

@@ -152,8 +152,15 @@ class ShortcutThread : public wxThread
 		//! \brief Destructeur.
 		~ShortcutThread();
 		
+		//! \brief Active un raccourci.
+		//! \param shortcutKey est le raccourci à activer.
 		void registerShortcut(ShortcutKey const& shortcutKey);
+		
+		//! \brief Désactive un raccourci.
+		//! \param shortcutKey est le raccourci à Désactive.
 		void unregisterShortcut(ShortcutKey const& shortcutKey);
+		
+		//! \brief Désactive tout les raccourcis.
 		void unregisterAllShortcut();
 		
 		void halt();
@@ -172,7 +179,10 @@ class ShortcutThread : public wxThread
 		//! \brief Table de lien entre les raccourci est les id.
 		std::map<ShortcutKey, int>& _bind;
 		
+		//! \brief Mutex pour protéger les variable de communication avec le thread.
 		volatile bool _mutexCommunicationThread;
+		
+		//! \brief Comunique le ShortcutKey au thread.
 		ShortcutKey const* _shortcutKeyCommunicationThread;
 		enum CommunicationThread
 		{
@@ -181,6 +191,7 @@ class ShortcutThread : public wxThread
 			QUIT,
 			NONE
 		};
+		//! \brief Action a communiquer au thread.
 		volatile CommunicationThread _communicationThread;
 		
 		
@@ -211,6 +222,11 @@ class ShortcutThread : public wxThread
 //! 	//Création d'un raccourci, touche super+b
 //! 	id = _shortcut->creat(KeyModifier::SUPER, 'b');
 //! 	//lie lie l'événement à la méthode de callBack.
+//! 	Bind(EVT_SHORTCUT, &App::OnShortcut, this, id);
+//!
+//! 	//Création d'un raccourci, touche shift+super+a
+//! 	ShortcutKey shortcutKey(ShortcutKey::stringToShortcutKey("shift+super+a"));
+//! 	id = _shortcut->creat(shortcutKey);
 //! 	Bind(EVT_SHORTCUT, &App::OnShortcut, this, id);
 //! 	
 //! 	//Création d'un raccourci, touche super+ctrl+a 
