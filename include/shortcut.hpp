@@ -221,17 +221,18 @@ class ShortcutThread : public wxThread
 //! 	
 //! 	//Création d'un raccourci, touche super+b
 //! 	id = _shortcut->creat(KeyModifier::SUPER, 'b');
-//! 	//lie lie l'événement à la méthode de callBack.
+//! 	//lie l'événement à la méthode de callBack.
 //! 	Bind(EVT_SHORTCUT, &App::OnShortcut, this, id);
 //!
 //! 	//Création d'un raccourci, touche shift+super+a
 //! 	ShortcutKey shortcutKey(ShortcutKey::stringToShortcutKey("shift+super+a"));
 //! 	id = _shortcut->creat(shortcutKey);
+//! 	//lie l'événement à la méthode de callBack.
 //! 	Bind(EVT_SHORTCUT, &App::OnShortcut, this, id);
 //! 	
 //! 	//Création d'un raccourci, touche super+ctrl+a 
 //! 	id = _shortcut->creat((KeyModifier)(KeyModifier::SUPER|KeyModifier::CONTROL), 'a');
-//! 	//lie lie l'événement à la méthode de callBack.
+//! 	//lie l'événement à la méthode de callBack.
 //! 	Bind(EVT_SHORTCUT, &App::OnShortcut, this, id);
 //! 
 //! 	return true;
