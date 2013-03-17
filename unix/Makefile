@@ -45,10 +45,6 @@ endif
 DEFINE=PROJECT_NAME=\"$(PROJECT_NAME)\"
 # Numéro de version
 DEFINE+=PROJECT_VERSION=\"$(PROJECT_VERSION)\"
-# Define pour libnotify (si utiliser)
-ifeq ($(USE_LIBNOTIFY), yes)
-DEFINE+=USE_LIBNOTIFY
-endif
 # Ajout du -D
 DEFINES = $(patsubst %,-D%, $(DEFINE))
 
@@ -65,8 +61,16 @@ OBJ_DIR = obj
 SRC=../src/main.cpp	
 SRC+=../src/menuIcon.cpp
 SRC+=../src/shortcut.cpp
+SRC+=../src/action.cpp
+#Action
+ifeq ($(ACT_TRANSLATION), yes)
+SRC+=../src/action/actTranslation.cpp
+endif
+#GUI
 SRC+=../gui/guiDialogPreferences.cpp
 SRC+=../src/dialogPreferences.cpp
+SRC+=../gui/guiDialogShortcutPreferences.cpp
+SRC+=../src/dialogShortcutPreferences.cpp
 
 
 ########################################################################

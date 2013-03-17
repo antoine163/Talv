@@ -14,6 +14,7 @@
 */
 
 #include "shortcut.hpp"
+
 #if defined(__UNIX__)
 #include <X11/XKBlib.h>
 #endif

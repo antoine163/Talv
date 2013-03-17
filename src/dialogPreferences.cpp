@@ -2,6 +2,7 @@
 //02.01.2013
 
 #include "dialogPreferences.hpp"
+#include "dialogShortcutPreferences.hpp"
 
 #include <wx/msgdlg.h>
 
@@ -30,6 +31,9 @@ void DialogPreferences::OnButtonClickActPreferences(wxCommandEvent&)
 
 void DialogPreferences::OnButtonClickActAdd(wxCommandEvent&)
 {
+	DialogShortcutPreferences *dlg = new DialogShortcutPreferences(this);
+	dlg->ShowModal();
+	delete dlg;
 }
 
 void DialogPreferences::OnButtonClickOK(wxCommandEvent& event)
