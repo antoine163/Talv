@@ -24,7 +24,7 @@
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/icon.h>
-#include <wx/propgrid/propgrid.h>
+#include <wx/listctrl.h>
 #include <wx/button.h>
 #include <wx/notebook.h>
 #include <wx/dialog.h>
@@ -41,57 +41,33 @@ class GuiDialogPreferences : public wxDialog
 	
 	protected:
 		wxPanel* _panelGeneral;
-		wxStaticText* _staticTextSartup;
+		wxStaticText* _staticTextSetting;
 		wxCheckBox* _checkBoxShowMenu;
 		wxStaticText* _staticTextShutdown;
 		wxToggleButton* _toggleBtnTurnOff;
 		wxPanel* _panelShortcut;
 		wxBoxSizer* bSizer4;
-		wxPropertyGrid* _propertyGridShortcut;
-		wxButton* _buttonDelete;
-		wxButton* _buttonAdd;
+		wxListCtrl* _listCtrlAction;
+		wxButton* _buttonActDelete;
+		wxButton* _buttonActPreferences;
+		wxButton* _buttonActAdd;
 		wxStdDialogButtonSizer* _sdbSizer;
 		wxButton* _sdbSizerOK;
 		wxButton* _sdbSizerApply;
 		wxButton* _sdbSizerCancel;
 		
 		// Virtual event handlers, overide them in your derived class
-		virtual void OnUpdateUIPropertyGridShortcut( wxUpdateUIEvent& event ) { event.Skip(); }
-		virtual void OnButtonClickDelete( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnButtonClickAdd( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnApplyButtonClick( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnOkButtonClick( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnButtonClickActDelete( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnButtonClickActPreferences( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnButtonClickActAdd( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnButtonClickApply( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnButtonClickOK( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
 		
-		GuiDialogPreferences( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 400,300 ), long style = wxDEFAULT_DIALOG_STYLE|wxDIALOG_NO_PARENT );
+		GuiDialogPreferences( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 400,300 ), long style = wxDEFAULT_DIALOG_STYLE|wxDIALOG_NO_PARENT|wxSTAY_ON_TOP );
 		~GuiDialogPreferences();
-	
-};
-
-///////////////////////////////////////////////////////////////////////////////
-/// Class GuiDialogChoiceShortcut
-///////////////////////////////////////////////////////////////////////////////
-class GuiDialogChoiceShortcut : public wxDialog 
-{
-	private:
-	
-	protected:
-		wxStaticText* _staticTextChoisShortcut;
-		wxStdDialogButtonSizer* _sdbSizer;
-		wxButton* _sdbSizerOK;
-		wxButton* _sdbSizerCancel;
-		
-		// Virtual event handlers, overide them in your derived class
-		virtual void OnKeyDown( wxKeyEvent& event ) { event.Skip(); }
-		virtual void OnKeyUp( wxKeyEvent& event ) { event.Skip(); }
-		
-	
-	public:
-		
-		GuiDialogChoiceShortcut( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Choice your shortcut"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE );
-		~GuiDialogChoiceShortcut();
 	
 };
 

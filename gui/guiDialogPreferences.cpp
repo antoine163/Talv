@@ -22,11 +22,11 @@ GuiDialogPreferences::GuiDialogPreferences( wxWindow* parent, wxWindowID id, con
 	wxBoxSizer* bSizer2;
 	bSizer2 = new wxBoxSizer( wxVERTICAL );
 	
-	_staticTextSartup = new wxStaticText( _panelGeneral, wxID_ANY, _("Option"), wxDefaultPosition, wxDefaultSize, 0 );
-	_staticTextSartup->Wrap( -1 );
-	bSizer2->Add( _staticTextSartup, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
+	_staticTextSetting = new wxStaticText( _panelGeneral, wxID_ANY, _("Setting"), wxDefaultPosition, wxDefaultSize, 0 );
+	_staticTextSetting->Wrap( -1 );
+	bSizer2->Add( _staticTextSetting, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
 	
-	_checkBoxShowMenu = new wxCheckBox( _panelGeneral, wxID_ANY, _("Show the popup menu"), wxDefaultPosition, wxDefaultSize, 0 );
+	_checkBoxShowMenu = new wxCheckBox( _panelGeneral, wxID_ANY, _("Show a icon in notification bar."), wxDefaultPosition, wxDefaultSize, 0 );
 	_checkBoxShowMenu->SetValue(true); 
 	bSizer2->Add( _checkBoxShowMenu, 0, wxLEFT, 20 );
 	
@@ -59,22 +59,27 @@ GuiDialogPreferences::GuiDialogPreferences( wxWindow* parent, wxWindowID id, con
 	_panelShortcut = new wxPanel( _notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	bSizer4 = new wxBoxSizer( wxVERTICAL );
 	
-	_propertyGridShortcut = new wxPropertyGrid(_panelShortcut);
-	bSizer4->Add( _propertyGridShortcut, 1, wxEXPAND|wxTOP|wxRIGHT|wxLEFT, 5 );
+	_listCtrlAction = new wxListCtrl( _panelShortcut, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT );
+	bSizer4->Add( _listCtrlAction, 1, wxALL|wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizer5;
 	bSizer5 = new wxBoxSizer( wxHORIZONTAL );
 	
-	_buttonDelete = new wxButton( _panelShortcut, wxID_ANY, _("Delete"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
-	_buttonDelete->Enable( false );
+	_buttonActDelete = new wxButton( _panelShortcut, wxID_ANY, _("Delete"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	_buttonActDelete->Enable( false );
 	
-	bSizer5->Add( _buttonDelete, 0, wxALL, 5 );
+	bSizer5->Add( _buttonActDelete, 0, wxALL, 5 );
 	
 	
 	bSizer5->Add( 0, 0, 1, wxEXPAND, 5 );
 	
-	_buttonAdd = new wxButton( _panelShortcut, wxID_ANY, _("Add"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
-	bSizer5->Add( _buttonAdd, 0, wxALL, 5 );
+	_buttonActPreferences = new wxButton( _panelShortcut, wxID_ANY, _("Preferences"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	_buttonActPreferences->Enable( false );
+	
+	bSizer5->Add( _buttonActPreferences, 0, wxALL, 5 );
+	
+	_buttonActAdd = new wxButton( _panelShortcut, wxID_ANY, _("Add"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	bSizer5->Add( _buttonActAdd, 0, wxALL, 5 );
 	
 	bSizer4->Add( bSizer5, 0, wxEXPAND, 5 );
 	
@@ -101,71 +106,20 @@ GuiDialogPreferences::GuiDialogPreferences( wxWindow* parent, wxWindowID id, con
 	this->Centre( wxBOTH );
 	
 	// Connect Events
-	_propertyGridShortcut->Connect( wxEVT_UPDATE_UI, wxUpdateUIEventHandler( GuiDialogPreferences::OnUpdateUIPropertyGridShortcut ), NULL, this );
-	_buttonDelete->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickDelete ), NULL, this );
-	_buttonAdd->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickAdd ), NULL, this );
-	_sdbSizerApply->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnApplyButtonClick ), NULL, this );
-	_sdbSizerOK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnOkButtonClick ), NULL, this );
+	_buttonActDelete->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickActDelete ), NULL, this );
+	_buttonActPreferences->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickActPreferences ), NULL, this );
+	_buttonActAdd->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickActAdd ), NULL, this );
+	_sdbSizerApply->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickApply ), NULL, this );
+	_sdbSizerOK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickOK ), NULL, this );
 }
 
 GuiDialogPreferences::~GuiDialogPreferences()
 {
 	// Disconnect Events
-	_propertyGridShortcut->Disconnect( wxEVT_UPDATE_UI, wxUpdateUIEventHandler( GuiDialogPreferences::OnUpdateUIPropertyGridShortcut ), NULL, this );
-	_buttonDelete->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickDelete ), NULL, this );
-	_buttonAdd->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickAdd ), NULL, this );
-	_sdbSizerApply->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnApplyButtonClick ), NULL, this );
-	_sdbSizerOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnOkButtonClick ), NULL, this );
-	
-}
-
-GuiDialogChoiceShortcut::GuiDialogChoiceShortcut( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
-{
-	this->SetSizeHints( wxSize( 350,-1 ), wxDefaultSize );
-	
-	wxBoxSizer* bSizer6;
-	bSizer6 = new wxBoxSizer( wxVERTICAL );
-	
-	wxStaticText* _staticText;
-	_staticText = new wxStaticText( this, wxID_ANY, _("Press your shortcut :"), wxDefaultPosition, wxDefaultSize, 0 );
-	_staticText->Wrap( -1 );
-	bSizer6->Add( _staticText, 0, wxEXPAND|wxALL, 5 );
-	
-	wxBoxSizer* bSizer7;
-	bSizer7 = new wxBoxSizer( wxHORIZONTAL );
-	
-	
-	bSizer7->Add( 0, 0, 1, wxEXPAND, 5 );
-	
-	_staticTextChoisShortcut = new wxStaticText( this, wxID_ANY, _("The shurtcute is not valide"), wxDefaultPosition, wxDefaultSize, 0 );
-	_staticTextChoisShortcut->Wrap( -1 );
-	bSizer7->Add( _staticTextChoisShortcut, 10, wxALL, 5 );
-	
-	bSizer6->Add( bSizer7, 0, wxEXPAND, 5 );
-	
-	_sdbSizer = new wxStdDialogButtonSizer();
-	_sdbSizerOK = new wxButton( this, wxID_OK );
-	_sdbSizer->AddButton( _sdbSizerOK );
-	_sdbSizerCancel = new wxButton( this, wxID_CANCEL );
-	_sdbSizer->AddButton( _sdbSizerCancel );
-	_sdbSizer->Realize();
-	bSizer6->Add( _sdbSizer, 0, wxEXPAND|wxBOTTOM, 5 );
-	
-	this->SetSizer( bSizer6 );
-	this->Layout();
-	bSizer6->Fit( this );
-	
-	this->Centre( wxBOTH );
-	
-	// Connect Events
-	this->Connect( wxEVT_KEY_DOWN, wxKeyEventHandler( GuiDialogChoiceShortcut::OnKeyDown ) );
-	this->Connect( wxEVT_KEY_UP, wxKeyEventHandler( GuiDialogChoiceShortcut::OnKeyUp ) );
-}
-
-GuiDialogChoiceShortcut::~GuiDialogChoiceShortcut()
-{
-	// Disconnect Events
-	this->Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler( GuiDialogChoiceShortcut::OnKeyDown ) );
-	this->Disconnect( wxEVT_KEY_UP, wxKeyEventHandler( GuiDialogChoiceShortcut::OnKeyUp ) );
+	_buttonActDelete->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickActDelete ), NULL, this );
+	_buttonActPreferences->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickActPreferences ), NULL, this );
+	_buttonActAdd->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickActAdd ), NULL, this );
+	_sdbSizerApply->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickApply ), NULL, this );
+	_sdbSizerOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickOK ), NULL, this );
 	
 }

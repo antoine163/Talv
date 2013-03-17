@@ -65,6 +65,8 @@ OBJ_DIR = obj
 SRC=../src/main.cpp	
 SRC+=../src/menuIcon.cpp
 SRC+=../src/shortcut.cpp
+SRC+=../gui/guiDialogPreferences.cpp
+SRC+=../src/dialogPreferences.cpp
 
 
 ########################################################################
@@ -77,6 +79,7 @@ OBJS=$(patsubst ../%.cpp,$(OBJ_DIR)/%.o, $(SRC))
 # Dossier a inclure.
 ########################################################################
 DIR = ../include
+DIR += ../gui
 INCLUDE_DIRS = $(patsubst %,-I%, $(DIR))
 
 

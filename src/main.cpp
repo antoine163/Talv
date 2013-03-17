@@ -1,5 +1,5 @@
 //30/11/12
-//version : 1.0
+//version : 1.1
 
 #include "main.hpp"
 
@@ -9,6 +9,10 @@
 #include <wx/utils.h> 
 #include <wx/process.h>
 
+//Dialog
+#include "dialogPreferences.hpp"
+
+//Test
 #include <iostream>
 
 IMPLEMENT_APP(App);
@@ -75,7 +79,36 @@ void App::deleteMenuItem()
 }
 
 void App::OnPreferences(wxCommandEvent&)
-{	
+{
+	static DialogPreferences *dlg = nullptr;
+	
+	//On lance le dialog si il n'est pas déjà lancer.
+	if(dlg == nullptr)
+	{
+		//Création du dialog.
+		dlg = new DialogPreferences();
+		
+		//Désactivation des raccourcis.
+		_shortcut->enable(false);
+		
+		//Affichage du dialog.
+		if(dlg->ShowModal() == wxID_OK)
+		{
+			//On vérifie si on doit quitter l'application ou pas.
+			if(dlg->shutdownIsToggle())
+				ExitMainLoop();
+		}
+		
+		//On réactive les raccourcis
+		_shortcut->enable(true);
+		
+		//Supprime le dialog
+		delete dlg;
+		dlg = nullptr;
+	}	
+	//Sinon on l'affiche au premier plan.
+	else
+		dlg->Raise();
 }
 
 void App::OnEnable(wxCommandEvent& event)
