@@ -20,7 +20,7 @@ EXEC_NAME=$(PROJECT_NAME)
 # Flags pour wxWidgets
 CXX_FLAGS+=`wx-config-2.9 --cflags`
 # Flags libnotify (si utiliser)
-ifeq ($(USE_LIBNOTIFY), yes)
+ifeq ($(EMULATE_NOTIFICATION), no)
 CXX_FLAGS+=`pkg-config --cflags libnotify`
 endif
 

@@ -19,6 +19,14 @@ PROJECT_VERSION=1.0
 
 
 ########################################################################
+# Détection de l'os (Pas de détection pour le moment, mais un simple
+# passage d'augment permer de compiler pour les différence os supporter.
+# ex pour windows: make release OS_NAME=msw).
+########################################################################
+OS_NAME=unix
+
+
+########################################################################
 # Action à compiler.
 ########################################################################
 #Traduction du mot/phrase
@@ -28,10 +36,17 @@ ACT_SAVE_TRANSLATION=no
 #Dire le mot/phrase
 ACT_SAY=no
 
+
 ########################################################################
-# Utiliser libnotify pour les notifications. (Option réserver pour unix)
+# Émuler les notifications. Par défaut sous msw elles sont émulé.
+# Par défaut sous unix elle ne sons pas émuler et libnotify sera utiliser
 ########################################################################
-USE_LIBNOTIFY=yes
+ifeq ($(OS_NAME), unix)
+EMULATE_NOTIFICATION=no
+endif
+ifeq ($(OS_NAME), msw)
+EMULATE_NOTIFICATION=yes
+endif
 
 
 ########################################################################
@@ -51,14 +66,6 @@ CXX_FLAGS_DEBUG=-g
 # Exportation de tout les variables dans les makefiles enfants.
 ########################################################################
 export
-
-
-########################################################################
-# Détection de l'os (Pas de détection pour le moment, mais un simple
-# passage d'augment permer de compiler pour les différence os supporter.
-# ex pour windows: make release OS_NAME=msw).
-########################################################################
-OS_NAME=unix
 
 
 ########################################################################
