@@ -3,7 +3,7 @@
 #	Makfile.
 #
 # - author 	:	Maleyrie Antoine : antoine.maleyrie@gmail.com
-# - version	:	1.0
+# - version	:	1.1
 # - date 	:	24/11/2012
 #
 ########################################################################
@@ -27,7 +27,7 @@ OS_NAME=unix
 
 
 ########################################################################
-# Action à compiler.
+# Actions à compiler.
 ########################################################################
 #Traduction du mot/phrase
 ACT_TRANSLATION=yes
@@ -60,6 +60,34 @@ CXX_FLAGS=-W -Wall -Wextra -std=gnu++11
 CXX_FLAGS_RELESE=-s -O2
 #Flage en plus pour la compilation en debug.
 CXX_FLAGS_DEBUG=-g
+
+########################################################################
+# Define à ajouter.
+########################################################################
+# Non du projet
+DEFINE=PROJECT_NAME=\"$(PROJECT_NAME)\"
+# Numéro de version
+DEFINE+=PROJECT_VERSION=\"$(PROJECT_VERSION)\"
+######## Les Actions > ######## 
+#Traduction du mot/phrase
+ifeq ($(ACT_TRANSLATION), yes)
+DEFINE+=USE_ACT_TRANSLATION
+endif
+#Sovgarde de la raduction du mot/phrase
+ifeq ($(ACT_SAVE_TRANSLATION), yes)
+DEFINE+=USE_ACT_SAVE_TRANSLATION
+endif
+#Dire le mot/phrase
+ifeq ($(ACT_SAY), yes)
+DEFINE+=USE_ACT_SAY
+endif
+######## Les Actions < ########
+#Émuler les notifications.
+ifeq ($(EMULATE_NOTIFICATION), yes)
+DEFINE+=USE_EMULATE_NOTIFICATION
+endif
+# Ajout du -D
+DEFINES = $(patsubst %,-D%, $(DEFINE))
 
 
 ########################################################################

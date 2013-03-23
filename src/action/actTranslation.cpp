@@ -6,7 +6,7 @@
 #include <iostream>
 
 ActTranslation::ActTranslation(	wxString const& lgsrc, wxString const& lgto)
-: Action("Translation"), _lgsrc(lgsrc), _lgto(lgto)
+: _lgsrc(lgsrc), _lgto(lgto)
 {
 }
 
@@ -17,6 +17,7 @@ ActTranslation::~ActTranslation()
 void ActTranslation::execute()
 {
 	std::cout << "ActTranslation::execute" << std::endl;
+	std::cout << "-- " << getStringPreferences() << std::endl;
 }
 
 wxString ActTranslation::getStringPreferences()

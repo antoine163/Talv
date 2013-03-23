@@ -7,7 +7,7 @@
 #include <wx/app.h>
 
 #include "menuIcon.hpp"
-#include "shortcut.hpp"
+#include "actionManager.hpp"
 
 class App : public wxApp
 {
@@ -28,7 +28,7 @@ class App : public wxApp
 	
 	private:
 		MenuIcon *_menuIcon;
-		Shortcut *_shortcut;
+		ActionManager *_actionManager;
 };
 
 DECLARE_APP(App);

@@ -1,5 +1,5 @@
 //30/11/12
-//version : 1.1
+//version : 1.x
 
 #include "main.hpp"
 
@@ -14,6 +14,8 @@
 
 //Test
 #include <iostream>
+#include "action/actTranslation.hpp"
+#include "shortcut.hpp"
 
 IMPLEMENT_APP(App);
 
@@ -24,16 +26,14 @@ bool App::OnInit()
 	SetExitOnFrameDelete(false);
 	_menuIcon = nullptr;
 	
-	//Création du gestionnaire de raccourci clavier
-	_shortcut = new Shortcut(this);	
+	_actionManager = new ActionManager();
 	
-	ShortcutKey shortcutKey1(ShortcutKey::stringToShortcutKey("alt+shift+f"));
-	int id1 = _shortcut->creat(shortcutKey1);
-	Bind(EVT_SHORTCUT, &App::OnShortcut, this, id1);
-	
-	ShortcutKey shortcutKey2(ShortcutKey::stringToShortcutKey("shift+super+a"));
-	int id2 = _shortcut->creat(shortcutKey2);
-	Bind(EVT_SHORTCUT, &App::OnShortcut, this, id2);
+	ActTranslation act2("fr", "en");
+	_actionManager->add(ShortcutKey::stringToShortcutKey("alt+b"), act2);
+	ActTranslation act("en", "fr");
+	_actionManager->add(ShortcutKey::stringToShortcutKey("alt+z"), act);
+	ActTranslation act3("bd", "tr");
+	_actionManager->add(ShortcutKey::stringToShortcutKey("alt+t"), act3);
 	
 	creatMenuItem();
 
@@ -42,11 +42,11 @@ bool App::OnInit()
 
 int App::OnExit()
 {	
-	//Suppression du menu
+	//Suppression du menu.
 	deleteMenuItem();
 	
-	//Suppression des raccourci.
-	delete _shortcut;
+	//Suppression du mangeur d'action.
+	delete _actionManager;
 
 	return 0;
 }
@@ -89,7 +89,7 @@ void App::OnPreferences(wxCommandEvent&)
 		dlg = new DialogPreferences();
 		
 		//Désactivation des raccourcis.
-		_shortcut->enable(false);
+		_actionManager->enable(false);
 		
 		//Affichage du dialog.
 		if(dlg->ShowModal() == wxID_OK)
@@ -100,7 +100,7 @@ void App::OnPreferences(wxCommandEvent&)
 		}
 		
 		//On réactive les raccourcis
-		_shortcut->enable(true);
+		_actionManager->enable(true);
 		
 		//Supprime le dialog
 		delete dlg;
@@ -113,7 +113,7 @@ void App::OnPreferences(wxCommandEvent&)
 
 void App::OnEnable(wxCommandEvent& event)
 {
-	_shortcut->enable(event.IsChecked());
+	_actionManager->enable(event.IsChecked());
 }
 
 void App::OnAbout(wxCommandEvent&)
@@ -154,5 +154,5 @@ void App::OnExit(wxCommandEvent&)
 
 void App::OnShortcut(ShortcutEvent& event)
 {
-	std::cout << ShortcutKey::shortcutKeyToString(event.getShortcutKey()) << std::endl;
+	//std::cout << ShortcutKey::shortcutKeyToString(event.getShortcutKey()) << std::endl;
 }

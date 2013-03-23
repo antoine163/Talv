@@ -3,7 +3,7 @@
 #	Makfile for Linux.
 #
 # - author 	:	Maleyrie Antoine : antoine.maleyrie@gmail.com
-# - version	:	0.1
+# - version	:	0.2
 # - date 	:	10.03.2013
 #
 ########################################################################
@@ -39,17 +39,6 @@ endif
 
 
 ########################################################################
-# Define à ajouter.
-########################################################################
-# Non du projet
-DEFINE=PROJECT_NAME=\"$(PROJECT_NAME)\"
-# Numéro de version
-DEFINE+=PROJECT_VERSION=\"$(PROJECT_VERSION)\"
-# Ajout du -D
-DEFINES = $(patsubst %,-D%, $(DEFINE))
-
-
-########################################################################
 # Dossier pour les binaires.
 ########################################################################
 OBJ_DIR = obj
@@ -61,6 +50,7 @@ OBJ_DIR = obj
 SRC=../src/main.cpp	
 SRC+=../src/menuIcon.cpp
 SRC+=../src/shortcut.cpp
+SRC+=../src/actionManager.cpp
 SRC+=../src/action.cpp
 #Action
 ifeq ($(ACT_TRANSLATION), yes)

@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Maleyrie Antoine
-//! \version 1.0.0
+//! \version 1.1
 //! \date 13/12/12
 //!
 //! ****************************************************************************
@@ -265,6 +265,8 @@ ShortcutThread::~ShortcutThread()
 
 void ShortcutThread::registerShortcut(ShortcutKey const& shortcutKey)
 {
+	std::cout << "registerShortcut " << ShortcutKey::shortcutKeyToString(shortcutKey) << std::endl;
+
 	//Si les données de communication avec le thread sont utiliser,
 	//alors on attente.
 	while(_mutexCommunicationThread);
@@ -286,6 +288,9 @@ void ShortcutThread::registerShortcut(ShortcutKey const& shortcutKey)
 	XFlush(_display);
 	#elif defined(__WXMSW__)
 	#endif
+	
+	//On attend la fin d'utilisation des données.
+	while(_mutexCommunicationThread);
 }
 
 void ShortcutThread::unregisterShortcut(ShortcutKey const& shortcutKey)
@@ -381,6 +386,7 @@ wxThread::ExitCode ShortcutThread::Entry()
 					charKey[0]=_shortcutKeyCommunicationThread->getCharKey();
 					key = XKeysymToKeycode(_display, XStringToKeysym(charKey));
 					XGrabKey(_display, key, (unsigned int)_shortcutKeyCommunicationThread->getModifiers(), _root, True, GrabModeAsync, GrabModeAsync);
+					std::cout << "CommunicationThread::REGISTER " << charKey << " " << _shortcutKeyCommunicationThread->getModifiers() << std::endl;
 				break;
 				
 				//Désenregistrer le raccourci.
@@ -485,7 +491,7 @@ void Shortcut::remove(ShortcutKey const& shortcutKey)
 		_thread->unregisterShortcut(shortcutKey);
 		
     //Supprime le lien
-    _bind.erase(shortcutKey); 
+    _bind.erase(shortcutKey);
 }
 
 void Shortcut::removeAll()
