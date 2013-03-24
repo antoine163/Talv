@@ -7,6 +7,9 @@
 
 #include <wx/msgdlg.h>
 
+//TEST
+#include <iostream>
+
 //! ****************************************************************************
 //! Class DialogPreferences
 //! ****************************************************************************
@@ -39,6 +42,7 @@ DialogPreferences::~DialogPreferences()
 
 void DialogPreferences::OnButtonClickActDelete(wxCommandEvent&)
 {
+	
 }
 
 void DialogPreferences::OnButtonClickActPreferences(wxCommandEvent&)
@@ -47,9 +51,14 @@ void DialogPreferences::OnButtonClickActPreferences(wxCommandEvent&)
 
 void DialogPreferences::OnButtonClickActAdd(wxCommandEvent&)
 {
-	DialogShortcutPreferences *dlg = new DialogShortcutPreferences(this);
-	dlg->ShowModal();
-	delete dlg;
+	for(auto it: _listItemSelected)
+	{
+		std::cout << it.GetText() << std::endl;
+	}
+	
+	//DialogShortcutPreferences *dlg = new DialogShortcutPreferences(this);
+	//dlg->ShowModal();
+	//delete dlg;
 }
 
 void DialogPreferences::OnButtonClickOK(wxCommandEvent& event)
@@ -60,6 +69,29 @@ void DialogPreferences::OnButtonClickOK(wxCommandEvent& event)
 void DialogPreferences::OnButtonClickApply(wxCommandEvent& event)
 {	
 	event.Skip();
+}
+
+void DialogPreferences::OnListItemDeselectedAction(wxListEvent& event)
+{
+	//Recherche e suppression de l'item désélectionner.
+	for(size_t i = 0; i<_listItemSelected.size(); i++)
+	{
+		if(_listItemSelected[i] == event.GetItem())
+		{
+			_listItemSelected.erase(_listItemSelected.begin()+i);
+			break;
+		}
+	}
+}
+
+void DialogPreferences::OnListItemRightClickAction(wxListEvent& event)
+{
+	std::cout << "OnListItemRightClickAction : " << event.GetItem().GetText() << std::endl;
+}
+
+void DialogPreferences::OnListItemSelectedAction(wxListEvent& event)
+{
+	_listItemSelected.push_back(event.GetItem());
 }
 
 bool DialogPreferences::shutdownIsToggle()const

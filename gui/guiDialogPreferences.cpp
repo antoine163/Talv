@@ -106,6 +106,9 @@ GuiDialogPreferences::GuiDialogPreferences( wxWindow* parent, wxWindowID id, con
 	this->Centre( wxBOTH );
 	
 	// Connect Events
+	_listCtrlAction->Connect( wxEVT_COMMAND_LIST_ITEM_DESELECTED, wxListEventHandler( GuiDialogPreferences::OnListItemDeselectedAction ), NULL, this );
+	_listCtrlAction->Connect( wxEVT_COMMAND_LIST_ITEM_RIGHT_CLICK, wxListEventHandler( GuiDialogPreferences::OnListItemRightClickAction ), NULL, this );
+	_listCtrlAction->Connect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( GuiDialogPreferences::OnListItemSelectedAction ), NULL, this );
 	_buttonActDelete->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickActDelete ), NULL, this );
 	_buttonActPreferences->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickActPreferences ), NULL, this );
 	_buttonActAdd->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickActAdd ), NULL, this );
@@ -116,6 +119,9 @@ GuiDialogPreferences::GuiDialogPreferences( wxWindow* parent, wxWindowID id, con
 GuiDialogPreferences::~GuiDialogPreferences()
 {
 	// Disconnect Events
+	_listCtrlAction->Disconnect( wxEVT_COMMAND_LIST_ITEM_DESELECTED, wxListEventHandler( GuiDialogPreferences::OnListItemDeselectedAction ), NULL, this );
+	_listCtrlAction->Disconnect( wxEVT_COMMAND_LIST_ITEM_RIGHT_CLICK, wxListEventHandler( GuiDialogPreferences::OnListItemRightClickAction ), NULL, this );
+	_listCtrlAction->Disconnect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( GuiDialogPreferences::OnListItemSelectedAction ), NULL, this );
 	_buttonActDelete->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickActDelete ), NULL, this );
 	_buttonActPreferences->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickActPreferences ), NULL, this );
 	_buttonActAdd->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickActAdd ), NULL, this );

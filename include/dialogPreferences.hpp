@@ -7,7 +7,9 @@
 #include "guiDialogPreferences.h"
 #include "actionManager.hpp"
 
-#include <map>
+#include <wx/listctrl.h>
+
+#include <vector>
 
 class DialogPreferences : public GuiDialogPreferences 
 {
@@ -28,6 +30,12 @@ class DialogPreferences : public GuiDialogPreferences
 		//! \brief Applique les modifications est quitte le dialog.
 		void OnButtonClickOK(wxCommandEvent&);
 		
+		//
+		void OnListItemDeselectedAction(wxListEvent& event);
+		void OnListItemRightClickAction(wxListEvent& event);
+		void OnListItemSelectedAction(wxListEvent& event);
+
+		
 		//! \brief Pour savoir si le bouton shutdown et actionner.
 		bool shutdownIsToggle()const;
 		
@@ -36,6 +44,8 @@ class DialogPreferences : public GuiDialogPreferences
 		
 	protected:		
 		ActionManager *_actionManager;
+		
+		std::vector<wxListItem> _listItemSelected;
 };
 
 #endif //DIALOG_PREFERENCES_H

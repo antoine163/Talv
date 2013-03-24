@@ -57,6 +57,9 @@ class GuiDialogPreferences : public wxDialog
 		wxButton* _sdbSizerCancel;
 		
 		// Virtual event handlers, overide them in your derived class
+		virtual void OnListItemDeselectedAction( wxListEvent& event ) { event.Skip(); }
+		virtual void OnListItemRightClickAction( wxListEvent& event ) { event.Skip(); }
+		virtual void OnListItemSelectedAction( wxListEvent& event ) { event.Skip(); }
 		virtual void OnButtonClickActDelete( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnButtonClickActPreferences( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnButtonClickActAdd( wxCommandEvent& event ) { event.Skip(); }

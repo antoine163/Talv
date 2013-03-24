@@ -617,11 +617,11 @@
                                             <event name="OnListEndLabelEdit"></event>
                                             <event name="OnListInsertItem"></event>
                                             <event name="OnListItemActivated"></event>
-                                            <event name="OnListItemDeselected"></event>
+                                            <event name="OnListItemDeselected">OnListItemDeselectedAction</event>
                                             <event name="OnListItemFocused"></event>
                                             <event name="OnListItemMiddleClick"></event>
-                                            <event name="OnListItemRightClick"></event>
-                                            <event name="OnListItemSelected"></event>
+                                            <event name="OnListItemRightClick">OnListItemRightClickAction</event>
+                                            <event name="OnListItemSelected">OnListItemSelectedAction</event>
                                             <event name="OnListKeyDown"></event>
                                             <event name="OnMiddleDClick"></event>
                                             <event name="OnMiddleDown"></event>
