@@ -265,8 +265,6 @@ ShortcutThread::~ShortcutThread()
 
 void ShortcutThread::registerShortcut(ShortcutKey const& shortcutKey)
 {
-	std::cout << "registerShortcut " << ShortcutKey::shortcutKeyToString(shortcutKey) << std::endl;
-
 	//Si les données de communication avec le thread sont utiliser,
 	//alors on attente.
 	while(_mutexCommunicationThread);
@@ -386,7 +384,6 @@ wxThread::ExitCode ShortcutThread::Entry()
 					charKey[0]=_shortcutKeyCommunicationThread->getCharKey();
 					key = XKeysymToKeycode(_display, XStringToKeysym(charKey));
 					XGrabKey(_display, key, (unsigned int)_shortcutKeyCommunicationThread->getModifiers(), _root, True, GrabModeAsync, GrabModeAsync);
-					std::cout << "CommunicationThread::REGISTER " << charKey << " " << _shortcutKeyCommunicationThread->getModifiers() << std::endl;
 				break;
 				
 				//Désenregistrer le raccourci.

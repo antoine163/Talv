@@ -1,5 +1,5 @@
 //20.03.2013
-//v 0.1
+//v 0.2
 
 #include "actionManager.hpp"
 
@@ -62,12 +62,96 @@ void ActionManager::removeAll()
 	_actions.clear();
 }
 
-void ActionManager::load(wxFileConfig const& fileConfig)
+void ActionManager::load(wxFileConfig & fileConfig)
 {
+	wxString stringShortcut;
+	long lIndex;
+	
+	//Avent de charger quoi que se soi on supprime tout les raccourcis/actions
+	removeAll();
+	
+	//On récupère le premier raccourci
+	if(!fileConfig.GetFirstGroup(stringShortcut, lIndex))
+		return;
+		
+	do
+	{		
+		//On positionne le path
+		fileConfig.SetPath(stringShortcut);
+		
+		//Récupérer le type de l'action.
+		wxString actTypeName;
+		fileConfig.Read("ActTypeName", &actTypeName);
+				
+		//Crée et charge les préférences de l'action.
+		#ifdef USE_ACT_TRANSLATION
+		if(actTypeName == "ActTranslation")
+		{
+			add(ShortcutKey::stringToShortcutKey(stringShortcut),
+				ActTranslation::load(fileConfig));
+		}
+		#endif
+			
+		#ifdef USE_ACT_SAVE_TRANSLATION
+		if(actTypeName == "ActSaveTranslation")
+		{
+			add(ShortcutKey::stringToShortcutKey(stringShortcut),
+				ActSaveTranslation::read(fileConfig));
+		}
+		#endif
+			
+		#ifdef USE_ACT_SAY
+		if(actTypeName == "ActSay")
+		{
+			add(ShortcutKey::stringToShortcutKey(stringShortcut),
+				ActSay::read(fileConfig));
+		}
+		#endif
+		
+		//On positionne le path
+		fileConfig.SetPath("../");
+		
+	}//Puis tous les autres
+	while(fileConfig.GetNextGroup(stringShortcut, lIndex));
 }
 
-void ActionManager::sove(wxFileConfig & fileConfig)
+void ActionManager::sove(wxFileConfig & fileConfig)const
 {
+	for(auto &it: _actions)
+	{
+		//Obtenir la version string du raccourci.
+		wxString stringShortcut = ShortcutKey::shortcutKeyToString(it.first);
+		//Crée un groupe pour ce raccourci.
+		fileConfig.SetPath("/"+stringShortcut);
+			
+		//Sauvegarder le type d'action et c'est préférences.
+		#ifdef USE_ACT_TRANSLATION
+		if(typeid(*it.second).hash_code() == typeid(ActTranslation).hash_code())
+		{
+			fileConfig.Write("ActTypeName", "ActTranslation");
+			it.second->sove(fileConfig);
+			continue;
+		}
+		#endif
+			
+		#ifdef USE_ACT_SAVE_TRANSLATION
+		if(typeid(*it.second).hash_code() == typeid(ActSaveTranslation).hash_code())
+		{
+			fileConfig.Write("ActTypeName", "ActSaveTranslation");
+			it.second->sove(fileConfig);
+			continue;
+		}
+		#endif
+			
+		#ifdef USE_ACT_SAY
+		if(typeid(*it.second).hash_code() == typeid(ActSay).hash_code())
+		{
+			fileConfig.Write("ActTypeName", "ActSay");
+			it.second->sove(fileConfig);
+			continue;
+		}
+		#endif
+	}
 }
 
 void ActionManager::enable(bool val)

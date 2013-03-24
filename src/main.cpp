@@ -6,8 +6,9 @@
 #include <unistd.h>
 
 #include <wx/aboutdlg.h>
-#include <wx/utils.h> 
-#include <wx/process.h>
+//#include <wx/utils.h> 
+//#include <wx/process.h>
+#include <wx/fileconf.h>
 
 //Dialog
 #include "dialogPreferences.hpp"
@@ -28,14 +29,24 @@ bool App::OnInit()
 	
 	_actionManager = new ActionManager();
 	
-	ActTranslation act2("fr", "en");
-	_actionManager->add(ShortcutKey::stringToShortcutKey("alt+b"), act2);
-	ActTranslation act("en", "fr");
-	_actionManager->add(ShortcutKey::stringToShortcutKey("alt+z"), act);
-	ActTranslation act3("bd", "tr");
-	_actionManager->add(ShortcutKey::stringToShortcutKey("alt+t"), act3);
 	
-	creatMenuItem();
+	//Chargement de la config
+	wxFileConfig fileConfig(	PROJECT_NAME,
+								wxEmptyString,
+								wxGetUserHome()+"/."+PROJECT_NAME);
+	bool showMenu = true;
+	fileConfig.Read("show_menu", &showMenu);
+	
+	//Création du menu ou pas.
+	if(showMenu)
+		creatMenuItem();
+	else
+		deleteMenuItem();
+		
+	//Installation des raccourcis et actions
+	_actionManager->load(fileConfig);
+	
+	//_actionManager->sove(fileConfig);
 
 	return true;
 }
@@ -150,9 +161,4 @@ void App::OnAbout(wxCommandEvent&)
 void App::OnExit(wxCommandEvent&)
 {		
 	ExitMainLoop();
-}
-
-void App::OnShortcut(ShortcutEvent& event)
-{
-	//std::cout << ShortcutKey::shortcutKeyToString(event.getShortcutKey()) << std::endl;
 }

@@ -1,5 +1,5 @@
 //17.03.2013
-//v 0.2
+//v 0.3
 
 #ifndef ACTION_TRANSLATION_H
 #define ACTION_TRANSLATION_H
@@ -25,9 +25,15 @@ class ActTranslation : public Action
 		//! \brief Exécuter l'action.
 		void execute();
 		
+		//! \brief Permet de charger les préférences de l'action à partir du wxFileConfig.
+		static ActTranslation load(wxFileConfig & fileConfig);
+		
+		//! \brief Permet de sauvegarder les préférences de l'action dans le wxFileConfig.
+		void sove(wxFileConfig & fileConfig)const;
+		
 		//! \brief Préférences de l'action au format string.
 		//! \todo à implémenter correctement.
-		wxString getStringPreferences();
+		wxString getStringPreferences()const;
 	
 	private:
 		//! \brief Lange source.

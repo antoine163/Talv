@@ -24,7 +24,6 @@ class App : public wxApp
 		void OnEnable(wxCommandEvent& event);
 		void OnAbout(wxCommandEvent&);
 		void OnExit(wxCommandEvent&);
-		void OnShortcut(ShortcutEvent& event);
 	
 	private:
 		MenuIcon *_menuIcon;
