@@ -6,11 +6,7 @@
 #include <iostream>
 
 ActTranslation::ActTranslation(wxString const& lgsrc, wxString const& lgto)
-: _lgsrc(lgsrc), _lgto(lgto)
-{
-}
-
-void Action(wxFileConfig const& fileConfig)
+: Action(_("Translation")), _lgsrc(lgsrc), _lgto(lgto)
 {
 }
 

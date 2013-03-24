@@ -59,7 +59,7 @@ GuiDialogPreferences::GuiDialogPreferences( wxWindow* parent, wxWindowID id, con
 	_panelShortcut = new wxPanel( _notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	bSizer4 = new wxBoxSizer( wxVERTICAL );
 	
-	_listCtrlAction = new wxListCtrl( _panelShortcut, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT );
+	_listCtrlAction = new wxListCtrl( _panelShortcut, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_VRULES );
 	bSizer4->Add( _listCtrlAction, 1, wxALL|wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizer5;

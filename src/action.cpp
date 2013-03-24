@@ -3,10 +3,15 @@
 
 #include "action.hpp"
 
-Action::Action()
+Action::Action(wxString const& actName):_actName(actName)
 {
 }
 
 Action::~Action()
 {
+}
+
+wxString const& Action::getName()const
+{
+	return _actName;
 }

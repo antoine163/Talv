@@ -1,18 +1,19 @@
-//version : 1.0
+//version : 1.1
 //02.01.2013
 
 #ifndef DIALOG_PREFERENCES_H
 #define DIALOG_PREFERENCES_H
 
-#include <map>
-
 #include "guiDialogPreferences.h"
+#include "actionManager.hpp"
+
+#include <map>
 
 class DialogPreferences : public GuiDialogPreferences 
 {
 	public:
 		
-		DialogPreferences();
+		DialogPreferences(ActionManager *actionManager);
 		~DialogPreferences();
 		
 		//! \brief Supprimer une action.
@@ -27,10 +28,14 @@ class DialogPreferences : public GuiDialogPreferences
 		//! \brief Applique les modifications est quitte le dialog.
 		void OnButtonClickOK(wxCommandEvent&);
 		
-		//! \brief Pour savoir si le bouton shutdown et actionner
+		//! \brief Pour savoir si le bouton shutdown et actionner.
 		bool shutdownIsToggle()const;
 		
+		//! \brief Pour savoir si le boite de l'afficha de l'icône de l'application est cocher ou pas.
+		bool showIcon()const;
+		
 	protected:		
+		ActionManager *_actionManager;
 };
 
 #endif //DIALOG_PREFERENCES_H

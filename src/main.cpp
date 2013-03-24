@@ -43,11 +43,12 @@ bool App::OnInit()
 	else
 		deleteMenuItem();
 		
-	//Installation des raccourcis et actions
+	//Installation des raccourcis/actions
 	_actionManager->load(fileConfig);
 	
-	//_actionManager->sove(fileConfig);
-
+	
+	wxCommandEvent te;
+OnPreferences(te);
 	return true;
 }
 
@@ -96,18 +97,24 @@ void App::OnPreferences(wxCommandEvent&)
 	//On lance le dialog si il n'est pas déjà lancer.
 	if(dlg == nullptr)
 	{
-		//Création du dialog.
-		dlg = new DialogPreferences();
-		
 		//Désactivation des raccourcis.
 		_actionManager->enable(false);
 		
+		//Création du dialog.
+		dlg = new DialogPreferences(_actionManager);
+		
 		//Affichage du dialog.
 		if(dlg->ShowModal() == wxID_OK)
-		{
+		{	
 			//On vérifie si on doit quitter l'application ou pas.
 			if(dlg->shutdownIsToggle())
 				ExitMainLoop();
+				
+			//Vérification si on doit afficher ou pas l'icône dans la zone de notification.
+			if(dlg->showIcon())
+				creatMenuItem();
+			else
+				deleteMenuItem();
 		}
 		
 		//On réactive les raccourcis

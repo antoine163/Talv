@@ -14,7 +14,7 @@ class Action
 {
 	public:		
 		//! \brief Constructeur.
-		Action();
+		Action(wxString const& actName);
 		
 		//! \brief destructeur.
 		//! \todo à implémenter correctement avec la gestion mémoire de _actShortcutKey.
@@ -29,8 +29,14 @@ class Action
 		//! \brief Permet d'extraire les préférences de l'action au format string,
 		//! dans le but des les affichées à l'utilisateur.
 		virtual wxString getStringPreferences()const=0;
+		
+		//! \brief Obtenir le non de l'action.
+		//! \return Le non de l'action.
+		wxString const& getName()const;
 	
 	private:
+		//! \brief Le non de l'action.
+		wxString _actName;
 };
 
 #endif //ACTION_H
