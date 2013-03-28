@@ -21,7 +21,7 @@
         <property name="skip_python_events">1</property>
         <property name="use_enum">0</property>
         <property name="use_microsoft_bom">0</property>
-        <object class="Dialog" expanded="0">
+        <object class="Dialog" expanded="1">
             <property name="bg"></property>
             <property name="center">wxBOTH</property>
             <property name="context_help"></property>
@@ -79,16 +79,16 @@
             <event name="OnSetFocus"></event>
             <event name="OnSize"></event>
             <event name="OnUpdateUI"></event>
-            <object class="wxBoxSizer" expanded="0">
+            <object class="wxBoxSizer" expanded="1">
                 <property name="minimum_size"></property>
                 <property name="name">bSizer1</property>
                 <property name="orient">wxVERTICAL</property>
                 <property name="permission">none</property>
-                <object class="sizeritem" expanded="0">
+                <object class="sizeritem" expanded="1">
                     <property name="border">5</property>
                     <property name="flag">wxEXPAND | wxALL</property>
                     <property name="proportion">1</property>
-                    <object class="wxNotebook" expanded="0">
+                    <object class="wxNotebook" expanded="1">
                         <property name="bg"></property>
                         <property name="bitmapsize"></property>
                         <property name="context_help"></property>
@@ -139,11 +139,11 @@
                         <event name="OnSetFocus"></event>
                         <event name="OnSize"></event>
                         <event name="OnUpdateUI"></event>
-                        <object class="notebookpage" expanded="0">
+                        <object class="notebookpage" expanded="1">
                             <property name="bitmap"></property>
                             <property name="label">General</property>
                             <property name="select">1</property>
-                            <object class="wxPanel" expanded="0">
+                            <object class="wxPanel" expanded="1">
                                 <property name="bg"></property>
                                 <property name="context_help"></property>
                                 <property name="context_menu">1</property>
@@ -190,7 +190,7 @@
                                 <event name="OnSetFocus"></event>
                                 <event name="OnSize"></event>
                                 <event name="OnUpdateUI"></event>
-                                <object class="wxBoxSizer" expanded="0">
+                                <object class="wxBoxSizer" expanded="1">
                                     <property name="minimum_size"></property>
                                     <property name="name">bSizer2</property>
                                     <property name="orient">wxVERTICAL</property>
@@ -372,7 +372,7 @@
                                             <event name="OnUpdateUI"></event>
                                         </object>
                                     </object>
-                                    <object class="sizeritem" expanded="0">
+                                    <object class="sizeritem" expanded="1">
                                         <property name="border">5</property>
                                         <property name="flag">wxEXPAND</property>
                                         <property name="proportion">0</property>
@@ -508,11 +508,11 @@
                                 </object>
                             </object>
                         </object>
-                        <object class="notebookpage" expanded="0">
+                        <object class="notebookpage" expanded="1">
                             <property name="bitmap"></property>
                             <property name="label">Shortcut</property>
                             <property name="select">0</property>
-                            <object class="wxPanel" expanded="0">
+                            <object class="wxPanel" expanded="1">
                                 <property name="bg"></property>
                                 <property name="context_help"></property>
                                 <property name="context_menu">1</property>
@@ -559,16 +559,16 @@
                                 <event name="OnSetFocus"></event>
                                 <event name="OnSize"></event>
                                 <event name="OnUpdateUI"></event>
-                                <object class="wxBoxSizer" expanded="0">
+                                <object class="wxBoxSizer" expanded="1">
                                     <property name="minimum_size"></property>
                                     <property name="name">bSizer4</property>
                                     <property name="orient">wxVERTICAL</property>
-                                    <property name="permission">protected</property>
-                                    <object class="sizeritem" expanded="0">
+                                    <property name="permission">none</property>
+                                    <object class="sizeritem" expanded="1">
                                         <property name="border">5</property>
                                         <property name="flag">wxALL|wxEXPAND</property>
                                         <property name="proportion">1</property>
-                                        <object class="wxListCtrl" expanded="0">
+                                        <object class="wxListCtrl" expanded="1">
                                             <property name="bg"></property>
                                             <property name="context_help"></property>
                                             <property name="context_menu">1</property>
@@ -620,7 +620,7 @@
                                             <event name="OnListItemDeselected">OnListItemDeselectedAction</event>
                                             <event name="OnListItemFocused"></event>
                                             <event name="OnListItemMiddleClick"></event>
-                                            <event name="OnListItemRightClick">OnListItemRightClickAction</event>
+                                            <event name="OnListItemRightClick"></event>
                                             <event name="OnListItemSelected">OnListItemSelectedAction</event>
                                             <event name="OnListKeyDown"></event>
                                             <event name="OnMiddleDClick"></event>
@@ -636,13 +636,63 @@
                                             <event name="OnSetFocus"></event>
                                             <event name="OnSize"></event>
                                             <event name="OnUpdateUI"></event>
+                                            <object class="wxMenu" expanded="1">
+                                                <property name="label"></property>
+                                                <property name="name">_menuListAction</property>
+                                                <property name="permission">protected</property>
+                                                <object class="wxMenuItem" expanded="1">
+                                                    <property name="bitmap">; Load From File</property>
+                                                    <property name="checked">0</property>
+                                                    <property name="enabled">1</property>
+                                                    <property name="help">Add an action</property>
+                                                    <property name="id">wxID_ADD</property>
+                                                    <property name="kind">wxITEM_NORMAL</property>
+                                                    <property name="label">Add</property>
+                                                    <property name="name">_menuItemListAdd</property>
+                                                    <property name="permission">protected</property>
+                                                    <property name="shortcut"></property>
+                                                    <property name="unchecked_bitmap">; Load From File [-1; -1]</property>
+                                                    <event name="OnMenuSelection">OnButtonClickActAdd</event>
+                                                    <event name="OnUpdateUI"></event>
+                                                </object>
+                                                <object class="wxMenuItem" expanded="1">
+                                                    <property name="bitmap"></property>
+                                                    <property name="checked">0</property>
+                                                    <property name="enabled">0</property>
+                                                    <property name="help">Preferences of this actions</property>
+                                                    <property name="id">wxID_ANY</property>
+                                                    <property name="kind">wxITEM_NORMAL</property>
+                                                    <property name="label">Preferences</property>
+                                                    <property name="name">_menuItemListPreferences</property>
+                                                    <property name="permission">protected</property>
+                                                    <property name="shortcut"></property>
+                                                    <property name="unchecked_bitmap"></property>
+                                                    <event name="OnMenuSelection">OnButtonClickActPreferences</event>
+                                                    <event name="OnUpdateUI"></event>
+                                                </object>
+                                                <object class="wxMenuItem" expanded="1">
+                                                    <property name="bitmap">; Load From File [-1; -1]</property>
+                                                    <property name="checked">0</property>
+                                                    <property name="enabled">0</property>
+                                                    <property name="help">Delete this actions</property>
+                                                    <property name="id">wxID_DELETE</property>
+                                                    <property name="kind">wxITEM_NORMAL</property>
+                                                    <property name="label">Delete</property>
+                                                    <property name="name">_menuItemListDelete</property>
+                                                    <property name="permission">protected</property>
+                                                    <property name="shortcut"></property>
+                                                    <property name="unchecked_bitmap">; Load From File</property>
+                                                    <event name="OnMenuSelection">OnButtonClickActDelete</event>
+                                                    <event name="OnUpdateUI"></event>
+                                                </object>
+                                            </object>
                                         </object>
                                     </object>
-                                    <object class="sizeritem" expanded="0">
+                                    <object class="sizeritem" expanded="1">
                                         <property name="border">5</property>
                                         <property name="flag">wxEXPAND</property>
                                         <property name="proportion">0</property>
-                                        <object class="wxBoxSizer" expanded="0">
+                                        <object class="wxBoxSizer" expanded="1">
                                             <property name="minimum_size"></property>
                                             <property name="name">bSizer5</property>
                                             <property name="orient">wxHORIZONTAL</property>
@@ -660,7 +710,7 @@
                                                     <property name="fg"></property>
                                                     <property name="font"></property>
                                                     <property name="hidden">0</property>
-                                                    <property name="id">wxID_ANY</property>
+                                                    <property name="id">wxID_DELETE</property>
                                                     <property name="label">Delete</property>
                                                     <property name="maximum_size"></property>
                                                     <property name="minimum_size"></property>
@@ -727,7 +777,7 @@
                                                     <property name="fg"></property>
                                                     <property name="font"></property>
                                                     <property name="hidden">0</property>
-                                                    <property name="id">wxID_ANY</property>
+                                                    <property name="id">wxID_PREFERENCES</property>
                                                     <property name="label">Preferences</property>
                                                     <property name="maximum_size"></property>
                                                     <property name="minimum_size"></property>
@@ -784,7 +834,7 @@
                                                     <property name="fg"></property>
                                                     <property name="font"></property>
                                                     <property name="hidden">0</property>
-                                                    <property name="id">wxID_ANY</property>
+                                                    <property name="id">wxID_ADD</property>
                                                     <property name="label">Add</property>
                                                     <property name="maximum_size"></property>
                                                     <property name="minimum_size"></property>

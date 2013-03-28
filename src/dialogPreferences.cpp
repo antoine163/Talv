@@ -5,7 +5,9 @@
 #include "dialogShortcutPreferences.hpp"
 #include "shortcut.hpp"
 
+#include <wx/artprov.h>
 #include <wx/msgdlg.h>
+#include <wx/menu.h>
 
 //TEST
 #include <iostream>
@@ -20,8 +22,7 @@ DialogPreferences::DialogPreferences(ActionManager *actionManager)
     //Magnifier 
     _staticTextSetting->SetLabelMarkup("<b>"+_("Setting")+"</b>");
 	_staticTextShutdown->SetLabelMarkup("<b>"+_("Shutdown this application")+"</b>");
-
-
+	
 	//_listCtrlAction->EnableAlternateRowColours();
 	_listCtrlAction->AppendColumn(_("Shortcut"), wxLIST_FORMAT_LEFT, 100);
 	_listCtrlAction->AppendColumn(_("Action"), wxLIST_FORMAT_LEFT, 100);
@@ -42,19 +43,17 @@ DialogPreferences::~DialogPreferences()
 
 void DialogPreferences::OnButtonClickActDelete(wxCommandEvent&)
 {
-	
+	std::cout << "OnButtonClickActDelete" << std::endl;
 }
 
 void DialogPreferences::OnButtonClickActPreferences(wxCommandEvent&)
 {
+	std::cout << "OnButtonClickActPreferences" << std::endl;
 }
 
 void DialogPreferences::OnButtonClickActAdd(wxCommandEvent&)
 {
-	for(auto it: _listItemSelected)
-	{
-		std::cout << it.GetText() << std::endl;
-	}
+	std::cout << "OnButtonClickActAdd" << std::endl;
 	
 	//DialogShortcutPreferences *dlg = new DialogShortcutPreferences(this);
 	//dlg->ShowModal();
@@ -82,16 +81,46 @@ void DialogPreferences::OnListItemDeselectedAction(wxListEvent& event)
 			break;
 		}
 	}
-}
-
-void DialogPreferences::OnListItemRightClickAction(wxListEvent& event)
-{
-	std::cout << "OnListItemRightClickAction : " << event.GetItem().GetText() << std::endl;
+	
+	//Si rien n'est sélectionner on désactive les boutons delete.
+	if(_listItemSelected.size() <= 0)
+	{
+		_buttonActDelete->Enable(false);
+		_menuItemListDelete->Enable(false);
+	}
+		
+	//On désactive le bouton Préférence soft si il y a un seul item de sélectionner.
+	if(_listItemSelected.size() != 1)
+	{
+		_buttonActPreferences->Enable(false);
+		_menuItemListPreferences->Enable(false);
+	}
+	else
+	{
+		_buttonActPreferences->Enable();
+		_menuItemListPreferences->Enable();
+	}
 }
 
 void DialogPreferences::OnListItemSelectedAction(wxListEvent& event)
 {
 	_listItemSelected.push_back(event.GetItem());
+	
+	//activation du bouton delete
+	_buttonActDelete->Enable();
+	_menuItemListDelete->Enable();
+	
+	//on active le bouton préférence seulement si il y a qu'un item de sélectionner.
+	if(_listItemSelected.size() == 1)
+	{
+		_buttonActPreferences->Enable();
+		_menuItemListPreferences->Enable();
+	}
+	else
+	{
+		_buttonActPreferences->Enable(false);
+		_menuItemListPreferences->Enable(false);
+	}
 }
 
 bool DialogPreferences::shutdownIsToggle()const

@@ -32,7 +32,6 @@ class DialogPreferences : public GuiDialogPreferences
 		
 		//
 		void OnListItemDeselectedAction(wxListEvent& event);
-		void OnListItemRightClickAction(wxListEvent& event);
 		void OnListItemSelectedAction(wxListEvent& event);
 
 		

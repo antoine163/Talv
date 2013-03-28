@@ -24,6 +24,7 @@
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/icon.h>
+#include <wx/menu.h>
 #include <wx/listctrl.h>
 #include <wx/button.h>
 #include <wx/notebook.h>
@@ -46,8 +47,11 @@ class GuiDialogPreferences : public wxDialog
 		wxStaticText* _staticTextShutdown;
 		wxToggleButton* _toggleBtnTurnOff;
 		wxPanel* _panelShortcut;
-		wxBoxSizer* bSizer4;
 		wxListCtrl* _listCtrlAction;
+		wxMenu* _menuListAction;
+		wxMenuItem* _menuItemListAdd;
+		wxMenuItem* _menuItemListPreferences;
+		wxMenuItem* _menuItemListDelete;
 		wxButton* _buttonActDelete;
 		wxButton* _buttonActPreferences;
 		wxButton* _buttonActAdd;
@@ -58,11 +62,10 @@ class GuiDialogPreferences : public wxDialog
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnListItemDeselectedAction( wxListEvent& event ) { event.Skip(); }
-		virtual void OnListItemRightClickAction( wxListEvent& event ) { event.Skip(); }
 		virtual void OnListItemSelectedAction( wxListEvent& event ) { event.Skip(); }
-		virtual void OnButtonClickActDelete( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnButtonClickActPreferences( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnButtonClickActAdd( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnButtonClickActPreferences( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnButtonClickActDelete( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnButtonClickApply( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnButtonClickOK( wxCommandEvent& event ) { event.Skip(); }
 		
@@ -71,6 +74,11 @@ class GuiDialogPreferences : public wxDialog
 		
 		GuiDialogPreferences( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 400,300 ), long style = wxDEFAULT_DIALOG_STYLE|wxDIALOG_NO_PARENT|wxSTAY_ON_TOP );
 		~GuiDialogPreferences();
+		
+		void _listCtrlActionOnContextMenu( wxMouseEvent &event )
+		{
+			_listCtrlAction->PopupMenu( _menuListAction, event.GetPosition() );
+		}
 	
 };
 
