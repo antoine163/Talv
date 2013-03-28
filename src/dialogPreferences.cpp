@@ -5,7 +5,6 @@
 #include "dialogShortcutPreferences.hpp"
 #include "shortcut.hpp"
 
-#include <wx/artprov.h>
 #include <wx/msgdlg.h>
 #include <wx/menu.h>
 
@@ -43,7 +42,18 @@ DialogPreferences::~DialogPreferences()
 
 void DialogPreferences::OnButtonClickActDelete(wxCommandEvent&)
 {
-	std::cout << "OnButtonClickActDelete" << std::endl;
+	wxMessageDialog *dlg = nullptr;
+	
+	if(_listItemSelected.size() > 1)
+		dlg = new wxMessageDialog(this, _("Do you want really delete this actions ?"), _("Delete actions"), wxYES_NO|wxCENTRE);
+	else
+		dlg = new wxMessageDialog(this, _("Do you want really delete an action ?"), _("Delete action"), wxYES_NO|wxCENTRE);
+    
+    if(dlg->ShowModal() == wxID_OK )
+	{
+	}
+	
+    dlg->Destroy();
 }
 
 void DialogPreferences::OnButtonClickActPreferences(wxCommandEvent&)
@@ -72,7 +82,7 @@ void DialogPreferences::OnButtonClickApply(wxCommandEvent& event)
 
 void DialogPreferences::OnListItemDeselectedAction(wxListEvent& event)
 {
-	//Recherche e suppression de l'item désélectionner.
+	//Recherche et suppression de l'item désélectionner.
 	for(size_t i = 0; i<_listItemSelected.size(); i++)
 	{
 		if(_listItemSelected[i] == event.GetItem())
