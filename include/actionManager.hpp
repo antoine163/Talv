@@ -50,6 +50,11 @@ class ActionManager : public wxEvtHandler
 		//! \brief Obtenir la lites des raccourcis/actions.
 		std::map<ShortcutKey, Action*> const* getAction()const;
 		
+		//! \brief Obtenir l'action d'un raccourcis.
+		//! \param shortcutKey est le raccourcis à rechercher.
+		//! \return nullptr si raccourci/action n'existe pas.
+		Action const* getAction(ShortcutKey const& shortcutKey)const;
+		
 	private:
 		//! \brief Créé une nouvelle instance d'une action à partir de son nom.
 		//! \note il faudra prévoir de libérai la mémoire après utilisation de l'action.

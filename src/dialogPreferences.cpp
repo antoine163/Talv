@@ -72,6 +72,7 @@ void DialogPreferences::OnButtonClickActDelete(wxCommandEvent&)
 void DialogPreferences::OnButtonClickActPreferences(wxCommandEvent&)
 {
 	std::cout << "OnButtonClickActPreferences" << std::endl;
+	std::cout << _actionManager->getAction(ShortcutKey::stringToShortcutKey(_listItemSelected[0].GetText())) << std::endl;
 }
 
 void DialogPreferences::OnButtonClickActAdd(wxCommandEvent&)

@@ -280,7 +280,7 @@ class Shortcut
 		//! \brief Obtenir l'id d'un raccourci.
 		//! \param shortcutKey Le raccourci.
 		//! \return id
-		int getId(ShortcutKey const& shortcutKey);
+		int getId(ShortcutKey const& shortcutKey)const;
 		
 		//! \brief Active ou désactive les raccourcis.
 		//! \param val true pour activer et false pour désactiver.

@@ -31,8 +31,9 @@ class DialogPreferences : public GuiDialogPreferences
 		//! \brief Applique les modifications est quitte le dialog.
 		void OnButtonClickOK(wxCommandEvent&);
 		
-		//
+		//! \brief Un item a été désélectionner.
 		void OnListItemDeselectedAction(wxListEvent& event);
+		//! \brief Un item a été sélectionner.
 		void OnListItemSelectedAction(wxListEvent& event);
 
 		

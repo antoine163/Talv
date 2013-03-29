@@ -501,9 +501,9 @@ void Shortcut::removeAll()
 	_bind.clear();
 }
 
-int Shortcut::getId(ShortcutKey const& shortcutKey)
+int Shortcut::getId(ShortcutKey const& shortcutKey)const
 {
-    return _bind[shortcutKey];
+    return _bind.at(shortcutKey);
 }
 
 void Shortcut::enable(bool val)

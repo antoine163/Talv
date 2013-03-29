@@ -124,7 +124,7 @@ void ActionManager::sove(wxFileConfig & fileConfig)const
 		//Crée un groupe pour ce raccourci.
 		fileConfig.SetPath("/"+stringShortcut);
 			
-		//Sauvegarder le type d'action et c'est préférences.
+		//Sauvegarder le type d'action et ces préférences.
 		#ifdef USE_ACT_TRANSLATION
 		if(typeid(*it.second).hash_code() == typeid(ActTranslation).hash_code())
 		{
@@ -162,6 +162,16 @@ void ActionManager::enable(bool val)
 std::map<ShortcutKey, Action*> const* ActionManager::getAction()const
 {
 	return &_actions;
+}
+
+Action const* ActionManager::getAction(ShortcutKey const& shortcutKey)const
+{
+	std::map<ShortcutKey, Action*>::const_iterator it = _actions.find(shortcutKey);
+	
+	if(it == _actions.end())
+		return nullptr;
+	
+	return it->second;
 }
 
 Action* ActionManager::newAction(Action const &act)const
