@@ -47,7 +47,7 @@ void DialogPreferences::OnButtonClickActDelete(wxCommandEvent&)
 	if(_listItemSelected.size() > 1)
 		dlg = new wxMessageDialog(this, _("Do you want really delete this actions ?"), _("Delete actions"), wxYES_NO|wxCENTRE);
 	else
-		dlg = new wxMessageDialog(this, _("Do you want really delete an action ?"), _("Delete action"), wxYES_NO|wxCENTRE);
+		dlg = new wxMessageDialog(this, _("Do you want really delete this action ?"), _("Delete action"), wxYES_NO|wxCENTRE);
     
     if(dlg->ShowModal() == wxID_OK )
 	{
