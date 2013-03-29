@@ -6,12 +6,14 @@
 
 #include "action.hpp"
 
+#include "shortcut.hpp"
+
 #include <wx/event.h>
 #include <wx/fileconf.h>
 
 #include <map>
 
-#include "shortcut.hpp"
+
 
 //singleton ?
 class ActionManager : public wxEvtHandler

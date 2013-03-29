@@ -7,7 +7,8 @@
 //! Class DialogShortcutPreferences
 //! ****************************************************************************
 
-DialogShortcutPreferences::DialogShortcutPreferences(wxWindow* parent) : GuiDialogShortcutPreferences(parent)
+DialogShortcutPreferences::DialogShortcutPreferences(wxWindow* parent, Action const*)
+: GuiDialogShortcutPreferences(parent)
 {	
 }
 

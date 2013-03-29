@@ -40,6 +40,16 @@ DialogPreferences::~DialogPreferences()
 {
 }
 
+bool DialogPreferences::shutdownIsToggle()const
+{
+	return _toggleBtnTurnOff->GetValue();
+}
+
+bool DialogPreferences::showIcon()const
+{
+	return _checkBoxShowMenu->GetValue();
+}
+
 void DialogPreferences::OnButtonClickActDelete(wxCommandEvent&)
 {
 	wxMessageDialog *dlg = nullptr;
@@ -51,7 +61,7 @@ void DialogPreferences::OnButtonClickActDelete(wxCommandEvent&)
 		dlg = new wxMessageDialog(this, _("Do you want really delete this action ?"), _("Delete action"), wxYES_NO|wxCENTRE);
     
     //Affichage du dialog
-    if(dlg->ShowModal() == wxID_YES )
+    if(dlg->ShowModal() == wxID_YES)
 	{
 		//Supprimer tous les items sélectionnés
 		for(size_t i = 0; i<_listItemSelected.size(); i++)
@@ -64,24 +74,41 @@ void DialogPreferences::OnButtonClickActDelete(wxCommandEvent&)
 			_listCtrlAction->DeleteItem(idItem);			
 		}
 		_listItemSelected.clear();
+		
+		//On désactive les boutons Prefernce et delete
+		_buttonActPreferences->Enable(false);
+		_menuItemListPreferences->Enable(false);
+		_buttonActDelete->Enable(false);
+		_menuItemListDelete->Enable(false);
 	}
 	
     dlg->Destroy();
+    delete dlg;
 }
 
 void DialogPreferences::OnButtonClickActPreferences(wxCommandEvent&)
 {
-	std::cout << "OnButtonClickActPreferences" << std::endl;
-	std::cout << _actionManager->getAction(ShortcutKey::stringToShortcutKey(_listItemSelected[0].GetText())) << std::endl;
+	Action const* tmpAct = _actionManager->getAction(ShortcutKey::stringToShortcutKey(_listItemSelected[0].GetText()));
+	
+	DialogShortcutPreferences *dlg = new DialogShortcutPreferences(this, tmpAct);
+	
+	if(dlg->ShowModal() == wxID_OK)
+	{
+	}
+	
+	dlg->Destroy();
+	delete dlg;
 }
 
 void DialogPreferences::OnButtonClickActAdd(wxCommandEvent&)
 {
-	std::cout << "OnButtonClickActAdd" << std::endl;
+	DialogShortcutPreferences *dlg = new DialogShortcutPreferences(this);
+	if(dlg->ShowModal() == wxID_OK)
+	{
+	}
 	
-	//DialogShortcutPreferences *dlg = new DialogShortcutPreferences(this);
-	//dlg->ShowModal();
-	//delete dlg;
+	dlg->Destroy();
+	delete dlg;
 }
 
 void DialogPreferences::OnButtonClickOK(wxCommandEvent& event)
@@ -145,15 +172,5 @@ void DialogPreferences::OnListItemSelectedAction(wxListEvent& event)
 		_buttonActPreferences->Enable(false);
 		_menuItemListPreferences->Enable(false);
 	}
-}
-
-bool DialogPreferences::shutdownIsToggle()const
-{
-	return _toggleBtnTurnOff->GetValue();
-}
-
-bool DialogPreferences::showIcon()const
-{
-	return _checkBoxShowMenu->GetValue();
 }
 		

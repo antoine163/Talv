@@ -6,11 +6,13 @@
 
 #include "guiDialogShortcutPreferences.h"
 
+#include "action.hpp"
+
 class DialogShortcutPreferences : public GuiDialogShortcutPreferences 
 {
 	public:
 		
-		DialogShortcutPreferences(wxWindow* parent);
+		DialogShortcutPreferences(wxWindow* parent, Action const* inAct = nullptr);
 		~DialogShortcutPreferences();
 		
 	protected:		

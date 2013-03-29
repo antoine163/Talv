@@ -19,6 +19,13 @@ class DialogPreferences : public GuiDialogPreferences
 		DialogPreferences(ActionManager *actionManager);
 		~DialogPreferences();
 		
+		//! \brief Pour savoir si le bouton shutdown et actionner.
+		bool shutdownIsToggle()const;
+		
+		//! \brief Pour savoir si le boite de l'afficha de l'icône de l'application est cocher ou pas.
+		bool showIcon()const;
+		
+	protected:		
 		//! \brief Supprimer une action.
 		void OnButtonClickActDelete(wxCommandEvent&);
 		//! \brief Configurai une action une action.
@@ -35,15 +42,7 @@ class DialogPreferences : public GuiDialogPreferences
 		void OnListItemDeselectedAction(wxListEvent& event);
 		//! \brief Un item a été sélectionner.
 		void OnListItemSelectedAction(wxListEvent& event);
-
 		
-		//! \brief Pour savoir si le bouton shutdown et actionner.
-		bool shutdownIsToggle()const;
-		
-		//! \brief Pour savoir si le boite de l'afficha de l'icône de l'application est cocher ou pas.
-		bool showIcon()const;
-		
-	protected:		
 		ActionManager *_actionManager;
 		
 		std::vector<wxListItem> _listItemSelected;
