@@ -164,7 +164,7 @@ std::map<ShortcutKey, Action*> const* ActionManager::getAction()const
 	return &_actions;
 }
 
-Action* ActionManager::newAction(Action const &act)
+Action* ActionManager::newAction(Action const &act)const
 {	
 	#ifdef USE_ACT_TRANSLATION
 	if(typeid(act).hash_code() == typeid(ActTranslation).hash_code())

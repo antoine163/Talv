@@ -53,7 +53,7 @@ class ActionManager : public wxEvtHandler
 	private:
 		//! \brief Créé une nouvelle instance d'une action à partir de son nom.
 		//! \note il faudra prévoir de libérai la mémoire après utilisation de l'action.
-		Action* newAction(Action const &act);
+		Action* newAction(Action const &act)const;
 		
 		//! \brief Méthode appeler lorsque un événement de raccourci clavier survient.
 		void OnShortcut(ShortcutEvent& event);

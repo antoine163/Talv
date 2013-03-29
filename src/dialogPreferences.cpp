@@ -44,13 +44,26 @@ void DialogPreferences::OnButtonClickActDelete(wxCommandEvent&)
 {
 	wxMessageDialog *dlg = nullptr;
 	
+	//Création du dialog.
 	if(_listItemSelected.size() > 1)
 		dlg = new wxMessageDialog(this, _("Do you want really delete this actions ?"), _("Delete actions"), wxYES_NO|wxCENTRE);
 	else
 		dlg = new wxMessageDialog(this, _("Do you want really delete this action ?"), _("Delete action"), wxYES_NO|wxCENTRE);
     
-    if(dlg->ShowModal() == wxID_OK )
+    //Affichage du dialog
+    if(dlg->ShowModal() == wxID_YES )
 	{
+		//Supprimer tous les items sélectionnés
+		for(size_t i = 0; i<_listItemSelected.size(); i++)
+		{
+			//On l'ajoute à la liste des raccourcis/actions a supprimer.
+			_shortcutKeyActDelete.push_back(ShortcutKey::stringToShortcutKey(_listItemSelected[i].GetText()));
+			//On cherche l'id de l'item.
+			long idItem = _listCtrlAction->FindItem(-1, _listItemSelected[i].GetText());
+			//Et on le supprime.
+			_listCtrlAction->DeleteItem(idItem);			
+		}
+		_listItemSelected.clear();
 	}
 	
     dlg->Destroy();

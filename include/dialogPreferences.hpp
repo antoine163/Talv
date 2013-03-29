@@ -6,6 +6,7 @@
 
 #include "guiDialogPreferences.h"
 #include "actionManager.hpp"
+#include "shortcut.hpp"
 
 #include <wx/listctrl.h>
 
@@ -45,6 +46,7 @@ class DialogPreferences : public GuiDialogPreferences
 		ActionManager *_actionManager;
 		
 		std::vector<wxListItem> _listItemSelected;
+		std::vector<ShortcutKey> _shortcutKeyActDelete;
 };
 
 #endif //DIALOG_PREFERENCES_H
