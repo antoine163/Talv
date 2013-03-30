@@ -22,10 +22,10 @@ GuiDialogShortcutPreferences::GuiDialogShortcutPreferences( wxWindow* parent, wx
 	wxBoxSizer* bSizer3;
 	bSizer3 = new wxBoxSizer( wxVERTICAL );
 	
-	wxStaticText* _staticTextShortcut;
-	_staticTextShortcut = new wxStaticText( this, wxID_ANY, _("Shortcut :"), wxDefaultPosition, wxDefaultSize, 0 );
-	_staticTextShortcut->Wrap( -1 );
-	bSizer3->Add( _staticTextShortcut, 1, wxALIGN_CENTER_VERTICAL|wxTOP|wxRIGHT|wxLEFT|wxALIGN_RIGHT, 5 );
+	wxStaticText* _staticTextShortcutText;
+	_staticTextShortcutText = new wxStaticText( this, wxID_ANY, _("Shortcut :"), wxDefaultPosition, wxDefaultSize, 0 );
+	_staticTextShortcutText->Wrap( -1 );
+	bSizer3->Add( _staticTextShortcutText, 1, wxALIGN_CENTER_VERTICAL|wxTOP|wxRIGHT|wxLEFT|wxALIGN_RIGHT, 5 );
 	
 	bSizer2->Add( bSizer3, 1, wxALIGN_CENTER_VERTICAL, 5 );
 	
@@ -42,15 +42,16 @@ GuiDialogShortcutPreferences::GuiDialogShortcutPreferences( wxWindow* parent, wx
 	wxBoxSizer* bSizer5;
 	bSizer5 = new wxBoxSizer( wxVERTICAL );
 	
-	wxStaticText* _staticTextAction;
-	_staticTextAction = new wxStaticText( this, wxID_ANY, _("Action :"), wxDefaultPosition, wxDefaultSize, 0 );
-	_staticTextAction->Wrap( -1 );
-	bSizer5->Add( _staticTextAction, 1, wxTOP|wxRIGHT|wxLEFT|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
+	wxStaticText* _staticTextActionText;
+	_staticTextActionText = new wxStaticText( this, wxID_ANY, _("Action :"), wxDefaultPosition, wxDefaultSize, 0 );
+	_staticTextActionText->Wrap( -1 );
+	bSizer5->Add( _staticTextActionText, 1, wxTOP|wxRIGHT|wxLEFT|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
 	
 	bSizer4->Add( bSizer5, 1, wxALIGN_CENTER_VERTICAL, 5 );
 	
-	wxArrayString _choiceActionChoices;
-	_choiceAction = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, _choiceActionChoices, 0 );
+	wxString _choiceActionChoices[] = { _("a"), _("b"), _("c"), _("d") };
+	int _choiceActionNChoices = sizeof( _choiceActionChoices ) / sizeof( wxString );
+	_choiceAction = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, _choiceActionNChoices, _choiceActionChoices, 0 );
 	_choiceAction->SetSelection( 0 );
 	bSizer4->Add( _choiceAction, 4, wxALIGN_CENTER_VERTICAL|wxEXPAND|wxTOP|wxRIGHT|wxLEFT, 5 );
 	
@@ -62,10 +63,10 @@ GuiDialogShortcutPreferences::GuiDialogShortcutPreferences( wxWindow* parent, wx
 	wxBoxSizer* bSizer7;
 	bSizer7 = new wxBoxSizer( wxVERTICAL );
 	
-	wxStaticText* _staticTextDescription;
-	_staticTextDescription = new wxStaticText( this, wxID_ANY, _("Description :"), wxDefaultPosition, wxDefaultSize, 0 );
-	_staticTextDescription->Wrap( -1 );
-	bSizer7->Add( _staticTextDescription, 1, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
+	wxStaticText* _staticTextDescriptionText;
+	_staticTextDescriptionText = new wxStaticText( this, wxID_ANY, _("Description :"), wxDefaultPosition, wxDefaultSize, 0 );
+	_staticTextDescriptionText->Wrap( -1 );
+	bSizer7->Add( _staticTextDescriptionText, 1, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
 	
 	bSizer6->Add( bSizer7, 1, wxALIGN_CENTER_VERTICAL, 5 );
 	
@@ -101,8 +102,20 @@ GuiDialogShortcutPreferences::GuiDialogShortcutPreferences( wxWindow* parent, wx
 	bSizer1->Fit( this );
 	
 	this->Centre( wxBOTH );
+	
+	// Connect Events
+	_textCtrlChortcut->Connect( wxEVT_KEY_DOWN, wxKeyEventHandler( GuiDialogShortcutPreferences::OnKeyDown ), NULL, this );
+	_textCtrlChortcut->Connect( wxEVT_KEY_UP, wxKeyEventHandler( GuiDialogShortcutPreferences::OnKeyUp ), NULL, this );
+	_textCtrlChortcut->Connect( wxEVT_KILL_FOCUS, wxFocusEventHandler( GuiDialogShortcutPreferences::OnKillFocus ), NULL, this );
+	_textCtrlChortcut->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler( GuiDialogShortcutPreferences::OnLeftDown ), NULL, this );
 }
 
 GuiDialogShortcutPreferences::~GuiDialogShortcutPreferences()
 {
+	// Disconnect Events
+	_textCtrlChortcut->Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler( GuiDialogShortcutPreferences::OnKeyDown ), NULL, this );
+	_textCtrlChortcut->Disconnect( wxEVT_KEY_UP, wxKeyEventHandler( GuiDialogShortcutPreferences::OnKeyUp ), NULL, this );
+	_textCtrlChortcut->Disconnect( wxEVT_KILL_FOCUS, wxFocusEventHandler( GuiDialogShortcutPreferences::OnKillFocus ), NULL, this );
+	_textCtrlChortcut->Disconnect( wxEVT_LEFT_DOWN, wxMouseEventHandler( GuiDialogShortcutPreferences::OnLeftDown ), NULL, this );
+	
 }

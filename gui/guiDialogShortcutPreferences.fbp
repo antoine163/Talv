@@ -118,7 +118,7 @@
                                         <property name="label">Shortcut :</property>
                                         <property name="maximum_size"></property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">_staticTextShortcut</property>
+                                        <property name="name">_staticTextShortcutText</property>
                                         <property name="permission">none</property>
                                         <property name="pos"></property>
                                         <property name="size"></property>
@@ -194,12 +194,12 @@
                                 <event name="OnChar"></event>
                                 <event name="OnEnterWindow"></event>
                                 <event name="OnEraseBackground"></event>
-                                <event name="OnKeyDown"></event>
-                                <event name="OnKeyUp"></event>
-                                <event name="OnKillFocus"></event>
+                                <event name="OnKeyDown">OnKeyDown</event>
+                                <event name="OnKeyUp">OnKeyUp</event>
+                                <event name="OnKillFocus">OnKillFocus</event>
                                 <event name="OnLeaveWindow"></event>
                                 <event name="OnLeftDClick"></event>
-                                <event name="OnLeftDown"></event>
+                                <event name="OnLeftDown">OnLeftDown</event>
                                 <event name="OnLeftUp"></event>
                                 <event name="OnMiddleDClick"></event>
                                 <event name="OnMiddleDown"></event>
@@ -231,7 +231,7 @@
                         <property name="name">bSizer4</property>
                         <property name="orient">wxHORIZONTAL</property>
                         <property name="permission">none</property>
-                        <object class="sizeritem" expanded="0">
+                        <object class="sizeritem" expanded="1">
                             <property name="border">5</property>
                             <property name="flag">wxALIGN_CENTER_VERTICAL</property>
                             <property name="proportion">1</property>
@@ -256,7 +256,7 @@
                                         <property name="label">Action :</property>
                                         <property name="maximum_size"></property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">_staticTextAction</property>
+                                        <property name="name">_staticTextActionText</property>
                                         <property name="permission">none</property>
                                         <property name="pos"></property>
                                         <property name="size"></property>
@@ -304,7 +304,7 @@
                             <property name="proportion">4</property>
                             <object class="wxChoice" expanded="0">
                                 <property name="bg"></property>
-                                <property name="choices"></property>
+                                <property name="choices">&quot;a&quot; &quot;b&quot; &quot;c&quot; &quot;d&quot;</property>
                                 <property name="context_help"></property>
                                 <property name="context_menu">1</property>
                                 <property name="enabled">1</property>
@@ -390,7 +390,7 @@
                                         <property name="label">Description :</property>
                                         <property name="maximum_size"></property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">_staticTextDescription</property>
+                                        <property name="name">_staticTextDescriptionText</property>
                                         <property name="permission">none</property>
                                         <property name="pos"></property>
                                         <property name="size"></property>

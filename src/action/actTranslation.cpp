@@ -6,7 +6,8 @@
 #include <iostream>
 
 ActTranslation::ActTranslation(wxString const& lgsrc, wxString const& lgto)
-: Action(_("Translation")), _lgsrc(lgsrc), _lgto(lgto)
+: Action(_("Translation"), _("Translation a word or a group words from google.")),
+_lgsrc(lgsrc), _lgto(lgto)
 {
 }
 

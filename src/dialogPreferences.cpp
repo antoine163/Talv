@@ -71,7 +71,7 @@ void DialogPreferences::OnButtonClickActDelete(wxCommandEvent&)
 			//On cherche l'id de l'item.
 			long idItem = _listCtrlAction->FindItem(-1, _listItemSelected[i].GetText());
 			//Et on le supprime.
-			_listCtrlAction->DeleteItem(idItem);			
+			_listCtrlAction->DeleteItem(idItem);
 		}
 		_listItemSelected.clear();
 		
@@ -88,9 +88,12 @@ void DialogPreferences::OnButtonClickActDelete(wxCommandEvent&)
 
 void DialogPreferences::OnButtonClickActPreferences(wxCommandEvent&)
 {
-	Action const* tmpAct = _actionManager->getAction(ShortcutKey::stringToShortcutKey(_listItemSelected[0].GetText()));
+	//Récupération du raccourci.
+	ShortcutKey tmpShortcut = ShortcutKey::stringToShortcutKey(_listItemSelected[0].GetText());
+	//Récupération de l'action.
+	Action const* tmpAct = _actionManager->getAction(tmpShortcut);
 	
-	DialogShortcutPreferences *dlg = new DialogShortcutPreferences(this, tmpAct);
+	DialogShortcutPreferences *dlg = new DialogShortcutPreferences(this, tmpShortcut, *tmpAct);
 	
 	if(dlg->ShowModal() == wxID_OK)
 	{

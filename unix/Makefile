@@ -3,7 +3,7 @@
 #	Makfile for Linux.
 #
 # - author 	:	Maleyrie Antoine : antoine.maleyrie@gmail.com
-# - version	:	0.2
+# - version	:	0.3
 # - date 	:	10.03.2013
 #
 ########################################################################
@@ -95,8 +95,8 @@ release: build
 # Compilation en debug.
 ########################################################################
 .PHONY: debug
-release: CXX_FLAGS+=$(CXX_FLAGS_DEBUG)
-release: build
+debug: CXX_FLAGS+=$(CXX_FLAGS_DEBUG)
+debug: build
 	
 
 ########################################################################
