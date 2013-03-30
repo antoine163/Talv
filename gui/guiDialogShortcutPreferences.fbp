@@ -93,7 +93,7 @@
                         <property name="name">bSizer2</property>
                         <property name="orient">wxHORIZONTAL</property>
                         <property name="permission">none</property>
-                        <object class="sizeritem" expanded="0">
+                        <object class="sizeritem" expanded="1">
                             <property name="border">5</property>
                             <property name="flag">wxALIGN_CENTER_VERTICAL</property>
                             <property name="proportion">1</property>
@@ -365,7 +365,7 @@
                         <property name="name">bSizer6</property>
                         <property name="orient">wxHORIZONTAL</property>
                         <property name="permission">none</property>
-                        <object class="sizeritem" expanded="0">
+                        <object class="sizeritem" expanded="1">
                             <property name="border">5</property>
                             <property name="flag">wxALIGN_CENTER_VERTICAL</property>
                             <property name="proportion">1</property>
@@ -559,7 +559,7 @@
                         <property name="id">wxID_ANY</property>
                         <property name="maximum_size"></property>
                         <property name="minimum_size">-1,100</property>
-                        <property name="name">m_panel1</property>
+                        <property name="name">_panelActPreferences</property>
                         <property name="permission">protected</property>
                         <property name="pos"></property>
                         <property name="size"></property>

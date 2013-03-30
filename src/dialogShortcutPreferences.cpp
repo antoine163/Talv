@@ -71,7 +71,7 @@ void DialogShortcutPreferences::OnKeyDown(wxKeyEvent& event)
 	
 	//Mise à jour du texte.
 	_shortKeyIsValide = false;
-	_textCtrlChortcut->SetForegroundColour( wxSystemSettings::GetColour(wxSYS_COLOUR_GRAYTEXT));
+	_textCtrlChortcut->SetForegroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_GRAYTEXT));
 	updateTextCtrlChortcut(event.GetUnicodeKey());
 	
 	event.Skip();

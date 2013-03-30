@@ -38,7 +38,7 @@ class GuiDialogShortcutPreferences : public wxDialog
 		wxTextCtrl* _textCtrlChortcut;
 		wxChoice* _choiceAction;
 		wxStaticText* _staticTextDescription;
-		wxPanel* m_panel1;
+		wxPanel* _panelActPreferences;
 		wxStdDialogButtonSizer* m_sdbSizer1;
 		wxButton* m_sdbSizer1OK;
 		wxButton* m_sdbSizer1Cancel;

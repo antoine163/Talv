@@ -80,10 +80,10 @@ GuiDialogShortcutPreferences::GuiDialogShortcutPreferences( wxWindow* parent, wx
 	m_staticline1 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 	bSizer1->Add( m_staticline1, 0, wxEXPAND | wxALL, 5 );
 	
-	m_panel1 = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	m_panel1->SetMinSize( wxSize( -1,100 ) );
+	_panelActPreferences = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	_panelActPreferences->SetMinSize( wxSize( -1,100 ) );
 	
-	bSizer1->Add( m_panel1, 1, wxEXPAND | wxALL, 5 );
+	bSizer1->Add( _panelActPreferences, 1, wxEXPAND | wxALL, 5 );
 	
 	wxStaticLine* m_staticline2;
 	m_staticline2 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
