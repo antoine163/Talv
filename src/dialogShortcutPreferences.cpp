@@ -2,6 +2,8 @@
 //02.01.2013
 
 #include "dialogShortcutPreferences.hpp"
+#include "resource.hpp"
+#include "actionManager.hpp"
 
 //TEST
 #include <iostream>
@@ -20,6 +22,15 @@ DialogShortcutPreferences::DialogShortcutPreferences(wxWindow* parent)
 	_keySuperIsPressed = false;
 	
 	_shortKeyIsValide = false;
+	
+	//Ajout des actions dans les chois.
+	std::vector<wxString> const& actions = Resource::getInstance()->getActions();	
+	for(size_t i = 0; i<actions.size(); i++)
+	{
+		_choiceAction->Append(actions[i]);
+	}
+	//Sélectionner la une action par défaut.
+	_choiceAction->SetSelection(0);
 }
 
 DialogShortcutPreferences::DialogShortcutPreferences(	wxWindow* parent,
@@ -27,6 +38,9 @@ DialogShortcutPreferences::DialogShortcutPreferences(	wxWindow* parent,
 														Action const& inAct)
 : GuiDialogShortcutPreferences(parent)
 {
+	//copie de l'action
+	_action = ActionManager::newAction(inAct);
+	
 	//Initialisation des variable
 	_keyCtrlIsPressed = false;
 	_keyAltIsPressed = false;
@@ -35,15 +49,33 @@ DialogShortcutPreferences::DialogShortcutPreferences(	wxWindow* parent,
 	
 	_shortKeyIsValide = true;
 	
-	//
+	//Ajout des actions dans la liste des chois.
+	std::vector<wxString> const& actions = Resource::getInstance()->getActions();	
+	for(size_t i = 0; i<actions.size(); i++)
+	{
+		_choiceAction->Append(actions[i]);
+	}
+	//Sélectionner la bonne action.
+	int n = _choiceAction->FindString(_action->getName());
+	_choiceAction->SetSelection(n);
+	
+	//Affiche du raccourci.
 	_textCtrlChortcut->SetValue(ShortcutKey::shortcutKeyToString(inShortcutKey));
 	_textCtrlChortcut->SetForegroundColour(wxNullColour);
 	
-	_staticTextDescription->SetLabel(inAct.getDescription());
+	//Affiche de la description de l'action
+	_staticTextDescription->SetLabel(_action->getDescription());
+	
+	//Ajout du panne d'édition propre à l'action.
+	_bSizerActPreference->Add(_action->getPanelPreferences(this), 1, wxEXPAND | wxALL, 5);
+
+	//
+	GetSizer()->Fit( this );
 }
 
 DialogShortcutPreferences::~DialogShortcutPreferences()
 {
+	delete _action;
 }
 
 void DialogShortcutPreferences::OnKeyDown(wxKeyEvent& event)

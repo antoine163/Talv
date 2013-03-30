@@ -43,6 +43,8 @@ class DialogShortcutPreferences : public GuiDialogShortcutPreferences
 		void updateTextCtrlChortcut(wxChar key);
 		
 	private:
+		Action * _action;
+		
 		bool _keyCtrlIsPressed;
 		bool _keyAltIsPressed;
 		bool _keyShiftIsPressed;

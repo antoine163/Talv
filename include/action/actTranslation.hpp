@@ -33,6 +33,8 @@ class PanelActTranslation : public GuiPanelActTranslation
 //! \brief Action de traduction.
 class ActTranslation : public Action
 {
+	friend PanelActTranslation;
+	
 	public:
 		//! \brief Constructeur.
 		//! Les deux paramètres doive être écrit en abrégé.

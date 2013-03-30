@@ -49,16 +49,16 @@ class ActionManager : public wxEvtHandler, public Singleton<ActionManager>
 		//! \return nullptr si raccourci/action n'existe pas.
 		Action const* getAction(ShortcutKey const& shortcutKey)const;
 		
+		//! \brief Créé une nouvelle instance d'une action.
+		//! \note Il faudra prévoir de libérer la mémoire après utilisation de l'action.
+		static Action* newAction(Action const &act);
+		
 	private:
 		//! \brief Constructeur.
 		ActionManager();
 		
 		//! \brief destructeur.
 		virtual ~ActionManager();
-		
-		//! \brief Créé une nouvelle instance d'une action.
-		//! \note Il faudra prévoir de libérai la mémoire après utilisation de l'action.
-		Action* newAction(Action const &act)const;
 		
 		//! \brief Méthode appeler lorsque un événement de raccourci clavier survient.
 		void OnShortcut(ShortcutEvent& event);

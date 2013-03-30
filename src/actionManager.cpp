@@ -171,7 +171,7 @@ Action const* ActionManager::getAction(ShortcutKey const& shortcutKey)const
 	return it->second;
 }
 
-Action* ActionManager::newAction(Action const &act)const
+Action* ActionManager::newAction(Action const &act)
 {	
 	#ifdef USE_ACT_TRANSLATION
 	if(typeid(act).hash_code() == typeid(ActTranslation).hash_code())

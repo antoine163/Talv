@@ -11,7 +11,7 @@
 
 GuiDialogShortcutPreferences::GuiDialogShortcutPreferences( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
 {
-	this->SetSizeHints( wxSize( -1,-1 ), wxDefaultSize );
+	this->SetSizeHints( wxSize( 450,200 ), wxDefaultSize );
 	
 	wxBoxSizer* bSizer1;
 	bSizer1 = new wxBoxSizer( wxVERTICAL );
@@ -49,9 +49,8 @@ GuiDialogShortcutPreferences::GuiDialogShortcutPreferences( wxWindow* parent, wx
 	
 	bSizer4->Add( bSizer5, 1, wxALIGN_CENTER_VERTICAL, 5 );
 	
-	wxString _choiceActionChoices[] = { _("a"), _("b"), _("c"), _("d") };
-	int _choiceActionNChoices = sizeof( _choiceActionChoices ) / sizeof( wxString );
-	_choiceAction = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, _choiceActionNChoices, _choiceActionChoices, 0 );
+	wxArrayString _choiceActionChoices;
+	_choiceAction = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, _choiceActionChoices, 0 );
 	_choiceAction->SetSelection( 0 );
 	bSizer4->Add( _choiceAction, 4, wxALIGN_CENTER_VERTICAL|wxEXPAND|wxTOP|wxRIGHT|wxLEFT, 5 );
 	
@@ -80,10 +79,9 @@ GuiDialogShortcutPreferences::GuiDialogShortcutPreferences( wxWindow* parent, wx
 	m_staticline1 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 	bSizer1->Add( m_staticline1, 0, wxEXPAND | wxALL, 5 );
 	
-	_panelActPreferences = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	_panelActPreferences->SetMinSize( wxSize( -1,100 ) );
+	_bSizerActPreference = new wxBoxSizer( wxVERTICAL );
 	
-	bSizer1->Add( _panelActPreferences, 1, wxEXPAND | wxALL, 5 );
+	bSizer1->Add( _bSizerActPreference, 1, wxEXPAND, 5 );
 	
 	wxStaticLine* m_staticline2;
 	m_staticline2 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
@@ -99,7 +97,6 @@ GuiDialogShortcutPreferences::GuiDialogShortcutPreferences( wxWindow* parent, wx
 	
 	this->SetSizer( bSizer1 );
 	this->Layout();
-	bSizer1->Fit( this );
 	
 	this->Centre( wxBOTH );
 	

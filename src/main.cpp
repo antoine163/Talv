@@ -2,18 +2,14 @@
 //version : 1.x
 
 #include "main.hpp"
-
-#include <unistd.h>
-
-#include <wx/aboutdlg.h>
-//#include <wx/utils.h> 
-//#include <wx/process.h>
-#include <wx/fileconf.h>
-
-//Dialog
+#include "resource.hpp"
 #include "dialogPreferences.hpp"
 
-//Test
+#include <wx/aboutdlg.h>
+#include <wx/fileconf.h>
+#include <unistd.h>
+
+//TEST
 #include <iostream>
 #include "action/actTranslation.hpp"
 #include "shortcut.hpp"
@@ -27,8 +23,10 @@ bool App::OnInit()
 	SetExitOnFrameDelete(false);
 	_menuIcon = nullptr;
 	
+	//Crée de l'instance de ActionManager;
 	_actionManager = ActionManager::getInstance();
-	
+	//Création des ressources 
+	Resource::getInstance();
 	
 	//Chargement de la config
 	wxFileConfig fileConfig(	PROJECT_NAME,
@@ -60,6 +58,9 @@ int App::OnExit()
 	//Suppression du mangeur d'action.
 	ActionManager::kill();
 	_actionManager = nullptr;
+	
+	//Suppression des ressources.
+	Resource::kill();
 
 	return 0;
 }

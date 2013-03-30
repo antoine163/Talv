@@ -20,7 +20,6 @@
 #include <wx/textctrl.h>
 #include <wx/choice.h>
 #include <wx/statline.h>
-#include <wx/panel.h>
 #include <wx/button.h>
 #include <wx/dialog.h>
 
@@ -38,7 +37,7 @@ class GuiDialogShortcutPreferences : public wxDialog
 		wxTextCtrl* _textCtrlChortcut;
 		wxChoice* _choiceAction;
 		wxStaticText* _staticTextDescription;
-		wxPanel* _panelActPreferences;
+		wxBoxSizer* _bSizerActPreference;
 		wxStdDialogButtonSizer* m_sdbSizer1;
 		wxButton* m_sdbSizer1OK;
 		wxButton* m_sdbSizer1Cancel;
@@ -52,7 +51,7 @@ class GuiDialogShortcutPreferences : public wxDialog
 	
 	public:
 		
-		GuiDialogShortcutPreferences( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Shortcut Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP );
+		GuiDialogShortcutPreferences( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Shortcut Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 450,200 ), long style = wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP );
 		~GuiDialogShortcutPreferences();
 	
 };

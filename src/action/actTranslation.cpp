@@ -2,6 +2,7 @@
 //v 0.3
 
 #include "action/actTranslation.hpp"
+#include "resource.hpp"
 
 //TEST
 #include <iostream>
@@ -12,6 +13,20 @@
 PanelActTranslation::PanelActTranslation(wxWindow* parent, ActTranslation * act)
 : GuiPanelActTranslation(parent), _act(act)
 {
+	std::map<wxString, wxString> const& langs = Resource::getInstance()->getLangs();	
+	
+	//Ajout des langes.
+	for(auto &it: langs)
+	{
+		_choiceLanguageSource->Append(it.second);
+		_choiceLanguageOfTranslation->Append(it.second);
+	}
+
+	//Sélectionne les bonnes langs.
+	int n = _choiceLanguageSource->FindString(langs.at(_act->_lgsrc));
+	_choiceLanguageSource->SetSelection(n);
+	n = _choiceLanguageOfTranslation->FindString(langs.at(_act->_lgto));
+	_choiceLanguageOfTranslation->SetSelection(n);
 }
 
 PanelActTranslation::~PanelActTranslation()
@@ -73,5 +88,6 @@ void ActTranslation::sove(wxFileConfig & fileConfig)const
 
 wxString ActTranslation::getStringPreferences()const
 {
-	return _lgsrc + " to " + _lgto;
+	std::map<wxString, wxString> const& langs = Resource::getInstance()->getLangs();
+	return langs.at(_lgsrc) + _(" to ") + langs.at(_lgto);
 }
