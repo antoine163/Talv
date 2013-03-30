@@ -5,6 +5,30 @@
 #define ACTION_TRANSLATION_H
 
 #include "action.hpp"
+#include "action/guiPanelActTranslation.h"
+
+//! ********************************************************************
+//! Class PanelActTranslation
+//! ********************************************************************
+
+class ActTranslation;
+class PanelActTranslation : public GuiPanelActTranslation
+{
+	public:
+		PanelActTranslation(wxWindow* parent, ActTranslation * act);
+		~PanelActTranslation();
+		
+		void OnChoiceSrc(wxCommandEvent& event);
+		void OnChoiceTo(wxCommandEvent& event);
+	
+	private:
+		ActTranslation * _act;
+};
+
+
+//! ********************************************************************
+//! Class ActTranslation
+//! ********************************************************************
 
 //! \brief Action de traduction.
 class ActTranslation : public Action
@@ -24,6 +48,11 @@ class ActTranslation : public Action
 		
 		//! \brief Exécuter l'action.
 		void execute();
+		
+		//! \brief Obtenir le panel pour l'édition de l'action.
+		//! \param parent est le parent du panel.
+		//! \note Cette méthode crées un panel et retourne le pointeur sur se panel il faudra prévoir de libérai la mémoire.
+		wxPanel* getPanelPreferences(wxWindow* parent);
 		
 		//! \brief Permet de charger les préférences de l'action à partir du wxFileConfig.
 		static ActTranslation load(wxFileConfig & fileConfig);

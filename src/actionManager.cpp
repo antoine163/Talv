@@ -87,24 +87,21 @@ void ActionManager::load(wxFileConfig & fileConfig)
 		#ifdef USE_ACT_TRANSLATION
 		if(actTypeName == "ActTranslation")
 		{
-			add(ShortcutKey::stringToShortcutKey(stringShortcut),
-				ActTranslation::load(fileConfig));
+			add(ShortcutKey::stringToShortcutKey(stringShortcut), ActTranslation::load(fileConfig));
 		}
 		#endif
 			
 		#ifdef USE_ACT_SAVE_TRANSLATION
 		if(actTypeName == "ActSaveTranslation")
 		{
-			add(ShortcutKey::stringToShortcutKey(stringShortcut),
-				ActSaveTranslation::read(fileConfig));
+			add(ShortcutKey::stringToShortcutKey(stringShortcut), ActSaveTranslation::load(fileConfig));
 		}
 		#endif
 			
 		#ifdef USE_ACT_SAY
 		if(actTypeName == "ActSay")
 		{
-			add(ShortcutKey::stringToShortcutKey(stringShortcut),
-				ActSay::read(fileConfig));
+			add(ShortcutKey::stringToShortcutKey(stringShortcut), ActSay::load(fileConfig));
 		}
 		#endif
 		

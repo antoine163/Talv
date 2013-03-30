@@ -3,7 +3,7 @@
 #	Makfile for Linux.
 #
 # - author 	:	Maleyrie Antoine : antoine.maleyrie@gmail.com
-# - version	:	0.3
+# - version	:	0.4
 # - date 	:	10.03.2013
 #
 ########################################################################
@@ -52,9 +52,11 @@ SRC+=../src/menuIcon.cpp
 SRC+=../src/shortcut.cpp
 SRC+=../src/actionManager.cpp
 SRC+=../src/action.cpp
+SRC+=../src/resource.cpp
 #Action
 ifeq ($(ACT_TRANSLATION), yes)
 SRC+=../src/action/actTranslation.cpp
+SRC+=../gui/action/guiPanelActTranslation.cpp
 endif
 #GUI
 SRC+=../gui/guiDialogPreferences.cpp

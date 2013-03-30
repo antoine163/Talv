@@ -6,9 +6,9 @@
 //TEST
 #include <iostream>
 
-//! ****************************************************************************
+//! ********************************************************************
 //! Class DialogShortcutPreferences
-//! ****************************************************************************
+//! ********************************************************************
 
 DialogShortcutPreferences::DialogShortcutPreferences(wxWindow* parent)
 : GuiDialogShortcutPreferences(parent)
@@ -73,8 +73,6 @@ void DialogShortcutPreferences::OnKeyDown(wxKeyEvent& event)
 	_shortKeyIsValide = false;
 	_textCtrlChortcut->SetForegroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_GRAYTEXT));
 	updateTextCtrlChortcut(event.GetUnicodeKey());
-	
-	event.Skip();
 }
 
 void DialogShortcutPreferences::OnKeyUp(wxKeyEvent& event)

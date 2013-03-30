@@ -6,6 +6,7 @@
 
 #include <wx/string.h>
 #include <wx/fileconf.h>
+#include <wx/panel.h>
 
 //! \brief Class de base pour les actions.
 //! \attention Dans les classes fille il faudra probablement prévoie un constructeur par recopie.
@@ -29,6 +30,11 @@ class Action
 		//! \brief Permet d'extraire les préférences de l'action au format string,
 		//! dans le but des les affichées à l'utilisateur.
 		virtual wxString getStringPreferences()const=0;
+		
+		//! \brief Obtenir le panel pour l'édition de l'action.
+		//! Pour les classes filles le but est d'éditer directement les paramètre (attribut) de l'action via directement le panel.
+		//! \note Cette méthode crées un panel et retourne le pointeur sur se panel il faudra prévoir de libérai la mémoire.
+		virtual wxPanel* getPanelPreferences(wxWindow* parent)=0;
 		
 		//! \brief Obtenir la description de l'action.
 		//! \return La description.
