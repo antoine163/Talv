@@ -15,12 +15,12 @@ enum RawKeyCodeModifier_e
 	RAW_KEY_CODE_MODIFIER_CONTROL 	= 37,
 	RAW_KEY_CODE_MODIFIER_ALT 		= 64,
 	RAW_KEY_CODE_MODIFIER_SHIFT 	= 50,
-	RAW_KEY_CODE_MODIFIER_WIN 		= 133,
+	RAW_KEY_CODE_MODIFIER_SUPER		= 133,
 	#elif defined(__WXMSW__)
 	RAW_KEY_CODE_MODIFIER_CONTROL 	= 17,
 	RAW_KEY_CODE_MODIFIER_ALT 		= 18,
 	RAW_KEY_CODE_MODIFIER_SHIFT 	= 16,
-	RAW_KEY_CODE_MODIFIER_WIN 		= 91,
+	RAW_KEY_CODE_MODIFIER_SUPER		= 91,
 	#endif
 };
 
@@ -46,7 +46,7 @@ class DialogShortcutPreferences : public GuiDialogShortcutPreferences
 		bool _keyCtrlIsPressed;
 		bool _keyAltIsPressed;
 		bool _keyShiftIsPressed;
-		bool _keyWinIsPressed;
+		bool _keySuperIsPressed;
 		
 		bool _shortKeyIsValide;
 };

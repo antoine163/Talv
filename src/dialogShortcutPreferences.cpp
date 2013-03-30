@@ -17,7 +17,7 @@ DialogShortcutPreferences::DialogShortcutPreferences(wxWindow* parent)
 	_keyCtrlIsPressed = false;
 	_keyAltIsPressed = false;
 	_keyShiftIsPressed = false;
-	_keyWinIsPressed = false;
+	_keySuperIsPressed = false;
 	
 	_shortKeyIsValide = false;
 }
@@ -31,9 +31,9 @@ DialogShortcutPreferences::DialogShortcutPreferences(	wxWindow* parent,
 	_keyCtrlIsPressed = false;
 	_keyAltIsPressed = false;
 	_keyShiftIsPressed = false;
-	_keyWinIsPressed = false;
+	_keySuperIsPressed = false;
 	
-	_shortKeyIsValide = false;
+	_shortKeyIsValide = true;
 	
 	//
 	_textCtrlChortcut->SetValue(ShortcutKey::shortcutKeyToString(inShortcutKey));
@@ -64,8 +64,8 @@ void DialogShortcutPreferences::OnKeyDown(wxKeyEvent& event)
 		case RAW_KEY_CODE_MODIFIER_SHIFT:
 		_keyShiftIsPressed = true;
 		break;
-		case RAW_KEY_CODE_MODIFIER_WIN:
-		_keyWinIsPressed = true;
+		case RAW_KEY_CODE_MODIFIER_SUPER:
+		_keySuperIsPressed = true;
 		break;
 	}
 	
@@ -95,8 +95,8 @@ void DialogShortcutPreferences::OnKeyUp(wxKeyEvent& event)
 		case RAW_KEY_CODE_MODIFIER_SHIFT:
 		_keyShiftIsPressed = false;
 		break;
-		case RAW_KEY_CODE_MODIFIER_WIN:
-		_keyWinIsPressed = false;
+		case RAW_KEY_CODE_MODIFIER_SUPER:
+		_keySuperIsPressed = false;
 		break;
 	}
 	
@@ -127,12 +127,12 @@ void DialogShortcutPreferences::updateTextCtrlChortcut(wxChar key)
 				
 			strShortcut << "shift";
 		}
-		if(_keyWinIsPressed)
+		if(_keySuperIsPressed)
 		{
 			if(!strShortcut.IsEmpty())
 				strShortcut << "+";
 				
-			strShortcut << "win";
+			strShortcut << "super";
 		}
 			
 		if(!strShortcut.IsEmpty() && key)
