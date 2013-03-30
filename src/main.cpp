@@ -27,7 +27,7 @@ bool App::OnInit()
 	SetExitOnFrameDelete(false);
 	_menuIcon = nullptr;
 	
-	_actionManager = new ActionManager();
+	_actionManager = ActionManager::getInstance();
 	
 	
 	//Chargement de la config
@@ -58,7 +58,8 @@ int App::OnExit()
 	deleteMenuItem();
 	
 	//Suppression du mangeur d'action.
-	delete _actionManager;
+	ActionManager::kill();
+	_actionManager = nullptr;
 
 	return 0;
 }

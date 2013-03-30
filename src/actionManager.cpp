@@ -1,5 +1,5 @@
 //20.03.2013
-//v 0.2
+//v 0.3
 
 #include "actionManager.hpp"
 

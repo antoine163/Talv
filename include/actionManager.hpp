@@ -1,30 +1,22 @@
 //20.03.2013
-//v 0.2
+//v 0.3
 
 #ifndef ACTION_MANAGER_H
 #define ACTION_MANAGER_H
 
 #include "action.hpp"
-
+#include "singleton.hpp"
 #include "shortcut.hpp"
 
 #include <wx/event.h>
 #include <wx/fileconf.h>
-
 #include <map>
 
-
-
-//singleton ?
-class ActionManager : public wxEvtHandler
+class ActionManager : public wxEvtHandler, public Singleton<ActionManager>
 {
-	public:		
-		//! \brief Constructeur.
-		ActionManager();
-		
-		//! \brief destructeur.
-		virtual ~ActionManager();
-		
+	friend class Singleton<ActionManager>;
+	
+	public:				
 		//! \brief Ajout d'une action.
 		//! \param shortcut c'est le raccourci a ajouter.
 		//! \param act c'est l'action a rajouter est qui sera lier au raccourci \b shortcut.
@@ -58,6 +50,12 @@ class ActionManager : public wxEvtHandler
 		Action const* getAction(ShortcutKey const& shortcutKey)const;
 		
 	private:
+		//! \brief Constructeur.
+		ActionManager();
+		
+		//! \brief destructeur.
+		virtual ~ActionManager();
+		
 		//! \brief Créé une nouvelle instance d'une action.
 		//! \note Il faudra prévoir de libérai la mémoire après utilisation de l'action.
 		Action* newAction(Action const &act)const;
