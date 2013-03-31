@@ -22,9 +22,9 @@
 #include "action.hpp"
 #include "shortcut.hpp"
 
-//! ********************************************************************
-//! Enum RawKeyCodeModifier_e
-//! ********************************************************************
+// *********************************************************************
+// Enum RawKeyCodeModifier_e
+// *********************************************************************
 
 //! \brief Codes des modificateurs.
 enum RawKeyCodeModifier_e
@@ -42,9 +42,9 @@ enum RawKeyCodeModifier_e
 	#endif
 };
 
-//! ********************************************************************
-//! Class DialogShortcutPreferences
-//! ********************************************************************
+// *********************************************************************
+// Class DialogShortcutPreferences
+// *********************************************************************
 
 //! \brief Dialogue pour les préférences d'une action et sont raccourci associer.
 class DialogShortcutPreferences : public GuiDialogShortcutPreferences 

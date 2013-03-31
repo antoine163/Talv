@@ -15,6 +15,10 @@
 
 #include "action.hpp"
 
+// *********************************************************************
+// Class Action
+// *********************************************************************
+
 Action::Action(wxString const& actName, wxString const& actDescription)
 :_actName(actName), _actDescription(actDescription)
 {

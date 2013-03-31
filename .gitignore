@@ -1,2 +1,8 @@
-#Ignorer les fichiers de la doc "doc/html/"
+#Ignorer les fichiers de la doc
 doc/html/
+
+#Ignorer les fichiers de compilation
+unix/obj/
+unix/flydocs
+msw/obj/
+msw/flydocs.exe

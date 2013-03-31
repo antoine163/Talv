@@ -21,9 +21,9 @@
 //TEST
 #include <iostream>
 
-//! ********************************************************************
-//! Class DialogShortcutPreferences
-//! ********************************************************************
+// *********************************************************************
+// Class DialogShortcutPreferences
+// *********************************************************************
 
 DialogShortcutPreferences::DialogShortcutPreferences(wxWindow* parent)
 : GuiDialogShortcutPreferences(parent)

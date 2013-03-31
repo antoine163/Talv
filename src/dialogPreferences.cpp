@@ -23,9 +23,9 @@
 //TEST
 #include <iostream>
 
-//! ****************************************************************************
-//! Class DialogPreferences
-//! ****************************************************************************
+// *********************************************************************
+// Class DialogPreferences
+// *********************************************************************
 
 DialogPreferences::DialogPreferences(ActionManager *actionManager)
 : GuiDialogPreferences(nullptr), _actionManager(actionManager)

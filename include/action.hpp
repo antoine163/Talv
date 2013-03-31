@@ -20,6 +20,10 @@
 #include <wx/fileconf.h>
 #include <wx/panel.h>
 
+// *********************************************************************
+// Class Action
+// *********************************************************************
+
 //! \brief Class de base pour les actions.
 //! La classe \ref ActTranslation peut être pris comme exemple pour fait d'autre type d'action.
 //! \attention Dans les classes fille il faudra probablement prévoie un constructeur par recopie.

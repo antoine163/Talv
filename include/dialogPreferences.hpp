@@ -23,9 +23,9 @@
 #include <wx/listctrl.h>
 #include <vector>
 
-//! ****************************************************************************
-//! Class DialogPreferences
-//! ****************************************************************************
+// *********************************************************************
+// Class DialogPreferences
+// *********************************************************************
 
 //! \brief Dialogue générale des préférence.
 class DialogPreferences : public GuiDialogPreferences 

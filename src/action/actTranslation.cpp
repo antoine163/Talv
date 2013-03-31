@@ -19,9 +19,9 @@
 //TEST
 #include <iostream>
 
-//! ********************************************************************
-//! Class PanelActTranslation
-//! ********************************************************************
+// *********************************************************************
+// Class PanelActTranslation
+// *********************************************************************
 
 PanelActTranslation::PanelActTranslation(wxWindow* parent, ActTranslation * act)
 : GuiPanelActTranslation(parent), _act(act)
@@ -56,9 +56,9 @@ void PanelActTranslation::OnChoiceTo(wxCommandEvent& event)
 }
 
 
-//! ********************************************************************
-//! Class ActTranslation
-//! ********************************************************************
+// *********************************************************************
+// Class ActTranslation
+// *********************************************************************
 
 ActTranslation::ActTranslation(wxString const& lgsrc, wxString const& lgto)
 : Action(_("Translation"), _("Translation a word or a group words from google.")),
