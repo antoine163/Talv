@@ -210,3 +210,7 @@ void DialogActionPreferences::OnKillFocus(wxFocusEvent&)
 	if(!_shortKeyIsValide)
 		_textCtrlChortcut->SetValue(_("Click here"));
 }
+
+void DialogActionPreferences::OnChoiceAction(wxCommandEvent& event)
+{
+}

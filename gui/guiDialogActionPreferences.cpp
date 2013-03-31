@@ -105,6 +105,7 @@ GuiDialogActionPreferences::GuiDialogActionPreferences( wxWindow* parent, wxWind
 	_textCtrlChortcut->Connect( wxEVT_KEY_UP, wxKeyEventHandler( GuiDialogActionPreferences::OnKeyUp ), NULL, this );
 	_textCtrlChortcut->Connect( wxEVT_KILL_FOCUS, wxFocusEventHandler( GuiDialogActionPreferences::OnKillFocus ), NULL, this );
 	_textCtrlChortcut->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler( GuiDialogActionPreferences::OnLeftDown ), NULL, this );
+	_choiceAction->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( GuiDialogActionPreferences::OnChoiceAction ), NULL, this );
 }
 
 GuiDialogActionPreferences::~GuiDialogActionPreferences()
@@ -114,5 +115,6 @@ GuiDialogActionPreferences::~GuiDialogActionPreferences()
 	_textCtrlChortcut->Disconnect( wxEVT_KEY_UP, wxKeyEventHandler( GuiDialogActionPreferences::OnKeyUp ), NULL, this );
 	_textCtrlChortcut->Disconnect( wxEVT_KILL_FOCUS, wxFocusEventHandler( GuiDialogActionPreferences::OnKillFocus ), NULL, this );
 	_textCtrlChortcut->Disconnect( wxEVT_LEFT_DOWN, wxMouseEventHandler( GuiDialogActionPreferences::OnLeftDown ), NULL, this );
+	_choiceAction->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( GuiDialogActionPreferences::OnChoiceAction ), NULL, this );
 	
 }

@@ -47,6 +47,7 @@ class GuiDialogActionPreferences : public wxDialog
 		virtual void OnKeyUp( wxKeyEvent& event ) { event.Skip(); }
 		virtual void OnKillFocus( wxFocusEvent& event ) { event.Skip(); }
 		virtual void OnLeftDown( wxMouseEvent& event ) { event.Skip(); }
+		virtual void OnChoiceAction( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:

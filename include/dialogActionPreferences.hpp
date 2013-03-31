@@ -70,6 +70,8 @@ class DialogActionPreferences : public GuiDialogActionPreferences
 		void OnLeftDown(wxMouseEvent&);
 		void OnKillFocus(wxFocusEvent&);
 		
+		void OnChoiceAction(wxCommandEvent& event);
+		
 		//! \brief Mise a jour du texte dans le TextCtrlChortcut.
 		void updateTextCtrlChortcut(wxChar key);
 		
