@@ -1,10 +1,10 @@
 //! \file **************************************************************
-//! \brief Source ressources.
+//! \brief Source ressource.
 //! 
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.3
+//! \version 0.4
 //! \date 30.03.2013
 //!
 //! ********************************************************************
@@ -34,71 +34,71 @@
 Resource::Resource()
 {
 	//Liste des langues
-	_langs["af"] = _("Afrikaans");
-	_langs["sq"] = _("Albanian");
-	_langs["ar"] = _("Arabic");
-	_langs["hy"] = _("Armenian");
-	_langs["az"] = _("Azerbaijani");
-	_langs["eu"] = _("Basque");
-	_langs["be"] = _("Belarusian");
-	_langs["bn"] = _("Bengali");
-	_langs["bg"] = _("Bulgarian");
-	_langs["ca"] = _("Catalan");
-	_langs["zh-CN"] = _("Chinese");
-	_langs["hr"] = _("Croatian");
-	_langs["sr"] = _("Czech");
-	_langs["da"] = _("Danish");
-	_langs["nl"] = _("Dutch");
-	_langs["en"] = _("English");
-	_langs["eo"] = _("Esperanto");
-	_langs["et"] = _("Estonian");
-	_langs["tl"] = _("Filipino");
-	_langs["fi"] = _("Finnish");
-	_langs["fr"] = _("French");
-	_langs["gl"] = _("Galician");
-	_langs["ka"] = _("Georgian");
-	_langs["de"] = _("German");
-	_langs["el"] = _("Greek");
-	_langs["gu"] = _("Gujarati");
-	_langs["ht"] = _("Haitian Creole");
-	_langs["iw"] = _("Hebrew");
-	_langs["hi"] = _("Hindi");
-	_langs["hu"] = _("Hungarian");
-	_langs["is"] = _("Icelandic");
-	_langs["id"] = _("Indonesian");
-	_langs["ga"] = _("Irish");
-	_langs["it"] = _("Italian");
-	_langs["ja"] = _("Japanese");
-	_langs["kn"] = _("Kannada");
-	_langs["ko"] = _("Korean");
-	_langs["lo"] = _("Lao");
-	_langs["la"] = _("Latin");
-	_langs["lv"] = _("Latvian");
-	_langs["it"] = _("Lithuanian");
-	_langs["mk"] = _("Macedonian");
-	_langs["ms"] = _("Malay");
-	_langs["mt"] = _("Maltese");
-	_langs["no"] = _("Norwegian");
-	_langs["fa"] = _("Persian");
-	_langs["pl"] = _("Polish");
-	_langs["pt"] = _("Portuguese");
-	_langs["ro"] = _("Romanian");
-	_langs["ru"] = _("Russian");
-	_langs["sr"] = _("Serbian");
-	_langs["sk"] = _("Slovak");
-	_langs["sl"] = _("Slovenian");
-	_langs["es"] = _("Spanish");
-	_langs["sw"] = _("Swahili");
-	_langs["sv"] = _("Swedish");
-	_langs["ta"] = _("Tamil");
-	_langs["te"] = _("Telugu");
-	_langs["th"] = _("Thai");
-	_langs["tr"] = _("Turkish");
-	_langs["uk"] = _("Ukrainian");
-	_langs["ur"] = _("Urdu");
-	_langs["vi"] = _("Vietnamese");
-	_langs["cy"] = _("Welsh");
-	_langs["yi"] = _("Yiddish");
+	_languages["af"] = _("Afrikaans");
+	_languages["sq"] = _("Albanian");
+	_languages["ar"] = _("Arabic");
+	_languages["hy"] = _("Armenian");
+	_languages["az"] = _("Azerbaijani");
+	_languages["eu"] = _("Basque");
+	_languages["be"] = _("Belarusian");
+	_languages["bn"] = _("Bengali");
+	_languages["bg"] = _("Bulgarian");
+	_languages["ca"] = _("Catalan");
+	_languages["zh-CN"] = _("Chinese");
+	_languages["hr"] = _("Croatian");
+	_languages["sr"] = _("Czech");
+	_languages["da"] = _("Danish");
+	_languages["nl"] = _("Dutch");
+	_languages["en"] = _("English");
+	_languages["eo"] = _("Esperanto");
+	_languages["et"] = _("Estonian");
+	_languages["tl"] = _("Filipino");
+	_languages["fi"] = _("Finnish");
+	_languages["fr"] = _("French");
+	_languages["gl"] = _("Galician");
+	_languages["ka"] = _("Georgian");
+	_languages["de"] = _("German");
+	_languages["el"] = _("Greek");
+	_languages["gu"] = _("Gujarati");
+	_languages["ht"] = _("Haitian Creole");
+	_languages["iw"] = _("Hebrew");
+	_languages["hi"] = _("Hindi");
+	_languages["hu"] = _("Hungarian");
+	_languages["is"] = _("Icelandic");
+	_languages["id"] = _("Indonesian");
+	_languages["ga"] = _("Irish");
+	_languages["it"] = _("Italian");
+	_languages["ja"] = _("Japanese");
+	_languages["kn"] = _("Kannada");
+	_languages["ko"] = _("Korean");
+	_languages["lo"] = _("Lao");
+	_languages["la"] = _("Latin");
+	_languages["lv"] = _("Latvian");
+	_languages["it"] = _("Lithuanian");
+	_languages["mk"] = _("Macedonian");
+	_languages["ms"] = _("Malay");
+	_languages["mt"] = _("Maltese");
+	_languages["no"] = _("Norwegian");
+	_languages["fa"] = _("Persian");
+	_languages["pl"] = _("Polish");
+	_languages["pt"] = _("Portuguese");
+	_languages["ro"] = _("Romanian");
+	_languages["ru"] = _("Russian");
+	_languages["sr"] = _("Serbian");
+	_languages["sk"] = _("Slovak");
+	_languages["sl"] = _("Slovenian");
+	_languages["es"] = _("Spanish");
+	_languages["sw"] = _("Swahili");
+	_languages["sv"] = _("Swedish");
+	_languages["ta"] = _("Tamil");
+	_languages["te"] = _("Telugu");
+	_languages["th"] = _("Thai");
+	_languages["tr"] = _("Turkish");
+	_languages["uk"] = _("Ukrainian");
+	_languages["ur"] = _("Urdu");
+	_languages["vi"] = _("Vietnamese");
+	_languages["cy"] = _("Welsh");
+	_languages["yi"] = _("Yiddish");
 	
 	
 	//Liste des actions
@@ -117,12 +117,44 @@ Resource::~Resource()
 {
 }
 
-std::map<wxString, wxString> const& Resource::getLangs()
+std::map<wxString, wxString> const& Resource::getLanguages()const
 {
-	return _langs;
+	return _languages;
 }
 
-std::map<wxString, size_t> const& Resource::getActions()
+wxString const& Resource::acronymToLanguage(wxString const& acronym)const
+{
+	return _languages.at(acronym);
+}
+
+wxString const& Resource::languageToAcronym(wxString const& language)const
+{
+	for(auto &it: _languages)
+	{
+		if(it.second == language)
+			return it.first;
+	}
+	
+	return wxEmptyString;
+}
+
+std::map<wxString, size_t> const& Resource::getActions()const
 {
 	return _actions;
+}
+
+wxString const& Resource::hashCodeToAction(size_t hashCode)const
+{
+	for(auto &it: _actions)
+	{
+		if(it.second == hashCode)
+			return it.first;
+	}
+	
+	return wxEmptyString;
+}
+
+size_t Resource::actionsToHashCode(wxString const& action)const
+{
+	return _actions.at(action);
 }

@@ -40,7 +40,7 @@ DialogActionPreferences::DialogActionPreferences(wxWindow* parent)
 	std::map<wxString, size_t> const& actions = Resource::getInstance()->getActions();
 	for(auto &it: actions)
 		_choiceAction->Append(it.first);
-	//Sélectionner la une action par défaut.
+	//Sélectionner une action par défaut.
 	_choiceAction->SetSelection(0);
 }
 
@@ -75,7 +75,7 @@ DialogActionPreferences::DialogActionPreferences(	wxWindow* parent,
 	//Affiche de la description de l'action
 	_staticTextDescription->SetLabel(_action->getDescription());
 	
-	//Ajout du panne d'édition propre à l'action.
+	//Ajout du panel d'édition propre à l'action.
 	_bSizerActPreference->Add(_action->getPanelPreferences(this), 1, wxEXPAND | wxALL, 5);
 
 	//

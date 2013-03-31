@@ -41,8 +41,6 @@ bool App::OnInit()
 	
 	//Crée de l'instance de ActionManager;
 	_actionManager = ActionManager::getInstance();
-	//Création des ressources 
-	Resource::getInstance();
 	
 	//Chargement de la config
 	wxFileConfig fileConfig(	PROJECT_NAME,

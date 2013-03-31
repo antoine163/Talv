@@ -26,19 +26,19 @@
 PanelActTranslation::PanelActTranslation(wxWindow* parent, ActTranslation * act)
 : GuiPanelActTranslation(parent), _act(act)
 {
-	std::map<wxString, wxString> const& langs = Resource::getInstance()->getLangs();	
+	std::map<wxString, wxString> const& languages = Resource::getInstance()->getLanguages();	
 	
 	//Ajout des langes.
-	for(auto &it: langs)
+	for(auto &it: languages)
 	{
 		_choiceLanguageSource->Append(it.second);
 		_choiceLanguageOfTranslation->Append(it.second);
 	}
 
 	//Sélectionne les bonnes langs.
-	int n = _choiceLanguageSource->FindString(langs.at(_act->_lgsrc));
+	int n = _choiceLanguageSource->FindString(languages.at(_act->_lgsrc));
 	_choiceLanguageSource->SetSelection(n);
-	n = _choiceLanguageOfTranslation->FindString(langs.at(_act->_lgto));
+	n = _choiceLanguageOfTranslation->FindString(languages.at(_act->_lgto));
 	_choiceLanguageOfTranslation->SetSelection(n);
 }
 
@@ -101,6 +101,7 @@ void ActTranslation::sove(wxFileConfig & fileConfig)const
 
 wxString ActTranslation::getStringPreferences()const
 {
-	std::map<wxString, wxString> const& langs = Resource::getInstance()->getLangs();
-	return langs.at(_lgsrc) + _(" to ") + langs.at(_lgto);
+	return 	Resource::getInstance()->acronymToLanguage(_lgsrc) +
+			_(" to ") +
+			Resource::getInstance()->acronymToLanguage(_lgto);
 }

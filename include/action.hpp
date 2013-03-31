@@ -26,7 +26,7 @@
 
 //! \brief Class de base pour les actions.
 //! La classe \ref ActTranslation peut être pris comme exemple pour fait d'autre type d'action.
-//! \attention Dans les classes fille il faudra probablement prévoie un constructeur par recopie.
+//! \attention Dans les classes fille il faudra probablement prévoie un constructeur par recopie et redéfinie l'opérateur =.
 //! \attention Dans les classes fille il faudra prévoie une méthode de prototype -> static TypeDeAction load(wxFileConfig & fileConfig).
 class Action
 {
@@ -61,6 +61,9 @@ class Action
 		wxString const& getName()const;
 	
 	private:
+		//! \brief Constructeur par défaut.
+		Action(){};
+		
 		//! \brief Le non de l'action.
 		wxString _actName;
 		
