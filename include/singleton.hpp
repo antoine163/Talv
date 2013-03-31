@@ -21,7 +21,7 @@
 // *********************************************************************
 
 //! \brief Pour la création de classe singleton.
-template <typename T>
+template <class T>
 class Singleton
 {
 	public:
@@ -54,7 +54,7 @@ class Singleton
 };
 
 //Initialisation de l'instance
-template <typename T>
+template <class T>
 T *Singleton<T>::_singleton = nullptr;
 
 #endif //SINGLETON_H

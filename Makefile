@@ -32,7 +32,7 @@ OS_NAME=unix
 #Traduction du mot/phrase
 ACT_TRANSLATION=yes
 #Sovgarde de la raduction du mot/phrase
-ACT_SAVE_TRANSLATION=no
+ACT_SAVE_TRANSLATION=yes
 #Dire le mot/phrase
 ACT_SAY=no
 
@@ -68,6 +68,7 @@ CXX_FLAGS_DEBUG=-g
 DEFINE=PROJECT_NAME=\"$(PROJECT_NAME)\"
 # Numéro de version
 DEFINE+=PROJECT_VERSION=\"$(PROJECT_VERSION)\"
+
 ######## Les Actions > ######## 
 #Traduction du mot/phrase
 ifeq ($(ACT_TRANSLATION), yes)
@@ -82,6 +83,7 @@ ifeq ($(ACT_SAY), yes)
 DEFINE+=USE_ACT_SAY
 endif
 ######## Les Actions < ########
+
 #Émuler les notifications.
 ifeq ($(EMULATE_NOTIFICATION), yes)
 DEFINE+=USE_EMULATE_NOTIFICATION

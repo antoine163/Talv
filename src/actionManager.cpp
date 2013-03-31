@@ -192,15 +192,15 @@ Action* ActionManager::newAction(Action const &act)
 		
 	#ifdef USE_ACT_SAVE_TRANSLATION
 	if(typeid(act).hash_code() == typeid(ActSaveTranslation).hash_code())
-		return new ActTranslation(static_cast<ActSaveTranslation const &>(act));
+		return new ActSaveTranslation(static_cast<ActSaveTranslation const &>(act));
 	#endif
 		
 	#ifdef USE_ACT_SAY
 	if(typeid(act).hash_code() == typeid(ActSay).hash_code())
-		return new ActTranslation(static_cast<ActSay const &>(act));
+		return new ActSay(static_cast<ActSay const &>(act));
 	#endif
 
-	return 0;
+	return nullptr;
 }
 
 void ActionManager::OnShortcut(ShortcutEvent& event)

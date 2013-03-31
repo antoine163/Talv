@@ -5,11 +5,11 @@
 // PLEASE DO "NOT" EDIT THIS FILE!
 ///////////////////////////////////////////////////////////////////////////
 
-#include "guiPanelActSoveTranslation.h"
+#include "guiPanelActSaveTranslation.h"
 
 ///////////////////////////////////////////////////////////////////////////
 
-GuiPanelActTranslation::GuiPanelActTranslation( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
+GuiPanelActSaveTranslation::GuiPanelActSaveTranslation( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
 {
 	wxBoxSizer* bSizer1;
 	bSizer1 = new wxBoxSizer( wxHORIZONTAL );
@@ -26,6 +26,6 @@ GuiPanelActTranslation::GuiPanelActTranslation( wxWindow* parent, wxWindowID id,
 	bSizer1->Fit( this );
 }
 
-GuiPanelActTranslation::~GuiPanelActTranslation()
+GuiPanelActSaveTranslation::~GuiPanelActSaveTranslation()
 {
 }

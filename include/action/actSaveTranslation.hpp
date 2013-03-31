@@ -13,43 +13,43 @@
 *	Copyright © 2013 - Antoine Maleyrie.
 */
 
-#ifndef ACTION_TRANSLATION_H
-#define ACTION_TRANSLATION_H
+#ifndef ACTION_SAVE_TRANSLATION_H
+#define ACTION_SAVE_TRANSLATION_H
 
 #include "action.hpp"
-#include "action/guiPanelActSoveTranslation.h"
+#include "action/guiPanelActSaveTranslation.h"
 
 // *********************************************************************
-// Class PanelActSoveTranslation
+// Class PanelActSaveTranslation
 // *********************************************************************
 
-class ActSoveTranslation;
+class ActSaveTranslation;
 
-class PanelActSoveTranslation : public GuiPanelActSoveTranslation
+class PanelActSaveTranslation : public GuiPanelActSaveTranslation
 {
 	public:
-		PanelActSoveTranslation(wxWindow* parent, ActSoveTranslation * act);
-		~PanelActSoveTranslation();
+		PanelActSaveTranslation(wxWindow* parent, ActSaveTranslation * act);
+		~PanelActSaveTranslation();
 	
 	private:
 		//! \brief ActSoveTranslation à modifier.
-		ActSoveTranslation * _act;
+		ActSaveTranslation * _act;
 };
 
 
 // *********************************************************************
-// Class ActSoveTranslation
+// Class ActSaveTranslation
 // *********************************************************************
 
-class ActSoveTranslation : public Action
+class ActSaveTranslation : public Action
 {
-	friend PanelActTranslation;
+	friend PanelActSaveTranslation;
 	
 	public:
-		ActSoveTranslation();
+		ActSaveTranslation();
 						
 		//! \brief Obtenir le non de l'action.
-		~ActSoveTranslation();
+		~ActSaveTranslation();
 		
 		//! \brief Exécuter l'action.
 		void execute();
@@ -60,7 +60,7 @@ class ActSoveTranslation : public Action
 		wxPanel* getPanelPreferences(wxWindow* parent);
 		
 		//! \brief Permet de charger les préférences de l'action à partir du wxFileConfig.
-		static ActSoveTranslation load(wxFileConfig & fileConfig);
+		static ActSaveTranslation load(wxFileConfig & fileConfig);
 		
 		//! \brief Permet de sauvegarder les préférences de l'action dans le wxFileConfig.
 		void sove(wxFileConfig & fileConfig)const;
@@ -71,4 +71,4 @@ class ActSoveTranslation : public Action
 	private:
 };
 
-#endif //ACTION_TRANSLATION_H
+#endif //ACTION_SAVE_TRANSLATION_H

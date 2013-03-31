@@ -58,6 +58,10 @@ ifeq ($(ACT_TRANSLATION), yes)
 SRC+=../src/action/actTranslation.cpp
 SRC+=../gui/action/guiPanelActTranslation.cpp
 endif
+ifeq ($(ACT_SAVE_TRANSLATION), yes)
+SRC+=../src/action/actSaveTranslation.cpp
+SRC+=../gui/action/guiPanelActSaveTranslation.cpp
+endif
 #GUI
 SRC+=../gui/guiDialogPreferences.cpp
 SRC+=../src/dialogPreferences.cpp
