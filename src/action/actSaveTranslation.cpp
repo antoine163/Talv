@@ -30,7 +30,6 @@ PanelActSaveTranslation::PanelActSaveTranslation(wxWindow* parent, ActSaveTransl
 
 PanelActSaveTranslation::~PanelActSaveTranslation()
 {
-	std::cout << "~PanelActSaveTranslation()" << std::endl;
 }
 
 // *********************************************************************
