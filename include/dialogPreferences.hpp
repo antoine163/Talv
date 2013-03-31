@@ -1,5 +1,17 @@
-//version : 1.1
-//02.01.2013
+//! \file **************************************************************
+//! \brief Header Dialogue générale des préférences.
+//! 
+//! - Compilateur : GCC,MinGW
+//!
+//! \author Antoine Maleyrie
+//! \version 1.2
+//! \date 02.01.2013
+//!
+//! ********************************************************************
+
+/*
+*	Copyright © 2013 - Antoine Maleyrie.
+*/
 
 #ifndef DIALOG_PREFERENCES_H
 #define DIALOG_PREFERENCES_H
@@ -9,9 +21,13 @@
 #include "shortcut.hpp"
 
 #include <wx/listctrl.h>
-
 #include <vector>
 
+//! ****************************************************************************
+//! Class DialogPreferences
+//! ****************************************************************************
+
+//! \brief Dialogue générale des préférence.
 class DialogPreferences : public GuiDialogPreferences 
 {
 	public:
@@ -43,9 +59,14 @@ class DialogPreferences : public GuiDialogPreferences
 		//! \brief Un item a été sélectionner.
 		void OnListItemSelectedAction(wxListEvent& event);
 		
+		//! \brief ActionManager qu'il faut modifier si changement de l'utilisateur via le GUI.
 		ActionManager *_actionManager;
 		
+		
+		//! \brief Liste des Item qui sélectionner dans la liste des raccourcis/actions.
 		std::vector<wxListItem> _listItemSelected;
+		//! \brief Liste des raccourcis qui on été supprimé de la liste des raccourcis/actions et qu'il
+		//! faudra probablement affecter à /ref _actionManager avec de quitter le dialogue ou a la sauvegarde.
 		std::vector<ShortcutKey> _shortcutKeyActDelete;
 };
 

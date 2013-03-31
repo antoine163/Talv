@@ -1,5 +1,18 @@
-//version : 1.0
-//02.01.2013
+//! \file **************************************************************
+//! \brief Source Dialogue pour les préférences d'une action et sont
+//! raccourci associer.
+//! 
+//! - Compilateur : GCC,MinGW
+//!
+//! \author Antoine Maleyrie
+//! \version 1.1
+//! \date 02.01.2013
+//!
+//! ********************************************************************
+
+/*
+*	Copyright © 2013 - Antoine Maleyrie.
+*/
 
 #include "dialogShortcutPreferences.hpp"
 #include "resource.hpp"

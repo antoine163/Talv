@@ -1,5 +1,17 @@
-//20.03.2013
-//v 0.3
+//! \file **************************************************************
+//! \brief Header Gestion des action/raccourcis
+//! 
+//! - Compilateur : GCC,MinGW
+//!
+//! \author Antoine Maleyrie
+//! \version 0.4
+//! \date 20.03.2013
+//!
+//! ********************************************************************
+
+/*
+*	Copyright © 2013 - Antoine Maleyrie.
+*/
 
 #ifndef ACTION_MANAGER_H
 #define ACTION_MANAGER_H
@@ -12,6 +24,11 @@
 #include <wx/fileconf.h>
 #include <map>
 
+// *********************************************************************
+// Class ActionManager
+// *********************************************************************
+
+//! \brief Interface utilisateur pour les gestions des actions avec leur raccourcis associer.
 class ActionManager : public wxEvtHandler, public Singleton<ActionManager>
 {
 	friend class Singleton<ActionManager>;

@@ -1,5 +1,17 @@
-//version : 1.1
-//02.01.2013
+//! \file **************************************************************
+//! \brief Source Dialogue générale des préférences.
+//! 
+//! - Compilateur : GCC,MinGW
+//!
+//! \author Antoine Maleyrie
+//! \version 1.2
+//! \date 02.01.2013
+//!
+//! ********************************************************************
+
+/*
+*	Copyright © 2013 - Antoine Maleyrie.
+*/
 
 #include "dialogPreferences.hpp"
 #include "dialogShortcutPreferences.hpp"

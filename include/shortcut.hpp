@@ -1,16 +1,16 @@
 //! \file **************************************************************
-//! Gestion des raccourcis globaux.
+//! \brief Header Gestion des raccourcis globaux.
 //! 
 //! - Compilateur : GCC,MinGW
 //!
-//! \author Maleyrie Antoine
+//! \author Antoine Maleyrie.
 //! \version 1.2
 //! \date 13.12.12
 //!
 //! ********************************************************************
 
 /*
-*	Copyright © 2012-2013 - Antoine Maleyrie.
+*	Copyright © 2012-2013 - Antoine Maleyrie..
 */
 
 #ifndef SHORTCUT_H
@@ -158,9 +158,9 @@ wxDECLARE_EVENT(EVT_SHORTCUT, ShortcutEvent);
 // Class ShortcutThread
 // *********************************************************************
 
-//! \brief C'est le thread qui installe/désinstalle les raccourci au-prés
+//! \brief C'est le thread qui installe/désinstalle les raccourcis au-prés
 //! de l'os et qui lève un événement de type \ref ShortcutEvent lorsque
-//! un raccourci et détecter presser sur le clavier.
+//! qu'un raccourci est détecter presser sur le clavier.
 class ShortcutThread : public wxThread
 {
 	public:
@@ -223,7 +223,7 @@ class ShortcutThread : public wxThread
 // Class Shortcut
 // *********************************************************************
 
-//! \brief Permet de générais des événements à partir de raccourcies globaux.
+//! \brief Interface utilisateur pour les gestions des raccourci clavier globaux.
 //!
 //! Voici un exemple d'utilisation. La classe App hérite de la class wxApp.
 //! \code
@@ -268,6 +268,7 @@ class Shortcut
 	public:
 		//! \brief Constructeur.
 		//! \param owner est un wxEvtHandler qui est utiliser pour générer les événements.
+		//! \note Par défaut les raccourcis sont activés. Il n'est donc pas nécessaire d'appeler la méthode \ref enable().
 		Shortcut(wxEvtHandler *owner);
 		
 		//! \brief Destructeur.
@@ -306,6 +307,7 @@ class Shortcut
 		int getId(ShortcutKey const& shortcutKey)const;
 		
 		//! \brief Active ou désactive les raccourcis.
+		//! Par défaut les raccourcis sont activés.
 		//! \param val true pour activer et false pour désactiver.
 		void enable(bool val = true);
 		

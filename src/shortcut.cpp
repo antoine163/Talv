@@ -1,9 +1,9 @@
 //! \file **************************************************************
-//! Gestion des raccourcis globaux.
+//! \brief Source Gestion des raccourcis globaux.
 //!
 //! - Compilateur : GCC,MinGW
 //!
-//! \author Maleyrie Antoine
+//! \author Antoine Maleyrie.
 //! \version 1.2
 //! \date 13.12.12
 //!

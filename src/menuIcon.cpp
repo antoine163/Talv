@@ -1,4 +1,17 @@
-//10/12/12
+//! \file **************************************************************
+//! \brief Source MenuIcon.
+//! 
+//! - Compilateur : GCC,MinGW
+//!
+//! \author Antoine Maleyrie
+//! \version 0.2
+//! \date 10.12.12
+//!
+//! ********************************************************************
+
+/*
+*	Copyright © 2012-2013 - Antoine Maleyrie.
+*/
 
 #include "menuIcon.hpp"
 
@@ -6,8 +19,11 @@
 #include <wx/icon.h>
 #include <wx/artprov.h>
 
-
 #include "../icons/ft.xpm"
+
+// *********************************************************************
+// Class MenuIcon
+// *********************************************************************
 
 MenuIcon::MenuIcon()
 {

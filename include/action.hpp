@@ -1,5 +1,17 @@
-//04.01.2013
-//v 0.4
+//! \file **************************************************************
+//! \brief Header Interface Action
+//! 
+//! - Compilateur : GCC,MinGW
+//!
+//! \author Antoine Maleyrie
+//! \version 0.5
+//! \date 04.01.2013
+//!
+//! ********************************************************************
+
+/*
+*	Copyright © 2013 - Antoine Maleyrie.
+*/
 
 #ifndef ACTION_H
 #define ACTION_H
@@ -9,6 +21,7 @@
 #include <wx/panel.h>
 
 //! \brief Class de base pour les actions.
+//! La classe \ref ActTranslation peut être pris comme exemple pour fait d'autre type d'action.
 //! \attention Dans les classes fille il faudra probablement prévoie un constructeur par recopie.
 //! \attention Dans les classes fille il faudra prévoie une méthode de prototype -> static TypeDeAction load(wxFileConfig & fileConfig).
 class Action
@@ -18,7 +31,6 @@ class Action
 		Action(wxString const& actName, wxString const& actDescription);
 		
 		//! \brief destructeur.
-		//! \todo à implémenter correctement avec la gestion mémoire de _actShortcutKey.
 		virtual ~Action();
 		
 		//! \brief Permet d'exécuter l'action.

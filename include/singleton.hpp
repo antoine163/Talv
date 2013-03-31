@@ -1,14 +1,32 @@
-//30.03.2013
-//v0.1
+//! \file **************************************************************
+//! \brief Header Singleton
+//! 
+//! - Compilateur : GCC,MinGW
+//!
+//! \author Antoine Maleyrie
+//! \version 0.2
+//! \date 30.03.2013
+//!
+//! ********************************************************************
 
+/*
+*	Copyright © 2013 - Antoine Maleyrie.
+*/
 
 #ifndef SINGLETON_H
 #define SINGLETON_H
 
+// *********************************************************************
+// Class Singleton
+// *********************************************************************
+
+//! \brief Pour la création de classe singleton.
 template <typename T>
 class Singleton
 {
 	public:
+		//! \brief Obtenir l'instance de la classe.
+		//! Elle sera crée si elle n'existe pas.
 		static T* getInstance()
 		{
 			if(_singleton == nullptr)
@@ -17,6 +35,7 @@ class Singleton
 			return _singleton;
 		}
 		
+		//! \brief Supprimer l'instance de la classe.
 		static void kill()
 		{
 			if(_singleton != nullptr)
@@ -29,10 +48,12 @@ class Singleton
 		Singleton & operator=(Singleton const&){}
 		~Singleton(){}
 		
-	private:	
+	private:
+		//! \brief Instance de la classe.
 		static T *_singleton;
 };
 
+//Initialisation de l'instance
 template <typename T>
 T *Singleton<T>::_singleton = nullptr;
 

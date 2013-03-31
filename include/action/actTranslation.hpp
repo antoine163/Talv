@@ -1,5 +1,17 @@
-//17.03.2013
-//v 0.3
+//! \file **************************************************************
+//! \brief Header Action de traduction.
+//! 
+//! - Compilateur : GCC,MinGW
+//!
+//! \author Antoine Maleyrie
+//! \version 0.4
+//! \date 17.03.2013
+//!
+//! ********************************************************************
+
+/*
+*	Copyright © 2013 - Antoine Maleyrie.
+*/
 
 #ifndef ACTION_TRANSLATION_H
 #define ACTION_TRANSLATION_H
@@ -12,16 +24,25 @@
 //! ********************************************************************
 
 class ActTranslation;
+
+//! \brief GUI pour la modification des préférences des actions de traductions \ref ActTranslation.
 class PanelActTranslation : public GuiPanelActTranslation
 {
 	public:
+		//! \brief Constructeur.
+		//! \param parent wxWindow parent.
+		//! \param act action de traduction a modifier.
 		PanelActTranslation(wxWindow* parent, ActTranslation * act);
+		//! \brief Destructeur.
 		~PanelActTranslation();
 		
+		//! \brief Événement lorsque l'utilisateur change de langage source.
 		void OnChoiceSrc(wxCommandEvent& event);
+		//! \brief Événement lorsque l'utilisateur change de langage de traduction.
 		void OnChoiceTo(wxCommandEvent& event);
 	
 	private:
+		//! \brief ActTranslation à modifier.
 		ActTranslation * _act;
 };
 
@@ -63,7 +84,6 @@ class ActTranslation : public Action
 		void sove(wxFileConfig & fileConfig)const;
 		
 		//! \brief Préférences de l'action au format string.
-		//! \todo à implémenter correctement.
 		wxString getStringPreferences()const;
 	
 	private:

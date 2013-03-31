@@ -1,5 +1,17 @@
-//30/11/12
-//version : 1.x
+//! \file **************************************************************
+//! \brief Source Poins d'entrée de l'application.
+//! 
+//! - Compilateur : GCC,MinGW
+//!
+//! \author Antoine Maleyrie
+//! \version 1.1
+//! \date 12.12.12
+//!
+//! ********************************************************************
+
+/*
+*	Copyright © 2012-2013 - Antoine Maleyrie.
+*/
 
 #include "main.hpp"
 #include "resource.hpp"
@@ -13,6 +25,10 @@
 #include <iostream>
 #include "action/actTranslation.hpp"
 #include "shortcut.hpp"
+
+// *********************************************************************
+// Class App
+// *********************************************************************
 
 IMPLEMENT_APP(App);
 

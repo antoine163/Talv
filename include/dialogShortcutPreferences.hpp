@@ -1,5 +1,18 @@
-//version : 1.0
-//02.01.2013
+//! \file **************************************************************
+//! \brief Header Dialogue pour les préférences d'une action et sont
+//! raccourci associer.
+//! 
+//! - Compilateur : GCC,MinGW
+//!
+//! \author Antoine Maleyrie
+//! \version 1.1
+//! \date 02.01.2013
+//!
+//! ********************************************************************
+
+/*
+*	Copyright © 2013 - Antoine Maleyrie.
+*/
 
 #ifndef DIALOG_SHORTCUT_PREFERENCES_H
 #define DIALOG_SHORTCUT_PREFERENCES_H
@@ -9,6 +22,11 @@
 #include "action.hpp"
 #include "shortcut.hpp"
 
+//! ********************************************************************
+//! Enum RawKeyCodeModifier_e
+//! ********************************************************************
+
+//! \brief Codes des modificateurs.
 enum RawKeyCodeModifier_e
 {
 	#if defined(__UNIX__)
@@ -24,14 +42,26 @@ enum RawKeyCodeModifier_e
 	#endif
 };
 
+//! ********************************************************************
+//! Class DialogShortcutPreferences
+//! ********************************************************************
+
+//! \brief Dialogue pour les préférences d'une action et sont raccourci associer.
 class DialogShortcutPreferences : public GuiDialogShortcutPreferences 
 {
 	public:
 		
+		//! \brief Constructeur.
+		//! \param parent parent du dialogue.
 		DialogShortcutPreferences(wxWindow* parent);
+		//! \brief Constructeur avec une action et un raccourci par défaut.
+		//! \param parent parent du dialogue.
+		//! \param inShortcutKey le raccourcis de l'action.
+		//! \param inAct l'action à modifier.
 		DialogShortcutPreferences(	wxWindow* parent,
 									ShortcutKey const& inShortcutKey,
 									Action const& inAct);
+		//! \brief Destructeur.
 		~DialogShortcutPreferences();
 		
 	protected:
@@ -40,9 +70,11 @@ class DialogShortcutPreferences : public GuiDialogShortcutPreferences
 		void OnLeftDown(wxMouseEvent&);
 		void OnKillFocus(wxFocusEvent&);
 		
+		//! \brief Mise a jour du texte dans le TextCtrlChortcut.
 		void updateTextCtrlChortcut(wxChar key);
 		
 	private:
+		//! \brief L'action à modifier.
 		Action * _action;
 		
 		bool _keyCtrlIsPressed;
@@ -50,6 +82,7 @@ class DialogShortcutPreferences : public GuiDialogShortcutPreferences
 		bool _keyShiftIsPressed;
 		bool _keySuperIsPressed;
 		
+		//! \brief Pour savoir si le raccourci qui est presser et valide.
 		bool _shortKeyIsValide;
 };
 

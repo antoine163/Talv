@@ -1,5 +1,17 @@
-//20.03.2013
-//v 0.3
+//! \file **************************************************************
+//! \brief Source Gestion des action/raccourcis
+//! 
+//! - Compilateur : GCC,MinGW
+//!
+//! \author Antoine Maleyrie
+//! \version 0.4
+//! \date 20.03.2013
+//!
+//! ********************************************************************
+
+/*
+*	Copyright © 2013 - Antoine Maleyrie.
+*/
 
 #include "actionManager.hpp"
 

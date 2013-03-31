@@ -1,5 +1,17 @@
-//04.01.2013
-//v 0.4
+//! \file **************************************************************
+//! \brief Source Interface Action
+//! 
+//! - Compilateur : GCC,MinGW
+//!
+//! \author Antoine Maleyrie
+//! \version 0.5
+//! \date 04.01.2013
+//!
+//! ********************************************************************
+
+/*
+*	Copyright © 2013 - Antoine Maleyrie.
+*/
 
 #include "action.hpp"
 

@@ -1,5 +1,17 @@
-//17.03.2013
-//v 0.3
+//! \file **************************************************************
+//! \brief Source Action de traduction.
+//! 
+//! - Compilateur : GCC,MinGW
+//!
+//! \author Antoine Maleyrie
+//! \version 0.4
+//! \date 17.03.2013
+//!
+//! ********************************************************************
+
+/*
+*	Copyright © 2013 - Antoine Maleyrie.
+*/
 
 #include "action/actTranslation.hpp"
 #include "resource.hpp"
@@ -10,6 +22,7 @@
 //! ********************************************************************
 //! Class PanelActTranslation
 //! ********************************************************************
+
 PanelActTranslation::PanelActTranslation(wxWindow* parent, ActTranslation * act)
 : GuiPanelActTranslation(parent), _act(act)
 {
