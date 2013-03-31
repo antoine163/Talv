@@ -1,16 +1,16 @@
-//! \file **********************************************************************
+//! \file **************************************************************
 //! Gestion des raccourcis globaux.
 //!
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Maleyrie Antoine
-//! \version 1.1
-//! \date 13/12/12
+//! \version 1.2
+//! \date 13.12.12
 //!
-//! ****************************************************************************
+//! ********************************************************************
 
 /*
-*	Copyright © 2012-1013 - Antoine Maleyrie.
+*	Copyright © 2012-2013 - Antoine Maleyrie.
 */
 
 #include "shortcut.hpp"
@@ -21,11 +21,11 @@
 
 #include <iostream>
 
-//! ****************************************************************************
-//! Class ShortcutKey
-//! ****************************************************************************
+// *********************************************************************
+// Class ShortcutKey
+// *********************************************************************
 
-ShortcutKey::ShortcutKey(KeyModifier modifiers, char charKey)
+ShortcutKey::ShortcutKey(KeyModifier_e modifiers, char charKey)
 : _modifiers(modifiers), _charKey(charKey)
 {
 }
@@ -64,7 +64,7 @@ char ShortcutKey::getCharKey()const
 	return _charKey;
 }
 
-KeyModifier ShortcutKey::getModifiers()const
+KeyModifier_e ShortcutKey::getModifiers()const
 {
 	return _modifiers;
 }
@@ -74,68 +74,68 @@ wxString ShortcutKey::shortcutKeyToString(ShortcutKey const& shortcut)
 	wxString ret;
 	
 	// ShortcutKey valide ?
-	if(!(shortcut._modifiers&KeyModifier::ALT ||
-		shortcut._modifiers&KeyModifier::CONTROL ||
+	if(!(shortcut._modifiers&KeyModifier_e::ALT ||
+		shortcut._modifiers&KeyModifier_e::CONTROL ||
 		#if defined(__UNIX__)
-		shortcut._modifiers&KeyModifier::ALTGR ||
+		shortcut._modifiers&KeyModifier_e::ALTGR ||
 		#endif
-		shortcut._modifiers&KeyModifier::SHIFT ||
-		shortcut._modifiers&KeyModifier::SUPER) &&
+		shortcut._modifiers&KeyModifier_e::SHIFT ||
+		shortcut._modifiers&KeyModifier_e::SUPER) &&
 		shortcut._charKey == '\0')
 	{
 		return wxEmptyString;
 	}
 	
 	//Conversion du modificateur.
-	KeyModifier statut = KeyModifier::CONTROL;
+	KeyModifier_e statut = KeyModifier_e::CONTROL;
 	for(unsigned int i = 0; i < NB_KEY_MODIFIER; i++)
 	{
 		switch(statut)
 		{
-			case KeyModifier::CONTROL:
+			case KeyModifier_e::CONTROL:
 			{
-				if(shortcut._modifiers&KeyModifier::CONTROL)
+				if(shortcut._modifiers&KeyModifier_e::CONTROL)
 					ret << "ctrl+";
 				
-				statut = KeyModifier::ALT;
+				statut = KeyModifier_e::ALT;
 			}break;
 			
-			case KeyModifier::ALT:
+			case KeyModifier_e::ALT:
 			{
-				if(shortcut._modifiers&KeyModifier::ALT)
+				if(shortcut._modifiers&KeyModifier_e::ALT)
 					ret << "alt+";
 				
 				#if defined(__UNIX__)
-				statut = KeyModifier::ALTGR;
+				statut = KeyModifier_e::ALTGR;
 				#elif defined(__WXMSW__)
-				statut = KeyModifier::SHIFT;
+				statut = KeyModifier_e::SHIFT;
 				#endif
 			}break;
 			
 			#if defined(__UNIX__)
-			case KeyModifier::ALTGR:
+			case KeyModifier_e::ALTGR:
 			{
-				if(shortcut._modifiers&KeyModifier::ALTGR)
+				if(shortcut._modifiers&KeyModifier_e::ALTGR)
 					ret << "altgr+";
 				
-				statut = KeyModifier::SHIFT;
+				statut = KeyModifier_e::SHIFT;
 			}break;
 			#endif
 			
-			case KeyModifier::SHIFT:
+			case KeyModifier_e::SHIFT:
 			{
-				if(shortcut._modifiers&KeyModifier::SHIFT)
+				if(shortcut._modifiers&KeyModifier_e::SHIFT)
 					ret << "shift+";
 				
-				statut = KeyModifier::SUPER;
+				statut = KeyModifier_e::SUPER;
 			}break;
 			
-			case KeyModifier::SUPER:
+			case KeyModifier_e::SUPER:
 			{
-				if(shortcut._modifiers&KeyModifier::SUPER)
+				if(shortcut._modifiers&KeyModifier_e::SUPER)
 					ret << "super+";
 				
-				statut = KeyModifier::NONE;
+				statut = KeyModifier_e::NONE;
 			}break;
 			
 			default:
@@ -155,7 +155,7 @@ wxString ShortcutKey::shortcutKeyToString(ShortcutKey const& shortcut)
 
 ShortcutKey ShortcutKey::stringToShortcutKey(wxString const& shortcut)
 {
-	KeyModifier modifiers = KeyModifier::NONE;
+	KeyModifier_e modifiers = KeyModifier_e::NONE;
 	char charKey = '\0';
 	
 	//Avent ou après le premier '+'.
@@ -175,17 +175,17 @@ ShortcutKey ShortcutKey::stringToShortcutKey(wxString const& shortcut)
 		charKey = *before.fn_str();
 		
 		if(before == "ctrl")
-			modifiers = (KeyModifier)(modifiers|KeyModifier::CONTROL);
+			modifiers = (KeyModifier_e)(modifiers|KeyModifier_e::CONTROL);
 		else if(before == "alt")
-			modifiers = (KeyModifier)(modifiers|KeyModifier::ALT);
+			modifiers = (KeyModifier_e)(modifiers|KeyModifier_e::ALT);
 		#if defined(__UNIX__)
 		else if(before == "altgr")
-			modifiers = (KeyModifier)(modifiers|KeyModifier::ALTGR);
+			modifiers = (KeyModifier_e)(modifiers|KeyModifier_e::ALTGR);
 		#endif
 		else if(before == "shift")
-			modifiers = (KeyModifier)(modifiers|KeyModifier::SHIFT);
+			modifiers = (KeyModifier_e)(modifiers|KeyModifier_e::SHIFT);
 		else if(before == "super")
-		modifiers = (KeyModifier)(modifiers|KeyModifier::SUPER);
+		modifiers = (KeyModifier_e)(modifiers|KeyModifier_e::SUPER);
 		
 		//Obtenir le nouveau avent ou après le premier '+'
 		tmp = after;
@@ -195,11 +195,11 @@ ShortcutKey ShortcutKey::stringToShortcutKey(wxString const& shortcut)
 	return ShortcutKey(modifiers, charKey);
 }
 
-//! ****************************************************************************
-//! Class ShortcutEvent
-//! ****************************************************************************
+// *********************************************************************
+// Class ShortcutEvent
+// *********************************************************************
 		
-ShortcutEvent::ShortcutEvent(int id, wxEventType eventType, KeyModifier modifiers, char charKey)
+ShortcutEvent::ShortcutEvent(int id, wxEventType eventType, KeyModifier_e modifiers, char charKey)
     : wxEvent(id, eventType), _shortcutKey(modifiers, charKey)
 {
 }
@@ -219,7 +219,7 @@ char ShortcutEvent::getCharKey()const
     return _shortcutKey.getCharKey();
 }
 
-KeyModifier ShortcutEvent::getModifiers()const
+KeyModifier_e ShortcutEvent::getModifiers()const
 {
     return _shortcutKey.getModifiers();
 }
@@ -231,9 +231,9 @@ ShortcutKey const& ShortcutEvent::getShortcutKey()const
 
 wxDEFINE_EVENT(EVT_SHORTCUT, ShortcutEvent);
 
-//! ****************************************************************************
-//! Class ShortcutThread
-//! ****************************************************************************
+// *********************************************************************
+// Class ShortcutThread
+// *********************************************************************
 
 ShortcutThread::ShortcutThread(wxEvtHandler *owner, std::map<ShortcutKey, int> & bind)
 : wxThread(wxTHREAD_JOINABLE), _owner(owner), _bind(bind), _mutexCommunicationThread(false), _shortcutKeyCommunicationThread(nullptr), _communicationThread(NONE)
@@ -366,7 +366,7 @@ wxThread::ExitCode ShortcutThread::Entry()
 			//Convertie le KeyCode en char.
 			const char charKey = *(XKeysymToString(XkbKeycodeToKeysym(_display, _event.xkey.keycode, 0, 0)));
 			//Mise en forme du raccourci.
-			ShortcutKey shortcutKey((KeyModifier)_event.xkey.state, charKey);
+			ShortcutKey shortcutKey((KeyModifier_e)_event.xkey.state, charKey);
 			//Recherche de l'id.
 			int id = _bind[shortcutKey];
 			//Envoi de l'événement.
@@ -438,9 +438,9 @@ wxThread::ExitCode ShortcutThread::Entry()
 	return (wxThread::ExitCode)0;
 }
 
-//! ****************************************************************************
-//! Class Shortcut
-//! ****************************************************************************
+// *********************************************************************
+// Class Shortcut
+// *********************************************************************
 
 Shortcut::Shortcut(wxEvtHandler *owner)
 : _thread(nullptr), _owner(owner), _enable(true)
@@ -456,7 +456,7 @@ Shortcut::~Shortcut()
 		delete _thread;
 }
 
-int Shortcut::creat(KeyModifier modifiers, char charKey)
+int Shortcut::creat(KeyModifier_e modifiers, char charKey)
 {
     return creat(ShortcutKey(modifiers, charKey));
 }
@@ -476,7 +476,7 @@ int Shortcut::creat(ShortcutKey const& shortcutKey)
     return id;
 }
 
-void Shortcut::remove(KeyModifier modifiers, char charKey)
+void Shortcut::remove(KeyModifier_e modifiers, char charKey)
 {
 	remove(ShortcutKey(modifiers, charKey));
 }
