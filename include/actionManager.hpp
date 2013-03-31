@@ -66,7 +66,7 @@ class ActionManager : public wxEvtHandler, public Singleton<ActionManager>
 		//! \return nullptr si raccourci/action n'existe pas.
 		Action const* getAction(ShortcutKey const& shortcutKey)const;
 		
-		//! \brief Créé une nouvelle instance d'une action.
+		//! \brief Créé une nouvelle instance (par recopie) d'une action.
 		//! \note Il faudra prévoir de libérer la mémoire après utilisation de l'action.
 		static Action* newAction(Action const &act);
 		

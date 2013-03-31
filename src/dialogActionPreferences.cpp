@@ -18,6 +18,16 @@
 #include "resource.hpp"
 #include "actionManager.hpp"
 
+#ifdef USE_ACT_TRANSLATION
+#include "action/actTranslation.hpp"
+#endif
+#ifdef USE_ACT_SAVE_TRANSLATION
+#include "action/actSaveTranslation.hpp"
+#endif
+#ifdef USE_ACT_SAY
+#include "action/actSay.hpp"
+#endif
+
 //TEST
 #include <iostream>
 
@@ -79,7 +89,9 @@ DialogActionPreferences::DialogActionPreferences(	wxWindow* parent,
 	_bSizerActPreference->Add(_action->getPanelPreferences(this), 1, wxEXPAND | wxALL, 5);
 
 	//
-	GetSizer()->Fit( this );
+	GetSizer()->Fit(this);
+	this->Layout();
+	this->Centre(wxBOTH);
 }
 
 DialogActionPreferences::~DialogActionPreferences()
@@ -207,6 +219,43 @@ void DialogActionPreferences::OnKillFocus(wxFocusEvent&)
 		_textCtrlChortcut->SetValue(_("Click here"));
 }
 
+//! \todo a implémenter avec les locales.
 void DialogActionPreferences::OnChoiceAction(wxCommandEvent& event)
 {
+	//On récuser le hash_code de l'action sélectionner
+	size_t hash_code = Resource::getInstance()->actionsToHashCode(event.GetString());
+	delete _action;
+	
+	#ifdef USE_ACT_TRANSLATION
+	if(hash_code == typeid(ActTranslation).hash_code())
+	{
+		_action = new ActTranslation("en", "fr");
+	}
+	#endif
+		
+	#ifdef USE_ACT_SAVE_TRANSLATION
+	if(hash_code == typeid(ActSaveTranslation).hash_code())
+	{
+		_action = new ActSaveTranslation();
+	}
+	#endif
+		
+	#ifdef USE_ACT_SAY
+	if(hash_code == typeid(ActSay).hash_code())
+	{
+		_action = new ActSay();
+	}
+	#endif
+	
+	//Affiche de la description de l'action
+	_staticTextDescription->SetLabel(_action->getDescription());
+	
+	//Ajout du panel d'édition propre à l'action.
+	_bSizerActPreference->Clear(true);
+	_bSizerActPreference->Add(_action->getPanelPreferences(this), 1, wxEXPAND | wxALL, 5);
+
+	//
+	GetSizer()->Fit(this);
+	this->Layout();
+	this->Centre(wxBOTH);
 }

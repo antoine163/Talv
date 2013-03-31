@@ -44,7 +44,6 @@ PanelActTranslation::PanelActTranslation(wxWindow* parent, ActTranslation * act)
 
 PanelActTranslation::~PanelActTranslation()
 {
-	std::cout << "~PanelActTranslation()" << std::endl;
 }
 
 void PanelActTranslation::OnChoiceSrc(wxCommandEvent& event)
