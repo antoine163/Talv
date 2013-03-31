@@ -1,10 +1,10 @@
 //! \file **************************************************************
-//! \brief Header Gestion des raccourci.
+//! \brief Header ressources.
 //! 
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.2
+//! \version 0.3
 //! \date 30.03.2013
 //!
 //! ********************************************************************
@@ -19,7 +19,6 @@
 #include "singleton.hpp"
 
 #include <wx/string.h>
-#include <vector>
 #include <map>
 
 // *********************************************************************
@@ -35,7 +34,7 @@ class Resource : public Singleton<Resource>
 		//! \brief Obtenir la liste des langues avec et leur acronymes <acronyme, langue>.
 		std::map<wxString, wxString> const& getLangs();
 		//! \brief Obtenir la liste des actions.
-		std::vector<wxString> const& getActions();
+		std::map<wxString, size_t> const& getActions();
 	
 	private:
 		Resource();
@@ -43,8 +42,8 @@ class Resource : public Singleton<Resource>
 		
 		//! \brief Liste des acronyme et langues <acronyme, langue>.
 		std::map<wxString, wxString> _langs;
-		//! \brief Liste des actions.
-		std::vector<wxString> _actions;
+		//! \brief Liste des actions et de leur hash_code associer <action, hash_code>..
+		std::map<wxString, size_t> _actions;
 };
 
 #endif //RESOURCE_H

@@ -37,11 +37,9 @@ DialogActionPreferences::DialogActionPreferences(wxWindow* parent)
 	_shortKeyIsValide = false;
 	
 	//Ajout des actions dans les chois.
-	std::vector<wxString> const& actions = Resource::getInstance()->getActions();	
-	for(size_t i = 0; i<actions.size(); i++)
-	{
-		_choiceAction->Append(actions[i]);
-	}
+	std::map<wxString, size_t> const& actions = Resource::getInstance()->getActions();
+	for(auto &it: actions)
+		_choiceAction->Append(it.first);
 	//Sélectionner la une action par défaut.
 	_choiceAction->SetSelection(0);
 }
@@ -63,11 +61,9 @@ DialogActionPreferences::DialogActionPreferences(	wxWindow* parent,
 	_shortKeyIsValide = true;
 	
 	//Ajout des actions dans la liste des chois.
-	std::vector<wxString> const& actions = Resource::getInstance()->getActions();	
-	for(size_t i = 0; i<actions.size(); i++)
-	{
-		_choiceAction->Append(actions[i]);
-	}
+	std::map<wxString, size_t> const& actions = Resource::getInstance()->getActions();
+	for(auto &it: actions)
+		_choiceAction->Append(it.first);
 	//Sélectionner la bonne action.
 	int n = _choiceAction->FindString(_action->getName());
 	_choiceAction->SetSelection(n);

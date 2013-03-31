@@ -1,10 +1,10 @@
 //! \file **************************************************************
-//! \brief Source Gestion des raccourci.
+//! \brief Source ressources.
 //! 
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.2
+//! \version 0.3
 //! \date 30.03.2013
 //!
 //! ********************************************************************
@@ -14,6 +14,17 @@
 */
 
 #include "resource.hpp"
+
+#ifdef USE_ACT_TRANSLATION
+#include "action/actTranslation.hpp"
+#endif
+#ifdef USE_ACT_SAVE_TRANSLATION
+#include "action/actSaveTranslation.hpp"
+#endif
+#ifdef USE_ACT_SAY
+#include "action/actSay.hpp"
+#endif
+
 #include <wx/intl.h> 
 
 // *********************************************************************
@@ -92,13 +103,13 @@ Resource::Resource()
 	
 	//Liste des actions
 	#ifdef USE_ACT_TRANSLATION
-	_actions.push_back(_("Translation"));
+	_actions[_("Translation")] = typeid(ActTranslation).hash_code();
 	#endif
 	#ifdef USE_ACT_SAVE_TRANSLATION
-	_actions.push_back(_("Save translation"));
+	_actions[_("Save translation")] = typeid(ActSaveTranslation).hash_code();
 	#endif
 	#ifdef USE_ACT_SAY
-	_actions.push_back(_("Say"));
+	_actions[_("Say")] = typeid(ActSay).hash_code();
 	#endif
 }
 
@@ -111,7 +122,7 @@ std::map<wxString, wxString> const& Resource::getLangs()
 	return _langs;
 }
 
-std::vector<wxString> const& Resource::getActions()
+std::map<wxString, size_t> const& Resource::getActions()
 {
 	return _actions;
 }
