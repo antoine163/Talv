@@ -65,8 +65,8 @@ endif
 #GUI
 SRC+=../gui/guiDialogPreferences.cpp
 SRC+=../src/dialogPreferences.cpp
-SRC+=../gui/guiDialogShortcutPreferences.cpp
-SRC+=../src/dialogShortcutPreferences.cpp
+SRC+=../gui/guiDialogActionPreferences.cpp
+SRC+=../src/dialogActionPreferences.cpp
 
 
 ########################################################################

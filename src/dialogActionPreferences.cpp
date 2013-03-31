@@ -14,7 +14,7 @@
 *	Copyright © 2013 - Antoine Maleyrie.
 */
 
-#include "dialogShortcutPreferences.hpp"
+#include "dialogActionPreferences.hpp"
 #include "resource.hpp"
 #include "actionManager.hpp"
 
@@ -22,11 +22,11 @@
 #include <iostream>
 
 // *********************************************************************
-// Class DialogShortcutPreferences
+// Class DialogActionPreferences
 // *********************************************************************
 
-DialogShortcutPreferences::DialogShortcutPreferences(wxWindow* parent)
-: GuiDialogShortcutPreferences(parent)
+DialogActionPreferences::DialogActionPreferences(wxWindow* parent)
+: GuiDialogActionPreferences(parent)
 {
 	//Initialisation des variable
 	_keyCtrlIsPressed = false;
@@ -46,10 +46,10 @@ DialogShortcutPreferences::DialogShortcutPreferences(wxWindow* parent)
 	_choiceAction->SetSelection(0);
 }
 
-DialogShortcutPreferences::DialogShortcutPreferences(	wxWindow* parent,
-														ShortcutKey const& inShortcutKey,
-														Action const& inAct)
-: GuiDialogShortcutPreferences(parent)
+DialogActionPreferences::DialogActionPreferences(	wxWindow* parent,
+													ShortcutKey const& inShortcutKey,
+													Action const& inAct)
+: GuiDialogActionPreferences(parent)
 {
 	//copie de l'action
 	_action = ActionManager::newAction(inAct);
@@ -86,12 +86,12 @@ DialogShortcutPreferences::DialogShortcutPreferences(	wxWindow* parent,
 	GetSizer()->Fit( this );
 }
 
-DialogShortcutPreferences::~DialogShortcutPreferences()
+DialogActionPreferences::~DialogActionPreferences()
 {
 	delete _action;
 }
 
-void DialogShortcutPreferences::OnKeyDown(wxKeyEvent& event)
+void DialogActionPreferences::OnKeyDown(wxKeyEvent& event)
 {
 	//Mise a jour des touches modifier
 	#if defined(__UNIX__)
@@ -120,7 +120,7 @@ void DialogShortcutPreferences::OnKeyDown(wxKeyEvent& event)
 	updateTextCtrlChortcut(event.GetUnicodeKey());
 }
 
-void DialogShortcutPreferences::OnKeyUp(wxKeyEvent& event)
+void DialogActionPreferences::OnKeyUp(wxKeyEvent& event)
 {
 	//Mise à jour des touches modifier
 	#if defined(__UNIX__)
@@ -147,7 +147,7 @@ void DialogShortcutPreferences::OnKeyUp(wxKeyEvent& event)
 	updateTextCtrlChortcut(event.GetUnicodeKey());
 }
 
-void DialogShortcutPreferences::updateTextCtrlChortcut(wxChar key)
+void DialogActionPreferences::updateTextCtrlChortcut(wxChar key)
 {
 	//Temps que le raccourci n'est pas valide, on met à jour le texte.
 	if(!_shortKeyIsValide)
@@ -197,7 +197,7 @@ void DialogShortcutPreferences::updateTextCtrlChortcut(wxChar key)
 	}
 }
 
-void DialogShortcutPreferences::OnLeftDown(wxMouseEvent&)
+void DialogActionPreferences::OnLeftDown(wxMouseEvent&)
 {
 	_shortKeyIsValide = false;
 	_textCtrlChortcut->SetForegroundColour( wxSystemSettings::GetColour(wxSYS_COLOUR_GRAYTEXT));
@@ -205,7 +205,7 @@ void DialogShortcutPreferences::OnLeftDown(wxMouseEvent&)
 	_textCtrlChortcut->SetFocus();
 }
 
-void DialogShortcutPreferences::OnKillFocus(wxFocusEvent&)
+void DialogActionPreferences::OnKillFocus(wxFocusEvent&)
 {
 	if(!_shortKeyIsValide)
 		_textCtrlChortcut->SetValue(_("Click here"));

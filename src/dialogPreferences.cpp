@@ -14,7 +14,7 @@
 */
 
 #include "dialogPreferences.hpp"
-#include "dialogShortcutPreferences.hpp"
+#include "dialogActionPreferences.hpp"
 #include "shortcut.hpp"
 
 #include <wx/msgdlg.h>
@@ -105,7 +105,7 @@ void DialogPreferences::OnButtonClickActPreferences(wxCommandEvent&)
 	//Récupération de l'action.
 	Action const* tmpAct = _actionManager->getAction(tmpShortcut);
 	
-	DialogShortcutPreferences *dlg = new DialogShortcutPreferences(this, tmpShortcut, *tmpAct);
+	DialogActionPreferences *dlg = new DialogActionPreferences(this, tmpShortcut, *tmpAct);
 	
 	if(dlg->ShowModal() == wxID_OK)
 	{
@@ -117,7 +117,7 @@ void DialogPreferences::OnButtonClickActPreferences(wxCommandEvent&)
 
 void DialogPreferences::OnButtonClickActAdd(wxCommandEvent&)
 {
-	DialogShortcutPreferences *dlg = new DialogShortcutPreferences(this);
+	DialogActionPreferences *dlg = new DialogActionPreferences(this);
 	if(dlg->ShowModal() == wxID_OK)
 	{
 	}

@@ -5,8 +5,8 @@
 // PLEASE DO "NOT" EDIT THIS FILE!
 ///////////////////////////////////////////////////////////////////////////
 
-#ifndef __guiDialogShortcutPreferences__
-#define __guiDialogShortcutPreferences__
+#ifndef __guiDialogActionPreferences__
+#define __guiDialogActionPreferences__
 
 #include <wx/intl.h>
 
@@ -27,9 +27,9 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
-/// Class GuiDialogShortcutPreferences
+/// Class GuiDialogActionPreferences
 ///////////////////////////////////////////////////////////////////////////////
-class GuiDialogShortcutPreferences : public wxDialog 
+class GuiDialogActionPreferences : public wxDialog 
 {
 	private:
 	
@@ -51,9 +51,9 @@ class GuiDialogShortcutPreferences : public wxDialog
 	
 	public:
 		
-		GuiDialogShortcutPreferences( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Shortcut Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 450,200 ), long style = wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP );
-		~GuiDialogShortcutPreferences();
+		GuiDialogActionPreferences( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Action Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 450,200 ), long style = wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP );
+		~GuiDialogActionPreferences();
 	
 };
 
-#endif //__guiDialogShortcutPreferences__
+#endif //__guiDialogActionPreferences__

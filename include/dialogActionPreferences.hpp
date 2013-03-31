@@ -17,7 +17,7 @@
 #ifndef DIALOG_SHORTCUT_PREFERENCES_H
 #define DIALOG_SHORTCUT_PREFERENCES_H
 
-#include "guiDialogShortcutPreferences.h"
+#include "guiDialogActionPreferences.h"
 
 #include "action.hpp"
 #include "shortcut.hpp"
@@ -43,26 +43,26 @@ enum RawKeyCodeModifier_e
 };
 
 // *********************************************************************
-// Class DialogShortcutPreferences
+// Class DialogActionPreferences
 // *********************************************************************
 
 //! \brief Dialogue pour les préférences d'une action et sont raccourci associer.
-class DialogShortcutPreferences : public GuiDialogShortcutPreferences 
+class DialogActionPreferences : public GuiDialogActionPreferences 
 {
 	public:
 		
 		//! \brief Constructeur.
 		//! \param parent parent du dialogue.
-		DialogShortcutPreferences(wxWindow* parent);
+		DialogActionPreferences(wxWindow* parent);
 		//! \brief Constructeur avec une action et un raccourci par défaut.
 		//! \param parent parent du dialogue.
 		//! \param inShortcutKey le raccourcis de l'action.
 		//! \param inAct l'action à modifier.
-		DialogShortcutPreferences(	wxWindow* parent,
+		DialogActionPreferences(	wxWindow* parent,
 									ShortcutKey const& inShortcutKey,
 									Action const& inAct);
 		//! \brief Destructeur.
-		~DialogShortcutPreferences();
+		~DialogActionPreferences();
 		
 	protected:
 		void OnKeyDown(wxKeyEvent& event);

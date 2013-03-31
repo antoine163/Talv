@@ -5,11 +5,11 @@
 // PLEASE DO "NOT" EDIT THIS FILE!
 ///////////////////////////////////////////////////////////////////////////
 
-#include "guiDialogShortcutPreferences.h"
+#include "guiDialogActionPreferences.h"
 
 ///////////////////////////////////////////////////////////////////////////
 
-GuiDialogShortcutPreferences::GuiDialogShortcutPreferences( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
+GuiDialogActionPreferences::GuiDialogActionPreferences( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
 {
 	this->SetSizeHints( wxSize( 450,200 ), wxDefaultSize );
 	
@@ -101,18 +101,18 @@ GuiDialogShortcutPreferences::GuiDialogShortcutPreferences( wxWindow* parent, wx
 	this->Centre( wxBOTH );
 	
 	// Connect Events
-	_textCtrlChortcut->Connect( wxEVT_KEY_DOWN, wxKeyEventHandler( GuiDialogShortcutPreferences::OnKeyDown ), NULL, this );
-	_textCtrlChortcut->Connect( wxEVT_KEY_UP, wxKeyEventHandler( GuiDialogShortcutPreferences::OnKeyUp ), NULL, this );
-	_textCtrlChortcut->Connect( wxEVT_KILL_FOCUS, wxFocusEventHandler( GuiDialogShortcutPreferences::OnKillFocus ), NULL, this );
-	_textCtrlChortcut->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler( GuiDialogShortcutPreferences::OnLeftDown ), NULL, this );
+	_textCtrlChortcut->Connect( wxEVT_KEY_DOWN, wxKeyEventHandler( GuiDialogActionPreferences::OnKeyDown ), NULL, this );
+	_textCtrlChortcut->Connect( wxEVT_KEY_UP, wxKeyEventHandler( GuiDialogActionPreferences::OnKeyUp ), NULL, this );
+	_textCtrlChortcut->Connect( wxEVT_KILL_FOCUS, wxFocusEventHandler( GuiDialogActionPreferences::OnKillFocus ), NULL, this );
+	_textCtrlChortcut->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler( GuiDialogActionPreferences::OnLeftDown ), NULL, this );
 }
 
-GuiDialogShortcutPreferences::~GuiDialogShortcutPreferences()
+GuiDialogActionPreferences::~GuiDialogActionPreferences()
 {
 	// Disconnect Events
-	_textCtrlChortcut->Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler( GuiDialogShortcutPreferences::OnKeyDown ), NULL, this );
-	_textCtrlChortcut->Disconnect( wxEVT_KEY_UP, wxKeyEventHandler( GuiDialogShortcutPreferences::OnKeyUp ), NULL, this );
-	_textCtrlChortcut->Disconnect( wxEVT_KILL_FOCUS, wxFocusEventHandler( GuiDialogShortcutPreferences::OnKillFocus ), NULL, this );
-	_textCtrlChortcut->Disconnect( wxEVT_LEFT_DOWN, wxMouseEventHandler( GuiDialogShortcutPreferences::OnLeftDown ), NULL, this );
+	_textCtrlChortcut->Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler( GuiDialogActionPreferences::OnKeyDown ), NULL, this );
+	_textCtrlChortcut->Disconnect( wxEVT_KEY_UP, wxKeyEventHandler( GuiDialogActionPreferences::OnKeyUp ), NULL, this );
+	_textCtrlChortcut->Disconnect( wxEVT_KILL_FOCUS, wxFocusEventHandler( GuiDialogActionPreferences::OnKillFocus ), NULL, this );
+	_textCtrlChortcut->Disconnect( wxEVT_LEFT_DOWN, wxMouseEventHandler( GuiDialogActionPreferences::OnLeftDown ), NULL, this );
 	
 }
