@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.4
+//! \version 0.5
 //! \date 17.03.2013
 //!
 //! ********************************************************************
@@ -28,14 +28,14 @@ PanelActTranslation::PanelActTranslation(wxWindow* parent, ActTranslation * act)
 {
 	std::map<wxString, wxString> const& languages = Resource::getInstance()->getLanguages();	
 	
-	//Ajout des langes.
+	//Ajout des langues.
 	for(auto &it: languages)
 	{
 		_choiceLanguageSource->Append(it.second);
 		_choiceLanguageOfTranslation->Append(it.second);
 	}
 
-	//Sélectionne les bonnes langs.
+	//Sélectionne les bonnes langues.
 	int n = _choiceLanguageSource->FindString(languages.at(_act->_lgsrc));
 	_choiceLanguageSource->SetSelection(n);
 	n = _choiceLanguageOfTranslation->FindString(languages.at(_act->_lgto));
@@ -49,10 +49,12 @@ PanelActTranslation::~PanelActTranslation()
 
 void PanelActTranslation::OnChoiceSrc(wxCommandEvent& event)
 {
+	_act->_lgsrc = Resource::getInstance()->acronymToLanguage(event.GetString());
 }
 
 void PanelActTranslation::OnChoiceTo(wxCommandEvent& event)
 {
+	_act->_lgto = Resource::getInstance()->acronymToLanguage(event.GetString());
 }
 
 
