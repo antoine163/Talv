@@ -46,7 +46,13 @@ class ActSaveTranslation : public Action
 	friend PanelActSaveTranslation;
 	
 	public:
-		ActSaveTranslation();
+		ActSaveTranslation(	wxString const& lgsrc,
+							wxString const& lgto,
+							wxString const& location,
+							wxString const& fileName,
+							bool soveAll,
+							bool noDoublon,
+							bool showDialog);
 						
 		//! \brief Obtenir le non de l'action.
 		~ActSaveTranslation();
@@ -69,6 +75,16 @@ class ActSaveTranslation : public Action
 		wxString getStringPreferences()const;
 	
 	private:
+		//! \brief Lange source.
+		wxString _lgsrc;
+		//! \brief Lange de traduction.
+		wxString _lgto;
+		
+		wxString _location;
+		wxString _fileName;
+		bool _soveAll;
+		bool _noDoublon;
+		bool _showDialog;
 };
 
 #endif //ACTION_SAVE_TRANSLATION_H

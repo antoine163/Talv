@@ -236,7 +236,13 @@ void DialogActionPreferences::OnChoiceAction(wxCommandEvent& event)
 	#ifdef USE_ACT_SAVE_TRANSLATION
 	if(hash_code == typeid(ActSaveTranslation).hash_code())
 	{
-		_action = new ActSaveTranslation();
+		_action = new ActSaveTranslation(	"en",
+											"fr",
+											wxGetUserHome(),
+											"translation",
+											true,
+											true,
+											true);
 	}
 	#endif
 		
