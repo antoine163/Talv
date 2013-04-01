@@ -37,7 +37,7 @@ PanelActSaveTranslation::~PanelActSaveTranslation()
 // *********************************************************************
 
 ActSaveTranslation::ActSaveTranslation()
-: Action(_("Save a translation"), _("Translation a word or a group words from google and save in the file."))
+: Action(_("Save a translation"), _("Translation a word or a group words from google and save in a file."))
 {
 }
 

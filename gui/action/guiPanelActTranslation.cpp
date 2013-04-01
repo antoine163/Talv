@@ -14,6 +14,9 @@ GuiPanelActTranslation::GuiPanelActTranslation( wxWindow* parent, wxWindowID id,
 	wxBoxSizer* bSizer1;
 	bSizer1 = new wxBoxSizer( wxHORIZONTAL );
 	
+	wxBoxSizer* bSizer5;
+	bSizer5 = new wxBoxSizer( wxHORIZONTAL );
+	
 	wxBoxSizer* bSizer2;
 	bSizer2 = new wxBoxSizer( wxVERTICAL );
 	
@@ -27,7 +30,7 @@ GuiPanelActTranslation::GuiPanelActTranslation( wxWindow* parent, wxWindowID id,
 	_choiceLanguageSource->SetSelection( 0 );
 	bSizer2->Add( _choiceLanguageSource, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
-	bSizer1->Add( bSizer2, 1, wxEXPAND, 5 );
+	bSizer5->Add( bSizer2, 1, wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizer3;
 	bSizer3 = new wxBoxSizer( wxVERTICAL );
@@ -43,7 +46,7 @@ GuiPanelActTranslation::GuiPanelActTranslation( wxWindow* parent, wxWindowID id,
 	
 	bSizer3->Add( 0, 0, 1, wxEXPAND, 5 );
 	
-	bSizer1->Add( bSizer3, 0, wxEXPAND, 5 );
+	bSizer5->Add( bSizer3, 0, wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizer4;
 	bSizer4 = new wxBoxSizer( wxVERTICAL );
@@ -58,7 +61,9 @@ GuiPanelActTranslation::GuiPanelActTranslation( wxWindow* parent, wxWindowID id,
 	_choiceLanguageOfTranslation->SetSelection( 0 );
 	bSizer4->Add( _choiceLanguageOfTranslation, 0, wxEXPAND|wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
-	bSizer1->Add( bSizer4, 1, wxEXPAND, 5 );
+	bSizer5->Add( bSizer4, 1, wxEXPAND, 5 );
+	
+	bSizer1->Add( bSizer5, 1, wxALIGN_CENTER_VERTICAL, 5 );
 	
 	this->SetSizer( bSizer1 );
 	this->Layout();
