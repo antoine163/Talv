@@ -72,6 +72,8 @@ class DialogActionPreferences : public GuiDialogActionPreferences
 		
 		void OnChoiceAction(wxCommandEvent& event);
 		
+		void setUpAction(wxString const& action);
+		
 		//! \brief Mise a jour du texte dans le TextCtrlChortcut.
 		void updateTextCtrlChortcut(wxChar key);
 		

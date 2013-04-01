@@ -46,12 +46,17 @@ DialogActionPreferences::DialogActionPreferences(wxWindow* parent)
 	
 	_shortKeyIsValide = false;
 	
+	
 	//Ajout des actions dans les chois.
 	std::map<wxString, size_t> const& actions = Resource::getInstance()->getActions();
 	for(auto &it: actions)
 		_choiceAction->Append(it.first);
 	//Sélectionner une action par défaut.
 	_choiceAction->SetSelection(0);
+	
+	//Installation d'un action par défaut.
+	_action = nullptr;
+	setUpAction(_choiceAction->GetString(0));
 }
 
 DialogActionPreferences::DialogActionPreferences(	wxWindow* parent,
@@ -222,9 +227,15 @@ void DialogActionPreferences::OnKillFocus(wxFocusEvent&)
 //! \todo a implémenter avec les locales.
 void DialogActionPreferences::OnChoiceAction(wxCommandEvent& event)
 {
+	setUpAction(event.GetString());
+}
+
+void DialogActionPreferences::setUpAction(wxString const& action)
+{
 	//On récuser le hash_code de l'action sélectionner
-	size_t hash_code = Resource::getInstance()->actionsToHashCode(event.GetString());
-	delete _action;
+	size_t hash_code = Resource::getInstance()->actionsToHashCode(action);
+	if(_action == nullptr)
+		delete _action;
 	
 	#ifdef USE_ACT_TRANSLATION
 	if(hash_code == typeid(ActTranslation).hash_code())
