@@ -74,6 +74,7 @@ void ActionManager::removeAll()
 	_actions.clear();
 }
 
+//! \todo a modifier pour jarter la methode static des actions
 void ActionManager::load(wxFileConfig & fileConfig)
 {
 	wxString stringShortcut;
@@ -99,6 +100,7 @@ void ActionManager::load(wxFileConfig & fileConfig)
 		#ifdef USE_ACT_TRANSLATION
 		if(actTypeName == "ActTranslation")
 		{
+			//add(ShortcutKey::stringToShortcutKey(stringShortcut), ActTranslation(fileConfig));
 			add(ShortcutKey::stringToShortcutKey(stringShortcut), ActTranslation::load(fileConfig));
 		}
 		#endif
@@ -106,6 +108,7 @@ void ActionManager::load(wxFileConfig & fileConfig)
 		#ifdef USE_ACT_SAVE_TRANSLATION
 		if(actTypeName == "ActSaveTranslation")
 		{
+			//add(ShortcutKey::stringToShortcutKey(stringShortcut), ActSaveTranslation(fileConfig));
 			add(ShortcutKey::stringToShortcutKey(stringShortcut), ActSaveTranslation::load(fileConfig));
 		}
 		#endif
@@ -113,6 +116,7 @@ void ActionManager::load(wxFileConfig & fileConfig)
 		#ifdef USE_ACT_SAY
 		if(actTypeName == "ActSay")
 		{
+			//add(ShortcutKey::stringToShortcutKey(stringShortcut), ActSay(fileConfig));
 			add(ShortcutKey::stringToShortcutKey(stringShortcut), ActSay::load(fileConfig));
 		}
 		#endif
@@ -124,6 +128,7 @@ void ActionManager::load(wxFileConfig & fileConfig)
 	while(fileConfig.GetNextGroup(stringShortcut, lIndex));
 }
 
+//! \todo supprimer les tests sur le hash_code
 void ActionManager::sove(wxFileConfig & fileConfig)const
 {
 	for(auto &it: _actions)
@@ -132,6 +137,13 @@ void ActionManager::sove(wxFileConfig & fileConfig)const
 		wxString stringShortcut = ShortcutKey::shortcutKeyToString(it.first);
 		//Crée un groupe pour ce raccourci.
 		fileConfig.SetPath("/"+stringShortcut);
+		
+		
+		
+		//fileConfig.Write("ActTypeName", it.second->getActName());
+		//it.second->sove(fileConfig);
+		
+		
 			
 		//Sauvegarder le type d'action et ces préférences.
 		#ifdef USE_ACT_TRANSLATION
