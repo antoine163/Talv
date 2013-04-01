@@ -2,7 +2,7 @@
 #
 #	Makfile for Windows.
 #
-# - author 	:	Maleyrie Antoine : antoine.maleyrie@gmail.com
+# - author 	:	Antoine Maleyrie : antoine.maleyrie@gmail.com
 # - version	:	0.1
 # - date 	:	10.03.2013
 #

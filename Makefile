@@ -2,7 +2,7 @@
 #
 #	Makfile.
 #
-# - author 	:	Maleyrie Antoine : antoine.maleyrie@gmail.com
+# - author 	:	Antoine Maleyrie : antoine.maleyrie@gmail.com
 # - version	:	1.1
 # - date 	:	24/11/2012
 #

@@ -2,7 +2,7 @@
 #
 #	Makfile for Linux.
 #
-# - author 	:	Maleyrie Antoine : antoine.maleyrie@gmail.com
+# - author 	:	Antoine Maleyrie : antoine.maleyrie@gmail.com
 # - version	:	0.4
 # - date 	:	10.03.2013
 #
