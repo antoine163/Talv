@@ -57,6 +57,9 @@ class ActTranslation : public Action
 	friend PanelActTranslation;
 	
 	public:
+		//! \brief Constructeur par défaut.
+		ActTranslation();
+		
 		//! \brief Constructeur.
 		//! Les deux paramètres doive être écrit en abrégé.
 		//! ex: pour le français "fr"

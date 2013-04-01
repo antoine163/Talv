@@ -61,6 +61,12 @@ void PanelActTranslation::OnChoiceTo(wxCommandEvent& event)
 // Class ActTranslation
 // *********************************************************************
 
+//! \todo a implémenter avec les locales.
+ActTranslation::ActTranslation()
+: ActTranslation("en", "fr")
+{
+}
+
 ActTranslation::ActTranslation(wxString const& lgsrc, wxString const& lgto)
 : Action(_("Translation"), _("Translation a word or a group words from google.")),
 _lgsrc(lgsrc), _lgto(lgto)

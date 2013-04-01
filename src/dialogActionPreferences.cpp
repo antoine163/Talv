@@ -224,12 +224,12 @@ void DialogActionPreferences::OnKillFocus(wxFocusEvent&)
 		_textCtrlChortcut->SetValue(_("Click here"));
 }
 
-//! \todo a implémenter avec les locales.
 void DialogActionPreferences::OnChoiceAction(wxCommandEvent& event)
 {
 	setUpAction(event.GetString());
 }
 
+//! \todo a implémenter avec les locales.
 void DialogActionPreferences::setUpAction(wxString const& action)
 {
 	//On récuser le hash_code de l'action sélectionner
@@ -239,29 +239,17 @@ void DialogActionPreferences::setUpAction(wxString const& action)
 	
 	#ifdef USE_ACT_TRANSLATION
 	if(hash_code == typeid(ActTranslation).hash_code())
-	{
-		_action = new ActTranslation("en", "fr");
-	}
+		_action = new ActTranslation();
 	#endif
 		
 	#ifdef USE_ACT_SAVE_TRANSLATION
 	if(hash_code == typeid(ActSaveTranslation).hash_code())
-	{
-		_action = new ActSaveTranslation(	"en",
-											"fr",
-											wxGetUserHome(),
-											"translation",
-											true,
-											true,
-											true);
-	}
+		_action = new ActSaveTranslation();
 	#endif
 		
 	#ifdef USE_ACT_SAY
 	if(hash_code == typeid(ActSay).hash_code())
-	{
 		_action = new ActSay();
-	}
 	#endif
 	
 	//Affiche de la description de l'action

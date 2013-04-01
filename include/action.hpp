@@ -30,7 +30,9 @@
 //! \attention Dans les classes fille il faudra prévoie une méthode de prototype -> static TypeDeAction load(wxFileConfig & fileConfig).
 class Action
 {
-	public:		
+	public:
+		//! \brief Constructeur par défaut.
+		Action();
 		//! \brief Constructeur.
 		Action(wxString const& actName, wxString const& actDescription);
 		
@@ -61,9 +63,6 @@ class Action
 		wxString const& getName()const;
 	
 	private:
-		//! \brief Constructeur par défaut.
-		Action(){};
-		
 		//! \brief Le non de l'action.
 		wxString _actName;
 		

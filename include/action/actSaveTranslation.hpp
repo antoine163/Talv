@@ -46,6 +46,7 @@ class ActSaveTranslation : public Action
 	friend PanelActSaveTranslation;
 	
 	public:
+		ActSaveTranslation();
 		ActSaveTranslation(	wxString const& lgsrc,
 							wxString const& lgto,
 							wxString const& location,

@@ -73,6 +73,12 @@ PanelActSaveTranslation::~PanelActSaveTranslation()
 // Class ActSaveTranslation
 // *********************************************************************
 
+ActSaveTranslation::ActSaveTranslation()
+: ActSaveTranslation(	"en", "fr", wxGetUserHome(), "translation",
+						true, true, true)
+{
+}
+
 ActSaveTranslation::ActSaveTranslation(wxString const& lgsrc,
 							wxString const& lgto,
 							wxString const& location,
