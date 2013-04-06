@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.6
+//! \version 0.7
 //! \date 17.03.2013
 //!
 //! ********************************************************************
@@ -16,6 +16,7 @@
 #ifndef ACTION_TRANSLATION_H
 #define ACTION_TRANSLATION_H
 
+#include "action.hpp"
 #include "action/guiPanelActTranslation.h"
 
 // *********************************************************************
@@ -30,22 +31,28 @@ class PanelActTranslation : public GuiPanelActTranslation
 	public:
 		//! \brief Constructeur.
 		//! \param parent wxWindow parent.
+		//! \param buttonOK bouton "OK" du dialogue parent.
 		//! \param act action de traduction a modifier.
-		PanelActTranslation(wxWindow* parent, ActTranslation* act);
+		PanelActTranslation(wxWindow* parent, wxButton* buttonOK, ActTranslation* act);
 		//! \brief Destructeur.
 		~PanelActTranslation();
+		
+		//! \brief Méthode appeler si appuis sur bouton "ok" du parent.
+		//! Elle valide les modifications et les installe dans l'action
+		void OnOKButtonClick(wxCommandEvent& event);
 	
 	private:
 		//! \brief ActTranslation à modifier.
 		ActTranslation * _act;
+		
+		//! \brief bouton "OK" du dialogue parent.
+		wxButton* _buttonOK;
 };
 
 
 // *********************************************************************
 // Class ActTranslation
 // *********************************************************************
-
-#include "action.hpp"
 
 //! \brief Action de traduction.
 class ActTranslation : public Action
@@ -74,7 +81,7 @@ class ActTranslation : public Action
 		//! \brief Obtenir le panel pour l'édition de l'action.
 		//! \param parent est le parent du panel.
 		//! \note Cette méthode crées un panel et retourne le pointeur sur se panel il faudra prévoir de libérai la mémoire.
-		wxPanel* getPanelPreferences(wxWindow* parent);
+		wxPanel* getPanelPreferences(wxWindow* parent, wxButton* buttonOK);
 		
 		//! \brief Préférences de l'action au format string.
 		wxString getStringPreferences()const;

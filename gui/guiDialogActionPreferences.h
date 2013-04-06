@@ -38,9 +38,9 @@ class GuiDialogActionPreferences : public wxDialog
 		wxChoice* _choiceAction;
 		wxStaticText* _staticTextDescription;
 		wxBoxSizer* _bSizerActPreference;
-		wxStdDialogButtonSizer* m_sdbSizer1;
-		wxButton* m_sdbSizer1OK;
-		wxButton* m_sdbSizer1Cancel;
+		wxStdDialogButtonSizer* _sdbSizer;
+		wxButton* _sdbSizerOK;
+		wxButton* _sdbSizerCancel;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnKeyDown( wxKeyEvent& event ) { event.Skip(); }
@@ -48,6 +48,7 @@ class GuiDialogActionPreferences : public wxDialog
 		virtual void OnKillFocus( wxFocusEvent& event ) { event.Skip(); }
 		virtual void OnLeftDown( wxMouseEvent& event ) { event.Skip(); }
 		virtual void OnChoiceAction( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnOKButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:

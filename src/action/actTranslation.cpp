@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.6
+//! \version 0.7
 //! \date 17.03.2013
 //!
 //! ********************************************************************
@@ -23,8 +23,8 @@
 // Class PanelActTranslation
 // *********************************************************************
 
-PanelActTranslation::PanelActTranslation(wxWindow* parent, ActTranslation * act)
-: GuiPanelActTranslation(parent), _act(act)
+PanelActTranslation::PanelActTranslation(wxWindow* parent, wxButton* buttonOK, ActTranslation * act)
+: GuiPanelActTranslation(parent), _act(act), _buttonOK(buttonOK)
 {
 	std::map<wxString, wxString> const& languages = Resource::getInstance()->getLanguages();	
 	
@@ -40,10 +40,30 @@ PanelActTranslation::PanelActTranslation(wxWindow* parent, ActTranslation * act)
 	_choiceLanguageSource->SetSelection(n);
 	n = _choiceLanguageOfTranslation->FindString(languages.at(_act->_lgto));
 	_choiceLanguageOfTranslation->SetSelection(n);
+	
+	//Lier l'événement du bouton OK du wxWindow parent.
+	_buttonOK->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &PanelActTranslation::OnOKButtonClick, this, _buttonOK->GetId());
 }
 
 PanelActTranslation::~PanelActTranslation()
 {
+	_buttonOK->Unbind(wxEVT_COMMAND_BUTTON_CLICKED, &PanelActTranslation::OnOKButtonClick, this, _buttonOK->GetId());
+}
+
+void PanelActTranslation::OnOKButtonClick(wxCommandEvent& event)
+{
+	//Affect le langage source.
+	int n = _choiceLanguageSource->GetSelection();
+	wxString s = _choiceLanguageSource->GetString(n);
+	_act->_lgsrc = Resource::getInstance()->languageToAcronym(s);
+	
+	//Affect le langage de destination.
+	n = _choiceLanguageOfTranslation->GetSelection();
+	s = _choiceLanguageOfTranslation->GetString(n);
+	_act->_lgto = Resource::getInstance()->languageToAcronym(s);
+	
+	//Propage l'événement.
+	event.Skip();
 }
 
 
@@ -74,9 +94,9 @@ void ActTranslation::execute()
 	std::cout << "-- " << getStringPreferences() << std::endl;
 }
 
-wxPanel* ActTranslation::getPanelPreferences(wxWindow* parent)
+wxPanel* ActTranslation::getPanelPreferences(wxWindow* parent, wxButton* buttonOK)
 {
-	return new PanelActTranslation(parent, this);
+	return new PanelActTranslation(parent, buttonOK, this);
 }
 
 void ActTranslation::actLoad(wxFileConfig & fileConfig)

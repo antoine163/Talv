@@ -5,7 +5,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.2
+//! \version 1.3
 //! \date 02.01.2013
 //!
 //! ********************************************************************
@@ -69,6 +69,7 @@ class DialogActionPreferences : public GuiDialogActionPreferences
 		void OnKeyUp(wxKeyEvent& event);
 		void OnLeftDown(wxMouseEvent&);
 		void OnKillFocus(wxFocusEvent&);
+		void OnOKButtonClick(wxCommandEvent&);
 		
 		void OnChoiceAction(wxCommandEvent& event);
 		

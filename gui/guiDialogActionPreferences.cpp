@@ -87,13 +87,13 @@ GuiDialogActionPreferences::GuiDialogActionPreferences( wxWindow* parent, wxWind
 	m_staticline2 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 	bSizer1->Add( m_staticline2, 0, wxEXPAND | wxALL, 5 );
 	
-	m_sdbSizer1 = new wxStdDialogButtonSizer();
-	m_sdbSizer1OK = new wxButton( this, wxID_OK );
-	m_sdbSizer1->AddButton( m_sdbSizer1OK );
-	m_sdbSizer1Cancel = new wxButton( this, wxID_CANCEL );
-	m_sdbSizer1->AddButton( m_sdbSizer1Cancel );
-	m_sdbSizer1->Realize();
-	bSizer1->Add( m_sdbSizer1, 0, wxEXPAND|wxBOTTOM, 5 );
+	_sdbSizer = new wxStdDialogButtonSizer();
+	_sdbSizerOK = new wxButton( this, wxID_OK );
+	_sdbSizer->AddButton( _sdbSizerOK );
+	_sdbSizerCancel = new wxButton( this, wxID_CANCEL );
+	_sdbSizer->AddButton( _sdbSizerCancel );
+	_sdbSizer->Realize();
+	bSizer1->Add( _sdbSizer, 0, wxEXPAND|wxBOTTOM, 5 );
 	
 	this->SetSizer( bSizer1 );
 	this->Layout();
@@ -106,6 +106,7 @@ GuiDialogActionPreferences::GuiDialogActionPreferences( wxWindow* parent, wxWind
 	_textCtrlChortcut->Connect( wxEVT_KILL_FOCUS, wxFocusEventHandler( GuiDialogActionPreferences::OnKillFocus ), NULL, this );
 	_textCtrlChortcut->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler( GuiDialogActionPreferences::OnLeftDown ), NULL, this );
 	_choiceAction->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( GuiDialogActionPreferences::OnChoiceAction ), NULL, this );
+	_sdbSizerOK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogActionPreferences::OnOKButtonClick ), NULL, this );
 }
 
 GuiDialogActionPreferences::~GuiDialogActionPreferences()
@@ -116,5 +117,6 @@ GuiDialogActionPreferences::~GuiDialogActionPreferences()
 	_textCtrlChortcut->Disconnect( wxEVT_KILL_FOCUS, wxFocusEventHandler( GuiDialogActionPreferences::OnKillFocus ), NULL, this );
 	_textCtrlChortcut->Disconnect( wxEVT_LEFT_DOWN, wxMouseEventHandler( GuiDialogActionPreferences::OnLeftDown ), NULL, this );
 	_choiceAction->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( GuiDialogActionPreferences::OnChoiceAction ), NULL, this );
+	_sdbSizerOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogActionPreferences::OnOKButtonClick ), NULL, this );
 	
 }

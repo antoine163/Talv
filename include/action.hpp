@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.6
+//! \version 0.7
 //! \date 04.01.2013
 //!
 //! ********************************************************************
@@ -18,6 +18,7 @@
 
 #include <wx/string.h>
 #include <wx/fileconf.h>
+#include <wx/button.h>
 #include <wx/panel.h>
 
 // *********************************************************************
@@ -52,9 +53,11 @@ class Action
 		virtual wxString getStringPreferences()const=0;
 		
 		//! \brief Obtenir le panel pour l'édition de l'action.
-		//! Pour les classes filles le but est d'éditer directement les paramètre (attribut) de l'action via directement le panel.
+		//! Pour les classes filles le but est d'éditer directement les paramètre (attribut) de l'action via le panel.
 		//! \note Cette méthode crées un panel et retourne le pointeur sur se panel il faudra prévoir de libérai la mémoire.
-		virtual wxPanel* getPanelPreferences(wxWindow* parent)=0;
+		//! \param parent le wxWindow parent.
+		//! \param buttonOK bouton "OK" du dialogue parent.
+		virtual wxPanel* getPanelPreferences(wxWindow* parent, wxButton* buttonOK)=0;
 		
 		//! \brief Obtenir la description de l'action.
 		//! \return La description.

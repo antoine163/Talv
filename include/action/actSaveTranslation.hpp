@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.2
+//! \version 0.3
 //! \date 31.03.2013
 //!
 //! ********************************************************************
@@ -17,6 +17,8 @@
 #define ACTION_SAVE_TRANSLATION_H
 
 #include "action/guiPanelActSaveTranslation.h"
+#include "action.hpp"
+#include <wx/filename.h>
 
 // *********************************************************************
 // Class PanelActSaveTranslation
@@ -27,12 +29,19 @@ class ActSaveTranslation;
 class PanelActSaveTranslation : public GuiPanelActSaveTranslation
 {
 	public:
-		PanelActSaveTranslation(wxWindow* parent, ActSaveTranslation * act);
+		PanelActSaveTranslation(wxWindow* parent, wxButton* buttonOK, ActSaveTranslation * act);
 		~PanelActSaveTranslation();
+		
+		//! \brief Méthode appeler si appuis sur bouton "ok" du parent.
+		//! Elle valide les modifications et les installe dans l'action
+		void OnOKButtonClick(wxCommandEvent& event);
 	
 	private:
 		//! \brief ActSoveTranslation à modifier.
 		ActSaveTranslation * _act;
+		
+		//! \brief bouton "OK" du dialogue parent.
+		wxButton* _buttonOK;
 };
 
 
@@ -40,18 +49,18 @@ class PanelActSaveTranslation : public GuiPanelActSaveTranslation
 // Class ActSaveTranslation
 // *********************************************************************
 
-#include "action.hpp"
-
 class ActSaveTranslation : public Action
 {
 	friend PanelActSaveTranslation;
 	
 	public:
+		//! \brief Constructeur par défaut.
 		ActSaveTranslation();
+		
+		//! \brief Constructeur.
 		ActSaveTranslation(	wxString const& lgsrc,
 							wxString const& lgto,
-							wxString const& location,
-							wxString const& fileName,
+							wxFileName const& fileName,
 							bool soveAll,
 							bool noDoublon,
 							bool showDialog);
@@ -65,7 +74,7 @@ class ActSaveTranslation : public Action
 		//! \brief Obtenir le panel pour l'édition de l'action.
 		//! \param parent est le parent du panel.
 		//! \note Cette méthode crées un panel et retourne le pointeur sur se panel il faudra prévoir de libérai la mémoire.
-		wxPanel* getPanelPreferences(wxWindow* parent);
+		wxPanel* getPanelPreferences(wxWindow* parent, wxButton* buttonOK);
 		
 		//! \brief Préférences de l'action au format string.
 		wxString getStringPreferences()const;
@@ -85,8 +94,7 @@ class ActSaveTranslation : public Action
 		//! \brief Lange de traduction.
 		wxString _lgto;
 		
-		wxString _location;
-		wxString _fileName;
+		wxFileName _fileName;
 		bool _soveAll;
 		bool _noDoublon;
 		bool _showDialog;

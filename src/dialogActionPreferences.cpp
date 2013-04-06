@@ -5,7 +5,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.2
+//! \version 1.3
 //! \date 02.01.2013
 //!
 //! ********************************************************************
@@ -82,7 +82,7 @@ DialogActionPreferences::DialogActionPreferences(	wxWindow* parent,
 	_staticTextDescription->SetLabel(_action->getDescription());
 	
 	//Ajout du panel d'édition propre à l'action.
-	_bSizerActPreference->Add(_action->getPanelPreferences(this), 1, wxEXPAND | wxALL, 5);
+	_bSizerActPreference->Add(_action->getPanelPreferences(this, _sdbSizerOK), 1, wxEXPAND | wxALL, 5);
 
 	//Mise a jour du dialogue.
 	GetSizer()->Fit(this);
@@ -215,6 +215,11 @@ void DialogActionPreferences::OnKillFocus(wxFocusEvent&)
 		_textCtrlChortcut->SetValue(_("Click here"));
 }
 
+void DialogActionPreferences::OnOKButtonClick(wxCommandEvent&)
+{
+	std::cout << "DialogActionPreferences::OnOKButtonClick" << std::endl;
+}
+
 void DialogActionPreferences::OnChoiceAction(wxCommandEvent& event)
 {
 	setUpAction(Resource::getInstance()->actionsToType(event.GetString()));
@@ -233,7 +238,7 @@ void DialogActionPreferences::setUpAction(wxString const& actTypeName)
 	
 	//Ajout du panel d'édition propre à l'action.
 	_bSizerActPreference->Clear(true);
-	_bSizerActPreference->Add(_action->getPanelPreferences(this), 1, wxEXPAND | wxALL, 5);
+	_bSizerActPreference->Add(_action->getPanelPreferences(this, _sdbSizerOK), 1, wxEXPAND | wxALL, 5);
 
 	//Mise a jour du dialogue.
 	GetSizer()->Fit(this);
