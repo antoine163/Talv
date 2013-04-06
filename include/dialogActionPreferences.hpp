@@ -5,7 +5,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.1
+//! \version 1.2
 //! \date 02.01.2013
 //!
 //! ********************************************************************
@@ -72,7 +72,7 @@ class DialogActionPreferences : public GuiDialogActionPreferences
 		
 		void OnChoiceAction(wxCommandEvent& event);
 		
-		void setUpAction(wxString const& action);
+		void setUpAction(wxString const& actTypeName);
 		
 		//! \brief Mise a jour du texte dans le TextCtrlChortcut.
 		void updateTextCtrlChortcut(wxChar key);

@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.4
+//! \version 0.5
 //! \date 30.03.2013
 //!
 //! ********************************************************************
@@ -14,16 +14,6 @@
 */
 
 #include "resource.hpp"
-
-#ifdef USE_ACT_TRANSLATION
-#include "action/actTranslation.hpp"
-#endif
-#ifdef USE_ACT_SAVE_TRANSLATION
-#include "action/actSaveTranslation.hpp"
-#endif
-#ifdef USE_ACT_SAY
-#include "action/actSay.hpp"
-#endif
 
 #include <wx/intl.h> 
 
@@ -103,13 +93,13 @@ Resource::Resource()
 	
 	//Liste des actions
 	#ifdef USE_ACT_TRANSLATION
-	_actions[_("Translation")] = typeid(ActTranslation).hash_code();
+	_actions[_("Translation")] = "ActTranslation";
 	#endif
 	#ifdef USE_ACT_SAVE_TRANSLATION
-	_actions[_("Save translation")] = typeid(ActSaveTranslation).hash_code();
+	_actions[_("Save a translation")] = "ActSaveTranslation";
 	#endif
 	#ifdef USE_ACT_SAY
-	_actions[_("Say")] = typeid(ActSay).hash_code();
+	_actions[_("Say a text")] = "ActSay";
 	#endif
 }
 
@@ -138,23 +128,23 @@ wxString const& Resource::languageToAcronym(wxString const& language)const
 	return wxEmptyString;
 }
 
-std::map<wxString, size_t> const& Resource::getActions()const
+std::map<wxString, wxString> const& Resource::getActions()const
 {
 	return _actions;
 }
 
-wxString const& Resource::hashCodeToAction(size_t hashCode)const
+wxString const& Resource::typeToAction(wxString const& actTypeName)const
 {
 	for(auto &it: _actions)
 	{
-		if(it.second == hashCode)
+		if(it.second == actTypeName)
 			return it.first;
 	}
 	
 	return wxEmptyString;
 }
 
-size_t Resource::actionsToHashCode(wxString const& action)const
+wxString const& Resource::actionsToType(wxString const& actionName)const
 {
-	return _actions.at(action);
+	return _actions.at(actionName);
 }

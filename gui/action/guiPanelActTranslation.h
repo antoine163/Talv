@@ -33,11 +33,6 @@ class GuiPanelActTranslation : public wxPanel
 	protected:
 		wxChoice* _choiceLanguageSource;
 		wxChoice* _choiceLanguageOfTranslation;
-		
-		// Virtual event handlers, overide them in your derived class
-		virtual void OnChoiceSrc( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnChoiceTo( wxCommandEvent& event ) { event.Skip(); }
-		
 	
 	public:
 		

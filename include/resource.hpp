@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.4
+//! \version 0.5
 //! \date 30.03.2013
 //!
 //! ********************************************************************
@@ -39,11 +39,11 @@ class Resource : public Singleton<Resource>
 		wxString const& languageToAcronym(wxString const& language)const;
 		
 		//! \brief Obtenir la liste des actions.
-		std::map<wxString, size_t> const& getActions()const;
-		//! \brief Obtenir l'actions en fonction de sont hash_code.
-		wxString const& hashCodeToAction(size_t hashCode)const;
-		//! \brief Obtenir le hash_code en fonction du l'actions.
-		size_t actionsToHashCode(wxString const& action)const;
+		std::map<wxString, wxString> const& getActions()const;
+		//! \brief Obtenir le non de l'action en fonctionne de nom de type.
+		wxString const& typeToAction(wxString const& actTypeName)const;
+		//! \brief Obtenir le nom du type de l'action a partir de son nom.
+		wxString const& actionsToType(wxString const& actionName)const;
 	
 	private:
 		Resource();
@@ -51,8 +51,8 @@ class Resource : public Singleton<Resource>
 		
 		//! \brief Liste des acronyme et langues <acronyme, langue>.
 		std::map<wxString, wxString> _languages;
-		//! \brief Liste des actions et de leur hash_code associer <action, hash_code>..
-		std::map<wxString, size_t> _actions;
+		//! \brief Liste des nom d'action en fonction de leur nom de type <actionName, actTypeName>.
+		std::map<wxString, wxString> _actions;
 };
 
 #endif //RESOURCE_H

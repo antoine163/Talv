@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.2
+//! \version 1.3
 //! \date 02.01.2013
 //!
 //! ********************************************************************
@@ -40,7 +40,7 @@ DialogPreferences::DialogPreferences(ActionManager *actionManager)
 	_listCtrlAction->AppendColumn(_("Preferences"), wxLIST_FORMAT_LEFT, 170);
 	
 	//Rempli la list.
-	for(auto it: *_actionManager->getAction())
+	for(auto it: *_actionManager->getActions())
 	{
 		_listCtrlAction->InsertItem(0, ShortcutKey::shortcutKeyToString(it.first));
 		_listCtrlAction->SetItem(0, 1, it.second->getName());

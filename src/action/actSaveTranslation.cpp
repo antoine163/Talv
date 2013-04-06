@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.1
+//! \version 0.2
 //! \date 31.03.2013
 //!
 //! ********************************************************************
@@ -74,7 +74,7 @@ PanelActSaveTranslation::~PanelActSaveTranslation()
 // *********************************************************************
 
 ActSaveTranslation::ActSaveTranslation()
-: ActSaveTranslation(	"en", "fr", wxGetUserHome(), "translation",
+: ActSaveTranslation(	"en", "fr", wxGetUserHome(), "",
 						true, true, true)
 {
 }
@@ -86,7 +86,7 @@ ActSaveTranslation::ActSaveTranslation(wxString const& lgsrc,
 							bool soveAll,
 							bool noDoublon,
 							bool showDialog)
-: Action(_("Save a translation"),
+: Action(_("Save a translation"), "ActSaveTranslation",
 _("Translation a word or a group words from google and save in a file.")),
 _lgsrc(lgsrc), _lgto(lgto), _location(location), _fileName(fileName),
 _soveAll(soveAll), _noDoublon(noDoublon), _showDialog(showDialog)
@@ -109,18 +109,12 @@ wxPanel* ActSaveTranslation::getPanelPreferences(wxWindow* parent)
 }
 
 //! \todo a compléter avec les valeurs écrites dans le fichier.
-ActSaveTranslation ActSaveTranslation::load(wxFileConfig & fileConfig)
+void ActSaveTranslation::actLoad(wxFileConfig & fileConfig)
 {	
-	return ActSaveTranslation(	"en",
-								"fr",
-								wxGetUserHome(),
-								"translation",
-								true,
-								true,
-								true);
+	std::cout << "ActSaveTranslation::load" << std::endl;
 }
 		
-void ActSaveTranslation::sove(wxFileConfig & fileConfig)const
+void ActSaveTranslation::actSove(wxFileConfig & fileConfig)const
 {
 }
 

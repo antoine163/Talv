@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.5
+//! \version 0.6
 //! \date 17.03.2013
 //!
 //! ********************************************************************
@@ -16,7 +16,6 @@
 #ifndef ACTION_TRANSLATION_H
 #define ACTION_TRANSLATION_H
 
-#include "action.hpp"
 #include "action/guiPanelActTranslation.h"
 
 // *********************************************************************
@@ -32,14 +31,9 @@ class PanelActTranslation : public GuiPanelActTranslation
 		//! \brief Constructeur.
 		//! \param parent wxWindow parent.
 		//! \param act action de traduction a modifier.
-		PanelActTranslation(wxWindow* parent, ActTranslation * act);
+		PanelActTranslation(wxWindow* parent, ActTranslation* act);
 		//! \brief Destructeur.
 		~PanelActTranslation();
-		
-		//! \brief Événement lorsque l'utilisateur change de langage source.
-		void OnChoiceSrc(wxCommandEvent& event);
-		//! \brief Événement lorsque l'utilisateur change de langage de traduction.
-		void OnChoiceTo(wxCommandEvent& event);
 	
 	private:
 		//! \brief ActTranslation à modifier.
@@ -50,6 +44,8 @@ class PanelActTranslation : public GuiPanelActTranslation
 // *********************************************************************
 // Class ActTranslation
 // *********************************************************************
+
+#include "action.hpp"
 
 //! \brief Action de traduction.
 class ActTranslation : public Action
@@ -80,14 +76,19 @@ class ActTranslation : public Action
 		//! \note Cette méthode crées un panel et retourne le pointeur sur se panel il faudra prévoir de libérai la mémoire.
 		wxPanel* getPanelPreferences(wxWindow* parent);
 		
-		//! \brief Permet de charger les préférences de l'action à partir du wxFileConfig.
-		static ActTranslation load(wxFileConfig & fileConfig);
-		
-		//! \brief Permet de sauvegarder les préférences de l'action dans le wxFileConfig.
-		void sove(wxFileConfig & fileConfig)const;
-		
 		//! \brief Préférences de l'action au format string.
 		wxString getStringPreferences()const;
+		
+	protected:		
+		//! \brief Permet de charger les préférences de l'action à partir du wxFileConfig.
+		//! \param fileConfig fichier à partir du quelle l'action doit être charger.
+		void actLoad(wxFileConfig & fileConfig);
+		
+		//! \brief Permet de sauvegarder les préférences de l'action dans le wxFileConfig.
+		//! \param fileConfig fichier où l'action doit être sauvegarder.
+		void actSove(wxFileConfig & fileConfig)const;
+		
+		
 	
 	private:
 		//! \brief Lange source.

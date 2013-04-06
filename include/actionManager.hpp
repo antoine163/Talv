@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.4
+//! \version 0.5
 //! \date 20.03.2013
 //!
 //! ********************************************************************
@@ -35,10 +35,11 @@ class ActionManager : public wxEvtHandler, public Singleton<ActionManager>
 	
 	public:				
 		//! \brief Ajout d'une action.
-		//! \param shortcut c'est le raccourci a ajouter.
-		//! \param act c'est l'action a rajouter est qui sera lier au raccourci \b shortcut.
+		//! Le paramètre \b act devra étre allouer dynamiquement au préalable, \ref ActionManager se charge de libérer la mémoire après utilisation.
+		//! \param shortcut c'est le raccourci à ajouter.
+		//! \param act c'est l'action à ajouter est qui sera lier au raccourci \b shortcut.
 		//! \return true si réussite, false si le raccourcie de l'action et déjà connue.
-		bool add(ShortcutKey const &shortcut, Action const &act);
+		bool add(ShortcutKey const &shortcut, Action* act);
 		
 		//! \brief Supprimer d'un raccourci/action.
 		//! \return true si réussite, false si le raccourcis/actions est déjà connue.
@@ -59,16 +60,12 @@ class ActionManager : public wxEvtHandler, public Singleton<ActionManager>
 		void enable(bool val = true);
 		
 		//! \brief Obtenir la lites des raccourcis/actions.
-		std::map<ShortcutKey, Action*> const* getAction()const;
+		std::map<ShortcutKey, Action*> const* getActions()const;
 		
 		//! \brief Obtenir l'action d'un raccourcis.
 		//! \param shortcutKey est le raccourcis à rechercher.
 		//! \return nullptr si raccourci/action n'existe pas.
 		Action const* getAction(ShortcutKey const& shortcutKey)const;
-		
-		//! \brief Créé une nouvelle instance (par recopie) d'une action.
-		//! \note Il faudra prévoir de libérer la mémoire après utilisation de l'action.
-		static Action* newAction(Action const &act);
 		
 	private:
 		//! \brief Constructeur.

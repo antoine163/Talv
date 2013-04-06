@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.5
+//! \version 0.6
 //! \date 04.01.2013
 //!
 //! ********************************************************************
@@ -27,15 +27,11 @@
 //! \brief Class de base pour les actions.
 //! La classe \ref ActTranslation peut être pris comme exemple pour fait d'autre type d'action.
 //! \attention Dans les classes fille il faudra probablement prévoie un constructeur par recopie et redéfinie l'opérateur =.
-//! \attention Dans les classes fille il faudra prévoie une méthode de prototype -> static TypeDeAction load(wxFileConfig & fileConfig).
-//! \todo ajouter la méthode getActName et un constructeur avec ficher de config
 class Action
 {
 	public:
-		//! \brief Constructeur par défaut.
-		Action();
 		//! \brief Constructeur.
-		Action(wxString const& actName, wxString const& actDescription);
+		Action(wxString const& name, wxString const& actTypeName, wxString const& actDescription);
 		
 		//! \brief destructeur.
 		virtual ~Action();
@@ -43,8 +39,13 @@ class Action
 		//! \brief Permet d'exécuter l'action.
 		virtual void execute()=0;
 		
+		//! \brief Permet de charger les préférences de l'action à partir du wxFileConfig.
+		//! \param fileConfig fichier à partir du quelle l'action doit être charger.
+		void load(wxFileConfig & fileConfig);
+		
 		//! \brief Permet de sauvegarder les préférences de l'action dans le wxFileConfig.
-		virtual void sove(wxFileConfig & fileConfig)const=0;
+		//! \param fileConfig fichier où l'action doit être sauvegarder.
+		void sove(wxFileConfig & fileConfig)const;
 		
 		//! \brief Permet d'extraire les préférences de l'action au format string,
 		//! dans le but des les affichées à l'utilisateur.
@@ -60,12 +61,36 @@ class Action
 		wxString const& getDescription()const;
 		
 		//! \brief Obtenir le non de l'action.
+		//! Peut être utiliser avec les GUI.
 		//! \return Le non de l'action.
 		wxString const& getName()const;
 	
+		//! \brief Obtenir le non de la class de l'action.
+		//! La différence avec \ref getName() est que cette méthode n'est pas influencer par la traduction de l'application.
+		//! \return Le non de l'action.
+		wxString const& getActTypeName()const;
+		
+		//! \brief Crée une nouvelle action à partir de son nom (invariant).
+		//! \param actName le non de l'action (invarient)
+		//! \return nullptr si l'action n'a pas pu être créé.
+		//! \see getActName()
+		static Action* newAction(wxString const& actTypeName);
+	
+	protected:
+		//! \brief Permet de charger les préférences de l'action à partir du wxFileConfig (appelé par \ref load()).
+		//! \param fileConfig fichier à partir du quelle l'action doit être charger.
+		virtual void actLoad(wxFileConfig & fileConfig)=0;
+		
+		//! \brief Permet de sauvegarder les préférences de l'action dans le wxFileConfig(appelé par \ref sove()).
+		//! \param fileConfig fichier où l'action doit être sauvegarder.
+		virtual void actSove(wxFileConfig & fileConfig)const=0;
+		
 	private:
 		//! \brief Le non de l'action.
-		wxString _actName;
+		wxString _name;
+		
+		//! \brief Le non de l'action (invariant).
+		wxString _actTypeName;
 		
 		//! \brief Le non de l'action.
 		wxString _actDescription;

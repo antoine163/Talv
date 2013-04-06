@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.1
+//! \version 0.2
 //! \date 31.03.2013
 //!
 //! ********************************************************************
@@ -16,7 +16,6 @@
 #ifndef ACTION_SAVE_TRANSLATION_H
 #define ACTION_SAVE_TRANSLATION_H
 
-#include "action.hpp"
 #include "action/guiPanelActSaveTranslation.h"
 
 // *********************************************************************
@@ -40,6 +39,8 @@ class PanelActSaveTranslation : public GuiPanelActSaveTranslation
 // *********************************************************************
 // Class ActSaveTranslation
 // *********************************************************************
+
+#include "action.hpp"
 
 class ActSaveTranslation : public Action
 {
@@ -66,15 +67,18 @@ class ActSaveTranslation : public Action
 		//! \note Cette méthode crées un panel et retourne le pointeur sur se panel il faudra prévoir de libérai la mémoire.
 		wxPanel* getPanelPreferences(wxWindow* parent);
 		
-		//! \brief Permet de charger les préférences de l'action à partir du wxFileConfig.
-		static ActSaveTranslation load(wxFileConfig & fileConfig);
-		
-		//! \brief Permet de sauvegarder les préférences de l'action dans le wxFileConfig.
-		void sove(wxFileConfig & fileConfig)const;
-		
 		//! \brief Préférences de l'action au format string.
 		wxString getStringPreferences()const;
-	
+		
+	protected:		
+		//! \brief Permet de charger les préférences de l'action à partir du wxFileConfig.
+		//! \param fileConfig fichier à partir du quelle l'action doit être charger.
+		void actLoad(wxFileConfig & fileConfig);
+		
+		//! \brief Permet de sauvegarder les préférences de l'action dans le wxFileConfig.
+		//! \param fileConfig fichier où l'action doit être sauvegarder.
+		void actSove(wxFileConfig & fileConfig)const;
+		
 	private:
 		//! \brief Lange source.
 		wxString _lgsrc;

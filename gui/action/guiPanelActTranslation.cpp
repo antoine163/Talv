@@ -68,16 +68,8 @@ GuiPanelActTranslation::GuiPanelActTranslation( wxWindow* parent, wxWindowID id,
 	this->SetSizer( bSizer1 );
 	this->Layout();
 	bSizer1->Fit( this );
-	
-	// Connect Events
-	_choiceLanguageSource->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( GuiPanelActTranslation::OnChoiceSrc ), NULL, this );
-	_choiceLanguageOfTranslation->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( GuiPanelActTranslation::OnChoiceTo ), NULL, this );
 }
 
 GuiPanelActTranslation::~GuiPanelActTranslation()
 {
-	// Disconnect Events
-	_choiceLanguageSource->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( GuiPanelActTranslation::OnChoiceSrc ), NULL, this );
-	_choiceLanguageOfTranslation->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( GuiPanelActTranslation::OnChoiceTo ), NULL, this );
-	
 }

@@ -5,7 +5,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.1
+//! \version 1.2
 //! \date 02.01.2013
 //!
 //! ********************************************************************
@@ -17,16 +17,6 @@
 #include "dialogActionPreferences.hpp"
 #include "resource.hpp"
 #include "actionManager.hpp"
-
-#ifdef USE_ACT_TRANSLATION
-#include "action/actTranslation.hpp"
-#endif
-#ifdef USE_ACT_SAVE_TRANSLATION
-#include "action/actSaveTranslation.hpp"
-#endif
-#ifdef USE_ACT_SAY
-#include "action/actSay.hpp"
-#endif
 
 //TEST
 #include <iostream>
@@ -48,7 +38,7 @@ DialogActionPreferences::DialogActionPreferences(wxWindow* parent)
 	
 	
 	//Ajout des actions dans les chois.
-	std::map<wxString, size_t> const& actions = Resource::getInstance()->getActions();
+	std::map<wxString, wxString> const& actions = Resource::getInstance()->getActions();
 	for(auto &it: actions)
 		_choiceAction->Append(it.first);
 	//Sélectionner une action par défaut.
@@ -56,7 +46,7 @@ DialogActionPreferences::DialogActionPreferences(wxWindow* parent)
 	
 	//Installation d'un action par défaut.
 	_action = nullptr;
-	setUpAction(_choiceAction->GetString(0));
+	setUpAction(actions.at(_choiceAction->GetString(0)));
 }
 
 DialogActionPreferences::DialogActionPreferences(	wxWindow* parent,
@@ -65,7 +55,8 @@ DialogActionPreferences::DialogActionPreferences(	wxWindow* parent,
 : GuiDialogActionPreferences(parent)
 {
 	//copie de l'action
-	_action = ActionManager::newAction(inAct);
+	_action = Action::newAction(inAct.getActTypeName());
+	*_action = inAct;
 	
 	//Initialisation des variable
 	_keyCtrlIsPressed = false;
@@ -76,7 +67,7 @@ DialogActionPreferences::DialogActionPreferences(	wxWindow* parent,
 	_shortKeyIsValide = true;
 	
 	//Ajout des actions dans la liste des chois.
-	std::map<wxString, size_t> const& actions = Resource::getInstance()->getActions();
+	std::map<wxString, wxString> const& actions = Resource::getInstance()->getActions();
 	for(auto &it: actions)
 		_choiceAction->Append(it.first);
 	//Sélectionner la bonne action.
@@ -93,7 +84,7 @@ DialogActionPreferences::DialogActionPreferences(	wxWindow* parent,
 	//Ajout du panel d'édition propre à l'action.
 	_bSizerActPreference->Add(_action->getPanelPreferences(this), 1, wxEXPAND | wxALL, 5);
 
-	//
+	//Mise a jour du dialogue.
 	GetSizer()->Fit(this);
 	this->Layout();
 	this->Centre(wxBOTH);
@@ -226,31 +217,16 @@ void DialogActionPreferences::OnKillFocus(wxFocusEvent&)
 
 void DialogActionPreferences::OnChoiceAction(wxCommandEvent& event)
 {
-	setUpAction(event.GetString());
+	setUpAction(Resource::getInstance()->actionsToType(event.GetString()));
 }
 
-//! \todo a implémenter avec les locales.
-void DialogActionPreferences::setUpAction(wxString const& action)
+void DialogActionPreferences::setUpAction(wxString const& actTypeName)
 {
-	//On récuser le hash_code de l'action sélectionner
-	size_t hash_code = Resource::getInstance()->actionsToHashCode(action);
 	if(_action == nullptr)
 		delete _action;
-	
-	#ifdef USE_ACT_TRANSLATION
-	if(hash_code == typeid(ActTranslation).hash_code())
-		_action = new ActTranslation();
-	#endif
-		
-	#ifdef USE_ACT_SAVE_TRANSLATION
-	if(hash_code == typeid(ActSaveTranslation).hash_code())
-		_action = new ActSaveTranslation();
-	#endif
-		
-	#ifdef USE_ACT_SAY
-	if(hash_code == typeid(ActSay).hash_code())
-		_action = new ActSay();
-	#endif
+
+	//Création d'une action a partir de son type.
+	_action = Action::newAction(actTypeName);
 	
 	//Affiche de la description de l'action
 	_staticTextDescription->SetLabel(_action->getDescription());
@@ -259,7 +235,7 @@ void DialogActionPreferences::setUpAction(wxString const& action)
 	_bSizerActPreference->Clear(true);
 	_bSizerActPreference->Add(_action->getPanelPreferences(this), 1, wxEXPAND | wxALL, 5);
 
-	//
+	//Mise a jour du dialogue.
 	GetSizer()->Fit(this);
 	this->Layout();
 	this->Centre(wxBOTH);

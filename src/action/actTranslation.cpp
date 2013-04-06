@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.5
+//! \version 0.6
 //! \date 17.03.2013
 //!
 //! ********************************************************************
@@ -46,16 +46,6 @@ PanelActTranslation::~PanelActTranslation()
 {
 }
 
-void PanelActTranslation::OnChoiceSrc(wxCommandEvent& event)
-{
-	_act->_lgsrc = Resource::getInstance()->acronymToLanguage(event.GetString());
-}
-
-void PanelActTranslation::OnChoiceTo(wxCommandEvent& event)
-{
-	_act->_lgto = Resource::getInstance()->acronymToLanguage(event.GetString());
-}
-
 
 // *********************************************************************
 // Class ActTranslation
@@ -68,7 +58,8 @@ ActTranslation::ActTranslation()
 }
 
 ActTranslation::ActTranslation(wxString const& lgsrc, wxString const& lgto)
-: Action(_("Translation"), _("Translation a word or a group words from google.")),
+: Action(_("Translation"), "ActTranslation",
+_("Translation a word or a group words from google.")),
 _lgsrc(lgsrc), _lgto(lgto)
 {
 }
@@ -88,19 +79,14 @@ wxPanel* ActTranslation::getPanelPreferences(wxWindow* parent)
 	return new PanelActTranslation(parent, this);
 }
 
-ActTranslation ActTranslation::load(wxFileConfig & fileConfig)
+void ActTranslation::actLoad(wxFileConfig & fileConfig)
 {
-	wxString lgsrc;
-	wxString lgto;
-	
 	//On récupère les préférence.
-	fileConfig.Read("lgsrc", &lgsrc);
-	fileConfig.Read("lgto", &lgto);
-	
-	return ActTranslation(lgsrc, lgto);
+	fileConfig.Read("lgsrc", &_lgsrc);
+	fileConfig.Read("lgto", &_lgto);
 }
 		
-void ActTranslation::sove(wxFileConfig & fileConfig)const
+void ActTranslation::actSove(wxFileConfig & fileConfig)const
 {
 	fileConfig.Write("lgsrc", _lgsrc);
 	fileConfig.Write("lgto", _lgto);
