@@ -5,7 +5,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.3
+//! \version 1.4
 //! \date 02.01.2013
 //!
 //! ********************************************************************
@@ -64,12 +64,15 @@ class DialogActionPreferences : public GuiDialogActionPreferences
 		//! \brief Destructeur.
 		~DialogActionPreferences();
 		
+		//! \brief Obtenir le raccourci.
+		ShortcutKey getShortcutKey()const;
+		
 	protected:
 		void OnKeyDown(wxKeyEvent& event);
 		void OnKeyUp(wxKeyEvent& event);
 		void OnLeftDown(wxMouseEvent&);
 		void OnKillFocus(wxFocusEvent&);
-		void OnOKButtonClick(wxCommandEvent&);
+		void OnOKButtonClick(wxCommandEvent& event);
 		
 		void OnChoiceAction(wxCommandEvent& event);
 		

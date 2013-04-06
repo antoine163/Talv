@@ -83,7 +83,7 @@ void PanelActSaveTranslation::OnOKButtonClick(wxCommandEvent& event)
 	//Vérifie si le non du fichier est valide.
 	if(_textCtrlFile->IsEmpty())
 	{
-		wxMessageDialog dlg(this, _("The name of file is empty."), _("Name file invalid"), wxOK);
+		wxMessageDialog dlg(this, _("The name of file is empty."), _("Name file invalid"), wxOK|wxICON_EXCLAMATION|wxCENTRE);
 		dlg.ShowModal();
 		
 		return;
@@ -97,7 +97,7 @@ void PanelActSaveTranslation::OnOKButtonClick(wxCommandEvent& event)
 	{
 		//Si il existe, on demande si il faut remplacer le fichier.
 		wxString message = _("The file \"") + tmpFileName.GetFullPath() + _("\" already exists.\n") + _("Do you want replace this file?");
-		wxMessageDialog *dlg = new wxMessageDialog(this, message, _("Replace a file"), wxYES_NO|wxICON_QUESTION);
+		wxMessageDialog *dlg = new wxMessageDialog(this, message, _("Replace a file"), wxYES_NO|wxICON_QUESTION|wxICON_EXCLAMATION|wxCENTRE);
 		if(dlg->ShowModal() != wxID_YES)
 			return;
 		
@@ -111,7 +111,7 @@ void PanelActSaveTranslation::OnOKButtonClick(wxCommandEvent& event)
 		wxFile file(tmpFileName.GetFullPath(), wxFile::OpenMode::write);
 		if(!file.IsOpened())
 		{
-			wxMessageDialog dlg(this, _("Cannot create or open the file : ")+tmpFileName.GetFullPath(), _("No open file"), wxOK);
+			wxMessageDialog dlg(this, _("Cannot create or open the file : ")+tmpFileName.GetFullPath(), _("No open file"), wxOK|wxICON_EXCLAMATION|wxCENTRE);
 			dlg.ShowModal();
 			
 			return;

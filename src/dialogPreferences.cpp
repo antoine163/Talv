@@ -106,9 +106,26 @@ void DialogPreferences::OnButtonClickActPreferences(wxCommandEvent&)
 	Action const* tmpAct = _actionManager->getAction(tmpShortcut);
 	
 	DialogActionPreferences *dlg = new DialogActionPreferences(this, tmpShortcut, *tmpAct);
-	
-	if(dlg->ShowModal() == wxID_OK)
+	while(1)
 	{
+		if(dlg->ShowModal() == wxID_OK)
+		{
+			ShortcutKey tmpNewShortcut = dlg->getShortcutKey();
+			
+			//Si le raccourci a été modifier.
+			if(tmpShortcut != tmpNewShortcut)
+			{
+				//vérifie si le raccourci n'est pas déjà existent.
+				if(ActionManager::getInstance()->getAction(tmpNewShortcut))
+				{
+					wxMessageDialog dlg(this, _("The shortcut already exist!"), _("Shortcut exist"), wxOK|wxICON_EXCLAMATION|wxCENTRE);
+					dlg.ShowModal();
+					
+					continue;
+				}
+			}
+		}
+		break;
 	}
 	
 	dlg->Destroy();

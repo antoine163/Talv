@@ -5,7 +5,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.3
+//! \version 1.4
 //! \date 02.01.2013
 //!
 //! ********************************************************************
@@ -17,6 +17,8 @@
 #include "dialogActionPreferences.hpp"
 #include "resource.hpp"
 #include "actionManager.hpp"
+
+#include <wx/msgdlg.h>
 
 //TEST
 #include <iostream>
@@ -215,11 +217,6 @@ void DialogActionPreferences::OnKillFocus(wxFocusEvent&)
 		_textCtrlChortcut->SetValue(_("Click here"));
 }
 
-void DialogActionPreferences::OnOKButtonClick(wxCommandEvent&)
-{
-	std::cout << "DialogActionPreferences::OnOKButtonClick" << std::endl;
-}
-
 void DialogActionPreferences::OnChoiceAction(wxCommandEvent& event)
 {
 	setUpAction(Resource::getInstance()->actionsToType(event.GetString()));
@@ -244,4 +241,24 @@ void DialogActionPreferences::setUpAction(wxString const& actTypeName)
 	GetSizer()->Fit(this);
 	this->Layout();
 	this->Centre(wxBOTH);
+}
+
+void DialogActionPreferences::OnOKButtonClick(wxCommandEvent& event)
+{
+	//vérifie si le raccourci est valide
+	if(!_shortKeyIsValide)
+	{
+		wxMessageDialog dlg(this, _("The shortcut is not valid!"), _("Shortcut not valid"), wxOK|wxICON_EXCLAMATION|wxCENTRE);
+		dlg.ShowModal();
+		
+		return;
+	}
+			
+	//Propage l'événement.
+	event.Skip();
+}
+
+ShortcutKey DialogActionPreferences::getShortcutKey()const
+{
+	return ShortcutKey::stringToShortcutKey(_textCtrlChortcut->GetValue());
 }
