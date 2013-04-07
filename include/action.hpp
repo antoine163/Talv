@@ -81,7 +81,7 @@ class Action
 		//! \brief Crée une nouvelle action à partir d'une autre action (création d'une copie).
 		//! \param act est l'action a copier
 		//! \return nullptr si l'action n'a pas pu être créé.
-		static Action* newAction(Action const& act);
+		static Action* newAction(Action const* act);
 	
 	protected:
 		//! \brief Permet de charger les préférences de l'action à partir du wxFileConfig (appelé par \ref load()).

@@ -93,7 +93,6 @@ void DialogPreferences::OnButtonClickActPreferences(wxCommandEvent&)
 	//Récupération de l'action.
 	Action const* tmpAct = _listShortcutAction[tmpShortcut];
 	
-	std::cout << "DialogActionPreferences " << tmpAct->getStringPreferences() << std::endl;
 	DialogActionPreferences *dlg = new DialogActionPreferences(this, tmpShortcut, tmpAct);
 	while(1)
 	{
@@ -255,9 +254,7 @@ bool DialogPreferences::addListShortcutAction(ShortcutKey const& shortcut, Actio
 		_listCtrlAction->SetItemState(tmpItem, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
 	
 	//listShortcutAction
-	Action* tmpAction = Action::newAction(act->getActTypeName());
-	*tmpAction = *act;
-	_listShortcutAction[shortcut] = tmpAction;
+	_listShortcutAction[shortcut] = Action::newAction(act);
 	
 	return false;
 }

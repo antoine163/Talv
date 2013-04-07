@@ -56,8 +56,7 @@ DialogActionPreferences::DialogActionPreferences(	wxWindow* parent,
 : GuiDialogActionPreferences(parent)
 {
 	//copie de l'action
-	_action = Action::newAction(inAct->getActTypeName());
-	*_action = *inAct;
+	_action = Action::newAction(inAct);;
 	
 	//Initialisation des variable
 	_keyCtrlIsPressed = false;

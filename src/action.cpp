@@ -69,21 +69,21 @@ Action* Action::newAction(wxString const& actTypeName)
 	return nullptr;
 }
 
-Action* Action::newAction(Action const& act)
+Action* Action::newAction(Action const* act)
 {
 	#ifdef USE_ACT_TRANSLATION
-	if(act.actTypeName == "ActTranslation")
-		return new ActTranslation(act);
+	if(act->_actTypeName == "ActTranslation")
+		return new ActTranslation(static_cast<ActTranslation const&>(*act));
 	#endif
 		
 	#ifdef USE_ACT_SAVE_TRANSLATION
-	if(act.actTypeName == "ActSaveTranslation")
-		return new ActSaveTranslation(act);
+	if(act->_actTypeName == "ActSaveTranslation")
+		return new ActSaveTranslation(static_cast<ActSaveTranslation const&>(*act));
 	#endif
 		
 	#ifdef USE_ACT_SAY
-	if(act.actTypeName == "ActSay")
-		return new ActSay(act);
+	if(act->_actTypeName == "ActSay")
+		return new ActSay(static_cast<ActSay const&>(*act));
 	#endif
 	
 	return nullptr;
