@@ -93,7 +93,8 @@ void DialogPreferences::OnButtonClickActPreferences(wxCommandEvent&)
 	//Récupération de l'action.
 	Action const* tmpAct = _listShortcutAction[tmpShortcut];
 	
-	DialogActionPreferences *dlg = new DialogActionPreferences(this, tmpShortcut, *tmpAct);
+	std::cout << "DialogActionPreferences " << tmpAct->getStringPreferences() << std::endl;
+	DialogActionPreferences *dlg = new DialogActionPreferences(this, tmpShortcut, tmpAct);
 	while(1)
 	{
 		//Montre le dialogue

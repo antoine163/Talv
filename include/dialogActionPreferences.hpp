@@ -5,7 +5,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.5
+//! \version 1.6
 //! \date 02.01.2013
 //!
 //! ********************************************************************
@@ -60,7 +60,7 @@ class DialogActionPreferences : public GuiDialogActionPreferences
 		//! \param inAct l'action à modifier.
 		DialogActionPreferences(	wxWindow* parent,
 									ShortcutKey const& inShortcutKey,
-									Action const& inAct);
+									Action const* inAct);
 		//! \brief Destructeur.
 		~DialogActionPreferences();
 		

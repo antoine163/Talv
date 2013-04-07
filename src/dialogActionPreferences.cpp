@@ -5,7 +5,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.5
+//! \version 1.6
 //! \date 02.01.2013
 //!
 //! ********************************************************************
@@ -16,7 +16,6 @@
 
 #include "dialogActionPreferences.hpp"
 #include "resource.hpp"
-#include "actionManager.hpp"
 
 #include <wx/msgdlg.h>
 
@@ -53,12 +52,12 @@ DialogActionPreferences::DialogActionPreferences(wxWindow* parent)
 
 DialogActionPreferences::DialogActionPreferences(	wxWindow* parent,
 													ShortcutKey const& inShortcutKey,
-													Action const& inAct)
+													Action const* inAct)
 : GuiDialogActionPreferences(parent)
 {
 	//copie de l'action
-	_action = Action::newAction(inAct.getActTypeName());
-	*_action = inAct;
+	_action = Action::newAction(inAct->getActTypeName());
+	*_action = *inAct;
 	
 	//Initialisation des variable
 	_keyCtrlIsPressed = false;
