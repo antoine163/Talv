@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.7
+//! \version 0.8
 //! \date 04.01.2013
 //!
 //! ********************************************************************
@@ -64,6 +64,26 @@ Action* Action::newAction(wxString const& actTypeName)
 	#ifdef USE_ACT_SAY
 	if(actTypeName == "ActSay")
 		return new ActSay();
+	#endif
+	
+	return nullptr;
+}
+
+Action* Action::newAction(Action const& act)
+{
+	#ifdef USE_ACT_TRANSLATION
+	if(act.actTypeName == "ActTranslation")
+		return new ActTranslation(act);
+	#endif
+		
+	#ifdef USE_ACT_SAVE_TRANSLATION
+	if(act.actTypeName == "ActSaveTranslation")
+		return new ActSaveTranslation(act);
+	#endif
+		
+	#ifdef USE_ACT_SAY
+	if(act.actTypeName == "ActSay")
+		return new ActSay(act);
 	#endif
 	
 	return nullptr;

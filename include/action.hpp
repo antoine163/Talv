@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.7
+//! \version 0.8
 //! \date 04.01.2013
 //!
 //! ********************************************************************
@@ -27,7 +27,6 @@
 
 //! \brief Class de base pour les actions.
 //! La classe \ref ActTranslation peut être pris comme exemple pour fait d'autre type d'action.
-//! \attention Dans les classes fille il faudra probablement prévoie un constructeur par recopie et redéfinie l'opérateur =.
 class Action
 {
 	public:
@@ -74,10 +73,15 @@ class Action
 		wxString const& getActTypeName()const;
 		
 		//! \brief Crée une nouvelle action à partir de son nom (invariant).
-		//! \param actName le non de l'action (invarient)
+		//! \param actTypeName le non de l'action (invarient)
 		//! \return nullptr si l'action n'a pas pu être créé.
 		//! \see getActName()
 		static Action* newAction(wxString const& actTypeName);
+		
+		//! \brief Crée une nouvelle action à partir d'une autre action (création d'une copie).
+		//! \param act est l'action a copier
+		//! \return nullptr si l'action n'a pas pu être créé.
+		static Action* newAction(Action const& act);
 	
 	protected:
 		//! \brief Permet de charger les préférences de l'action à partir du wxFileConfig (appelé par \ref load()).
