@@ -72,7 +72,7 @@ class GuiDialogPreferences : public wxDialog
 	
 	public:
 		
-		GuiDialogPreferences( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 400,300 ), long style = wxDEFAULT_DIALOG_STYLE|wxDIALOG_NO_PARENT|wxSTAY_ON_TOP );
+		GuiDialogPreferences( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxDEFAULT_DIALOG_STYLE|wxDIALOG_NO_PARENT|wxSTAY_ON_TOP );
 		~GuiDialogPreferences();
 		
 		void _listCtrlActionOnContextMenu( wxMouseEvent &event )

@@ -37,8 +37,8 @@ DialogPreferences::DialogPreferences()
 	
 	//_listCtrlAction->EnableAlternateRowColours();
 	_listCtrlAction->AppendColumn(_("Shortcut"), wxLIST_FORMAT_LEFT, 100);
-	_listCtrlAction->AppendColumn(_("Action"), wxLIST_FORMAT_LEFT, 100);
-	_listCtrlAction->AppendColumn(_("Preferences"), wxLIST_FORMAT_LEFT, 170);
+	_listCtrlAction->AppendColumn(_("Action"), wxLIST_FORMAT_LEFT, 120);
+	_listCtrlAction->AppendColumn(_("Preferences"), wxLIST_FORMAT_LEFT, 255);
 	
 	
 	//Rempli les lists.

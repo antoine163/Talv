@@ -182,17 +182,45 @@ wxPanel* ActSaveTranslation::getPanelPreferences(wxWindow* parent, wxButton* but
 	return new PanelActSaveTranslation(parent, buttonOK, this);
 }
 
-//! \todo a compléter avec les valeurs écrites dans le fichier.
 void ActSaveTranslation::actLoad(wxFileConfig & fileConfig)
 {	
-	std::cout << "ActSaveTranslation::load" << std::endl;
+	//On récupère les langage.
+	fileConfig.Read("lgsrc", &_lgsrc);
+	fileConfig.Read("lgto", &_lgto);
+	
+	//On récupère le fichier.
+	wxString file;
+	fileConfig.Read("fileName", &file);
+	_fileName.Assign(file);
+	
+	//On récupère le reste
+	fileConfig.Read("saveAll", &_saveAll);		
+	fileConfig.Read("noDoublon", &_noDoublon);
+	fileConfig.Read("showDialog", &_showDialog);
 }
 		
 void ActSaveTranslation::actSave(wxFileConfig & fileConfig)const
 {
+	fileConfig.Write("lgsrc", _lgsrc);
+	fileConfig.Write("lgto", _lgto);
+	
+	//On sauvegarde les langage.
+	fileConfig.Write("lgsrc", _lgsrc);
+	fileConfig.Write("lgto", _lgto);
+	
+	//On sauvegarde le fichier.
+	fileConfig.Write("fileName", _fileName.GetFullPath());
+	
+	//On sauvegarde le reste
+	fileConfig.Write("saveAll", _saveAll);		
+	fileConfig.Write("noDoublon", _noDoublon);
+	fileConfig.Write("showDialog", _showDialog);
 }
 
 wxString ActSaveTranslation::getStringPreferences()const
 {
-	return "ActSoveTranslation::getStringPreferences";
+	return 	Resource::getInstance()->acronymToLanguage(_lgsrc) +
+			_(" to ") +
+			Resource::getInstance()->acronymToLanguage(_lgto) +
+			_(" in ") + _fileName.GetFullPath();
 }
