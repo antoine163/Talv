@@ -5,7 +5,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.4
+//! \version 1.5
 //! \date 02.01.2013
 //!
 //! ********************************************************************
@@ -261,4 +261,9 @@ void DialogActionPreferences::OnOKButtonClick(wxCommandEvent& event)
 ShortcutKey DialogActionPreferences::getShortcutKey()const
 {
 	return ShortcutKey::stringToShortcutKey(_textCtrlChortcut->GetValue());
+}
+
+Action const* DialogActionPreferences::getAction()
+{
+	return _action;
 }

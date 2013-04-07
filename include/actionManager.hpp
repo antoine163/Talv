@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.5
+//! \version 0.7
 //! \date 20.03.2013
 //!
 //! ********************************************************************
@@ -42,11 +42,15 @@ class ActionManager : public wxEvtHandler, public Singleton<ActionManager>
 		bool add(ShortcutKey const &shortcut, Action* act);
 		
 		//! \brief Supprimer d'un raccourci/action.
-		//! \return true si réussite, false si le raccourcis/actions est déjà connue.
+		//! \return true si réussite, false si le raccourcis/actions n'est pas connue.
 		bool remove(ShortcutKey const &shortcut);
 		
 		//! \brief Supprimer tout les raccourcis/actions.
 		void removeAll();
+		
+		//! \brief Pour savoir si d'un raccourci/action existe.
+		//! \return true si le raccourci/action existe (est connue).
+		bool exist(ShortcutKey const &shortcut);
 		
 		//! \brief Charger les raccourcis/actions à partir du fichier de config.
 		//! \note Cette méthode appellera \ref removeAll() au préalable.

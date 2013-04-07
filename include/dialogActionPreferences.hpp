@@ -5,7 +5,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.4
+//! \version 1.5
 //! \date 02.01.2013
 //!
 //! ********************************************************************
@@ -66,6 +66,9 @@ class DialogActionPreferences : public GuiDialogActionPreferences
 		
 		//! \brief Obtenir le raccourci.
 		ShortcutKey getShortcutKey()const;
+		
+		//! \brief Obtenir l'action.
+		Action const* getAction();
 		
 	protected:
 		void OnKeyDown(wxKeyEvent& event);

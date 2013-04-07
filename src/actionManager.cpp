@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.5
+//! \version 0.7
 //! \date 20.03.2013
 //!
 //! ********************************************************************
@@ -37,7 +37,7 @@ bool ActionManager::add(ShortcutKey const &shortcut, Action* act)
 	int id = _shortcut.creat(shortcut);
 	Bind(EVT_SHORTCUT, &ActionManager::OnShortcut, this, id);
 	
-	return false;
+	return true;
 }
 
 bool ActionManager::remove(ShortcutKey const &shortcut)
@@ -61,6 +61,15 @@ void ActionManager::removeAll()
 		delete it.second;
 		
 	_actions.clear();
+}
+
+bool ActionManager::exist(ShortcutKey const &shortcut)
+{
+	//Si le raccourci existe.
+	if(_actions.count(shortcut) > 0)
+		return true;
+	
+	return false;
 }
 
 void ActionManager::load(wxFileConfig & fileConfig)

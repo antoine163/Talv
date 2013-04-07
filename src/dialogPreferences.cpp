@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.3
+//! \version 1.5
 //! \date 02.01.2013
 //!
 //! ********************************************************************
@@ -28,7 +28,7 @@
 // *********************************************************************
 
 DialogPreferences::DialogPreferences(ActionManager *actionManager)
-: GuiDialogPreferences(nullptr), _actionManager(actionManager)
+: GuiDialogPreferences(nullptr)
 {	
     //Magnifier 
     _staticTextSetting->SetLabelMarkup("<b>"+_("Setting")+"</b>");
@@ -39,17 +39,16 @@ DialogPreferences::DialogPreferences(ActionManager *actionManager)
 	_listCtrlAction->AppendColumn(_("Action"), wxLIST_FORMAT_LEFT, 100);
 	_listCtrlAction->AppendColumn(_("Preferences"), wxLIST_FORMAT_LEFT, 170);
 	
-	//Rempli la list.
-	for(auto it: *_actionManager->getActions())
-	{
-		_listCtrlAction->InsertItem(0, ShortcutKey::shortcutKeyToString(it.first));
-		_listCtrlAction->SetItem(0, 1, it.second->getName());
-		_listCtrlAction->SetItem(0, 2, it.second->getStringPreferences());
-	}
+	//Rempli les lists.
+	for(auto it: *actionManager->getActions())
+		addListShortcutAction(it.first, it.second, -1);
 }
 
 DialogPreferences::~DialogPreferences()
 {
+	//Suppression des actions
+	for(auto it: _listShortcutAction)
+		delete it.second;
 }
 
 bool DialogPreferences::shutdownIsToggle()const
@@ -76,22 +75,11 @@ void DialogPreferences::OnButtonClickActDelete(wxCommandEvent&)
     if(dlg->ShowModal() == wxID_YES)
 	{
 		//Supprimer tous les items sélectionnés
-		for(size_t i = 0; i<_listItemSelected.size(); i++)
-		{
-			//On l'ajoute à la liste des raccourcis/actions a supprimer.
-			_shortcutKeyActDelete.push_back(ShortcutKey::stringToShortcutKey(_listItemSelected[i].GetText()));
-			//On cherche l'id de l'item.
-			long idItem = _listCtrlAction->FindItem(-1, _listItemSelected[i].GetText());
-			//Et on le supprime.
-			_listCtrlAction->DeleteItem(idItem);
+		while(!_listItemSelected.empty())
+		{	
+			//On le supprime de la liste des raccourcis/actions.
+			deleteListShortcutAction(ShortcutKey::stringToShortcutKey(_listItemSelected.back().GetText()));
 		}
-		_listItemSelected.clear();
-		
-		//On désactive les boutons Prefernce et delete
-		_buttonActPreferences->Enable(false);
-		_menuItemListPreferences->Enable(false);
-		_buttonActDelete->Enable(false);
-		_menuItemListDelete->Enable(false);
 	}
 	
     dlg->Destroy();
@@ -103,20 +91,22 @@ void DialogPreferences::OnButtonClickActPreferences(wxCommandEvent&)
 	//Récupération du raccourci.
 	ShortcutKey tmpShortcut = ShortcutKey::stringToShortcutKey(_listItemSelected[0].GetText());
 	//Récupération de l'action.
-	Action const* tmpAct = _actionManager->getAction(tmpShortcut);
+	Action const* tmpAct = _listShortcutAction[tmpShortcut];
 	
 	DialogActionPreferences *dlg = new DialogActionPreferences(this, tmpShortcut, *tmpAct);
 	while(1)
 	{
+		//Montre le dialogue
 		if(dlg->ShowModal() == wxID_OK)
 		{
+			//Récupère le raccourci sélectionner.
 			ShortcutKey tmpNewShortcut = dlg->getShortcutKey();
 			
 			//Si le raccourci a été modifier.
 			if(tmpShortcut != tmpNewShortcut)
 			{
 				//vérifie si le raccourci n'est pas déjà existent.
-				if(ActionManager::getInstance()->getAction(tmpNewShortcut))
+				if(existListShortcutAction(tmpNewShortcut))
 				{
 					wxMessageDialog dlg(this, _("The shortcut already exist!"), _("Shortcut exist"), wxOK|wxICON_EXCLAMATION|wxCENTRE);
 					dlg.ShowModal();
@@ -124,6 +114,11 @@ void DialogPreferences::OnButtonClickActPreferences(wxCommandEvent&)
 					continue;
 				}
 			}
+			
+			//On supprime l'ancien raccourci.
+			long n = deleteListShortcutAction(tmpShortcut);
+			//Et on ajoute le nouveau
+			addListShortcutAction(tmpNewShortcut, dlg->getAction(), n);
 		}
 		break;
 	}
@@ -135,8 +130,27 @@ void DialogPreferences::OnButtonClickActPreferences(wxCommandEvent&)
 void DialogPreferences::OnButtonClickActAdd(wxCommandEvent&)
 {
 	DialogActionPreferences *dlg = new DialogActionPreferences(this);
-	if(dlg->ShowModal() == wxID_OK)
+	while(1)
 	{
+		//Montre le dialogue
+		if(dlg->ShowModal() == wxID_OK)
+		{
+			//Récupère le raccourci sélectionner.
+			ShortcutKey tmpNewShortcut = dlg->getShortcutKey();
+			
+			//vérifie si le raccourci n'est pas déjà existent.
+			if(existListShortcutAction(tmpNewShortcut))
+			{
+				wxMessageDialog dlg(this, _("The shortcut already exist!"), _("Shortcut exist"), wxOK|wxICON_EXCLAMATION|wxCENTRE);
+				dlg.ShowModal();
+				
+				continue;
+			}
+			
+			//On ajoute le nouveau raccourci
+			addListShortcutAction(tmpNewShortcut, dlg->getAction(), _listCtrlAction->GetItemCount());
+		}
+		break;
 	}
 	
 	dlg->Destroy();
@@ -145,6 +159,7 @@ void DialogPreferences::OnButtonClickActAdd(wxCommandEvent&)
 
 void DialogPreferences::OnButtonClickOK(wxCommandEvent& event)
 {	
+	
 	event.Skip();
 }
 
@@ -204,5 +219,76 @@ void DialogPreferences::OnListItemSelectedAction(wxListEvent& event)
 		_buttonActPreferences->Enable(false);
 		_menuItemListPreferences->Enable(false);
 	}
+}
+
+bool DialogPreferences::addListShortcutAction(ShortcutKey const& shortcut, Action const* act, long item)
+{
+	//Si le raccourci existe déjà.
+	if(_listShortcutAction.count(shortcut) > 0)
+		return false;
+		
+	//Sinon on l'ajoute.
+	long tmpItem = -1;
+	
+	//Désélectionne tout les items
+	for(;;)
+	{
+		tmpItem = _listCtrlAction->GetNextItem(tmpItem, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+		if(tmpItem == -1)
+			break;
+			
+		_listCtrlAction->SetItemState(tmpItem, 0, wxLIST_STATE_SELECTED);
+	}
+	
+	
+	//listCtrl
+	tmpItem = 0;
+	if(item != -1)
+		tmpItem = item;
+		
+	_listCtrlAction->InsertItem(tmpItem, ShortcutKey::shortcutKeyToString(shortcut));
+	_listCtrlAction->SetItem(tmpItem, 1, act->getName());
+	_listCtrlAction->SetItem(tmpItem, 2, act->getStringPreferences());
+	_listCtrlAction->EnsureVisible(tmpItem);
+	if(item != -1)
+		_listCtrlAction->SetItemState(tmpItem, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+	
+	//listShortcutAction
+	Action* tmpAction = Action::newAction(act->getActTypeName());
+	*tmpAction = *act;
+	_listShortcutAction[shortcut] = tmpAction;
+	
+	return false;
+}
+
+long DialogPreferences::deleteListShortcutAction(ShortcutKey const& shortcut)
+{
+	//Si le raccourci existe.
+	if(_listShortcutAction.count(shortcut) > 0)
+	{
+		//On cherche l'id de l'item.
+		long idItem = _listCtrlAction->FindItem(-1, ShortcutKey::shortcutKeyToString(shortcut));
+		//On le désélectionne
+		_listCtrlAction->SetItemState(idItem, 0, wxLIST_STATE_SELECTED);
+		//Et on le supprime.
+		_listCtrlAction->DeleteItem(idItem);
+
+		//On le supprime
+		delete _listShortcutAction[shortcut];
+		_listShortcutAction.erase(shortcut);
+		
+		return idItem;
+	}
+	
+	return -1;
+}
+
+bool DialogPreferences::existListShortcutAction(ShortcutKey const& shortcut)
+{
+	//Si le raccourci existe.
+	if(_listShortcutAction.count(shortcut) > 0)
+		return true;
+	
+	return false;
 }
 		

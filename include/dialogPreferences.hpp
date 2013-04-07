@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.3
+//! \version 1.5
 //! \date 02.01.2013
 //!
 //! ********************************************************************
@@ -41,7 +41,7 @@ class DialogPreferences : public GuiDialogPreferences
 		//! \brief Pour savoir si le boite de l'afficha de l'icône de l'application est cocher ou pas.
 		bool showIcon()const;
 		
-	protected:		
+	private:		
 		//! \brief Supprimer une action.
 		void OnButtonClickActDelete(wxCommandEvent&);
 		//! \brief Configurai une action une action.
@@ -59,15 +59,21 @@ class DialogPreferences : public GuiDialogPreferences
 		//! \brief Un item a été sélectionner.
 		void OnListItemSelectedAction(wxListEvent& event);
 		
-		//! \brief ActionManager qu'il faut modifier si changement de l'utilisateur via le GUI.
-		ActionManager *_actionManager;
+		//! \brief Ajout un raccourci/action.
+		//! \return true si le raccourci a bien été ajouter. false si le raccourci existe déjà.
+		bool addListShortcutAction(ShortcutKey const& shortcut, Action const* act, long item = -1);
+		//! \brief Supprime un raccourci/action.
+		//! \return le numéro de l'item supprimer. -1 si le raccourci n'existe pas.
+		long deleteListShortcutAction(ShortcutKey const& shortcut);
+		//! \brief Pour savoir si un raccourci existe.
+		//! \return true si le raccourci existe, false sinon.
+		bool existListShortcutAction(ShortcutKey const& shortcut);
+
+		//! \brief Liste des raccourcis/actions dans l'êta du dialogue.
+		std::map<ShortcutKey, Action*> _listShortcutAction;
 		
-		
-		//! \brief Liste des Item qui sélectionner dans la liste des raccourcis/actions.
+		//! \brief Liste des Item qui sont sélectionner dans la liste des raccourcis/actions.
 		std::vector<wxListItem> _listItemSelected;
-		//! \brief Liste des raccourcis qui on été supprimé de la liste des raccourcis/actions et qu'il
-		//! faudra probablement affecter à /ref _actionManager avec de quitter le dialogue ou a la sauvegarde.
-		std::vector<ShortcutKey> _shortcutKeyActDelete;
 };
 
 #endif //DIALOG_PREFERENCES_H
