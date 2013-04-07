@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.7
+//! \version 0.8
 //! \date 20.03.2013
 //!
 //! ********************************************************************
@@ -48,6 +48,7 @@ bool ActionManager::remove(ShortcutKey const &shortcut)
 		//On le supprime
 		delete _actions[shortcut];
 		_actions.erase(shortcut);
+		_shortcut.remove(shortcut);
 		return true;
 	}
 	
@@ -58,7 +59,10 @@ void ActionManager::removeAll()
 {
 	//Suppression des actions.
 	for(auto &it: _actions)
+	{
 		delete it.second;
+		_shortcut.remove(it.first);
+	}
 		
 	_actions.clear();
 }

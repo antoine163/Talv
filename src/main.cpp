@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.1
+//! \version 1.2
 //! \date 12.12.12
 //!
 //! ********************************************************************
@@ -39,9 +39,6 @@ bool App::OnInit()
 	SetExitOnFrameDelete(false);
 	_menuIcon = nullptr;
 	
-	//Crée de l'instance de ActionManager;
-	_actionManager = ActionManager::getInstance();
-	
 	//Chargement de la config
 	wxFileConfig fileConfig(	PROJECT_NAME,
 								wxEmptyString,
@@ -55,8 +52,8 @@ bool App::OnInit()
 	else
 		deleteMenuItem();
 		
-	//Installation des raccourcis/actions
-	_actionManager->load(fileConfig);
+	//Crée de l'instance de ActionManager et Installation des raccourcis/actions
+	ActionManager::getInstance()->load(fileConfig);
 	
 	
 	wxCommandEvent te;
@@ -71,7 +68,6 @@ int App::OnExit()
 	
 	//Suppression du mangeur d'action.
 	ActionManager::kill();
-	_actionManager = nullptr;
 	
 	//Suppression des ressources.
 	Resource::kill();
@@ -113,11 +109,14 @@ void App::OnPreferences(wxCommandEvent&)
 	//On lance le dialog si il n'est pas déjà lancer.
 	if(dlg == nullptr)
 	{
+		//Récupération de l'instance de ActionManager;
+		ActionManager* actionManager = ActionManager::getInstance();
+	
 		//Désactivation des raccourcis.
-		_actionManager->enable(false);
+		actionManager->enable(false);
 		
 		//Création du dialog.
-		dlg = new DialogPreferences(_actionManager);
+		dlg = new DialogPreferences();
 		
 		//Affichage du dialog.
 		if(dlg->ShowModal() == wxID_OK)
@@ -134,7 +133,7 @@ void App::OnPreferences(wxCommandEvent&)
 		}
 		
 		//On réactive les raccourcis
-		_actionManager->enable(true);
+		actionManager->enable(true);
 		
 		//Supprime le dialog
 		delete dlg;
@@ -147,7 +146,7 @@ void App::OnPreferences(wxCommandEvent&)
 
 void App::OnEnable(wxCommandEvent& event)
 {
-	_actionManager->enable(event.IsChecked());
+	ActionManager::getInstance()->enable(event.IsChecked());
 }
 
 void App::OnAbout(wxCommandEvent&)

@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.5
+//! \version 1.6
 //! \date 02.01.2013
 //!
 //! ********************************************************************
@@ -32,7 +32,7 @@ class DialogPreferences : public GuiDialogPreferences
 {
 	public:
 		
-		DialogPreferences(ActionManager *actionManager);
+		DialogPreferences();
 		~DialogPreferences();
 		
 		//! \brief Pour savoir si le bouton shutdown et actionner.

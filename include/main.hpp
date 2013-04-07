@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.1
+//! \version 1.2
 //! \date 12.12.12
 //!
 //! ********************************************************************
@@ -56,8 +56,6 @@ class App : public wxApp
 	private:
 		//! \brief Menu dans la zone de notification.
 		MenuIcon *_menuIcon;
-		//! \brief Gestion des action/raccourci.
-		ActionManager *_actionManager;
 };
 
 DECLARE_APP(App);

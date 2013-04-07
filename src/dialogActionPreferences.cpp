@@ -56,7 +56,7 @@ DialogActionPreferences::DialogActionPreferences(	wxWindow* parent,
 : GuiDialogActionPreferences(parent)
 {
 	//copie de l'action
-	_action = Action::newAction(inAct);;
+	_action = Action::newAction(inAct);
 	
 	//Initialisation des variable
 	_keyCtrlIsPressed = false;
@@ -92,6 +92,10 @@ DialogActionPreferences::DialogActionPreferences(	wxWindow* parent,
 
 DialogActionPreferences::~DialogActionPreferences()
 {
+	//Pour éviter un "Bus error (core dumped)" lorsque le panel de l'action est supprimer.
+	_bSizerActPreference->Clear(true);
+	
+	//On suprime l'action.
 	delete _action;
 }
 
