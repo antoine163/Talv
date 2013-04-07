@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.2
+//! \version 1.3
 //! \date 12.12.12
 //!
 //! ********************************************************************
@@ -55,9 +55,6 @@ bool App::OnInit()
 	//Crée de l'instance de ActionManager et Installation des raccourcis/actions
 	ActionManager::getInstance()->load(fileConfig);
 	
-	
-	wxCommandEvent te;
-OnPreferences(te);
 	return true;
 }
 

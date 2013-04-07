@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.6
+//! \version 1.8
 //! \date 02.01.2013
 //!
 //! ********************************************************************
@@ -17,6 +17,7 @@
 #include "dialogActionPreferences.hpp"
 #include "shortcut.hpp"
 
+#include <wx/fileconf.h>
 #include <wx/msgdlg.h>
 #include <wx/menu.h>
 
@@ -94,46 +95,46 @@ void DialogPreferences::OnButtonClickActPreferences(wxCommandEvent&)
 	Action const* tmpAct = _listShortcutAction[tmpShortcut];
 	
 	DialogActionPreferences dlg(this, tmpShortcut, tmpAct);
-	//while(1)
-	//{
-		////Montre le dialogue
-		//if(dlg.ShowModal() == wxID_OK)
-		//{
-			////Récupère le raccourci sélectionner.
-			//ShortcutKey tmpNewShortcut = dlg->getShortcutKey();
+	while(1)
+	{
+		//Montre le dialogue
+		if(dlg.ShowModal() == wxID_OK)
+		{
+			//Récupère le raccourci sélectionner.
+			ShortcutKey tmpNewShortcut = dlg.getShortcutKey();
 			
-			////Si le raccourci a été modifier.
-			//if(tmpShortcut != tmpNewShortcut)
-			//{
-				////vérifie si le raccourci n'est pas déjà existent.
-				//if(existListShortcutAction(tmpNewShortcut))
-				//{
-					//wxMessageDialog dlg(this, _("The shortcut already exist!"), _("Shortcut exist"), wxOK|wxICON_EXCLAMATION|wxCENTRE);
-					//dlg.ShowModal();
+			//Si le raccourci a été modifier.
+			if(tmpShortcut != tmpNewShortcut)
+			{
+				//vérifie si le raccourci n'est pas déjà existent.
+				if(existListShortcutAction(tmpNewShortcut))
+				{
+					wxMessageDialog dlg(this, _("The shortcut already exist!"), _("Shortcut exist"), wxOK|wxICON_EXCLAMATION|wxCENTRE);
+					dlg.ShowModal();
 					
-					//continue;
-				//}
-			//}
+					continue;
+				}
+			}
 			
-			////On supprime l'ancien raccourci.
-			//long n = deleteListShortcutAction(tmpShortcut);
-			////Et on ajoute le nouveau
-			//addListShortcutAction(tmpNewShortcut, dlg->getAction(), n);
-		//}
-		//break;
-	//}
+			//On supprime l'ancien raccourci.
+			long n = deleteListShortcutAction(tmpShortcut);
+			//Et on ajoute le nouveau
+			addListShortcutAction(tmpNewShortcut, dlg.getAction(), n);
+		}
+		break;
+	}
 }
 
 void DialogPreferences::OnButtonClickActAdd(wxCommandEvent&)
 {
-	DialogActionPreferences *dlg = new DialogActionPreferences(this);
+	DialogActionPreferences dlg(this);
 	while(1)
 	{
 		//Montre le dialogue
-		if(dlg->ShowModal() == wxID_OK)
+		if(dlg.ShowModal() == wxID_OK)
 		{
 			//Récupère le raccourci sélectionner.
-			ShortcutKey tmpNewShortcut = dlg->getShortcutKey();
+			ShortcutKey tmpNewShortcut = dlg.getShortcutKey();
 			
 			//vérifie si le raccourci n'est pas déjà existent.
 			if(existListShortcutAction(tmpNewShortcut))
@@ -145,22 +146,26 @@ void DialogPreferences::OnButtonClickActAdd(wxCommandEvent&)
 			}
 			
 			//On ajoute le nouveau raccourci
-			addListShortcutAction(tmpNewShortcut, dlg->getAction(), _listCtrlAction->GetItemCount());
+			addListShortcutAction(tmpNewShortcut, dlg.getAction(), _listCtrlAction->GetItemCount());
 		}
 		break;
 	}
-	
-	dlg->Destroy();
 }
 
 void DialogPreferences::OnButtonClickOK(wxCommandEvent& event)
 {	
-	
+	applyAndSave();
 	event.Skip();
 }
 
 void DialogPreferences::OnButtonClickApply(wxCommandEvent& event)
 {	
+	applyAndSave();	
+	event.Skip();
+}
+
+void DialogPreferences::applyAndSave()
+{
 	//Récupération de l'instance de ActionManager
 	ActionManager* actionManager = ActionManager::getInstance();
 	
@@ -173,7 +178,14 @@ void DialogPreferences::OnButtonClickApply(wxCommandEvent& event)
 	//On vide _listShortcutAction
 	_listShortcutAction.clear();
 	
-	event.Skip();
+	
+	//on sauvegarde dans le fichier de configuration
+	wxFileConfig fileConfig(	PROJECT_NAME,
+								wxEmptyString,
+								wxGetUserHome()+"/."+PROJECT_NAME);
+								
+	
+	fileConfig.Read("show_menu", _checkBoxShowMenu->GetValue());
 }
 
 void DialogPreferences::OnListItemDeselectedAction(wxListEvent& event)

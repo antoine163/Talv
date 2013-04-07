@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.6
+//! \version 1.8
 //! \date 02.01.2013
 //!
 //! ********************************************************************
@@ -41,7 +41,10 @@ class DialogPreferences : public GuiDialogPreferences
 		//! \brief Pour savoir si le boite de l'afficha de l'icône de l'application est cocher ou pas.
 		bool showIcon()const;
 		
-	private:		
+	private:
+		//! \brief Applique les modification et les sauvegarder dans le fichier de config.
+		void applyAndSave();
+		
 		//! \brief Supprimer une action.
 		void OnButtonClickActDelete(wxCommandEvent&);
 		//! \brief Configurai une action une action.
