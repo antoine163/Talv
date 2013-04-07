@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.8
+//! \version 0.9
 //! \date 04.01.2013
 //!
 //! ********************************************************************
@@ -43,10 +43,10 @@ void Action::load(wxFileConfig & fileConfig)
 	actLoad(fileConfig);
 }
 	
-void Action::sove(wxFileConfig & fileConfig)const
+void Action::save(wxFileConfig & fileConfig)const
 {
 	fileConfig.Write("ActTypeName", _actTypeName);
-	actSove(fileConfig);
+	actSave(fileConfig);
 }
 
 Action* Action::newAction(wxString const& actTypeName)

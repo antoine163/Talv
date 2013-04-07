@@ -58,7 +58,7 @@ class ActionManager : public wxEvtHandler, public Singleton<ActionManager>
 		
 		//! \brief Sauvegarde des action dans le fichier de config.
 		//! Ne supprime pas les enceint raccourcis/actions qui pourrai déjà existé dans le wxFileConfig.
-		void sove(wxFileConfig & fileConfig)const;
+		void save(wxFileConfig & fileConfig)const;
 
 		//! \brief Active ou désactive les raccourcis
 		void enable(bool val = true);

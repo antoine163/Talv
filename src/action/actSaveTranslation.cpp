@@ -51,7 +51,7 @@ PanelActSaveTranslation::PanelActSaveTranslation(wxWindow* parent, wxButton* but
 	_textCtrlFile->SetValue(_act->_fileName.GetName());
 	
 	//Tout sauvegarder ?
-	if(_act->_soveAll)
+	if(_act->_saveAll)
 		_radioBtnSaveAllTranslations->SetValue(true);
 	else
 		_radioBtnSaveATranslation->SetValue(true);
@@ -135,7 +135,7 @@ void PanelActSaveTranslation::OnOKButtonClick(wxCommandEvent& event)
 	
 	//Affect les autres arguments.
 	_act->_fileName = tmpFileName;
-	_act->_soveAll = _radioBtnSaveAllTranslations->GetValue();
+	_act->_saveAll = _radioBtnSaveAllTranslations->GetValue();
 	_act->_noDoublon = _checkBoxNoDoublon->IsChecked();
 	_act->_showDialog = _checkBoxShowDialog->IsChecked();
 		
@@ -163,7 +163,7 @@ ActSaveTranslation::ActSaveTranslation(wxString const& lgsrc,
 : Action(_("Save a translation"), "ActSaveTranslation",
 _("Translation a word or a group words from google and save in a file.")),
 _lgsrc(lgsrc), _lgto(lgto), _fileName(fileName),
-_soveAll(soveAll), _noDoublon(noDoublon), _showDialog(showDialog)
+_saveAll(soveAll), _noDoublon(noDoublon), _showDialog(showDialog)
 {
 }
 
@@ -188,7 +188,7 @@ void ActSaveTranslation::actLoad(wxFileConfig & fileConfig)
 	std::cout << "ActSaveTranslation::load" << std::endl;
 }
 		
-void ActSaveTranslation::actSove(wxFileConfig & fileConfig)const
+void ActSaveTranslation::actSave(wxFileConfig & fileConfig)const
 {
 }
 

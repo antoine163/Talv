@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.7
+//! \version 0.8
 //! \date 17.03.2013
 //!
 //! ********************************************************************
@@ -106,7 +106,7 @@ void ActTranslation::actLoad(wxFileConfig & fileConfig)
 	fileConfig.Read("lgto", &_lgto);
 }
 		
-void ActTranslation::actSove(wxFileConfig & fileConfig)const
+void ActTranslation::actSave(wxFileConfig & fileConfig)const
 {
 	fileConfig.Write("lgsrc", _lgsrc);
 	fileConfig.Write("lgto", _lgto);

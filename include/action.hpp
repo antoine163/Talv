@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.8
+//! \version 0.9
 //! \date 04.01.2013
 //!
 //! ********************************************************************
@@ -45,7 +45,7 @@ class Action
 		
 		//! \brief Permet de sauvegarder les préférences de l'action dans le wxFileConfig.
 		//! \param fileConfig fichier où l'action doit être sauvegarder.
-		void sove(wxFileConfig & fileConfig)const;
+		void save(wxFileConfig & fileConfig)const;
 		
 		//! \brief Permet d'extraire les préférences de l'action au format string,
 		//! dans le but des les affichées à l'utilisateur.
@@ -90,7 +90,7 @@ class Action
 		
 		//! \brief Permet de sauvegarder les préférences de l'action dans le wxFileConfig(appelé par \ref sove()).
 		//! \param fileConfig fichier où l'action doit être sauvegarder.
-		virtual void actSove(wxFileConfig & fileConfig)const=0;
+		virtual void actSave(wxFileConfig & fileConfig)const=0;
 		
 	private:
 		//! \brief Le non de l'action.

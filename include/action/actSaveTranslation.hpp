@@ -61,7 +61,7 @@ class ActSaveTranslation : public Action
 		ActSaveTranslation(	wxString const& lgsrc,
 							wxString const& lgto,
 							wxFileName const& fileName,
-							bool soveAll,
+							bool saveAll,
 							bool noDoublon,
 							bool showDialog);
 						
@@ -86,7 +86,7 @@ class ActSaveTranslation : public Action
 		
 		//! \brief Permet de sauvegarder les préférences de l'action dans le wxFileConfig.
 		//! \param fileConfig fichier où l'action doit être sauvegarder.
-		void actSove(wxFileConfig & fileConfig)const;
+		void actSave(wxFileConfig & fileConfig)const;
 		
 	private:
 		//! \brief Lange source.
@@ -95,7 +95,7 @@ class ActSaveTranslation : public Action
 		wxString _lgto;
 		
 		wxFileName _fileName;
-		bool _soveAll;
+		bool _saveAll;
 		bool _noDoublon;
 		bool _showDialog;
 };

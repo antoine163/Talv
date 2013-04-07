@@ -111,7 +111,7 @@ void ActionManager::load(wxFileConfig & fileConfig)
 	while(fileConfig.GetNextGroup(stringShortcut, lIndex));
 }
 
-void ActionManager::sove(wxFileConfig & fileConfig)const
+void ActionManager::save(wxFileConfig & fileConfig)const
 {
 	for(auto &it: _actions)
 	{
@@ -121,7 +121,7 @@ void ActionManager::sove(wxFileConfig & fileConfig)const
 		fileConfig.SetPath("/"+stringShortcut);
 		
 		//Sauvegarde de l'action
-		it.second->sove(fileConfig);
+		it.second->save(fileConfig);
 	}
 }
 

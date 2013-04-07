@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.7
+//! \version 0.8
 //! \date 17.03.2013
 //!
 //! ********************************************************************
@@ -93,7 +93,7 @@ class ActTranslation : public Action
 		
 		//! \brief Permet de sauvegarder les préférences de l'action dans le wxFileConfig.
 		//! \param fileConfig fichier où l'action doit être sauvegarder.
-		void actSove(wxFileConfig & fileConfig)const;
+		void actSave(wxFileConfig & fileConfig)const;
 		
 		
 	

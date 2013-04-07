@@ -40,9 +40,10 @@ DialogPreferences::DialogPreferences()
 	_listCtrlAction->AppendColumn(_("Action"), wxLIST_FORMAT_LEFT, 100);
 	_listCtrlAction->AppendColumn(_("Preferences"), wxLIST_FORMAT_LEFT, 170);
 	
+	
 	//Rempli les lists.
-	ActionManager* actionManager = ActionManager::getInstance();
-	for(auto it: *actionManager->getActions())
+	auto actions = ActionManager::getInstance()->getActions();
+	for(auto it: *actions)
 		addListShortcutAction(it.first, it.second, -1);
 }
 
@@ -154,17 +155,17 @@ void DialogPreferences::OnButtonClickActAdd(wxCommandEvent&)
 
 void DialogPreferences::OnButtonClickOK(wxCommandEvent& event)
 {	
-	applyAndSave();
+	applayAndSave();
 	event.Skip();
 }
 
 void DialogPreferences::OnButtonClickApply(wxCommandEvent& event)
-{	
-	applyAndSave();	
+{
+	applayAndSave();
 	event.Skip();
 }
 
-void DialogPreferences::applyAndSave()
+void DialogPreferences::applayAndSave()
 {
 	//Récupération de l'instance de ActionManager
 	ActionManager* actionManager = ActionManager::getInstance();
@@ -173,19 +174,19 @@ void DialogPreferences::applyAndSave()
 	actionManager->removeAll();
 	//Et on ajoute les raccourcis.
 	for(auto &it: _listShortcutAction)
-		actionManager->add(it.first, it.second);
-		
-	//On vide _listShortcutAction
-	_listShortcutAction.clear();
+		actionManager->add(it.first, Action::newAction(it.second));	
 	
-	
-	//on sauvegarde dans le fichier de configuration
+	//Chargement de la config
 	wxFileConfig fileConfig(	PROJECT_NAME,
 								wxEmptyString,
 								wxGetUserHome()+"/."+PROJECT_NAME);
-								
+	fileConfig.DeleteAll();
 	
-	fileConfig.Read("show_menu", _checkBoxShowMenu->GetValue());
+	//Ajout du menu dans le fichier de config
+	fileConfig.Write("show_menu", _checkBoxShowMenu->GetValue());
+	
+	//sauvegarde des action
+	ActionManager::getInstance()->save(fileConfig);
 }
 
 void DialogPreferences::OnListItemDeselectedAction(wxListEvent& event)

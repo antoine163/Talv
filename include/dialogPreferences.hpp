@@ -52,10 +52,12 @@ class DialogPreferences : public GuiDialogPreferences
 		//! \brief Ajouter une action une action.
 		void OnButtonClickActAdd(wxCommandEvent&);
 		
+		//! \brief Applique les modifications et quitte le dialog.
+		void OnButtonClickOK(wxCommandEvent& event);
 		//! \brief Applique les modifications.
-		void OnButtonClickApply(wxCommandEvent&);
-		//! \brief Applique les modifications est quitte le dialog.
-		void OnButtonClickOK(wxCommandEvent&);
+		void OnButtonClickApply(wxCommandEvent& event);
+		//! \brief applique les modification et les sauvegarde dans le fichier de configuration.
+		void applayAndSave();
 		
 		//! \brief Un item a été désélectionner.
 		void OnListItemDeselectedAction(wxListEvent& event);
