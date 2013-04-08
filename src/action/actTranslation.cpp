@@ -90,8 +90,7 @@ ActTranslation::~ActTranslation()
 
 void ActTranslation::execute()
 {
-	std::cout << "ActTranslation::execute" << std::endl;
-	std::cout << "-- " << getStringPreferences() << std::endl;
+	std::cout << Resource::getClipboard() << std::endl;
 }
 
 wxPanel* ActTranslation::getPanelPreferences(wxWindow* parent, wxButton* buttonOK)

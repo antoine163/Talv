@@ -173,8 +173,7 @@ ActSaveTranslation::~ActSaveTranslation()
 
 void ActSaveTranslation::execute()
 {
-	std::cout << "ActSaveTranslation::execute" << std::endl;
-	std::cout << "-- " << getStringPreferences() << std::endl;
+	std::cout << Resource::getClipboard() << std::endl;
 }
 
 wxPanel* ActSaveTranslation::getPanelPreferences(wxWindow* parent, wxButton* buttonOK)
@@ -200,10 +199,7 @@ void ActSaveTranslation::actLoad(wxFileConfig & fileConfig)
 }
 		
 void ActSaveTranslation::actSave(wxFileConfig & fileConfig)const
-{
-	fileConfig.Write("lgsrc", _lgsrc);
-	fileConfig.Write("lgto", _lgto);
-	
+{	
 	//On sauvegarde les langage.
 	fileConfig.Write("lgsrc", _lgsrc);
 	fileConfig.Write("lgto", _lgto);

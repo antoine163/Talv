@@ -15,6 +15,7 @@
 
 #include "resource.hpp"
 
+#include <wx/clipbrd.h>
 #include <wx/intl.h> 
 
 // *********************************************************************
@@ -147,4 +148,27 @@ wxString const& Resource::typeToAction(wxString const& actTypeName)const
 wxString const& Resource::actionsToType(wxString const& actionName)const
 {
 	return _actions.at(actionName);
+}
+
+//! \todo a implémenter pour win
+wxString Resource::getClipboard()
+{
+	wxString word;
+	
+	//Lire le text ce trouvent dans la presse papier
+	if (wxTheClipboard->Open())
+	{
+		#if defined(__UNIX__)
+		wxTheClipboard->UsePrimarySelection(true);
+		#endif
+		if(wxTheClipboard->IsSupported(wxDF_TEXT))
+		{
+			wxTextDataObject data;
+			wxTheClipboard->GetData(data);
+			word = data.GetText();
+		}
+		wxTheClipboard->Close();
+	}
+	
+	return word;
 }

@@ -44,6 +44,13 @@ class Resource : public Singleton<Resource>
 		wxString const& typeToAction(wxString const& actTypeName)const;
 		//! \brief Obtenir le nom du type de l'action a partir de son nom.
 		wxString const& actionsToType(wxString const& actionName)const;
+		
+		//! \brief Obtenir le text se trouvent dans la presse papier.
+		//! Sous Unix la presse papier "Primary" est utiliser.
+		//! Sous Windows une demande de copie dans la presse papier est
+		//! demander à la fenêtre active avent de retourner sont contenue.
+		//! Tous pour simuler la presse papier "Primary" des systèmes unix.
+		static wxString getClipboard();
 	
 	private:
 		Resource();
