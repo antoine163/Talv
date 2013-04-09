@@ -51,6 +51,15 @@ class Resource : public Singleton<Resource>
 		//! demander à la fenêtre active avent de retourner sont contenue.
 		//! Tous pour simuler la presse papier "Primary" des systèmes unix.
 		static wxString getClipboard();
+		
+		//! \brief Obtenir l'a traduction d'un texte.
+		//! \param text
+		//! \param lgsrc
+		//! \param lgto
+		//! \return 
+		static void getTranslation(	wxString const& text,
+									wxString const& lgsrc,
+									wxString const& lgto);
 	
 	private:
 		Resource();

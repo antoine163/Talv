@@ -15,8 +15,13 @@
 
 #include "resource.hpp"
 
+#include <wx/jsonreader.h>
 #include <wx/clipbrd.h>
 #include <wx/intl.h> 
+#include <wx/url.h>
+
+//TEST
+#include <iostream>
 
 // *********************************************************************
 // Class Resource
@@ -153,7 +158,7 @@ wxString const& Resource::actionsToType(wxString const& actionName)const
 //! \todo a implémenter pour win
 wxString Resource::getClipboard()
 {
-	wxString word;
+	wxString text;
 	
 	//Lire le text ce trouvent dans la presse papier
 	if (wxTheClipboard->Open())
@@ -165,10 +170,54 @@ wxString Resource::getClipboard()
 		{
 			wxTextDataObject data;
 			wxTheClipboard->GetData(data);
-			word = data.GetText();
+			text = data.GetText();
 		}
 		wxTheClipboard->Close();
 	}
 	
-	return word;
+	return text;
+}
+
+void Resource::getTranslation(	wxString const& text,
+								wxString const& lgsrc,
+								wxString const& lgto)
+{
+	//Représentent la traduction au forma json
+	wxString resJson;
+	
+	//Si il y a un texte à traduire.
+	if(!text.IsEmpty())
+	{
+		//Preparation de l'url
+		wxURL url("http://translate.google.com/translate_a/t?ie=UTF-8&client=x&text="+text+"&hl="+lgsrc+"&sl="+lgsrc+"&tl="+lgto);
+		
+		//Pas d'erreur ?
+		if (url.GetError() == wxURL_NOERR)
+		{
+			//Récupération des données.
+			wxInputStream *inStream;
+			inStream = url.GetInputStream();
+			
+			//Si il y à quel que chose à lire
+			if(inStream->CanRead())
+			{
+				//On récupère tout les données.
+				int cRead = inStream->GetC();
+				while(cRead != wxEOF)
+				{
+					resJson << (wxUniChar)cRead;
+					cRead = inStream->GetC();
+				}
+			}
+			
+			wxDELETE(inStream);
+		}
+	}
+		
+	//std::cout << text << std::endl;
+	//std::cout << resJson << std::endl;
+	
+	//wxJSONReader jsonReader(wxJSONREADER_TOLERANT, 30);
+	//wxJSONValue val;
+	//std::cout << jsonReader.Parse(resJson, &val) << std::endl;
 }

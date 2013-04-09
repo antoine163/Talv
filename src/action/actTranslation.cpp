@@ -90,7 +90,8 @@ ActTranslation::~ActTranslation()
 
 void ActTranslation::execute()
 {
-	std::cout << Resource::getClipboard() << std::endl;
+	wxString clipboard = Resource::getClipboard();
+	Resource::getTranslation(clipboard, _lgsrc, _lgto);
 }
 
 wxPanel* ActTranslation::getPanelPreferences(wxWindow* parent, wxButton* buttonOK)
