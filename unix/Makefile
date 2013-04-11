@@ -79,7 +79,6 @@ OBJS=$(patsubst ../%.cpp,$(OBJ_DIR)/%.o, $(SRC))
 # Dossier a inclure.
 ########################################################################
 DIR = ../include
-DIR += ../wxJSON/include
 DIR += ../gui
 INCLUDE_DIRS = $(patsubst %,-I%, $(DIR))
 
