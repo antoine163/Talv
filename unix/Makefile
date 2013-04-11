@@ -53,9 +53,6 @@ SRC+=../src/shortcut.cpp
 SRC+=../src/actionManager.cpp
 SRC+=../src/action.cpp
 SRC+=../src/resource.cpp
-#wxjSON
-SRC+=../wxJSON/src/jsonval.cpp
-SRC+=../wxJSON/src/jsonreader.cpp
 #Action
 ifeq ($(ACT_TRANSLATION), yes)
 SRC+=../src/action/actTranslation.cpp
