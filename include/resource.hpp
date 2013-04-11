@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.5
+//! \version 0.6
 //! \date 30.03.2013
 //!
 //! ********************************************************************
@@ -19,6 +19,7 @@
 #include "singleton.hpp"
 
 #include <wx/string.h>
+#include <wx/arrstr.h>
 #include <map>
 
 // *********************************************************************
@@ -57,9 +58,10 @@ class Resource : public Singleton<Resource>
 		//! \param lgsrc
 		//! \param lgto
 		//! \return 
-		static void getTranslation(	wxString const& text,
-									wxString const& lgsrc,
-									wxString const& lgto);
+		static std::map<wxString, wxArrayString>& getTranslation(
+											wxString const& text,
+											wxString const& lgsrc,
+											wxString const& lgto);
 	
 	private:
 		Resource();

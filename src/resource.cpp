@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.5
+//! \version 0.6
 //! \date 30.03.2013
 //!
 //! ********************************************************************
@@ -177,10 +177,15 @@ wxString Resource::getClipboard()
 	return text;
 }
 
-void Resource::getTranslation(	wxString const& text,
-								wxString const& lgsrc,
-								wxString const& lgto)
+//! \todo Vois pour une implémentation avec un analyser jSON
+std::map<wxString, wxArrayString>& Resource::getTranslation(
+										wxString const& text,
+										wxString const& lgsrc,
+										wxString const& lgto)
 {
+	//La/Les traductions
+	std::map<wxString, wxArrayString> translations;
+	
 	//Représentent la traduction au forma json
 	wxString jsonText;
 	
@@ -212,7 +217,100 @@ void Resource::getTranslation(	wxString const& text,
 			wxDELETE(inStream);
 		}
 	}
+	else
+		return translations;
 		
-	std::cout << text << std::endl;
-	std::cout << jsonText << std::endl;
+		
+	//Analyser du forma jSON provenant de google (Code fonctionnelle ...)
+	//translations["trans"] désigne la traduction la plus courent.
+	bool inSentences = false;
+	bool inSentencesTrans = false;
+	
+	bool inDict = false;
+	bool inDictPos = false;
+	bool inDictTerms = false;
+	
+	wxString parseText;
+	wxString proposal;
+	unsigned int accolade = 0;
+	unsigned int quote = 0;
+
+	for(size_t i = 0; i<jsonText.Len(); i++)
+	{
+		if(jsonText[i] == '{')
+			accolade++;
+		else if(jsonText[i] == '}')
+			accolade--;
+		else if(jsonText[i] == ':')
+		{
+			if(!parseText.IsEmpty())
+			{
+				if((accolade-1) == 0)
+				{
+					inSentences = false;
+					inDict = false;
+					if(parseText == "sentences")
+						inSentences = true;
+					else if(parseText == "dict")
+						inDict = true;
+				}
+				else if((accolade-1) == 1)
+				{
+					if(inSentences)
+					{
+						inSentencesTrans = false;
+						if(parseText == "trans")
+							inSentencesTrans = true;
+					}
+					else if(inDict)
+					{
+						inDictPos = false;
+						inDictTerms = false;
+						if(parseText == "pos")
+							inDictPos = true;
+						else if(parseText == "terms")
+							inDictTerms = true;
+					}
+				}
+			}
+		}
+		else if(jsonText[i] == ',')
+		{
+			if(!parseText.IsEmpty())
+			{
+				if(inSentencesTrans)
+				{
+					//ici parseText est la traduction du text
+					translations["trans"].Add(parseText);
+				}
+				else if(inDictPos)
+				{
+					//ici parseText est la proposition
+					proposal = parseText;
+					translations[proposal] = wxArrayString();					
+				}
+				else if(inDictTerms)
+				{
+					//ici parseText est un terme de la proposition
+					translations[proposal].Add(parseText);
+				}
+			}
+		}
+		else if(jsonText[i] == '"')
+		{
+			if(quote == 0)
+			{
+				parseText.Empty();
+				quote = 1;
+			}
+			else
+				quote = 0;
+		}
+		else if(quote == 1)
+		{
+			parseText << jsonText[i];
+		}
+	}
+	
+	return translations;
 }

@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.3
+//! \version 0.4
 //! \date 31.03.2013
 //!
 //! ********************************************************************
@@ -106,12 +106,16 @@ void PanelActSaveTranslation::OnOKButtonClick(wxCommandEvent& event)
 				dlg->Destroy();
 				return;
 			}
-
-			//Suppression du fichier.
-			if(!wxRemoveFile(_filePickerFile->GetPath()))
-				wxLogError(_("Could not remove the file : ")+tmpFileName.GetFullPath());
-			
-			dlg->Destroy();
+			else
+			{
+				//Suppression du fichier.
+				if(!wxRemoveFile(_filePickerFile->GetPath()))
+				{
+					wxLogError(_("Could not remove the file : ")+tmpFileName.GetFullPath());
+				}
+				
+				dlg->Destroy();
+			}
 		}
 	}
 	
