@@ -18,10 +18,12 @@
 
 #include <wx/filename.h>
 #include <wx/file.h>
+#include <wx/filefn.h> 
 #include <wx/msgdlg.h>
 
 //TEST
 #include <iostream>
+#include <wx/log.h> 
 
 // *********************************************************************
 // Class PanelActSaveTranslation
@@ -45,10 +47,8 @@ PanelActSaveTranslation::PanelActSaveTranslation(wxWindow* parent, wxButton* but
 	n = _choiceLanguageOfTranslation->FindString(languages.at(_act->_lgto));
 	_choiceLanguageOfTranslation->SetSelection(n);
 	
-	//Sélectionne le bon répertoire.
-	_dirPickerFolder->SetPath(_act->_fileName.GetPath());
 	//Sélectionne le bon fichier.
-	_textCtrlFile->SetValue(_act->_fileName.GetName());
+	_filePickerFile->SetFileName(_act->_fileName);
 	
 	//Tout sauvegarder ?
 	if(_act->_saveAll)
@@ -80,8 +80,8 @@ PanelActSaveTranslation::~PanelActSaveTranslation()
 
 void PanelActSaveTranslation::OnOKButtonClick(wxCommandEvent& event)
 {
-	//Vérifie si le non du fichier est valide.
-	if(_textCtrlFile->IsEmpty())
+	//Vérifie si il y a un fichier de sélectionner.
+	if(_filePickerFile->GetFileName().GetFullName().IsEmpty())
 	{
 		wxMessageDialog dlg(this, _("The name of file is empty."), _("Name file invalid"), wxOK|wxICON_EXCLAMATION|wxCENTRE);
 		dlg.ShowModal();
@@ -89,39 +89,49 @@ void PanelActSaveTranslation::OnOKButtonClick(wxCommandEvent& event)
 		return;
 	}
 	
-	//Réoccuper le non complet du fichier.
-	wxFileName tmpFileName(wxGetUserHome(_dirPickerFolder->GetPath()), _textCtrlFile->GetValue());
-	
-	//Vérifier si le fichier existe.
-	if(tmpFileName.Exists() && tmpFileName != _act->_fileName)
-	{
-		//Si il existe, on demande si il faut remplacer le fichier.
-		wxString message = _("The file \"") + tmpFileName.GetFullPath() + _("\" already exists.\n") + _("Do you want replace this file?");
-		wxMessageDialog *dlg = new wxMessageDialog(this, message, _("Replace a file"), wxYES_NO|wxICON_QUESTION|wxICON_EXCLAMATION|wxCENTRE);
-		if(dlg->ShowModal() != wxID_YES)
-			return;
+	//Réoccuper le nom du fichier.
+	wxFileName tmpFileName = _filePickerFile->GetFileName();
 		
-		dlg->Destroy();
+	//Si fichier a été modifier ?
+	if(_act->_fileName != tmpFileName)
+	{
+		//Le fichier est déjà existent ?
+		if(tmpFileName.Exists() && tmpFileName != _act->_fileName)
+		{
+			//Si il existe, on demande si il faut remplacer le fichier.
+			wxString message = _("The file \"") + tmpFileName.GetFullPath() + _("\" already exists.\n") + _("Do you want delete this file?");
+			wxMessageDialog *dlg = new wxMessageDialog(this, message, _("Delete a file"), wxYES_NO|wxICON_QUESTION|wxICON_EXCLAMATION|wxCENTRE);
+			if(dlg->ShowModal() != wxID_YES)
+			{
+				dlg->Destroy();
+				return;
+			}
+
+			//Suppression du fichier.
+			if(!wxRemoveFile(_filePickerFile->GetPath()))
+				wxLogError(_("Could not remove the file : ")+tmpFileName.GetFullPath());
+			
+			dlg->Destroy();
+		}
 	}
 	
-	//Si le non du fichier a été modifier
-	if(tmpFileName != _act->_fileName)
-	{
-		//Création du fichier, si il n'existe pas ou si on doit le remplacer.
-		wxFile file(tmpFileName.GetFullPath(), wxFile::OpenMode::write);
-		if(!file.IsOpened())
-		{
-			wxMessageDialog dlg(this, _("Cannot create or open the file : ")+tmpFileName.GetFullPath(), _("No open file"), wxOK|wxICON_EXCLAMATION|wxCENTRE);
-			dlg.ShowModal();
-			
-			return;
-		}
+	//! \todo déplacée ce bout de code.
+	////Si le nom du fichier a été modifier
+	//if(tmpFileName != _act->_fileName)
+	//{
+		////Création du fichier, si il n'existe pas ou si on doit le remplacer.
+		//wxFile file(tmpFileName.GetFullPath(), wxFile::OpenMode::write);
+		//if(!file.IsOpened())
+		//{
+			//wxLogError(_("Could not create or open the file : ")+tmpFileName.GetFullPath(), _("No open file"));
+			//return;
+		//}
 
-		//Écrie la première ligne
-		file.Write(_("word")+","+_("translation")+","+_("adverbe")+","+_("adjectif")+","+_("nom")+","+_("verbe")+","+_("pronom"));
-		//Fermeture du fichier
-		file.Close();
-	}
+		////Écrie la première ligne
+		//file.Write(_("word")+","+_("translation")+","+_("adverbe")+","+_("adjectif")+","+_("nom")+","+_("verbe")+","+_("pronom"));
+		////Fermeture du fichier
+		//file.Close();
+	//}
 	
 	//Affect le langage source.
 	int n = _choiceLanguageSource->GetSelection();

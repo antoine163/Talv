@@ -20,7 +20,6 @@
 #include <wx/sizer.h>
 #include <wx/statline.h>
 #include <wx/filepicker.h>
-#include <wx/textctrl.h>
 #include <wx/radiobut.h>
 #include <wx/checkbox.h>
 #include <wx/panel.h>
@@ -38,8 +37,7 @@ class GuiPanelActSaveTranslation : public wxPanel
 	protected:
 		wxChoice* _choiceLanguageSource;
 		wxChoice* _choiceLanguageOfTranslation;
-		wxDirPickerCtrl* _dirPickerFolder;
-		wxTextCtrl* _textCtrlFile;
+		wxFilePickerCtrl* _filePickerFile;
 		wxRadioButton* _radioBtnSaveAllTranslations;
 		wxRadioButton* _radioBtnSaveATranslation;
 		wxCheckBox* _checkBoxNoDoublon;

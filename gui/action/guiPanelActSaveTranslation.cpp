@@ -72,31 +72,13 @@ GuiPanelActSaveTranslation::GuiPanelActSaveTranslation( wxWindow* parent, wxWind
 	wxBoxSizer* bSizer6;
 	bSizer6 = new wxBoxSizer( wxHORIZONTAL );
 	
-	wxBoxSizer* bSizer7;
-	bSizer7 = new wxBoxSizer( wxVERTICAL );
-	
-	wxStaticText* staticTextFolder;
-	staticTextFolder = new wxStaticText( this, wxID_ANY, _("Folder where save the translations :"), wxDefaultPosition, wxDefaultSize, 0 );
-	staticTextFolder->Wrap( -1 );
-	bSizer7->Add( staticTextFolder, 1, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT|wxALL, 5 );
-	
 	wxStaticText* staticTextFile;
-	staticTextFile = new wxStaticText( this, wxID_ANY, _("Name of file where save the translations :"), wxDefaultPosition, wxDefaultSize, 0 );
+	staticTextFile = new wxStaticText( this, wxID_ANY, _("Pick a file for save save the translations :"), wxDefaultPosition, wxDefaultSize, 0 );
 	staticTextFile->Wrap( -1 );
-	bSizer7->Add( staticTextFile, 1, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT|wxALL, 5 );
+	bSizer6->Add( staticTextFile, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT|wxTOP|wxBOTTOM|wxLEFT, 5 );
 	
-	bSizer6->Add( bSizer7, 1, wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
-	
-	wxBoxSizer* bSizer8;
-	bSizer8 = new wxBoxSizer( wxVERTICAL );
-	
-	_dirPickerFolder = new wxDirPickerCtrl( this, wxID_ANY, wxEmptyString, _("Select a folder"), wxDefaultPosition, wxDefaultSize, wxDIRP_DEFAULT_STYLE );
-	bSizer8->Add( _dirPickerFolder, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL|wxEXPAND|wxRIGHT|wxLEFT, 5 );
-	
-	_textCtrlFile = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer8->Add( _textCtrlFile, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL|wxALL|wxEXPAND, 5 );
-	
-	bSizer6->Add( bSizer8, 1, wxEXPAND, 5 );
+	_filePickerFile = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, _("Select a file"), wxT("*.*"), wxDefaultPosition, wxDefaultSize, wxFLP_USE_TEXTCTRL );
+	bSizer6->Add( _filePickerFile, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	bSizer1->Add( bSizer6, 0, wxEXPAND, 5 );
 	
