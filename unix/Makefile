@@ -3,7 +3,7 @@
 #	Makfile for Linux.
 #
 # - author 	:	Antoine Maleyrie : antoine.maleyrie@gmail.com
-# - version	:	0.4
+# - version	:	0.5
 # - date 	:	10.03.2013
 #
 ########################################################################
@@ -33,7 +33,7 @@ LD_FLAGS+=`wx-config-2.9 --libs base,core,adv,net,propgrid`
 # Flags pour la xlib
 LD_FLAGS+=-lX11
 # Flags pour libnotify (si utiliser)
-ifeq ($(USE_LIBNOTIFY), yes)
+ifeq ($(EMULATE_NOTIFICATION), no)
 LD_FLAGS+=`pkg-config --libs libnotify`
 endif
 

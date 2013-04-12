@@ -20,10 +20,11 @@
 #include <wx/file.h>
 #include <wx/filefn.h> 
 #include <wx/msgdlg.h>
+#include <wx/log.h> 
 
 //TEST
 #include <iostream>
-#include <wx/log.h> 
+
 
 // *********************************************************************
 // Class PanelActSaveTranslation

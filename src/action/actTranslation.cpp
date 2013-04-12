@@ -15,6 +15,7 @@
 
 #include "action/actTranslation.hpp"
 #include "resource.hpp"
+#include "notification.hpp"
 
 //TEST
 #include <iostream>
@@ -92,6 +93,8 @@ void ActTranslation::execute()
 {
 	wxString clipboard = Resource::getClipboard();
 	Resource::getTranslation(clipboard, _lgsrc, _lgto);
+	
+	Notification::getInstance()->notify();
 }
 
 wxPanel* ActTranslation::getPanelPreferences(wxWindow* parent, wxButton* buttonOK)
