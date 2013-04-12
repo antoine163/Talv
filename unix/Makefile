@@ -53,6 +53,7 @@ SRC+=../src/shortcut.cpp
 SRC+=../src/actionManager.cpp
 SRC+=../src/action.cpp
 SRC+=../src/resource.cpp
+SRC+=../src/notification.cpp
 #Action
 ifeq ($(ACT_TRANSLATION), yes)
 SRC+=../src/action/actTranslation.cpp

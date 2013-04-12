@@ -55,7 +55,8 @@ endif
 #Compilateur
 CXX=g++
 #Option de compilation généraux
-CXX_FLAGS=-W -Wall -Wextra -Wno-unused-local-typedefs -std=gnu++11
+CXX_FLAGS=-W -Wall -Wextra -std=gnu++11
+CXX_FLAGS+=-Wno-unused-local-typedefs -Wno-return-local-addr
 #Flage en plus pour la compilation en release.
 CXX_FLAGS_RELESE=-s -O2
 #Flage en plus pour la compilation en debug.
