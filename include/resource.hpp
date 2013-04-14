@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.9
+//! \version 0.11
 //! \date 30.03.2013
 //!
 //! ********************************************************************
@@ -36,16 +36,16 @@ class Resource : public Singleton<Resource>
 		//! \brief Obtenir la liste des langues avec et leur acronymes <acronyme, langue>.
 		std::map<wxString, wxString> const& getLanguages()const;
 		//! \brief Obtenir la langue en fonction de sont acronyme.
-		wxString const& abbreviationToLanguage(wxString const& abbreviation)const;
+		wxString abbreviationToLanguage(wxString const& abbreviation)const;
 		//! \brief Obtenir l'acronyme en fonction de sa langue.
-		wxString const& languageToAbbreviation(wxString const& language)const;
+		wxString languageToAbbreviation(wxString const& language)const;
 		
 		//! \brief Obtenir la liste des actions.
 		std::map<wxString, wxString> const& getActions()const;
 		//! \brief Obtenir le non de l'action en fonctionne de nom de type.
-		wxString const& typeToAction(wxString const& actTypeName)const;
+		wxString typeToAction(wxString const& actTypeName)const;
 		//! \brief Obtenir le nom du type de l'action a partir de son nom.
-		wxString const& actionsToType(wxString const& actionName)const;
+		wxString actionsToType(wxString const& actionName)const;
 		
 		//! \brief Obtenir le text se trouvent dans la presse papier.
 		//! Sous Unix la presse papier "Primary" est utiliser.

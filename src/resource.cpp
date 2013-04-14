@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.9
+//! \version 0.11
 //! \date 30.03.2013
 //!
 //! ********************************************************************
@@ -118,12 +118,12 @@ std::map<wxString, wxString> const& Resource::getLanguages()const
 	return _languages;
 }
 
-wxString const& Resource::abbreviationToLanguage(wxString const& abbreviation)const
+wxString Resource::abbreviationToLanguage(wxString const& abbreviation)const
 {
 	return _languages.at(abbreviation);
 }
 
-wxString const& Resource::languageToAbbreviation(wxString const& language)const
+wxString Resource::languageToAbbreviation(wxString const& language)const
 {
 	for(auto &it: _languages)
 	{
@@ -139,7 +139,7 @@ std::map<wxString, wxString> const& Resource::getActions()const
 	return _actions;
 }
 
-wxString const& Resource::typeToAction(wxString const& actTypeName)const
+wxString Resource::typeToAction(wxString const& actTypeName)const
 {
 	for(auto &it: _actions)
 	{
@@ -150,7 +150,7 @@ wxString const& Resource::typeToAction(wxString const& actTypeName)const
 	return wxEmptyString;
 }
 
-wxString const& Resource::actionsToType(wxString const& actionName)const
+wxString Resource::actionsToType(wxString const& actionName)const
 {
 	return _actions.at(actionName);
 }
@@ -266,7 +266,7 @@ wxString Resource::getTranslations(
 				else if(inDictPos)
 				{
 					//ici parseText est la proposition
-					proposal = parseText;
+					proposal = _(parseText);
 					(*translations)[proposal] = wxArrayString();					
 				}
 				else if(inDictTerms)
