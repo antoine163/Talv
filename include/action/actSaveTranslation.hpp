@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.7
+//! \version 0.8
 //! \date 31.03.2013
 //!
 //! ********************************************************************
@@ -19,6 +19,7 @@
 #include "action/guiPanelActSaveTranslation.h"
 #include "notification.hpp"
 #include "action.hpp"
+
 #include <wx/filename.h>
 
 #include <map>
@@ -59,6 +60,8 @@ class ActSaveTranslationFile
 						
 		//! \brief Destructeur.
 		~ActSaveTranslationFile();
+		
+		bool isOk();
 	
 		bool exist(wxString const& text);
 		
@@ -70,6 +73,9 @@ class ActSaveTranslationFile
 					std::map<wxString, wxArrayString> const& translations);
 
 	private:
+		wxFileName _fileName;
+		wxString _stringFile;
+		bool _isOk;
 };
 
 // *********************************************************************

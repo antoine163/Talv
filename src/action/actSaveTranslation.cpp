@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.7
+//! \version 0.8
 //! \date 31.03.2013
 //!
 //! ********************************************************************
@@ -16,11 +16,11 @@
 #include "action/actSaveTranslation.hpp"
 #include "resource.hpp"
 
-#include <wx/filename.h>
-#include <wx/file.h>
-#include <wx/filefn.h> 
+#include <wx/wfstream.h>
 #include <wx/msgdlg.h> 
+#include <wx/file.h>
 #include <wx/log.h> 
+
 
 //TEST
 #include <iostream>
@@ -142,21 +142,103 @@ void PanelActSaveTranslation::OnOKButtonClick(wxCommandEvent& event)
 // Class ActSaveTranslationFile
 // *********************************************************************
 ActSaveTranslationFile::ActSaveTranslationFile(wxFileName const& fileName)
+: _fileName(fileName), _isOk(true)
 {
+	//Si le fichier existe on le charge
+	if(wxFile::Exists(fileName.GetFullPath()))
+	{
+		//Ouverture du fichier
+		wxFileInputStream file(fileName.GetFullPath());
+		_isOk = file.IsOk();
+		
+		//OK ?
+		if(_isOk)
+		{	
+			//Le buffer pour stoker le tout contenue fichier
+			wxMemoryBuffer buffer;
+			//data temporaire.
+			uint8_t tmpData[1024];
+			
+			//Lie des données temps qu'il y en a.
+			while(file.CanRead() && !file.Eof())
+			{
+				file.Read(tmpData, 1024);
+				buffer.AppendData(tmpData, file.LastRead());
+			}
+			
+			//Ajouter les données au _stringFile
+			_stringFile.Append((const char *)buffer.GetData(), buffer.GetDataLen());
+		}
+	}	
 }
 
 ActSaveTranslationFile::~ActSaveTranslationFile()
 {
+	
+}
+
+bool ActSaveTranslationFile::isOk()
+{
+	return _isOk;
 }
 
 bool ActSaveTranslationFile::exist(wxString const& text)
 {
-	return true;
+	//Taille des wxString
+	size_t sizeStringFile = _stringFile.Length();
+	size_t sizeText = text.Length();
+	//Index pour le text
+	size_t indexText = 0;
+	
+	//Variable pour savoir si on doit comparer les caractères.
+	bool compare = true;
+	
+	//Parcoure touts les caractères (avec la ',') temps que l'on a pas trouver le "text"
+	for(size_t i = 0; i < sizeStringFile; i++)
+	{
+		//Doit-ont comparer les caractères ?
+		if(compare)
+		{
+			//Les caractères sont égaux.
+			if(text[indexText] == _stringFile[i])
+			{
+				//Si le caractères suivent est une ',' alors le text existe
+				if(_stringFile[i+1] == ',')
+				{
+					return true;
+				}
+				
+				indexText++;
+			}
+			//On arrête de comparer pour cette ligne.
+			else
+			{
+				compare = false;
+			}
+		}
+		
+		//On arrête de comparer si ','
+		if(_stringFile[i] == ',')
+		{
+			compare = false;
+		}
+		//On repent la comparaison si nouvelle ligne ?
+		else if(_stringFile[i] == '\n')
+		{
+			compare = true;
+			sizeText = 0;
+		}
+	}
+	
+	return false;
 }
 		
 void ActSaveTranslationFile::save(	wxString const& text,
 									wxString const& mainTranslate)
 {
+	//const wxCharBuffer buffer = text.fn_str();
+	//_file.
+	//_file.Write(buffer.data(), buffer.length());
 }
 
 void ActSaveTranslationFile::save(
@@ -226,6 +308,10 @@ void ActSaveTranslation::execute()
 	
 	//Fichier de sauvegarde
 	ActSaveTranslationFile file(_fileName);
+	
+	//Vérifie si ok
+	if(!file.isOk())
+		return;
 	
 	//Si on dois vérifier l'existence du texte dans le fichier
 	if(_noDoublon)
