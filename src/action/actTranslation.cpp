@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.8
+//! \version 0.10
 //! \date 17.03.2013
 //!
 //! ********************************************************************
@@ -89,12 +89,53 @@ ActTranslation::~ActTranslation()
 {
 }
 
+//! \todo traduit les "trans" (adj, nom ...)
 void ActTranslation::execute()
 {
+	//On récupère le contenue de la presse papier.
 	wxString clipboard = Resource::getClipboard();
-	Resource::getTranslation(clipboard, _lgsrc, _lgto);
 	
-	Notification::getInstance()->notify(_("ActTranslation::execute"), clipboard);
+	//La presse papier est t'elle vide ?
+	if(clipboard.IsEmpty())
+	{
+		//Pas de texte à traduire
+		Notification::getInstance()->notify(_("Translate clipboard"), _("Sorry, nothing at translate."));
+		return;
+	}
+
+	//On récupère le texte traduit
+	std::map<wxString, wxArrayString> translations;
+	wxString mainTransat = Resource::getTranslations(&translations, clipboard, _lgsrc, _lgto);
+	//On vérifie si une traduction existe.
+	if(mainTransat.IsEmpty())
+	{
+		Notification::getInstance()->notify(_("Translate clipboard"), _("Sorry, not translation."));
+		return;
+	}
+	//Timeout correspondant au temps d'affichage de la notification, plus il y a de mot plus le timeout est long (par défaut timeout = 3s).
+	int timeout = 3;
+	//On mes en forme la traduction dans un wxString
+		wxString trans;
+		trans << "\n==> "<< mainTransat;
+		
+		//1s de plus tout les 10 caractères.
+		timeout += mainTransat.Length()/10;
+		
+		for(auto &it: translations)
+		{		
+			trans << "\n\n- " << it.first;
+			for(auto &itt: it.second)
+			{
+				trans << "\n\t" << itt;
+				//1s de plus a chaque traduction.
+				timeout++;
+			}
+		}
+	
+	//On affiche la traduction
+	Notification::getInstance()->notify(
+		_("Clipboard translation in ")+Resource::getInstance()->acronymToLanguage(_lgto)+" :",
+		trans, timeout);
 }
 
 wxPanel* ActTranslation::getPanelPreferences(wxWindow* parent, wxButton* buttonOK)

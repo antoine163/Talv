@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.4
+//! \version 0.5
 //! \date 31.03.2013
 //!
 //! ********************************************************************
@@ -19,7 +19,7 @@
 #include <wx/filename.h>
 #include <wx/file.h>
 #include <wx/filefn.h> 
-#include <wx/msgdlg.h>
+#include <wx/msgdlg.h> 
 #include <wx/log.h> 
 
 //TEST
@@ -84,9 +84,7 @@ void PanelActSaveTranslation::OnOKButtonClick(wxCommandEvent& event)
 	//Vérifie si il y a un fichier de sélectionner.
 	if(_filePickerFile->GetFileName().GetFullName().IsEmpty())
 	{
-		wxMessageDialog dlg(this, _("The name of file is empty."), _("Name file invalid"), wxOK|wxICON_EXCLAMATION|wxCENTRE);
-		dlg.ShowModal();
-		
+		wxMessageBox(_("The name of file is empty."), _("Name file invalid"), wxOK|wxICON_EXCLAMATION|wxCENTRE, this);
 		return;
 	}
 	

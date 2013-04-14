@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.6
+//! \version 0.8
 //! \date 30.03.2013
 //!
 //! ********************************************************************
@@ -20,6 +20,7 @@
 
 #include <wx/string.h>
 #include <wx/arrstr.h>
+#include <wx/buffer.h>
 #include <map>
 
 // *********************************************************************
@@ -53,15 +54,19 @@ class Resource : public Singleton<Resource>
 		//! Tous pour simuler la presse papier "Primary" des systèmes unix.
 		static wxString getClipboard();
 		
-		//! \brief Obtenir l'a traduction d'un texte.
+		//! \brief Obtenir la traduction d'un texte.
+		//! \param translations
 		//! \param text
 		//! \param lgsrc
 		//! \param lgto
 		//! \return 
-		static std::map<wxString, wxArrayString>& getTranslation(
-											wxString const& text,
-											wxString const& lgsrc,
-											wxString const& lgto);
+		static wxString getTranslations(
+						std::map<wxString, wxArrayString>* translations,
+						wxString const& text,
+						wxString const& lgsrc,
+						wxString const& lgto);
+											
+		//static wxMemoryBuffer download(wxString const& url);
 	
 	private:
 		Resource();

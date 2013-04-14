@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.6
+//! \version 0.8
 //! \date 30.03.2013
 //!
 //! ********************************************************************
@@ -16,6 +16,7 @@
 #include "resource.hpp"
 
 #include <wx/clipbrd.h>
+#include <wx/sstream.h>
 #include <wx/intl.h> 
 #include <wx/url.h>
 
@@ -178,51 +179,48 @@ wxString Resource::getClipboard()
 }
 
 //! \todo Vois pour une implémentation avec un analyser jSON
-std::map<wxString, wxArrayString>& Resource::getTranslation(
-										wxString const& text,
-										wxString const& lgsrc,
-										wxString const& lgto)
-{
-	//La/Les traductions
-	std::map<wxString, wxArrayString> translations;
-	
+//! \todo perscister avec unicode
+wxString Resource::getTranslations(
+						std::map<wxString, wxArrayString>* translations,
+						wxString const& text,
+						wxString const& lgsrc,
+						wxString const& lgto)
+{	
 	//Représentent la traduction au forma json
 	wxString jsonText;
 	
 	//Si il y a un texte à traduire.
 	if(!text.IsEmpty())
-	{
+	{	
 		//Preparation de l'url
 		wxURL url("http://translate.google.com/translate_a/t?ie=UTF-8&client=x&text="+text+"&hl="+lgsrc+"&sl="+lgsrc+"&tl="+lgto);
 		
 		//Pas d'erreur ?
 		if (url.GetError() == wxURL_NOERR)
-		{
+		{	
 			//Récupération des données.
-			wxInputStream *inStream;
-			inStream = url.GetInputStream();
+			wxInputStream *urlStream;
+			urlStream = url.GetInputStream(); 
 			
 			//Si il y à quel que chose à lire
-			if(inStream->CanRead())
+			if(urlStream->CanRead())
 			{
 				//On récupère tout les données.
-				int cRead = inStream->GetC();
+				int cRead = urlStream->GetC();
 				while(cRead != wxEOF)
 				{
-					jsonText << (wxUniChar)cRead;
-					cRead = inStream->GetC();
+					jsonText.Append(wxUniChar(cRead));
+					cRead = urlStream->GetC();
 				}
 			}
-			
-			wxDELETE(inStream);
+			wxDELETE(urlStream);
 		}
 	}
 	else
-		return translations;
-		
+		return wxEmptyString;
 		
 	//Analyser du forma jSON provenant de google (Code fonctionnelle ...)
-	//translations["trans"] désigne la traduction la plus courent.
+	wxString mainTranslate;
 	bool inSentences = false;
 	bool inSentencesTrans = false;
 	
@@ -281,18 +279,18 @@ std::map<wxString, wxArrayString>& Resource::getTranslation(
 				if(inSentencesTrans)
 				{
 					//ici parseText est la traduction du text
-					translations["trans"].Add(parseText);
+					mainTranslate = parseText;
 				}
 				else if(inDictPos)
 				{
 					//ici parseText est la proposition
 					proposal = parseText;
-					translations[proposal] = wxArrayString();					
+					(*translations)[proposal] = wxArrayString();					
 				}
 				else if(inDictTerms)
 				{
 					//ici parseText est un terme de la proposition
-					translations[proposal].Add(parseText);
+					(*translations)[proposal].Add(parseText);
 				}
 			}
 		}
@@ -312,5 +310,5 @@ std::map<wxString, wxArrayString>& Resource::getTranslation(
 		}
 	}
 	
-	return translations;
+	return mainTranslate;
 }
