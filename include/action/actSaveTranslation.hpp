@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.6
+//! \version 0.7
 //! \date 31.03.2013
 //!
 //! ********************************************************************
@@ -17,8 +17,11 @@
 #define ACTION_SAVE_TRANSLATION_H
 
 #include "action/guiPanelActSaveTranslation.h"
+#include "notification.hpp"
 #include "action.hpp"
 #include <wx/filename.h>
+
+#include <map>
 
 // *********************************************************************
 // Class PanelActSaveTranslation
@@ -44,6 +47,30 @@ class PanelActSaveTranslation : public GuiPanelActSaveTranslation
 		wxButton* _buttonOK;
 };
 
+// *********************************************************************
+// Class ActSaveTranslationFile
+// *********************************************************************
+
+class ActSaveTranslationFile
+{
+	public:
+		//! \brief Constructeur.
+		ActSaveTranslationFile(wxFileName const& fileName);
+						
+		//! \brief Destructeur.
+		~ActSaveTranslationFile();
+	
+		bool exist(wxString const& text);
+		
+		void save(	wxString const& text,
+					wxString const& mainTranslate);
+					
+		void save(	wxString const& text,
+					wxString const& mainTranslate,
+					std::map<wxString, wxArrayString> const& translations);
+
+	private:
+};
 
 // *********************************************************************
 // Class ActSaveTranslation
@@ -65,7 +92,7 @@ class ActSaveTranslation : public Action
 							bool noDoublon,
 							bool showDialog);
 						
-		//! \brief Obtenir le non de l'action.
+		//! \brief Destructeur.
 		~ActSaveTranslation();
 		
 		//! \brief Exécuter l'action.

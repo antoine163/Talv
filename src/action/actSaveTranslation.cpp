@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.6
+//! \version 0.7
 //! \date 31.03.2013
 //!
 //! ********************************************************************
@@ -88,7 +88,7 @@ void PanelActSaveTranslation::OnOKButtonClick(wxCommandEvent& event)
 		return;
 	}
 	
-	//Réoccuper le nom du fichier.
+	//Récupérer le nom du fichier.
 	wxFileName tmpFileName = _filePickerFile->GetFileName();
 		
 	//Si fichier a été modifier ?
@@ -118,24 +118,6 @@ void PanelActSaveTranslation::OnOKButtonClick(wxCommandEvent& event)
 		}
 	}
 	
-	//! \todo déplacée ce bout de code.
-	////Si le nom du fichier a été modifier
-	//if(tmpFileName != _act->_fileName)
-	//{
-		////Création du fichier, si il n'existe pas ou si on doit le remplacer.
-		//wxFile file(tmpFileName.GetFullPath(), wxFile::OpenMode::write);
-		//if(!file.IsOpened())
-		//{
-			//wxLogError(_("Could not create or open the file : ")+tmpFileName.GetFullPath(), _("No open file"));
-			//return;
-		//}
-
-		////Écrie la première ligne
-		//file.Write(_("word")+","+_("translation")+","+_("adverbe")+","+_("adjectif")+","+_("nom")+","+_("verbe")+","+_("pronom"));
-		////Fermeture du fichier
-		//file.Close();
-	//}
-	
 	//Affect le langage source.
 	int n = _choiceLanguageSource->GetSelection();
 	wxString s = _choiceLanguageSource->GetString(n);
@@ -154,6 +136,34 @@ void PanelActSaveTranslation::OnOKButtonClick(wxCommandEvent& event)
 		
 	//Propage l'événement.
 	event.Skip();
+}
+
+// *********************************************************************
+// Class ActSaveTranslationFile
+// *********************************************************************
+ActSaveTranslationFile::ActSaveTranslationFile(wxFileName const& fileName)
+{
+}
+
+ActSaveTranslationFile::~ActSaveTranslationFile()
+{
+}
+
+bool ActSaveTranslationFile::exist(wxString const& text)
+{
+	return true;
+}
+		
+void ActSaveTranslationFile::save(	wxString const& text,
+									wxString const& mainTranslate)
+{
+}
+
+void ActSaveTranslationFile::save(
+	wxString const& text,
+	wxString const& mainTranslate,
+	std::map<wxString, wxArrayString> const& translations)
+{
 }
 
 // *********************************************************************
@@ -186,7 +196,56 @@ ActSaveTranslation::~ActSaveTranslation()
 
 void ActSaveTranslation::execute()
 {
-	std::cout << Resource::getClipboard() << std::endl;
+	//On récupère le contenue de la presse papier.
+	wxString clipboard = Resource::getClipboard();
+	
+	//La presse papier est t'elle vide ?
+	if(clipboard.IsEmpty())
+	{
+		//Pas de texte à traduire
+		Notification::getInstance()->notify(_("Save clipboard translation"), _("Sorry, nothing at save."));
+		return;
+	}
+
+	//On récupère le texte traduit
+	std::map<wxString, wxArrayString> translations;
+	wxString mainTranslate = Resource::getTranslations(&translations, clipboard, _lgsrc, _lgto);
+	//On vérifie si une traduction existe.
+	if(mainTranslate.IsEmpty())
+	{
+		Notification::getInstance()->notify(_("Save clipboard translation"), _("Sorry, nothing at save."));
+		return;
+	}
+	
+	//On vérifie la validités du fichier.
+	if(_fileName.GetFullName().IsEmpty())
+	{
+		wxMessageBox(_("The name of file is wrong."), _("Name file invalid"), wxOK|wxICON_EXCLAMATION|wxCENTRE);
+		return;
+	}
+	
+	//Fichier de sauvegarde
+	ActSaveTranslationFile file(_fileName);
+	
+	//Si on dois vérifier l'existence du texte dans le fichier
+	if(_noDoublon)
+	{
+		if(file.exist(clipboard))
+		{
+			Notification::getInstance()->notify(_("Save clipboard translation"), _("The text is already existing in ")+_fileName.GetFullPath());
+			return;
+		}
+	}
+	
+	//Sinon on le sauvegarde.
+	if(_saveAll)//Doit ton tout sauvegarder ?
+	{
+		file.save(clipboard, mainTranslate, translations);
+	}
+	else
+	{
+		file.save(clipboard, mainTranslate);
+	}
 }
 
 wxPanel* ActSaveTranslation::getPanelPreferences(wxWindow* parent, wxButton* buttonOK)
@@ -196,7 +255,7 @@ wxPanel* ActSaveTranslation::getPanelPreferences(wxWindow* parent, wxButton* but
 
 void ActSaveTranslation::actLoad(wxFileConfig & fileConfig)
 {	
-	//On récupère les langage.
+	//On récupère les langages.
 	fileConfig.Read("lgsrc", &_lgsrc);
 	fileConfig.Read("lgto", &_lgto);
 	
@@ -213,7 +272,7 @@ void ActSaveTranslation::actLoad(wxFileConfig & fileConfig)
 		
 void ActSaveTranslation::actSave(wxFileConfig & fileConfig)const
 {	
-	//On sauvegarde les langage.
+	//On sauvegarde les langages.
 	fileConfig.Write("lgsrc", _lgsrc);
 	fileConfig.Write("lgto", _lgto);
 	

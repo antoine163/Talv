@@ -104,9 +104,9 @@ void ActTranslation::execute()
 
 	//On récupère le texte traduit
 	std::map<wxString, wxArrayString> translations;
-	wxString mainTransat = Resource::getTranslations(&translations, clipboard, _lgsrc, _lgto);
+	wxString mainTranslate = Resource::getTranslations(&translations, clipboard, _lgsrc, _lgto);
 	//On vérifie si une traduction existe.
-	if(mainTransat.IsEmpty())
+	if(mainTranslate.IsEmpty())
 	{
 		Notification::getInstance()->notify(_("Translate clipboard"), _("Sorry, not translation."));
 		return;
@@ -115,10 +115,10 @@ void ActTranslation::execute()
 	int timeout = 3;
 	//On mes en forme la traduction dans un wxString
 		wxString trans;
-		trans << "\n==> "<< mainTransat;
+		trans << "\n==> "<< mainTranslate;
 		
 		//1s de plus tout les 10 caractères.
-		timeout += mainTransat.Length()/10;
+		timeout += mainTranslate.Length()/10;
 		
 		for(auto &it: translations)
 		{		

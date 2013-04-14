@@ -32,7 +32,7 @@ class Notification : public Singleton<Notification>
 	public:
 		void notify(wxString const& title,
 					wxString const& message=wxEmptyString,
-					int timeout = 3);
+					int timeout = 5);
 	
 	private:
 		Notification();
