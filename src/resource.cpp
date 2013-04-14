@@ -179,7 +179,7 @@ wxString Resource::getClipboard()
 }
 
 //! \todo Vois pour une implémentation avec un analyser jSON
-//! \todo perscister avec unicode
+//! \todo &hl= avec les locals
 wxString Resource::getTranslations(
 						std::map<wxString, wxArrayString>* translations,
 						wxString const& text,
@@ -266,7 +266,7 @@ wxString Resource::getTranslations(
 				else if(inDictPos)
 				{
 					//ici parseText est la proposition
-					proposal = _(parseText);
+					proposal = parseText;
 					(*translations)[proposal] = wxArrayString();					
 				}
 				else if(inDictTerms)
