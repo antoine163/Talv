@@ -36,9 +36,9 @@ class Resource : public Singleton<Resource>
 		//! \brief Obtenir la liste des langues avec et leur acronymes <acronyme, langue>.
 		std::map<wxString, wxString> const& getLanguages()const;
 		//! \brief Obtenir la langue en fonction de sont acronyme.
-		wxString const& acronymToLanguage(wxString const& acronym)const;
+		wxString const& abbreviationToLanguage(wxString const& abbreviation)const;
 		//! \brief Obtenir l'acronyme en fonction de sa langue.
-		wxString const& languageToAcronym(wxString const& language)const;
+		wxString const& languageToAbbreviation(wxString const& language)const;
 		
 		//! \brief Obtenir la liste des actions.
 		std::map<wxString, wxString> const& getActions()const;
@@ -72,7 +72,7 @@ class Resource : public Singleton<Resource>
 		Resource();
 		~Resource();
 		
-		//! \brief Liste des acronyme et langues <acronyme, langue>.
+		//! \brief Liste des acronyme et langues <abbreviation, langue>.
 		std::map<wxString, wxString> _languages;
 		//! \brief Liste des nom d'action en fonction de leur nom de type <actionName, actTypeName>.
 		std::map<wxString, wxString> _actions;

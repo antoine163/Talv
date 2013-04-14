@@ -118,12 +118,12 @@ std::map<wxString, wxString> const& Resource::getLanguages()const
 	return _languages;
 }
 
-wxString const& Resource::acronymToLanguage(wxString const& acronym)const
+wxString const& Resource::abbreviationToLanguage(wxString const& abbreviation)const
 {
-	return _languages.at(acronym);
+	return _languages.at(abbreviation);
 }
 
-wxString const& Resource::languageToAcronym(wxString const& language)const
+wxString const& Resource::languageToAbbreviation(wxString const& language)const
 {
 	for(auto &it: _languages)
 	{

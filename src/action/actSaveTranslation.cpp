@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.5
+//! \version 0.6
 //! \date 31.03.2013
 //!
 //! ********************************************************************
@@ -139,12 +139,12 @@ void PanelActSaveTranslation::OnOKButtonClick(wxCommandEvent& event)
 	//Affect le langage source.
 	int n = _choiceLanguageSource->GetSelection();
 	wxString s = _choiceLanguageSource->GetString(n);
-	_act->_lgsrc = Resource::getInstance()->languageToAcronym(s);
+	_act->_lgsrc = Resource::getInstance()->languageToAbbreviation(s);
 	
 	//Affect le langage de destination.
 	n = _choiceLanguageOfTranslation->GetSelection();
 	s = _choiceLanguageOfTranslation->GetString(n);
-	_act->_lgto = Resource::getInstance()->languageToAcronym(s);
+	_act->_lgto = Resource::getInstance()->languageToAbbreviation(s);
 	
 	//Affect les autres arguments.
 	_act->_fileName = tmpFileName;
@@ -228,8 +228,8 @@ void ActSaveTranslation::actSave(wxFileConfig & fileConfig)const
 
 wxString ActSaveTranslation::getStringPreferences()const
 {
-	return 	Resource::getInstance()->acronymToLanguage(_lgsrc) +
+	return 	Resource::getInstance()->abbreviationToLanguage(_lgsrc) +
 			_(" to ") +
-			Resource::getInstance()->acronymToLanguage(_lgto) +
+			Resource::getInstance()->abbreviationToLanguage(_lgto) +
 			_(" in ") + _fileName.GetFullPath();
 }
