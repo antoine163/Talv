@@ -89,7 +89,6 @@ ActTranslation::~ActTranslation()
 {
 }
 
-//! \todo traduit les "trans" (adj, nom ...)
 void ActTranslation::execute()
 {
 	//On récupère le contenue de la presse papier.
