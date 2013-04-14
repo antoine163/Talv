@@ -111,14 +111,9 @@ void ActTranslation::execute()
 		Notification::getInstance()->notify(_("Translate clipboard"), _("Sorry, not translation."));
 		return;
 	}
-	//Timeout correspondant au temps d'affichage de la notification, plus il y a de mot plus le timeout est long (par défaut timeout = 3s).
-	int timeout = 3;
 	//On mes en forme la traduction dans un wxString
 		wxString trans;
 		trans << "\n==> "<< mainTranslate;
-		
-		//1s de plus tout les 10 caractères.
-		timeout += mainTranslate.Length()/10;
 		
 		for(auto &it: translations)
 		{		
@@ -126,15 +121,12 @@ void ActTranslation::execute()
 			for(auto &itt: it.second)
 			{
 				trans << "\n\t" << itt;
-				//1s de plus a chaque traduction.
-				timeout++;
 			}
 		}
 	
 	//On affiche la traduction
 	Notification::getInstance()->notify(
-		_("Clipboard translation in ")+Resource::getInstance()->abbreviationToLanguage(_lgto)+" :",
-		trans, timeout);
+		_("Clipboard translation in ")+Resource::getInstance()->abbreviationToLanguage(_lgto)+" :", trans);
 }
 
 wxPanel* ActTranslation::getPanelPreferences(wxWindow* parent, wxButton* buttonOK)

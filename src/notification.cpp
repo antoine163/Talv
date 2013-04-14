@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.1
+//! \version 0.2
 //! \date 12.04.2013
 //!
 //! ********************************************************************
@@ -50,9 +50,11 @@ Notification::~Notification()
 }
 
 void Notification::notify(	wxString const& title,
-							wxString const& message,
-							int timeout)
+							wxString const& message)
 {
+	//3s par défaut + 1s de plus tout les 10 caractères.
+	int timeout = 3+message.Length()/10;
+	
 	#ifdef __UNIX__
 		NotifyNotification * notify = notify_notification_new(title.mb_str(wxConvUTF8), message.fn_str(), "dialog-information");
 		notify_notification_set_timeout(notify, timeout*1000);

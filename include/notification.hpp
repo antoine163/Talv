@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.1
+//! \version 0.2
 //! \date 12.04.2013
 //!
 //! ********************************************************************
@@ -31,8 +31,7 @@ class Notification : public Singleton<Notification>
 	
 	public:
 		void notify(wxString const& title,
-					wxString const& message=wxEmptyString,
-					int timeout = 5);
+					wxString const& message=wxEmptyString);
 	
 	private:
 		Notification();
