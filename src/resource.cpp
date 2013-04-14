@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.8
+//! \version 0.9
 //! \date 30.03.2013
 //!
 //! ********************************************************************
@@ -192,29 +192,11 @@ wxString Resource::getTranslations(
 	//Si il y a un texte à traduire.
 	if(!text.IsEmpty())
 	{	
-		//Preparation de l'url
-		wxURL url("http://translate.google.com/translate_a/t?ie=UTF-8&client=x&text="+text+"&hl="+lgsrc+"&sl="+lgsrc+"&tl="+lgto);
-		
-		//Pas d'erreur ?
-		if (url.GetError() == wxURL_NOERR)
-		{	
-			//Récupération des données.
-			wxInputStream *urlStream;
-			urlStream = url.GetInputStream(); 
-			
-			//Si il y à quel que chose à lire
-			if(urlStream->CanRead())
-			{
-				//On récupère tout les données.
-				int cRead = urlStream->GetC();
-				while(cRead != wxEOF)
-				{
-					jsonText.Append(wxUniChar(cRead));
-					cRead = urlStream->GetC();
-				}
-			}
-			wxDELETE(urlStream);
-		}
+		//Télécharger la raiponce de google
+		wxMemoryBuffer buffer;
+		Resource::getInstance()->downloadFromUrl(&buffer, "http://translate.google.com/translate_a/t?ie=UTF-8&oe=UTF-8&client=x&text="+text+"&hl="+lgsrc+"&sl="+lgsrc+"&tl="+lgto);
+		//l'ajouter au jsonText
+		jsonText.Append((const char *)buffer.GetData(), buffer.GetDataLen());
 	}
 	else
 		return wxEmptyString;
@@ -311,4 +293,31 @@ wxString Resource::getTranslations(
 	}
 	
 	return mainTranslate;
+}
+
+void Resource::downloadFromUrl(wxMemoryBuffer* buffer, wxString const& sUrl)
+{
+	wxURL url(sUrl);
+	
+	//Erreur ?
+	if (url.GetError() == wxURL_NOERR)
+	{	
+		//Récupération des données.
+		wxInputStream *urlStream = url.GetInputStream(); 
+		
+		//Erreur ?
+		if(urlStream->IsOk())
+		{			
+			//data temporaire.
+			uint8_t tmpData[1024];
+			
+			//Lie des données temps qu'il y en a.
+			while(urlStream->CanRead() && !urlStream->Eof())
+			{
+				urlStream->Read(tmpData, 1024);
+				buffer->AppendData(tmpData, urlStream->LastRead());
+			}
+		}
+		delete urlStream;
+	}
 }

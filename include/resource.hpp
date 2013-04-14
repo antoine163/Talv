@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.8
+//! \version 0.9
 //! \date 30.03.2013
 //!
 //! ********************************************************************
@@ -66,7 +66,7 @@ class Resource : public Singleton<Resource>
 						wxString const& lgsrc,
 						wxString const& lgto);
 											
-		//static wxMemoryBuffer download(wxString const& url);
+		void downloadFromUrl(wxMemoryBuffer* buffer, wxString const& sUrl);
 	
 	private:
 		Resource();
