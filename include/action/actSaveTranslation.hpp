@@ -64,13 +64,13 @@ class ActSaveTranslationFile
 		
 		bool isOk();
 	
-		bool exist(wxString const& text);
+		bool exist(wxString text);
 		
-		void save(	wxString const& text,
-					wxString const& mainTranslate);
+		void save(	wxString text,
+					wxString mainTranslate);
 					
-		void save(	wxString const& text,
-					wxString const& mainTranslate,
+		void save(	wxString text,
+					wxString mainTranslate,
 					std::map<wxString, wxArrayString> const& translations);
 
 	private:

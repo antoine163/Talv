@@ -175,7 +175,7 @@ ActSaveTranslationFile::ActSaveTranslationFile(wxFileName const& fileName)
 			
 			//On analyse la première ligne
 			wxString beforeComma;
-			for(size_t i; i<firstLine.Length(); i++)
+			for(size_t i = 0; i<firstLine.Length(); i++)
 			{
 				if(firstLine[i] == ',')
 				{
@@ -201,11 +201,14 @@ bool ActSaveTranslationFile::isOk()
 	return _isOk;
 }
 
-bool ActSaveTranslationFile::exist(wxString const& text)
+//! \todo ne fonctionne pas 
+bool ActSaveTranslationFile::exist(wxString text)
 {
+	//Caractère en minuscule.
+	text.MakeLower();
+	
 	//Taille des wxString
 	size_t sizeStringFile = _texts.Length();
-	size_t sizeText = text.Length();
 	//Index pour le text
 	size_t indexText = 0;
 	
@@ -245,18 +248,20 @@ bool ActSaveTranslationFile::exist(wxString const& text)
 		else if(_texts[i] == '\n')
 		{
 			compare = true;
-			sizeText = 0;
 		}
 	}
 	
 	return false;
 }
 		
-void ActSaveTranslationFile::save(	wxString const& text,
-									wxString const& mainTranslate)
+void ActSaveTranslationFile::save(	wxString text,
+									wxString mainTranslate)
 {
-	wxFile file;
+	//Caractère en minuscule.
+	text.MakeLower();
+	mainTranslate.MakeLower();
 	
+	wxFile file;	
 	wxString stringAtWrite;
 	
 	//Ouverture du fichier
@@ -274,10 +279,13 @@ void ActSaveTranslationFile::save(	wxString const& text,
 }
 
 void ActSaveTranslationFile::save(
-	wxString const& text,
-	wxString const& mainTranslate,
+	wxString text,
+	wxString mainTranslate,
 	std::map<wxString, wxArrayString> const& translations)
 {
+	//Caractère en minuscule.
+	text.MakeLower();
+	mainTranslate.MakeLower();
 }
 
 // *********************************************************************
@@ -334,7 +342,7 @@ void ActSaveTranslation::execute()
 	//On vérifie la validités du fichier.
 	if(_fileName.GetFullName().IsEmpty())
 	{
-		wxMessageBox(_("The name of file is wrong."), _("Name file invalid"), wxOK|wxICON_EXCLAMATION|wxCENTRE);
+		wxMessageBox(_("The name of file is wrong."), _("Name file invalid."), wxOK|wxICON_EXCLAMATION|wxCENTRE);
 		return;
 	}
 	
@@ -364,6 +372,8 @@ void ActSaveTranslation::execute()
 	{
 		file.save(clipboard, mainTranslate);
 	}
+	
+	Notification::getInstance()->notify(_("Save clipboard translation"), _("The text has be saved."));
 }
 
 wxPanel* ActSaveTranslation::getPanelPreferences(wxWindow* parent, wxButton* buttonOK)
