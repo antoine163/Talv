@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.8
+//! \version 0.9
 //! \date 31.03.2013
 //!
 //! ********************************************************************
@@ -166,8 +166,27 @@ ActSaveTranslationFile::ActSaveTranslationFile(wxFileName const& fileName)
 				buffer.AppendData(tmpData, file.LastRead());
 			}
 			
-			//Ajouter les données au _stringFile
-			_stringFile.Append((const char *)buffer.GetData(), buffer.GetDataLen());
+			//Ajouter les données dans un wxString.
+			wxString stringFile;
+			stringFile.Append((const char *)buffer.GetData(), buffer.GetDataLen());
+			
+			//On récupère la première ligne et on sauvegarde le reste
+			wxString firstLine = stringFile.BeforeFirst('\n', &_texts);
+			
+			//On analyse la première ligne
+			wxString beforeComma;
+			for(size_t i; i<firstLine.Length(); i++)
+			{
+				if(firstLine[i] == ',')
+				{
+					_FirstLine.Add(beforeComma);
+					beforeComma.Clear();
+				}
+				else
+				{
+					beforeComma << firstLine[i];
+				}
+			}
 		}
 	}	
 }
@@ -185,7 +204,7 @@ bool ActSaveTranslationFile::isOk()
 bool ActSaveTranslationFile::exist(wxString const& text)
 {
 	//Taille des wxString
-	size_t sizeStringFile = _stringFile.Length();
+	size_t sizeStringFile = _texts.Length();
 	size_t sizeText = text.Length();
 	//Index pour le text
 	size_t indexText = 0;
@@ -200,10 +219,10 @@ bool ActSaveTranslationFile::exist(wxString const& text)
 		if(compare)
 		{
 			//Les caractères sont égaux.
-			if(text[indexText] == _stringFile[i])
+			if(text[indexText] == _texts[i])
 			{
 				//Si le caractères suivent est une ',' alors le text existe
-				if(_stringFile[i+1] == ',')
+				if(_texts[i+1] == ',')
 				{
 					return true;
 				}
@@ -218,12 +237,12 @@ bool ActSaveTranslationFile::exist(wxString const& text)
 		}
 		
 		//On arrête de comparer si ','
-		if(_stringFile[i] == ',')
+		if(_texts[i] == ',')
 		{
 			compare = false;
 		}
 		//On repent la comparaison si nouvelle ligne ?
-		else if(_stringFile[i] == '\n')
+		else if(_texts[i] == '\n')
 		{
 			compare = true;
 			sizeText = 0;

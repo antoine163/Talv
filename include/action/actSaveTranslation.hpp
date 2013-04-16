@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.8
+//! \version 0.9
 //! \date 31.03.2013
 //!
 //! ********************************************************************
@@ -21,6 +21,7 @@
 #include "action.hpp"
 
 #include <wx/filename.h>
+#include <wx/arrstr.h>
 
 #include <map>
 
@@ -74,7 +75,8 @@ class ActSaveTranslationFile
 
 	private:
 		wxFileName _fileName;
-		wxString _stringFile;
+		wxArrayString _FirstLine;
+		wxString _texts;
 		bool _isOk;
 };
 
