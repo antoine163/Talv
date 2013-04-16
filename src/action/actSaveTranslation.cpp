@@ -148,7 +148,7 @@ ActSaveTranslationFile::ActSaveTranslationFile(wxFileName const& fileName)
 	if(wxFile::Exists(fileName.GetFullPath()))
 	{
 		//Ouverture du fichier
-		wxFileInputStream file(fileName.GetFullPath());
+		wxFileInputStream file(_fileName.GetFullPath());
 		_isOk = file.IsOk();
 		
 		//OK ?
@@ -255,9 +255,22 @@ bool ActSaveTranslationFile::exist(wxString const& text)
 void ActSaveTranslationFile::save(	wxString const& text,
 									wxString const& mainTranslate)
 {
-	//const wxCharBuffer buffer = text.fn_str();
-	//_file.
-	//_file.Write(buffer.data(), buffer.length());
+	wxFile file;
+	
+	wxString stringAtWrite;
+	
+	//Ouverture du fichier
+	if(!file.Open(_fileName.GetFullPath(), wxFile::write_append))
+	{
+		return;
+	}
+	
+	//Écriture des données dans le fichier
+	stringAtWrite += "\n" + text + "," + mainTranslate;
+	file.Write(stringAtWrite);
+	
+	//Fermeture du fichier
+	file.Close();
 }
 
 void ActSaveTranslationFile::save(
