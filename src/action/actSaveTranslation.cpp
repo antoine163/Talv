@@ -208,7 +208,8 @@ bool ActSaveTranslationFile::exist(wxString text)
 	text.MakeLower();
 	
 	//Taille des wxString
-	size_t sizeStringFile = _texts.Length();
+	size_t sizeTexts = _texts.Length();
+	size_t sizeText = text.Length();
 	//Index pour le text
 	size_t indexText = 0;
 	
@@ -216,37 +217,31 @@ bool ActSaveTranslationFile::exist(wxString text)
 	bool compare = true;
 	
 	//Parcoure touts les caractères (avec la ',') temps que l'on a pas trouver le "text"
-	for(size_t i = 0; i < sizeStringFile; i++)
+	for(size_t i = 0; i < sizeTexts; i++)
 	{
 		//Doit-ont comparer les caractères ?
 		if(compare)
 		{
-			//Les caractères sont égaux.
-			if(text[indexText] == _texts[i])
-			{
-				//Si le caractères suivent est une ',' alors le text existe
-				if(_texts[i+1] == ',')
+			//Si les caractère ne son pas les même.
+			if(text[indexText] != _texts[i])
+			{			
+				//Si on li une ',' et que l'on est a la fin du text.
+				//Ceci veut dire que l'on a trouver le text.
+				if(_texts[i] == ',' && (sizeText == indexText))
 				{
 					return true;
 				}
-				
-				indexText++;
-			}
-			//On arrête de comparer pour cette ligne.
-			else
-			{
+				//Sinon on arrêt de comparer
 				compare = false;
 			}
+			
+			indexText++;
 		}
 		
-		//On arrête de comparer si ','
-		if(_texts[i] == ',')
-		{
-			compare = false;
-		}
 		//On repent la comparaison si nouvelle ligne ?
-		else if(_texts[i] == '\n')
+		if(_texts[i] == '\n')
 		{
+			indexText = 0;
 			compare = true;
 		}
 	}
