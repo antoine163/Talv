@@ -194,7 +194,7 @@ wxString Resource::getTranslations(
 	{	
 		//Télécharger la raiponce de google
 		wxMemoryBuffer buffer;
-		Resource::getInstance()->downloadFromUrl(&buffer, "http://translate.google.com/translate_a/t?ie=UTF-8&oe=UTF-8&client=x&text="+text+"&hl="+lgsrc+"&sl="+lgsrc+"&tl="+lgto);
+		Resource::getInstance()->downloadFromUrl(&buffer, "http://translate.google.com/translate_a/t?ie=UTF-8&oe=UTF-8&client=x&text="+text+"&hl="+lgto+"&sl="+lgsrc+"&tl="+lgto);
 		//l'ajouter au jsonText
 		jsonText.Append((const char *)buffer.GetData(), buffer.GetDataLen());
 	}

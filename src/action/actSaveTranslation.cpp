@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.9
+//! \version 0.10
 //! \date 31.03.2013
 //!
 //! ********************************************************************
@@ -17,8 +17,7 @@
 #include "resource.hpp"
 
 #include <wx/wfstream.h>
-#include <wx/msgdlg.h> 
-#include <wx/file.h>
+#include <wx/msgdlg.h>
 #include <wx/log.h> 
 
 
@@ -142,107 +141,55 @@ void PanelActSaveTranslation::OnOKButtonClick(wxCommandEvent& event)
 // Class ActSaveTranslationFile
 // *********************************************************************
 ActSaveTranslationFile::ActSaveTranslationFile(wxFileName const& fileName)
-: _fileName(fileName), _isOk(true)
+: _fileName(fileName)
 {
-	//Si le fichier existe on le charge
+	//Le fichier existe ?
 	if(wxFile::Exists(fileName.GetFullPath()))
 	{
-		//Ouverture du fichier
-		wxFileInputStream file(_fileName.GetFullPath());
-		_isOk = file.IsOk();
+		//On ouvre le fichier
+		_file.Open(fileName.GetFullPath());
 		
-		//OK ?
-		if(_isOk)
-		{	
-			//Le buffer pour stoker le tout contenue fichier
-			wxMemoryBuffer buffer;
-			//data temporaire.
-			uint8_t tmpData[1024];
-			
-			//Lie des données temps qu'il y en a.
-			while(file.CanRead() && !file.Eof())
+		//On analyse la première ligne
+		wxString firstLine = _file. GetFirstLine();
+		wxString beforeComma;
+		for(size_t i = 0; i<firstLine.Length(); i++)
+		{
+			if(firstLine[i] == ',')
 			{
-				file.Read(tmpData, 1024);
-				buffer.AppendData(tmpData, file.LastRead());
+				_FirstLine.Add(beforeComma);
+				beforeComma.Clear();
 			}
-			
-			//Ajouter les données dans un wxString.
-			wxString stringFile;
-			stringFile.Append((const char *)buffer.GetData(), buffer.GetDataLen());
-			
-			//On récupère la première ligne et on sauvegarde le reste
-			wxString firstLine = stringFile.BeforeFirst('\n', &_texts);
-			
-			//On analyse la première ligne
-			wxString beforeComma;
-			for(size_t i = 0; i<firstLine.Length(); i++)
+			else
 			{
-				if(firstLine[i] == ',')
-				{
-					_FirstLine.Add(beforeComma);
-					beforeComma.Clear();
-				}
-				else
-				{
-					beforeComma << firstLine[i];
-				}
+				beforeComma << firstLine[i];
 			}
 		}
-	}	
+	}
 }
 
 ActSaveTranslationFile::~ActSaveTranslationFile()
 {
-	
+	_file.Close();
 }
 
 bool ActSaveTranslationFile::isOk()
 {
-	return _isOk;
+	return _file.IsOpened();
 }
 
-//! \todo ne fonctionne pas 
 bool ActSaveTranslationFile::exist(wxString text)
 {
 	//Caractère en minuscule.
 	text.MakeLower();
 	
-	//Taille des wxString
-	size_t sizeTexts = _texts.Length();
-	size_t sizeText = text.Length();
-	//Index pour le text
-	size_t indexText = 0;
-	
-	//Variable pour savoir si on doit comparer les caractères.
-	bool compare = true;
-	
-	//Parcoure touts les caractères (avec la ',') temps que l'on a pas trouver le "text"
-	for(size_t i = 0; i < sizeTexts; i++)
+	//On recherche si le texte existe (avent la première ',' de tout les lignes)
+	wxString line;
+	_file.GoToLine(1);
+	for (line = _file.GetLine(1); !_file.Eof(); line = _file.GetNextLine())
 	{
-		//Doit-ont comparer les caractères ?
-		if(compare)
+		if(line.BeforeFirst(',') == text)
 		{
-			//Si les caractère ne son pas les même.
-			if(text[indexText] != _texts[i])
-			{			
-				//Si on li une ',' et que l'on est a la fin du text.
-				//Ceci veut dire que l'on a trouver le text.
-				if(_texts[i] == ',' && (sizeText == indexText))
-				{
-					return true;
-				}
-				//Sinon on arrêt de comparer
-				compare = false;
-			}
-			
-			indexText++;
-		}
-		
-		//On repent la comparaison si nouvelle ligne ?
-		if(_texts[i] == '\n')
-		{
-			indexText = 0;
-			compare = true;
+			return true;
 		}
 	}
 	
@@ -256,21 +203,16 @@ void ActSaveTranslationFile::save(	wxString text,
 	text.MakeLower();
 	mainTranslate.MakeLower();
 	
-	wxFile file;	
-	wxString stringAtWrite;
-	
-	//Ouverture du fichier
-	if(!file.Open(_fileName.GetFullPath(), wxFile::write_append))
+	//Si le fichier n'est pas déjà existent
+	if(!wxFile::Exists(_fileName.GetFullPath()))
 	{
-		return;
+		//On ajout la première ligne.
+		_file.AddLine(_("text")+","+_("translation"));
 	}
 	
-	//Écriture des données dans le fichier
-	stringAtWrite += "\n" + text + "," + mainTranslate;
-	file.Write(stringAtWrite);
-	
-	//Fermeture du fichier
-	file.Close();
+	////Écriture des données dans le fichier
+	_file.AddLine(text+","+mainTranslate);
+	_file.Write();
 }
 
 void ActSaveTranslationFile::save(
@@ -319,12 +261,12 @@ void ActSaveTranslation::execute()
 	//La presse papier est t'elle vide ?
 	if(clipboard.IsEmpty())
 	{
-		//Pas de texte à traduire
+		//Pas de texte à traduire.
 		Notification::getInstance()->notify(_("Save clipboard translation"), _("Sorry, nothing at save."));
 		return;
 	}
 
-	//On récupère le texte traduit
+	//On récupère le texte traduit.
 	std::map<wxString, wxArrayString> translations;
 	wxString mainTranslate = Resource::getTranslations(&translations, clipboard, _lgsrc, _lgto);
 	//On vérifie si une traduction existe.
