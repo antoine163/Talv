@@ -224,6 +224,13 @@ void ActSaveTranslationFile::save(
 	wxString mainTranslate,
 	std::map<wxString, wxArrayString> const& translations)
 {
+	//translations est vide ?
+	if(translations.size() == 0)
+	{
+		save('\n'+text, mainTranslate);
+		return;
+	}
+	
 	//Caractère en minuscule.
 	text.MakeLower();
 	mainTranslate.MakeLower();
