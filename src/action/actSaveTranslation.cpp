@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.10
+//! \version 0.11
 //! \date 31.03.2013
 //!
 //! ********************************************************************
@@ -164,6 +164,11 @@ ActSaveTranslationFile::ActSaveTranslationFile(wxFileName const& fileName)
 				beforeComma << firstLine[i];
 			}
 		}
+		//On enregistre aussi le dernier texte trouver si il n'est pas vide
+		if(!beforeComma.IsEmpty())
+		{
+			_FirstLine.Add(beforeComma);
+		}
 	}
 }
 
@@ -172,24 +177,21 @@ ActSaveTranslationFile::~ActSaveTranslationFile()
 	_file.Close();
 }
 
-bool ActSaveTranslationFile::isOk()
-{
-	return _file.IsOpened();
-}
-
 bool ActSaveTranslationFile::exist(wxString text)
 {
-	//Caractère en minuscule.
-	text.MakeLower();
-	
-	//On recherche si le texte existe (avent la première ',' de tout les lignes)
-	wxString line;
-	_file.GoToLine(1);
-	for (line = _file.GetLine(1); !_file.Eof(); line = _file.GetNextLine())
+	//Fichier ouvert ?
+	if(_file.IsOpened())
 	{
-		if(line.BeforeFirst(',') == text)
+		//Caractère en minuscule.
+		text.MakeLower();
+		
+		//On recherche si le texte existe (avent la première ',' de tout les lignes)
+		for (wxString line = _file.GetFirstLine(); !_file.Eof(); line = _file.GetNextLine())
 		{
-			return true;
+			if(line.BeforeFirst(',') == text)
+			{
+				return true;
+			}
 		}
 	}
 	
@@ -206,11 +208,13 @@ void ActSaveTranslationFile::save(	wxString text,
 	//Si le fichier n'est pas déjà existent
 	if(!wxFile::Exists(_fileName.GetFullPath()))
 	{
+		//On le crée
+		_file.Create(_fileName.GetFullPath());
 		//On ajout la première ligne.
 		_file.AddLine(_("text")+","+_("translation"));
 	}
 	
-	////Écriture des données dans le fichier
+	//Écriture des données dans le fichier
 	_file.AddLine(text+","+mainTranslate);
 	_file.Write();
 }
@@ -223,6 +227,103 @@ void ActSaveTranslationFile::save(
 	//Caractère en minuscule.
 	text.MakeLower();
 	mainTranslate.MakeLower();
+	
+	//Si le fichier n'est pas déjà existent
+	if(!wxFile::Exists(_fileName.GetFullPath()))
+	{
+		//On le crée
+		_file.Create(_fileName.GetFullPath());
+		//On ajout la première ligne.
+		_file.AddLine(_("text")+","+_("translation"));
+		_file.Write();
+		
+		_FirstLine.Add(_("text"));
+		_FirstLine.Add(_("translation"));
+	}
+	
+	//Parcoure autant de ligne qu'il y en a dans la traduction.
+	bool loop = true;
+	for(size_t iline = 0;;iline++)
+	{
+		std::map<int, wxString> strline;
+		int nbColumn = 0;
+		
+		//Parcoure tout les colonnes
+		for(auto it : translations)
+		{
+			//On vérifie si le type du mot et connue dans la première ligne.
+			int column = _FirstLine.Index(it.first, false);
+			if(column == wxNOT_FOUND)
+			{
+				//Si il n'existe pas on l'ajoute.
+				column = _FirstLine.Add(it.first);
+			}
+			
+			//Le nombre de colonne et égale a l'index de la colonne la plus élever.
+			if(nbColumn < column)
+			{
+				nbColumn = column;
+			}
+			
+			//Si il n'y a plus de texte a cette colonne et a cette ligne
+			if(iline >= it.second.GetCount())
+			{
+				//On a plus besoin de boucler pour cette ligne.
+				loop = false;
+			}
+			else
+			{
+				//On a besoin de boucler pour cette ligne.
+				loop = true;
+				//On ajoute le texte dans la bonne colonne et la bonne ligne
+				strline[column] = it.second[iline];
+			}
+		}
+		
+		//Si on ne doit plus boucler.
+		if(!loop)
+		{
+			break;
+		}
+		
+		//La ligne a ajouter
+		wxString addLine;
+		
+		//Première ligne (du texte) ?
+		if(iline == 0)
+		{
+			_file.AddLine(wxEmptyString);
+			addLine << text << ',' << mainTranslate;
+		}
+		else
+		{
+			addLine << ',';
+		}
+		
+		//On parcoure tout les colonne (soft les deux première).
+		for(int iColumn = 2; iColumn <= nbColumn; iColumn++)
+		{
+			addLine << ',';
+			if(strline.count(iColumn) > 0)
+			{
+				addLine << strline[iColumn];
+			}
+		}
+		//Écriture des données dans le fichier.
+		_file.AddLine(addLine);
+	}
+	
+	//Réécriture de la première ligne du fichier.
+	wxString addFirstLine;
+	for(auto it : _FirstLine)
+	{
+		addFirstLine << it << ',';
+	}
+	_file.RemoveLine(0);
+	_file.InsertLine(addFirstLine, 0);
+	
+	//Écriture des données dans le fichier.
+	_file.Write();
 }
 
 // *********************************************************************
@@ -285,10 +386,6 @@ void ActSaveTranslation::execute()
 	
 	//Fichier de sauvegarde
 	ActSaveTranslationFile file(_fileName);
-	
-	//Vérifie si ok
-	if(!file.isOk())
-		return;
 	
 	//Si on dois vérifier l'existence du texte dans le fichier
 	if(_noDoublon)

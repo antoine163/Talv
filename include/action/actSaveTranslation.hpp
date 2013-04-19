@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.10
+//! \version 0.11
 //! \date 31.03.2013
 //!
 //! ********************************************************************
@@ -62,8 +62,6 @@ class ActSaveTranslationFile
 						
 		//! \brief Destructeur.
 		~ActSaveTranslationFile();
-		
-		bool isOk();
 	
 		bool exist(wxString text);
 		
