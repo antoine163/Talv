@@ -141,3 +141,94 @@ GuiPanelActSaveTranslation::~GuiPanelActSaveTranslation()
 	_choiceLanguageOfTranslation->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( GuiPanelActSaveTranslation::OnChoiceTo ), NULL, this );
 	
 }
+
+GuiDialogPickMainTranslation::GuiDialogPickMainTranslation( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
+{
+	this->SetSizeHints( wxSize( 300,150 ), wxDefaultSize );
+	
+	wxBoxSizer* bSizer1;
+	bSizer1 = new wxBoxSizer( wxVERTICAL );
+	
+	wxBoxSizer* bSizer2;
+	bSizer2 = new wxBoxSizer( wxHORIZONTAL );
+	
+	_staticText = new wxStaticText( this, wxID_ANY, _("Text"), wxDefaultPosition, wxDefaultSize, 0 );
+	_staticText->Wrap( -1 );
+	bSizer2->Add( _staticText, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	_buttonMainTranslation = new wxButton( this, wxID_ANY, _("Main translation"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT|wxNO_BORDER );
+	bSizer2->Add( _buttonMainTranslation, 1, wxALL, 5 );
+	
+	bSizer1->Add( bSizer2, 0, wxEXPAND, 5 );
+	
+	wxStaticLine* staticline1;
+	staticline1 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
+	bSizer1->Add( staticline1, 0, wxEXPAND | wxALL, 5 );
+	
+	_bSizerTranslation = new wxBoxSizer( wxVERTICAL );
+	
+	bSizer1->Add( _bSizerTranslation, 1, wxEXPAND, 5 );
+	
+	wxStaticLine* staticline2;
+	staticline2 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
+	bSizer1->Add( staticline2, 0, wxEXPAND | wxALL, 5 );
+	
+	wxBoxSizer* bSizer3;
+	bSizer3 = new wxBoxSizer( wxHORIZONTAL );
+	
+	wxStaticText* staticTextHelp;
+	staticTextHelp = new wxStaticText( this, wxID_ANY, _("Click on text you want save"), wxDefaultPosition, wxDefaultSize, 0 );
+	staticTextHelp->Wrap( -1 );
+	bSizer3->Add( staticTextHelp, 0, wxALIGN_CENTER_VERTICAL|wxLEFT, 5 );
+	
+	wxStdDialogButtonSizer* sdbSizer1;
+	wxButton* sdbSizer1Cancel;
+	sdbSizer1 = new wxStdDialogButtonSizer();
+	sdbSizer1Cancel = new wxButton( this, wxID_CANCEL );
+	sdbSizer1->AddButton( sdbSizer1Cancel );
+	sdbSizer1->Realize();
+	bSizer3->Add( sdbSizer1, 1, wxEXPAND|wxBOTTOM, 5 );
+	
+	bSizer1->Add( bSizer3, 0, wxEXPAND, 5 );
+	
+	this->SetSizer( bSizer1 );
+	this->Layout();
+	bSizer1->Fit( this );
+	
+	this->Centre( wxBOTH );
+}
+
+GuiDialogPickMainTranslation::~GuiDialogPickMainTranslation()
+{
+}
+
+GuiPanelTranslation::GuiPanelTranslation( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
+{
+	wxBoxSizer* bSizer1;
+	bSizer1 = new wxBoxSizer( wxVERTICAL );
+	
+	_staticTextKind = new wxStaticText( this, wxID_ANY, _("Kind :"), wxDefaultPosition, wxDefaultSize, 0 );
+	_staticTextKind->Wrap( -1 );
+	bSizer1->Add( _staticTextKind, 0, wxALL, 5 );
+	
+	wxBoxSizer* bSizer2;
+	bSizer2 = new wxBoxSizer( wxHORIZONTAL );
+	
+	wxStaticLine* staticline;
+	staticline = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
+	bSizer2->Add( staticline, 0, wxEXPAND | wxALL, 5 );
+	
+	_bSizerTranslation = new wxBoxSizer( wxVERTICAL );
+	
+	bSizer2->Add( _bSizerTranslation, 10, wxEXPAND, 5 );
+	
+	bSizer1->Add( bSizer2, 1, wxEXPAND, 5 );
+	
+	this->SetSizer( bSizer1 );
+	this->Layout();
+	bSizer1->Fit( this );
+}
+
+GuiPanelTranslation::~GuiPanelTranslation()
+{
+}

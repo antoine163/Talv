@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.11
+//! \version 0.12
 //! \date 31.03.2013
 //!
 //! ********************************************************************
@@ -135,6 +135,81 @@ void PanelActSaveTranslation::OnOKButtonClick(wxCommandEvent& event)
 		
 	//Propage l'événement.
 	event.Skip();
+}
+
+// *********************************************************************
+// Class PanelTranslation
+// *********************************************************************
+
+PanelTranslation::PanelTranslation(	wxWindow* parent,
+							wxString const& kind,
+							wxArrayString const& translations)
+: GuiPanelTranslation(parent)
+{
+	_staticTextKind->SetLabelMarkup("<b>"+kind+" :</b>");
+
+	//Création des bouton pour charge translations
+	for(auto it : translations)
+	{
+		wxButton* button = new wxButton( this, wxID_ANY, it, wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT|wxBU_LEFT|wxNO_BORDER );
+		_bSizerTranslation->Add(button, 0, wxEXPAND, 5);
+	}
+}
+
+PanelTranslation::~PanelTranslation()
+{
+}
+
+// *********************************************************************
+// Class DialogPickMainTranslation
+// *********************************************************************
+
+DialogPickMainTranslation::DialogPickMainTranslation(wxWindow* parent,
+						wxString text,
+						wxString mainTranslate,
+						std::map<wxString, wxArrayString> const& translations)
+: GuiDialogPickMainTranslation(parent), _choice(mainTranslate)
+{
+	//Afficher le texte et la traduction principale
+	_staticText->SetLabelMarkup("<b>"+text+" :</b>");
+	_buttonMainTranslation->SetLabel(mainTranslate);
+	
+	//Ajout une spacer si il ni pas rien dans translations
+	if(translations.size() == 0)
+	{
+		_bSizerTranslation->Add(0, 0, 1, wxEXPAND, 5);
+	}
+	//Sinon on remplir le dialogue avec les traductions
+	else
+	{
+		wxBoxSizer* bSizer;
+		PanelTranslation* panel;
+		
+		bSizer = new wxBoxSizer(wxHORIZONTAL);
+		
+		for(auto it : translations)
+		{
+			panel = new PanelTranslation(this, it.first, it.second);
+			bSizer->Add(panel, 1, wxEXPAND|wxALL, 5);
+		}
+
+		
+		_bSizerTranslation->Add(bSizer, 1, wxEXPAND, 5);
+	}
+	
+	//Recalcule de la tille de la fenêtre.
+	this->Layout();
+	GetSizer()->Fit(this);
+	this->Centre(wxBOTH);
+}	
+
+DialogPickMainTranslation::~DialogPickMainTranslation()
+{
+}
+	
+wxString const& DialogPickMainTranslation::GetChoice()
+{
+	return _choice;
 }
 
 // *********************************************************************
@@ -402,6 +477,19 @@ void ActSaveTranslation::execute()
 			Notification::getInstance()->notify(_("Save clipboard translation"), _("The text is already existing in ")+_fileName.GetFullPath());
 			return;
 		}
+	}
+	
+	//Si on doit afficher le dialogue pour choisie la principale traduction.
+	if(_showDialog)
+	{
+		DialogPickMainTranslation dlg(nullptr, clipboard, mainTranslate, translations);
+		if(dlg.ShowModal() == wxID_CANCEL)
+		{
+			Notification::getInstance()->notify(_("Save clipboard translation"), _("The text is not saved."));
+			return;
+		}
+		
+		mainTranslate = dlg.GetChoice();
 	}
 	
 	//Sinon on le sauvegarde.

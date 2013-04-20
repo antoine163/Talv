@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.11
+//! \version 0.12
 //! \date 31.03.2013
 //!
 //! ********************************************************************
@@ -20,6 +20,7 @@
 #include "notification.hpp"
 #include "action.hpp"
 
+#include <wx/dialog.h>
 #include <wx/filename.h>
 #include <wx/textfile.h>
 #include <wx/arrstr.h>
@@ -48,6 +49,40 @@ class PanelActSaveTranslation : public GuiPanelActSaveTranslation
 		
 		//! \brief bouton "OK" du dialogue parent.
 		wxButton* _buttonOK;
+};
+
+// *********************************************************************
+// Class PanelTranslation
+// *********************************************************************
+
+class PanelTranslation : public GuiPanelTranslation
+{
+	public:
+		PanelTranslation(	wxWindow* parent,
+							wxString const& kind,
+							wxArrayString const& translations);
+		~PanelTranslation();
+		
+	private:
+};
+
+// *********************************************************************
+// Class DialogPickMainTranslation
+// *********************************************************************
+
+class DialogPickMainTranslation : public GuiDialogPickMainTranslation
+{
+	public:
+		DialogPickMainTranslation(wxWindow* parent,
+								wxString text,
+								wxString mainTranslate,
+								std::map<wxString, wxArrayString> const& translations);
+		~DialogPickMainTranslation();
+	
+		wxString const& GetChoice();
+		
+	private:
+		wxString _choice;
 };
 
 // *********************************************************************

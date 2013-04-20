@@ -23,6 +23,8 @@
 #include <wx/radiobut.h>
 #include <wx/checkbox.h>
 #include <wx/panel.h>
+#include <wx/button.h>
+#include <wx/dialog.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -52,6 +54,43 @@ class GuiPanelActSaveTranslation : public wxPanel
 		
 		GuiPanelActSaveTranslation( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL );
 		~GuiPanelActSaveTranslation();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class GuiDialogPickMainTranslation
+///////////////////////////////////////////////////////////////////////////////
+class GuiDialogPickMainTranslation : public wxDialog 
+{
+	private:
+	
+	protected:
+		wxStaticText* _staticText;
+		wxButton* _buttonMainTranslation;
+		wxBoxSizer* _bSizerTranslation;
+	
+	public:
+		
+		GuiDialogPickMainTranslation( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Pick a main translation"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
+		~GuiDialogPickMainTranslation();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class GuiPanelTranslation
+///////////////////////////////////////////////////////////////////////////////
+class GuiPanelTranslation : public wxPanel 
+{
+	private:
+	
+	protected:
+		wxStaticText* _staticTextKind;
+		wxBoxSizer* _bSizerTranslation;
+	
+	public:
+		
+		GuiPanelTranslation( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL );
+		~GuiPanelTranslation();
 	
 };
 
