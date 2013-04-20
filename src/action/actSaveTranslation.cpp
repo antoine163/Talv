@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.12
+//! \version 0.13
 //! \date 31.03.2013
 //!
 //! ********************************************************************
@@ -141,23 +141,33 @@ void PanelActSaveTranslation::OnOKButtonClick(wxCommandEvent& event)
 // Class PanelTranslation
 // *********************************************************************
 
-PanelTranslation::PanelTranslation(	wxWindow* parent,
-							wxString const& kind,
-							wxArrayString const& translations)
-: GuiPanelTranslation(parent)
+PanelTranslation::PanelTranslation(	DialogPickMainTranslation* parent,
+									wxString const& kind,
+									wxArrayString const& translations)
+: GuiPanelTranslation(parent),_parent(parent)
 {
 	_staticTextKind->SetLabelMarkup("<b>"+kind+" :</b>");
 
-	//Création des bouton pour charge translations
+	//Création des boutons pour chaque traductions
 	for(auto it : translations)
 	{
+		//Ajout un bouton
 		wxButton* button = new wxButton( this, wxID_ANY, it, wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT|wxBU_LEFT|wxNO_BORDER );
 		_bSizerTranslation->Add(button, 0, wxEXPAND, 5);
+		_buttons.push_back(button);
+		
+		//Bind l'événement du bouton
+		button->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &DialogPickMainTranslation::OnButtonClick, _parent, button->GetId());
 	}
 }
 
 PanelTranslation::~PanelTranslation()
 {
+	//Unbind les événements des boutons
+	for(auto it : _buttons)
+	{
+		it->Unbind(wxEVT_COMMAND_BUTTON_CLICKED, &DialogPickMainTranslation::OnButtonClick, _parent, it->GetId());
+	}
 }
 
 // *********************************************************************
@@ -174,6 +184,10 @@ DialogPickMainTranslation::DialogPickMainTranslation(wxWindow* parent,
 	_staticText->SetLabelMarkup("<b>"+text+" :</b>");
 	_buttonMainTranslation->SetLabel(mainTranslate);
 	
+	//Bind l'événement du bouton
+	_buttonMainTranslation->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &DialogPickMainTranslation::OnButtonClick, this, _buttonMainTranslation->GetId());
+
+	
 	//Ajout une spacer si il ni pas rien dans translations
 	if(translations.size() == 0)
 	{
@@ -182,19 +196,13 @@ DialogPickMainTranslation::DialogPickMainTranslation(wxWindow* parent,
 	//Sinon on remplir le dialogue avec les traductions
 	else
 	{
-		wxBoxSizer* bSizer;
+		//Ajout des panels avec les traductions pour touts les genres (le wxString de translations).
 		PanelTranslation* panel;
-		
-		bSizer = new wxBoxSizer(wxHORIZONTAL);
-		
 		for(auto it : translations)
 		{
 			panel = new PanelTranslation(this, it.first, it.second);
-			bSizer->Add(panel, 1, wxEXPAND|wxALL, 5);
+			_bSizerTranslation->Add(panel, 1, wxEXPAND|wxALL, 5);
 		}
-
-		
-		_bSizerTranslation->Add(bSizer, 1, wxEXPAND, 5);
 	}
 	
 	//Recalcule de la tille de la fenêtre.
@@ -205,6 +213,8 @@ DialogPickMainTranslation::DialogPickMainTranslation(wxWindow* parent,
 
 DialogPickMainTranslation::~DialogPickMainTranslation()
 {
+	//Unbind l'événement du bouton
+	_buttonMainTranslation->Unbind(wxEVT_COMMAND_BUTTON_CLICKED, &DialogPickMainTranslation::OnButtonClick, this, _buttonMainTranslation->GetId());
 }
 	
 wxString const& DialogPickMainTranslation::GetChoice()
@@ -212,9 +222,22 @@ wxString const& DialogPickMainTranslation::GetChoice()
 	return _choice;
 }
 
+void DialogPickMainTranslation::OnButtonClick(wxCommandEvent& event)
+{
+	//On récupère le bouton qui a générer l'événement.
+	wxButton const* button = static_cast<wxButton const*>(event.GetEventObject());
+	
+	//On récupère le label du bouton.
+	_choice = button->GetLabel();
+	
+	//On quitte le dialogue
+	EndModal(wxID_OK);
+}
+
 // *********************************************************************
 // Class ActSaveTranslationFile
 // *********************************************************************
+
 ActSaveTranslationFile::ActSaveTranslationFile(wxFileName const& fileName)
 : _fileName(fileName)
 {

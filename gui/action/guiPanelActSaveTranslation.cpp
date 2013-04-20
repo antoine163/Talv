@@ -165,7 +165,7 @@ GuiDialogPickMainTranslation::GuiDialogPickMainTranslation( wxWindow* parent, wx
 	staticline1 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 	bSizer1->Add( staticline1, 0, wxEXPAND | wxALL, 5 );
 	
-	_bSizerTranslation = new wxBoxSizer( wxVERTICAL );
+	_bSizerTranslation = new wxBoxSizer( wxHORIZONTAL );
 	
 	bSizer1->Add( _bSizerTranslation, 1, wxEXPAND, 5 );
 	
@@ -181,13 +181,13 @@ GuiDialogPickMainTranslation::GuiDialogPickMainTranslation( wxWindow* parent, wx
 	staticTextHelp->Wrap( -1 );
 	bSizer3->Add( staticTextHelp, 0, wxALIGN_CENTER_VERTICAL|wxLEFT, 5 );
 	
-	wxStdDialogButtonSizer* sdbSizer1;
-	wxButton* sdbSizer1Cancel;
-	sdbSizer1 = new wxStdDialogButtonSizer();
-	sdbSizer1Cancel = new wxButton( this, wxID_CANCEL );
-	sdbSizer1->AddButton( sdbSizer1Cancel );
-	sdbSizer1->Realize();
-	bSizer3->Add( sdbSizer1, 1, wxEXPAND|wxBOTTOM, 5 );
+	wxStdDialogButtonSizer* sdbSizer;
+	wxButton* sdbSizerCancel;
+	sdbSizer = new wxStdDialogButtonSizer();
+	sdbSizerCancel = new wxButton( this, wxID_CANCEL );
+	sdbSizer->AddButton( sdbSizerCancel );
+	sdbSizer->Realize();
+	bSizer3->Add( sdbSizer, 1, wxEXPAND|wxBOTTOM, 5 );
 	
 	bSizer1->Add( bSizer3, 0, wxEXPAND, 5 );
 	

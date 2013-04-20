@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.12
+//! \version 0.13
 //! \date 31.03.2013
 //!
 //! ********************************************************************
@@ -25,6 +25,7 @@
 #include <wx/textfile.h>
 #include <wx/arrstr.h>
 
+#include <vector>
 #include <map>
 
 // *********************************************************************
@@ -55,15 +56,18 @@ class PanelActSaveTranslation : public GuiPanelActSaveTranslation
 // Class PanelTranslation
 // *********************************************************************
 
+class DialogPickMainTranslation;
 class PanelTranslation : public GuiPanelTranslation
 {
 	public:
-		PanelTranslation(	wxWindow* parent,
+		PanelTranslation(	DialogPickMainTranslation* parent,
 							wxString const& kind,
 							wxArrayString const& translations);
 		~PanelTranslation();
 		
 	private:
+		DialogPickMainTranslation* _parent;
+		std::vector<wxButton*> _buttons;
 };
 
 // *********************************************************************
@@ -72,14 +76,18 @@ class PanelTranslation : public GuiPanelTranslation
 
 class DialogPickMainTranslation : public GuiDialogPickMainTranslation
 {
+	friend PanelTranslation;
 	public:
-		DialogPickMainTranslation(wxWindow* parent,
-								wxString text,
-								wxString mainTranslate,
-								std::map<wxString, wxArrayString> const& translations);
+		DialogPickMainTranslation(	wxWindow* parent,
+									wxString text,
+									wxString mainTranslate,
+									std::map<wxString, wxArrayString> const& translations);
 		~DialogPickMainTranslation();
 	
 		wxString const& GetChoice();
+	
+	protected:
+		void OnButtonClick(wxCommandEvent& event);
 		
 	private:
 		wxString _choice;

@@ -1227,7 +1227,7 @@
                     <object class="wxBoxSizer" expanded="1">
                         <property name="minimum_size"></property>
                         <property name="name">_bSizerTranslation</property>
-                        <property name="orient">wxVERTICAL</property>
+                        <property name="orient">wxHORIZONTAL</property>
                         <property name="permission">protected</property>
                     </object>
                 </object>
@@ -1364,7 +1364,7 @@
                                 <property name="Save">0</property>
                                 <property name="Yes">0</property>
                                 <property name="minimum_size"></property>
-                                <property name="name">sdbSizer1</property>
+                                <property name="name">sdbSizer</property>
                                 <property name="permission">none</property>
                                 <event name="OnApplyButtonClick"></event>
                                 <event name="OnCancelButtonClick"></event>
