@@ -138,10 +138,10 @@ void PanelActSaveTranslation::OnOKButtonClick(wxCommandEvent& event)
 }
 
 // *********************************************************************
-// Class PanelTranslation
+// Class PanelPickTranslation
 // *********************************************************************
 
-PanelTranslation::PanelTranslation(	DialogPickMainTranslation* parent,
+PanelPickTranslation::PanelPickTranslation(	DialogPickMainTranslation* parent,
 									wxString const& kind,
 									wxArrayString const& translations)
 : GuiPanelTranslation(parent),_parent(parent)
@@ -152,7 +152,7 @@ PanelTranslation::PanelTranslation(	DialogPickMainTranslation* parent,
 	for(auto it : translations)
 	{
 		//Ajout un bouton
-		wxButton* button = new wxButton( this, wxID_ANY, it, wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT|wxBU_LEFT|wxNO_BORDER );
+		wxButton* button = new wxButton(this, wxID_ANY, it, wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT|wxBU_LEFT|wxNO_BORDER );
 		_bSizerTranslation->Add(button, 0, wxEXPAND, 5);
 		_buttons.push_back(button);
 		
@@ -161,7 +161,7 @@ PanelTranslation::PanelTranslation(	DialogPickMainTranslation* parent,
 	}
 }
 
-PanelTranslation::~PanelTranslation()
+PanelPickTranslation::~PanelPickTranslation()
 {
 	//Unbind les événements des boutons
 	for(auto it : _buttons)
@@ -197,10 +197,10 @@ DialogPickMainTranslation::DialogPickMainTranslation(wxWindow* parent,
 	else
 	{
 		//Ajout des panels avec les traductions pour touts les genres (le wxString de translations).
-		PanelTranslation* panel;
+		PanelPickTranslation* panel;
 		for(auto it : translations)
 		{
-			panel = new PanelTranslation(this, it.first, it.second);
+			panel = new PanelPickTranslation(this, it.first, it.second);
 			_bSizerTranslation->Add(panel, 1, wxEXPAND|wxALL, 5);
 		}
 	}

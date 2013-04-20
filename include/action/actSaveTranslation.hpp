@@ -54,26 +54,26 @@ class PanelActSaveTranslation : public GuiPanelActSaveTranslation
 };
 
 // *********************************************************************
-// Class PanelTranslation
+// Class PanelPickTranslation
 // *********************************************************************
 
 class DialogPickMainTranslation;
 
 //! \brief Panel présentent les traductions sous forme de bouton.
 //! \see DialogPickMainTranslation
-class PanelTranslation : public GuiPanelTranslation
+class PanelPickTranslation : public GuiPanelTranslation
 {
 	public:
 		//! \brief Constructeur.
 		//! \param parentfenêtre parant.
 		//! \param kind fenêtre parant.
 		//! \param translations les traductions à afficher dans les boutons.
-		PanelTranslation(	DialogPickMainTranslation* parent,
+		PanelPickTranslation(	DialogPickMainTranslation* parent,
 							wxString const& kind,
 							wxArrayString const& translations);
 		
 		//! \brief Destructeur.
-		~PanelTranslation();
+		~PanelPickTranslation();
 		
 	private:
 		//! \brief la fenêtre parant.
@@ -90,7 +90,7 @@ class PanelTranslation : public GuiPanelTranslation
 //! \see ActSaveTranslation
 class DialogPickMainTranslation : public GuiDialogPickMainTranslation
 {
-	friend PanelTranslation;
+	friend PanelPickTranslation;
 	public:
 		//! \brief Constructeur.
 		//! \param parent fenêtre parant.
