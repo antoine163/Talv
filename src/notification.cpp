@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.2
+//! \version 0.3
 //! \date 12.04.2013
 //!
 //! ********************************************************************
@@ -29,23 +29,58 @@
 #endif
 
 // *********************************************************************
+// Class FrameNotification
+// *********************************************************************
+
+#if defined(USE_EMULATE_NOTIFICATION) || defined(__DOXYGEN__)
+
+FrameNotification::FrameNotification(	wxString const& title,
+										wxString const& message)
+: GuiFrameNotification(nullptr)
+{
+	_staticTextTitle->SetLabelMarkup("<b>"+title+"</b>");
+	_staticTextMessage->SetLabel(message);
+	
+	//Recalcule de la tille de la fenêtre.
+	this->Layout();
+	GetSizer()->Fit(this);
+}
+
+FrameNotification::~FrameNotification()
+{
+}
+
+void FrameNotification::show(int timeout)
+{
+	Show();
+}
+
+#endif
+
+// *********************************************************************
 // Class Notification
 // *********************************************************************
 //! \todo a instenser/supprimer dans main.cpp
 Notification::Notification()
 {
-	#ifdef __UNIX__
-		if(!notify_init(PROJECT_NAME))
-		{
-			wxLogError(_("Libnotify could not be initialized."));
-		}
+	#ifndef USE_EMULATE_NOTIFICATION
+		//Sous unix on utilise la libnotify
+		#if defined(__UNIX__)
+			if(!notify_init(PROJECT_NAME))
+			{
+				wxLogError(_("Libnotify could not be initialized."));
+			}
+		#endif
 	#endif
 }
 
 Notification::~Notification()
 {
-	#ifdef __UNIX__
-		notify_uninit();
+	#ifndef USE_EMULATE_NOTIFICATION
+		//Sous unix on utilise la libnotify
+		#if defined(__UNIX__)
+			notify_uninit();
+		#endif
 	#endif
 }
 
@@ -55,15 +90,26 @@ void Notification::notify(	wxString const& title,
 	//3s par défaut + 1s de plus tout les 10 caractères.
 	int timeout = 3+message.Length()/10;
 	
-	#ifdef __UNIX__
-		NotifyNotification * notify = notify_notification_new(title.mb_str(wxConvUTF8), message.fn_str(), "dialog-information");
-		notify_notification_set_timeout(notify, timeout*1000);
-		if(!notify_notification_show(notify, nullptr))
-		{
-			wxLogError(_("The notify could not be show."));
-		}
+	#ifndef USE_EMULATE_NOTIFICATION
+		#if define(__UNIX__)
+			//Préparation de la notification.
+			NotifyNotification * notify = notify_notification_new(title.mb_str(wxConvUTF8), message.fn_str(), "dialog-information");
+			notify_notification_set_timeout(notify, timeout*1000);
+			
+			//Affichage de la notification
+			if(!notify_notification_show(notify, nullptr))
+			{
+				//Si problème
+				wxLogError(_("The notify could not be show."));
+			}
+		#else
+			//Préparation de la notification.
+			wxNotificationMessage notify(title, message);
+			//Affichage de la notification
+			notify.Show(timeout);
+		#endif
 	#else
-		wxNotificationMessage notify(title, message);
-		notify.Show(timeout);
+	FrameNotification *frame = new FrameNotification(title, message);
+	frame->show(timeout);
 	#endif
 }

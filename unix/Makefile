@@ -3,7 +3,7 @@
 #	Makfile for Linux.
 #
 # - author 	:	Antoine Maleyrie : antoine.maleyrie@gmail.com
-# - version	:	0.5
+# - version	:	0.6
 # - date 	:	10.03.2013
 #
 ########################################################################
@@ -53,7 +53,11 @@ SRC+=../src/shortcut.cpp
 SRC+=../src/actionManager.cpp
 SRC+=../src/action.cpp
 SRC+=../src/resource.cpp
+#Notification
 SRC+=../src/notification.cpp
+ifeq ($(EMULATE_NOTIFICATION), yes)
+SRC+=../gui/guiFrameNotification.cpp
+endif
 #Action
 ifeq ($(ACT_TRANSLATION), yes)
 SRC+=../src/action/actTranslation.cpp
