@@ -20,9 +20,8 @@
 #include <wx/string.h>
 
 #ifdef USE_EMULATE_NOTIFICATION
-	#include "guiFrameNotification.h"
+	#include "guiDialogNotification.h"
 	#include <wx/frame.h>
-	//#include <wx/dialog.h>
 #endif
 
 
@@ -33,7 +32,7 @@
 #if defined(USE_EMULATE_NOTIFICATION) || defined(__DOXYGEN__)
 
 //! \brief .
-class FrameNotification : public GuiFrameNotification
+class FrameNotification : public GuiDialogNotification
 {	
 
 	public:

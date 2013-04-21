@@ -56,7 +56,7 @@ SRC+=../src/resource.cpp
 #Notification
 SRC+=../src/notification.cpp
 ifeq ($(EMULATE_NOTIFICATION), yes)
-SRC+=../gui/guiFrameNotification.cpp
+SRC+=../gui/guiDialogNotification.cpp
 endif
 #Action
 ifeq ($(ACT_TRANSLATION), yes)
