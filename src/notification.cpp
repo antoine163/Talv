@@ -26,6 +26,8 @@
 	#else
 		#include <wx/notifmsg.h>
 	#endif
+#else
+	#include <wx/gdicmn.h>
 #endif
 
 //TEST
@@ -161,7 +163,7 @@ void Notification::notify(	wxString const& title,
 		DialogNotification *dialog = new DialogNotification(title, message);
 		
 		if(_dialogs.size() != 0)
-		{
+		{			
 			int positionY = 0;
 			int sizeY = 0;
 			DialogNotification *lastDialog = _dialogs.back();
@@ -176,10 +178,25 @@ void Notification::notify(	wxString const& title,
 			dialog->SetPosition(wxPoint(0, 0));
 		}
 
-
 		_dialogs.push_back(dialog);
 		dialog->Bind(EVT_EXIT_DIALG_NOTIFICATION, &Notification::OnExitDialogNotification, this);
 		dialog->show(timeout);
+		
+		if(_dialogs.size() != 0)
+		{
+			int positionY = 0;
+			int sizeY = 0;
+			int displayY = 0;
+			
+			wxDisplaySize(nullptr, &displayY);
+			dialog->GetPosition(nullptr, &positionY);
+			dialog->GetSize(nullptr, &sizeY);
+			
+			if(positionY+sizeY > displayY)
+			{
+				_dialogs[0]->exit();
+			}
+		}
 	#endif
 }
 
