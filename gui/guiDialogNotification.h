@@ -32,6 +32,10 @@ class GuiDialogNotification : public wxDialog
 	protected:
 		wxStaticText* _staticTextTitle;
 		wxStaticText* _staticTextMessage;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void OnLeftDown( wxMouseEvent& event ) { event.Skip(); }
+		
 	
 	public:
 		

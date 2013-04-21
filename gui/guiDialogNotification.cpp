@@ -29,8 +29,14 @@ GuiDialogNotification::GuiDialogNotification( wxWindow* parent, wxWindowID id, c
 	bSizer->Fit( this );
 	
 	this->Centre( wxBOTH );
+	
+	// Connect Events
+	this->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler( GuiDialogNotification::OnLeftDown ) );
 }
 
 GuiDialogNotification::~GuiDialogNotification()
 {
+	// Disconnect Events
+	this->Disconnect( wxEVT_LEFT_DOWN, wxMouseEventHandler( GuiDialogNotification::OnLeftDown ) );
+	
 }

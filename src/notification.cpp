@@ -28,13 +28,16 @@
 	#endif
 #endif
 
+//TEST
+#include <iostream>
+
 // *********************************************************************
 // Class FrameNotification
 // *********************************************************************
 
 #if defined(USE_EMULATE_NOTIFICATION) || defined(__DOXYGEN__)
 
-FrameNotification::FrameNotification(	wxString const& title,
+DialogNotification::DialogNotification(	wxString const& title,
 										wxString const& message)
 : GuiDialogNotification(nullptr, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxFRAME_NO_TASKBAR|wxDIALOG_NO_PARENT|wxSTAY_ON_TOP|wxNO_BORDER)
 {
@@ -47,13 +50,18 @@ FrameNotification::FrameNotification(	wxString const& title,
 	GetSizer()->Fit(this);
 }
 
-FrameNotification::~FrameNotification()
+DialogNotification::~DialogNotification()
 {
 }
 
-void FrameNotification::show(int timeout)
+void DialogNotification::show(int timeout)
 {
 	ShowWithoutActivating();
+}
+
+void DialogNotification::OnLeftDown(wxMouseEvent&)
+{
+	std::cout << "DialogNotification::OnLeftDown"  << std::endl;
 }
 
 #endif
@@ -110,7 +118,7 @@ void Notification::notify(	wxString const& title,
 			notify.Show(timeout);
 		#endif
 	#else
-	FrameNotification *frame = new FrameNotification(title, message);
+	DialogNotification *frame = new DialogNotification(title, message);
 	frame->show(timeout);
 	#endif
 }

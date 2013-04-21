@@ -26,21 +26,24 @@
 
 
 // *********************************************************************
-// Class FrameNotification
+// Class DialogNotification
 // *********************************************************************
 
 #if defined(USE_EMULATE_NOTIFICATION) || defined(__DOXYGEN__)
 
 //! \brief .
-class FrameNotification : public GuiDialogNotification
+class DialogNotification : public GuiDialogNotification
 {	
 
 	public:
-		FrameNotification(	wxString const& title,
+		DialogNotification(	wxString const& title,
 							wxString const& message=wxEmptyString);
-		~FrameNotification();
+		~DialogNotification();
 		
 		void show(int timeout);
+	
+	protected:
+		void OnLeftDown(wxMouseEvent&);
 	
 	private:
 
