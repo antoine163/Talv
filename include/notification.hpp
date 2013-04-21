@@ -23,6 +23,7 @@
 	#include "guiDialogNotification.h"
 	#include <wx/frame.h>
 	#include <wx/event.h>
+	#include <wx/timer.h>
 	#include <vector>
 #endif
 
@@ -48,8 +49,10 @@ class DialogNotification : public GuiDialogNotification
 	protected:
 		void OnClose(wxCloseEvent&);
 		void OnLeftDown(wxMouseEvent&);
+		void OnTimeout(wxTimerEvent&);
 	
 	private:
+		wxTimer _timeout;
 
 };
 
@@ -62,7 +65,7 @@ wxDECLARE_EVENT(EVT_EXIT_DIALG_NOTIFICATION, wxCommandEvent);
 // *********************************************************************
 
 //! \brief .
-class Notification : public wxEvtHandler, public Singleton<Notification>
+class Notification : public Singleton<Notification>
 {	
 	friend class Singleton<Notification>;
 	

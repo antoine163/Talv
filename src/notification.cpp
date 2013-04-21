@@ -39,7 +39,8 @@
 
 DialogNotification::DialogNotification(	wxString const& title,
 										wxString const& message)
-: GuiDialogNotification(nullptr, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxFRAME_NO_TASKBAR|wxDIALOG_NO_PARENT|wxSTAY_ON_TOP|wxNO_BORDER)
+: GuiDialogNotification(nullptr, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxFRAME_NO_TASKBAR|wxDIALOG_NO_PARENT|wxSTAY_ON_TOP|wxNO_BORDER),
+_timeout(this) 
 {
 	//Affiche le titre et le message.
 	_staticTextTitle->SetLabelMarkup("<b>"+title+"</b>");
@@ -51,15 +52,21 @@ DialogNotification::DialogNotification(	wxString const& title,
 	
 	//Pour ne pas redimensionner la fenêtre.
 	this->SetSizeHints(GetSize(), GetSize());
+	
+	//Bind du timer pour le timeout
+	Bind(wxEVT_TIMER, &DialogNotification::OnTimeout, this);
 }
 
 DialogNotification::~DialogNotification()
 {
+	//Unbind du timer pour le timeout
+	Unbind(wxEVT_TIMER, &DialogNotification::OnTimeout, this);
 }
 
 void DialogNotification::show(int timeout)
 {
 	ShowWithoutActivating();
+	_timeout.Start(timeout*1000, wxTIMER_ONE_SHOT);
 }
 
 void DialogNotification::OnClose(wxCloseEvent&)
@@ -69,6 +76,12 @@ void DialogNotification::OnClose(wxCloseEvent&)
 }
 
 void DialogNotification::OnLeftDown(wxMouseEvent&)
+{
+	//Qui la notification
+	exit();
+}
+
+void DialogNotification::OnTimeout(wxTimerEvent&)
 {
 	//Qui la notification
 	exit();
@@ -110,6 +123,13 @@ Notification::~Notification()
 		#if defined(__UNIX__)
 			notify_uninit();
 		#endif
+	#else
+		//On détruis les dialogues
+		for(auto it : _dialogs)
+		{
+			it->Destroy();
+			delete it;
+		}
 	#endif
 }
 
@@ -167,14 +187,19 @@ void Notification::notify(	wxString const& title,
 
 void Notification::OnExitDialogNotification(wxCommandEvent& event)
 {
+	//Obtenir le dialogue qui provoquer l'événement.
 	DialogNotification* dialog = static_cast<DialogNotification*>(event.GetEventObject());
 	
+	//Unbind le dialogue
+	dialog->Unbind(EVT_EXIT_DIALG_NOTIFICATION, &Notification::OnExitDialogNotification, this);
+
 	int iDialog = -1;
 	int sizeY = 0;
 	
 	//On sauvegarde le décalage que l'on doit affecter au dialogue qui doive être décaler.
 	dialog->GetSize(nullptr, &sizeY);
 	
+	//Parcoure tout les dialogues actifs
 	for(unsigned int i = 0; i<_dialogs.size(); i++)
 	{
 		//Si le dialogue a été trouver
@@ -193,15 +218,11 @@ void Notification::OnExitDialogNotification(wxCommandEvent& event)
 		}
 	}
 	
-	//Cette condition ne devrai jamais être fausse
-	if(iDialog != -1)
-	{
-		//On détruis le dialogue
-		_dialogs[iDialog]->Destroy();
-		delete _dialogs[iDialog];
-		//Et on l'enlève du vector
-		_dialogs.erase(_dialogs.begin()+iDialog);
-	}
+	//On détruis le dialogue
+	_dialogs[iDialog]->Destroy();
+	delete _dialogs[iDialog];
+	//Et on l'enlève du vector
+	_dialogs.erase(_dialogs.begin()+iDialog);
 }
 
 #endif
