@@ -34,12 +34,13 @@ class GuiDialogNotification : public wxDialog
 		wxStaticText* _staticTextMessage;
 		
 		// Virtual event handlers, overide them in your derived class
+		virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
 		virtual void OnLeftDown( wxMouseEvent& event ) { event.Skip(); }
 		
 	
 	public:
 		
-		GuiDialogNotification( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDIALOG_NO_PARENT|wxSTAY_ON_TOP|wxNO_BORDER );
+		GuiDialogNotification( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDIALOG_NO_PARENT|wxMINIMIZE_BOX|wxSTAY_ON_TOP|wxNO_BORDER );
 		~GuiDialogNotification();
 	
 };

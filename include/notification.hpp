@@ -22,6 +22,8 @@
 #ifdef USE_EMULATE_NOTIFICATION
 	#include "guiDialogNotification.h"
 	#include <wx/frame.h>
+	#include <wx/event.h>
+	#include <vector>
 #endif
 
 
@@ -37,17 +39,21 @@ class DialogNotification : public GuiDialogNotification
 
 	public:
 		DialogNotification(	wxString const& title,
-							wxString const& message=wxEmptyString);
+							wxString const& message);
 		~DialogNotification();
 		
 		void show(int timeout);
+		void exit();
 	
 	protected:
+		void OnClose(wxCloseEvent&);
 		void OnLeftDown(wxMouseEvent&);
 	
 	private:
 
 };
+
+wxDECLARE_EVENT(EVT_EXIT_DIALG_NOTIFICATION, wxCommandEvent);
 
 #endif
 
@@ -56,7 +62,7 @@ class DialogNotification : public GuiDialogNotification
 // *********************************************************************
 
 //! \brief .
-class Notification : public Singleton<Notification>
+class Notification : public wxEvtHandler, public Singleton<Notification>
 {	
 	friend class Singleton<Notification>;
 	
@@ -65,6 +71,7 @@ class Notification : public Singleton<Notification>
 					wxString const& message=wxEmptyString);
 		
 	#ifdef USE_EMULATE_NOTIFICATION
+		void OnExitDialogNotification(wxCommandEvent& event);
 	#endif
 	
 	private:
@@ -72,6 +79,7 @@ class Notification : public Singleton<Notification>
 		~Notification();
 		
 	#ifdef USE_EMULATE_NOTIFICATION
+		std::vector<DialogNotification*> _dialogs;
 	#endif
 };
 

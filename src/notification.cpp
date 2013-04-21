@@ -48,6 +48,9 @@ DialogNotification::DialogNotification(	wxString const& title,
 	//Recalcule de la tille de la fenêtre.
 	this->Layout();
 	GetSizer()->Fit(this);
+	
+	//Pour ne pas redimensionner la fenêtre.
+	this->SetSizeHints(GetSize(), GetSize());
 }
 
 DialogNotification::~DialogNotification()
@@ -59,10 +62,27 @@ void DialogNotification::show(int timeout)
 	ShowWithoutActivating();
 }
 
+void DialogNotification::OnClose(wxCloseEvent&)
+{
+	//Qui la notification
+	exit();
+}
+
 void DialogNotification::OnLeftDown(wxMouseEvent&)
 {
-	std::cout << "DialogNotification::OnLeftDown"  << std::endl;
+	//Qui la notification
+	exit();
 }
+
+void DialogNotification::exit()
+{
+	//Envoi de l'événement.
+	wxCommandEvent event(EVT_EXIT_DIALG_NOTIFICATION, GetId());
+    event.SetEventObject(this);
+    ProcessWindowEvent(event);
+}
+
+wxDEFINE_EVENT(EVT_EXIT_DIALG_NOTIFICATION, wxCommandEvent);
 
 #endif
 
@@ -118,7 +138,70 @@ void Notification::notify(	wxString const& title,
 			notify.Show(timeout);
 		#endif
 	#else
-	DialogNotification *frame = new DialogNotification(title, message);
-	frame->show(timeout);
+		DialogNotification *dialog = new DialogNotification(title, message);
+		
+		if(_dialogs.size() != 0)
+		{
+			int positionY = 0;
+			int sizeY = 0;
+			DialogNotification *lastDialog = _dialogs.back();
+		
+			lastDialog->GetPosition(nullptr, &positionY);
+			lastDialog->GetSize(nullptr, &sizeY);
+			
+			dialog->SetPosition(wxPoint(0, positionY+sizeY));
+		}
+		else
+		{
+			dialog->SetPosition(wxPoint(0, 0));
+		}
+
+
+		_dialogs.push_back(dialog);
+		dialog->Bind(EVT_EXIT_DIALG_NOTIFICATION, &Notification::OnExitDialogNotification, this);
+		dialog->show(timeout);
 	#endif
 }
+
+#ifdef USE_EMULATE_NOTIFICATION
+
+void Notification::OnExitDialogNotification(wxCommandEvent& event)
+{
+	DialogNotification* dialog = static_cast<DialogNotification*>(event.GetEventObject());
+	
+	int iDialog = -1;
+	int sizeY = 0;
+	
+	//On sauvegarde le décalage que l'on doit affecter au dialogue qui doive être décaler.
+	dialog->GetSize(nullptr, &sizeY);
+	
+	for(unsigned int i = 0; i<_dialogs.size(); i++)
+	{
+		//Si le dialogue a été trouver
+		if(iDialog != -1)
+		{
+			//On décale les dialogue qui doive changer de position
+			wxPoint pos = _dialogs[i]->GetPosition();
+			pos.y -= sizeY;
+			_dialogs[i]->SetPosition(pos);
+		}
+		//c'est le dialogue que l'on cherche ?
+		else if(_dialogs[i] == dialog)
+		{
+			//On retiens sont index dans le vector
+			iDialog = i;
+		}
+	}
+	
+	//Cette condition ne devrai jamais être fausse
+	if(iDialog != -1)
+	{
+		//On détruis le dialogue
+		_dialogs[iDialog]->Destroy();
+		delete _dialogs[iDialog];
+		//Et on l'enlève du vector
+		_dialogs.erase(_dialogs.begin()+iDialog);
+	}
+}
+
+#endif
