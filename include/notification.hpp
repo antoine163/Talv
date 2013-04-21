@@ -21,6 +21,8 @@
 
 #ifdef USE_EMULATE_NOTIFICATION
 	#include "guiFrameNotification.h"
+	#include <wx/frame.h>
+	//#include <wx/dialog.h>
 #endif
 
 

@@ -36,8 +36,9 @@
 
 FrameNotification::FrameNotification(	wxString const& title,
 										wxString const& message)
-: GuiFrameNotification(nullptr)
+: GuiFrameNotification(nullptr, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxFRAME_NO_TASKBAR|wxDIALOG_NO_PARENT|wxSTAY_ON_TOP|wxNO_BORDER)
 {
+	//Affiche le titre et le message.
 	_staticTextTitle->SetLabelMarkup("<b>"+title+"</b>");
 	_staticTextMessage->SetLabel(message);
 	
@@ -52,7 +53,7 @@ FrameNotification::~FrameNotification()
 
 void FrameNotification::show(int timeout)
 {
-	Show();
+	ShowWithoutActivating();
 }
 
 #endif
