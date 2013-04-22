@@ -109,7 +109,7 @@ Notification::Notification()
 {
 	#ifndef USE_EMULATE_NOTIFICATION
 		//Sous unix on utilise la libnotify
-		#if defined(__UNIX__)
+		#ifdef __UNIX__
 			if(!notify_init(PROJECT_NAME))
 			{
 				wxLogError(_("Libnotify could not be initialized."));
@@ -122,7 +122,7 @@ Notification::~Notification()
 {
 	#ifndef USE_EMULATE_NOTIFICATION
 		//Sous unix on utilise la libnotify
-		#if defined(__UNIX__)
+		#ifdef __UNIX__
 			notify_uninit();
 		#endif
 	#else
@@ -142,9 +142,9 @@ void Notification::notify(	wxString const& title,
 	int timeout = 3+message.Length()/10;
 	
 	#ifndef USE_EMULATE_NOTIFICATION
-		#if define(__UNIX__)
+		#ifdef __UNIX__
 			//Préparation de la notification.
-			NotifyNotification * notify = notify_notification_new(title.mb_str(wxConvUTF8), message.fn_str(), "dialog-information");
+			NotifyNotification * notify = notify_notification_new(title.mb_str(wxConvUTF8), message.fn_str(), nullptr);
 			notify_notification_set_timeout(notify, timeout*1000);
 			
 			//Affichage de la notification
