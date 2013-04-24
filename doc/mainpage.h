@@ -5,7 +5,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie.
-//! \version 0.1
+//! \version 0.2
 //! \date 13/12/12
 //!
 //! ****************************************************************************
@@ -23,7 +23,33 @@
 //! <b>Website</b> \n <a href="http://antoine163.github.com/flydocs/">http://antoine163.github.com/flydocs/</a>
 //! 
 //! \author Antoine Maleyrie : antoine.maleyrie@gmail.com
-//! \version  1.x
+//! \version  1.0
+//!
+//! \page pageCreateAction Création d'une nouvelle action.
+//! \tableofcontents
+//! \section pageCreateActionSectionExemple Exemple avec la class \ref ActSay.
+//! Ci dessous est décrit une procédure pour écrire une nouvelle action. On prendras comme exemple la class \ref ActSay.
+//!
+//! \subsection pageCreateActionSubsectionCreateFiles Création des fichiers
+//! texte ...
+//!
+//! \subsection pageCreateActionSubsectionCreateClass Création des classes
+//! texte ...
+//! \subsubsection pageCreateActionSubsubsectionCreateClassAction Création de l'action
+//! texte ...
+//! \subsubsection pageCreateActionSubsubsectionCreateClassPanel Création du panel de configuration
+//! texte ...
+//!
+//! \subsection pageCreateActionSubsectionLink Prise en compte de l'action dans le programme.
+//! texte ...
+//!
+//! \subsection pageCreateActionSubsectionFirstTest Premier test
+//! texte ...
+//!
+//! \subsection pageCreateActionSubsectionCreateGUI Création du GUI
+//! texte ...
+
+
 
 #endif // MAIN_PAGE_H
 

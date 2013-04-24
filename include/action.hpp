@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.9
+//! \version 0.10
 //! \date 04.01.2013
 //!
 //! ********************************************************************
@@ -26,7 +26,7 @@
 // *********************************************************************
 
 //! \brief Class de base pour les actions.
-//! La classe \ref ActTranslation peut être pris comme exemple pour fait d'autre type d'action.
+//! \see \ref pageCreateAction
 class Action
 {
 	public:
@@ -41,11 +41,11 @@ class Action
 		
 		//! \brief Permet de charger les préférences de l'action à partir du wxFileConfig.
 		//! \param fileConfig fichier à partir du quelle l'action doit être charger.
-		void load(wxFileConfig & fileConfig);
+		void load(wxFileConfig& fileConfig);
 		
 		//! \brief Permet de sauvegarder les préférences de l'action dans le wxFileConfig.
 		//! \param fileConfig fichier où l'action doit être sauvegarder.
-		void save(wxFileConfig & fileConfig)const;
+		void save(wxFileConfig& fileConfig)const;
 		
 		//! \brief Permet d'extraire les préférences de l'action au format string,
 		//! dans le but des les affichées à l'utilisateur.
@@ -86,11 +86,11 @@ class Action
 	protected:
 		//! \brief Permet de charger les préférences de l'action à partir du wxFileConfig (appelé par \ref load()).
 		//! \param fileConfig fichier à partir du quelle l'action doit être charger.
-		virtual void actLoad(wxFileConfig & fileConfig)=0;
+		virtual void actLoad(wxFileConfig& fileConfig)=0;
 		
 		//! \brief Permet de sauvegarder les préférences de l'action dans le wxFileConfig(appelé par \ref sove()).
 		//! \param fileConfig fichier où l'action doit être sauvegarder.
-		virtual void actSave(wxFileConfig & fileConfig)const=0;
+		virtual void actSave(wxFileConfig& fileConfig)const=0;
 		
 	private:
 		//! \brief Le non de l'action.
