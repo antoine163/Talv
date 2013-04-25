@@ -449,7 +449,7 @@ ActSaveTranslation::ActSaveTranslation(wxString const& lgsrc,
 							bool noDoublon,
 							bool showDialog)
 : Action(_("Save a translation"), "ActSaveTranslation",
-_("Translation a word or a group words from google and save in a file.")),
+_("Translation a text with google and save in a file.")),
 _lgsrc(lgsrc), _lgto(lgto), _fileName(fileName),
 _saveAll(soveAll), _noDoublon(noDoublon), _showDialog(showDialog)
 {

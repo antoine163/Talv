@@ -80,7 +80,7 @@ ActTranslation::ActTranslation()
 
 ActTranslation::ActTranslation(wxString const& lgsrc, wxString const& lgto)
 : Action(_("Translation"), "ActTranslation",
-_("Translation a word or a group words from google.")),
+_("Translation a text with google.")),
 _lgsrc(lgsrc), _lgto(lgto)
 {
 }
