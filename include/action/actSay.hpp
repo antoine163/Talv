@@ -17,15 +17,34 @@
 #define ACTION_SAY_H
 
 #include "action.hpp"
+#include "action/guiPanelActSay.h"
+
+// *********************************************************************
+// Class PanelActSay
+// *********************************************************************
+
+class ActSay;
+
+class PanelActSay : public GuiPanelActSay
+{
+	public:
+		PanelActSay(wxWindow* parent, wxButton* buttonOK, ActSay* act);
+		~PanelActSay();
+		
+		void OnOKButtonClick(wxCommandEvent& event);
+	
+	private:
+		ActSay* _act;
+		wxButton* _buttonOK;
+};
 
 // *********************************************************************
 // Class ActSay
 // *********************************************************************
 
-//! \brief Action de traduction.
 class ActSay : public Action
 {
-	//friend PanelActTranslation;
+	friend PanelActSay;
 	
 	public:
 		ActSay();
@@ -37,8 +56,8 @@ class ActSay : public Action
 		wxString getStringPreferences()const;
 		
 	protected:
-		void actLoad(wxFileConfig & fileConfig);
-		void actSave(wxFileConfig & fileConfig)const;
+		void actLoad(wxFileConfig& fileConfig);
+		void actSave(wxFileConfig& fileConfig)const;
 		
 	private:
 		wxString _lgsrc;

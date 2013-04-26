@@ -9,13 +9,13 @@
 ########################################################################
 
 ########################################################################
-# Non de l'exécutable
+# Non de l'exécutable.
 ########################################################################
 EXEC_NAME=$(PROJECT_NAME)
 
 
 ########################################################################
-# Flags de compilation pour les libs
+# Flags de compilation pour les libs.
 ########################################################################
 # Flags pour wxWidgets
 CXX_FLAGS+=`wx-config-2.9 --cflags`
@@ -26,7 +26,7 @@ endif
 
 
 ########################################################################
-# Flags de linkage pour les libs
+# Flags de linkage pour les libs.
 ########################################################################
 # Flags pour wxWidgets
 LD_FLAGS+=`wx-config-2.9 --libs base,core,adv,net,propgrid`
@@ -62,6 +62,10 @@ endif
 ifeq ($(ACT_TRANSLATION), yes)
 SRC+=../src/action/actTranslation.cpp
 SRC+=../gui/action/guiPanelActTranslation.cpp
+endif
+ifeq ($(ACT_SAY), yes)
+SRC+=../src/action/actSay.cpp
+SRC+=../gui/action/guiPanelActSay.cpp
 endif
 ifeq ($(ACT_SAVE_TRANSLATION), yes)
 SRC+=../src/action/actSaveTranslation.cpp
@@ -126,7 +130,7 @@ $(OBJ_DIR)/%.o: ../%.cpp
 	
 	
 ########################################################################
-# Exécute le programme
+# Exécute le programme.
 ########################################################################
 .PHONY: run
 run:
@@ -135,7 +139,7 @@ run:
 	
 	
 ########################################################################
-# Exécute le programme avec gdb
+# Exécute le programme avec gdb.
 ########################################################################
 .PHONY: rungdb
 rungdb: debug
@@ -143,7 +147,7 @@ rungdb: debug
 
 
 ########################################################################
-# Génération de la doc
+# Génération de la doc.
 ########################################################################
 .PHONY: doc
 doc:
@@ -151,7 +155,7 @@ doc:
 	
 	
 ########################################################################
-# Supprime la doc générée
+# Supprime la doc générée.
 ########################################################################
 .PHONY: cleandoc
 cleandoc:
@@ -160,7 +164,7 @@ cleandoc:
 
 
 ########################################################################
-# Nettoyage du projet
+# Nettoyage du projet.
 ########################################################################
 .PHONY: clean
 clean:

@@ -34,7 +34,7 @@ ACT_TRANSLATION=yes
 #Sovgarde de la raduction du mot/phrase
 ACT_SAVE_TRANSLATION=yes
 #Dire le mot/phrase
-ACT_SAY=no
+ACT_SAY=yes
 
 
 ########################################################################
