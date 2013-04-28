@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.11
+//! \version 0.12
 //! \date 30.03.2013
 //!
 //! ********************************************************************
@@ -22,6 +22,11 @@
 #include <wx/arrstr.h>
 #include <wx/buffer.h>
 #include <map>
+
+#if defined(__UNIX__)
+#include <gst/gst.h>
+#elif defined(__WXMSW__)
+#endif
 
 // *********************************************************************
 // Class Resource
@@ -67,6 +72,12 @@ class Resource : public Singleton<Resource>
 						wxString const& lgto);
 											
 		void downloadFromUrl(wxMemoryBuffer* buffer, wxString const& sUrl);
+		
+		void Tts(wxString const& text, wxString const& lg);
+		
+		void setTtsVolume(double volume);
+		double getTtsVolume();
+		
 	
 	private:
 		Resource();
@@ -76,6 +87,13 @@ class Resource : public Singleton<Resource>
 		std::map<wxString, wxString> _languages;
 		//! \brief Liste des nom d'action en fonction de leur nom de type <actionName, actTypeName>.
 		std::map<wxString, wxString> _actions;
+		
+		double _ttsVolume;
+		
+		#if defined(__UNIX__)
+			GstElement* _pipeline;
+		#elif defined(__WXMSW__)
+		#endif
 };
 
 #endif //RESOURCE_H

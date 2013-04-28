@@ -15,6 +15,7 @@
 
 #include "action/actSay.hpp"
 #include "resource.hpp"
+#include "notification.hpp"
 
 //TEST 
 #include <iostream>
@@ -79,7 +80,19 @@ ActSay::~ActSay()
 		
 void ActSay::execute()
 {
-	std::cout << "ActSay::execute" << std::endl;
+	//On récupère le contenue de la presse papier.
+	wxString clipboard = Resource::getClipboard();
+	
+	//La presse papier est t'elle vide ?
+	if(clipboard.IsEmpty())
+	{
+		//Pas de texte à traduire
+		Notification::getInstance()->notify(_("Translate clipboard"), _("Sorry, nothing at translate."));
+		return;
+	}
+	
+	//On dit le texte
+	Resource::getInstance()->Tts(clipboard, _lgsrc);
 }
 
 wxPanel* ActSay::getPanelPreferences(wxWindow* parent, wxButton* buttonOK)

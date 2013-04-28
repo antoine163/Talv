@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.11
+//! \version 0.12
 //! \date 30.03.2013
 //!
 //! ********************************************************************
@@ -19,6 +19,7 @@
 #include <wx/sstream.h>
 #include <wx/intl.h> 
 #include <wx/url.h>
+#include <wx/log.h> 
 
 //TEST
 #include <iostream>
@@ -29,6 +30,17 @@
 
 Resource::Resource()
 {
+	#if defined(__UNIX__)
+		//Initialisation de GStreamer.
+		gst_init(nullptr, nullptr);
+		_pipeline = nullptr;
+	#elif defined(__WXMSW__)
+	#endif
+	
+	//Volume 100%
+	_ttsVolume = 1.0;
+	
+	
 	//Liste des langues
 	_languages["af"] = _("Afrikaans");
 	_languages["sq"] = _("Albanian");
@@ -111,6 +123,15 @@ Resource::Resource()
 
 Resource::~Resource()
 {
+	#if defined(__UNIX__)
+		//Libération des ressources de GStreamer.
+		if (_pipeline != NULL)
+		{
+			gst_object_unref(_pipeline);
+		}
+		gst_deinit();
+	#elif defined(__WXMSW__)
+	#endif
 }
 
 std::map<wxString, wxString> const& Resource::getLanguages()const
@@ -179,7 +200,6 @@ wxString Resource::getClipboard()
 }
 
 //! \todo Vois pour une implémentation avec un analyser jSON
-//! \todo &hl= avec les locals
 wxString Resource::getTranslations(
 						std::map<wxString, wxArrayString>* translations,
 						wxString const& text,
@@ -303,7 +323,7 @@ void Resource::downloadFromUrl(wxMemoryBuffer* buffer, wxString const& sUrl)
 	if (url.GetError() == wxURL_NOERR)
 	{	
 		//Récupération des données.
-		wxInputStream *urlStream = url.GetInputStream(); 
+		wxInputStream *urlStream = url.GetInputStream();
 		
 		//Erreur ?
 		if(urlStream->IsOk())
@@ -320,4 +340,32 @@ void Resource::downloadFromUrl(wxMemoryBuffer* buffer, wxString const& sUrl)
 		}
 		delete urlStream;
 	}
+}
+
+void Resource::Tts(wxString const& text, wxString const& lg)
+{		
+	//Construction de la pipeline
+	wxString stringPipeline;
+	stringPipeline << "playbin uri=\"http://translate.google.com/translate_tts?ie=UTF-8&tl="+lg+"&q="+text+"\" volume=" << _ttsVolume;
+	_pipeline = gst_parse_launch(stringPipeline.fn_str(), nullptr);
+	
+	//pipeline n'est pas ok ?
+	if(_pipeline == nullptr)
+	{
+		wxLogError(_("Could not build pipeling for GStreamer."));
+		return;
+	}
+	
+	//Début la lecture.
+	gst_element_set_state(_pipeline, GST_STATE_PLAYING);
+}
+
+void Resource::setTtsVolume(double volume)
+{
+	_ttsVolume = volume;
+}
+
+double Resource::getTtsVolume()
+{
+	return _ttsVolume;
 }

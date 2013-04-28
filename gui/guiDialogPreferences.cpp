@@ -31,7 +31,7 @@ GuiDialogPreferences::GuiDialogPreferences( wxWindow* parent, wxWindowID id, con
 	bSizer2->Add( _checkBoxShowMenu, 0, wxLEFT, 20 );
 	
 	
-	bSizer2->Add( 0, 0, 1, wxEXPAND, 5 );
+	bSizer2->Add( 0, 0, 1, 0, 5 );
 	
 	wxStaticLine* m_staticline1;
 	m_staticline1 = new wxStaticLine( _panelGeneral, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );

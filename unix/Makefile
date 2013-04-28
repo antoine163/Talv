@@ -18,7 +18,8 @@ EXEC_NAME=$(PROJECT_NAME)
 # Flags de compilation pour les libs.
 ########################################################################
 # Flags pour wxWidgets
-CXX_FLAGS+=`wx-config-2.9 --cflags`
+CXX_FLAGS+=`wx-config-2.9 --cxxflags`
+CXX_FLAGS+=`pkg-config --cflags gstreamer-1.0`
 # Flags libnotify (si utiliser)
 ifeq ($(EMULATE_NOTIFICATION), no)
 CXX_FLAGS+=`pkg-config --cflags libnotify`
@@ -29,7 +30,8 @@ endif
 # Flags de linkage pour les libs.
 ########################################################################
 # Flags pour wxWidgets
-LD_FLAGS+=`wx-config-2.9 --libs base,core,adv,net,media`
+LD_FLAGS+=`wx-config-2.9 --libs base,core,adv,net`
+LD_FLAGS+=`pkg-config --libs gstreamer-1.0`
 # Flags pour la xlib
 LD_FLAGS+=-lX11
 # Flags pour libnotify (si utiliser)
