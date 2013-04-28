@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.8
+//! \version 1.9
 //! \date 02.01.2013
 //!
 //! ********************************************************************
@@ -16,6 +16,7 @@
 #include "dialogPreferences.hpp"
 #include "dialogActionPreferences.hpp"
 #include "shortcut.hpp"
+#include "resource.hpp"
 
 #include <wx/fileconf.h>
 #include <wx/msgdlg.h>
@@ -32,8 +33,14 @@ DialogPreferences::DialogPreferences()
 : GuiDialogPreferences(nullptr)
 {	
     //Magnifier 
-    _staticTextSetting->SetLabelMarkup("<b>"+_("Setting")+"</b>");
+    _staticTextGeneral->SetLabelMarkup("<b>"+_("General :")+"</b>");
+    _staticTextVolumeTts->SetLabelMarkup("<b>"+_("Volume for text to speech (Say a text) :")+"</b>");
 	_staticTextShutdown->SetLabelMarkup("<b>"+_("Shutdown this application")+"</b>");
+	
+	//Initialise les valeurs
+	_checkBoxShowMenu->SetValue(Resource::getInstance()->getShowMenu());
+	_checkBoxPowerOn->SetValue(Resource::getInstance()->getPowerOn());
+	_spinCtrlVolumeTts->SetValue(Resource::getInstance()->getTtsVolume()*100);
 	
 	//_listCtrlAction->EnableAlternateRowColours();
 	_listCtrlAction->AppendColumn(_("Shortcut"), wxLIST_FORMAT_LEFT, 100);
@@ -56,11 +63,6 @@ DialogPreferences::~DialogPreferences()
 bool DialogPreferences::shutdownIsToggle()const
 {
 	return _toggleBtnTurnOff->GetValue();
-}
-
-bool DialogPreferences::showIcon()const
-{
-	return _checkBoxShowMenu->GetValue();
 }
 
 void DialogPreferences::OnButtonClickActDelete(wxCommandEvent&)
@@ -173,18 +175,23 @@ void DialogPreferences::applayAndSave()
 	actionManager->removeAll();
 	//Et on ajoute les raccourcis.
 	for(auto &it: _listShortcutAction)
-		actionManager->add(it.first, Action::newAction(it.second));	
+		actionManager->add(it.first, Action::newAction(it.second));
 	
-	//Chargement de la config
+	//Affectation des valeurs dans les ressources.
+	Resource::getInstance()->setShowMenu(_checkBoxShowMenu->GetValue());
+	Resource::getInstance()->setPowerOn(_checkBoxPowerOn->GetValue());
+	Resource::getInstance()->setTtsVolume(_spinCtrlVolumeTts->GetValue()/100.);
+	
+	//On ouvre le fichier de config.
 	wxFileConfig fileConfig(	PROJECT_NAME,
 								wxEmptyString,
 								wxGetUserHome()+"/."+PROJECT_NAME);
 	fileConfig.DeleteAll();
 	
-	//Ajout du menu dans le fichier de config
-	fileConfig.Write("show_menu", _checkBoxShowMenu->GetValue());
+	//On sauvegarde les ressources.
+	Resource::getInstance()->save(fileConfig);
 	
-	//sauvegarde des action
+	//Sauvegarde des actions.
 	ActionManager::getInstance()->save(fileConfig);
 }
 

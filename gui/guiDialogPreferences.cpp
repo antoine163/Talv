@@ -18,44 +18,87 @@ GuiDialogPreferences::GuiDialogPreferences( wxWindow* parent, wxWindowID id, con
 	
 	wxNotebook* _notebook;
 	_notebook = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
-	_panelGeneral = new wxPanel( _notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	_panelSetting = new wxPanel( _notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer2;
 	bSizer2 = new wxBoxSizer( wxVERTICAL );
 	
-	_staticTextSetting = new wxStaticText( _panelGeneral, wxID_ANY, _("Setting"), wxDefaultPosition, wxDefaultSize, 0 );
-	_staticTextSetting->Wrap( -1 );
-	bSizer2->Add( _staticTextSetting, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
+	_staticTextGeneral = new wxStaticText( _panelSetting, wxID_ANY, _("General :"), wxDefaultPosition, wxDefaultSize, 0 );
+	_staticTextGeneral->Wrap( -1 );
+	bSizer2->Add( _staticTextGeneral, 0, wxALL, 5 );
 	
-	_checkBoxShowMenu = new wxCheckBox( _panelGeneral, wxID_ANY, _("Show a icon in notification bar."), wxDefaultPosition, wxDefaultSize, 0 );
+	wxBoxSizer* bSizer6;
+	bSizer6 = new wxBoxSizer( wxHORIZONTAL );
+	
+	
+	bSizer6->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	_checkBoxShowMenu = new wxCheckBox( _panelSetting, wxID_ANY, _("Show a icon in notification bar."), wxDefaultPosition, wxDefaultSize, 0 );
 	_checkBoxShowMenu->SetValue(true); 
-	bSizer2->Add( _checkBoxShowMenu, 0, wxLEFT, 20 );
+	bSizer6->Add( _checkBoxShowMenu, 20, wxRIGHT|wxLEFT, 5 );
+	
+	bSizer2->Add( bSizer6, 0, wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer7;
+	bSizer7 = new wxBoxSizer( wxHORIZONTAL );
+	
+	
+	bSizer7->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	_checkBoxPowerOn = new wxCheckBox( _panelSetting, wxID_ANY, _("Launch after power on."), wxDefaultPosition, wxDefaultSize, 0 );
+	_checkBoxPowerOn->SetValue(true); 
+	bSizer7->Add( _checkBoxPowerOn, 20, wxRIGHT|wxLEFT, 5 );
+	
+	bSizer2->Add( bSizer7, 0, wxEXPAND, 5 );
+	
+	_staticTextVolumeTts = new wxStaticText( _panelSetting, wxID_ANY, _("Volume for text to speech (Say a text) :"), wxDefaultPosition, wxDefaultSize, 0 );
+	_staticTextVolumeTts->Wrap( -1 );
+	bSizer2->Add( _staticTextVolumeTts, 0, wxALL, 5 );
+	
+	wxBoxSizer* bSizer8;
+	bSizer8 = new wxBoxSizer( wxHORIZONTAL );
+	
+	
+	bSizer8->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	_spinCtrlVolumeTts = new wxSpinCtrl( _panelSetting, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 400, 100 );
+	bSizer8->Add( _spinCtrlVolumeTts, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxLEFT, 5 );
+	
+	wxStaticText* staticTextPercent;
+	staticTextPercent = new wxStaticText( _panelSetting, wxID_ANY, _("in %"), wxDefaultPosition, wxDefaultSize, 0 );
+	staticTextPercent->Wrap( -1 );
+	bSizer8->Add( staticTextPercent, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxLEFT, 5 );
+	
+	
+	bSizer8->Add( 0, 0, 15, wxEXPAND, 5 );
+	
+	bSizer2->Add( bSizer8, 0, wxEXPAND, 5 );
 	
 	
 	bSizer2->Add( 0, 0, 1, 0, 5 );
 	
 	wxStaticLine* m_staticline1;
-	m_staticline1 = new wxStaticLine( _panelGeneral, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
+	m_staticline1 = new wxStaticLine( _panelSetting, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 	bSizer2->Add( m_staticline1, 0, wxEXPAND | wxALL, 5 );
 	
 	wxBoxSizer* bSizer3;
 	bSizer3 = new wxBoxSizer( wxHORIZONTAL );
 	
-	_staticTextShutdown = new wxStaticText( _panelGeneral, wxID_ANY, _("Shutdown this application"), wxDefaultPosition, wxDefaultSize, 0 );
+	_staticTextShutdown = new wxStaticText( _panelSetting, wxID_ANY, _("Shutdown this application"), wxDefaultPosition, wxDefaultSize, 0 );
 	_staticTextShutdown->Wrap( -1 );
 	bSizer3->Add( _staticTextShutdown, 0, wxALL, 5 );
 	
 	
 	bSizer3->Add( 0, 0, 1, wxEXPAND, 5 );
 	
-	_toggleBtnTurnOff = new wxToggleButton( _panelGeneral, wxID_ANY, _("Turn off"), wxDefaultPosition, wxDefaultSize, 0 );
+	_toggleBtnTurnOff = new wxToggleButton( _panelSetting, wxID_ANY, _("Turn off"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer3->Add( _toggleBtnTurnOff, 0, wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
 	bSizer2->Add( bSizer3, 0, wxEXPAND, 5 );
 	
-	_panelGeneral->SetSizer( bSizer2 );
-	_panelGeneral->Layout();
-	bSizer2->Fit( _panelGeneral );
-	_notebook->AddPage( _panelGeneral, _("General"), true );
+	_panelSetting->SetSizer( bSizer2 );
+	_panelSetting->Layout();
+	bSizer2->Fit( _panelSetting );
+	_notebook->AddPage( _panelSetting, _("Setting"), true );
 	_panelShortcut = new wxPanel( _notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer4;
 	bSizer4 = new wxBoxSizer( wxVERTICAL );

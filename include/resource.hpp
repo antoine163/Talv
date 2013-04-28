@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.12
+//! \version 0.13
 //! \date 30.03.2013
 //!
 //! ********************************************************************
@@ -21,6 +21,7 @@
 #include <wx/string.h>
 #include <wx/arrstr.h>
 #include <wx/buffer.h>
+#include <wx/fileconf.h>
 #include <map>
 
 #if defined(__UNIX__)
@@ -78,6 +79,15 @@ class Resource : public Singleton<Resource>
 		void setTtsVolume(double volume);
 		double getTtsVolume();
 		
+		void setShowMenu(bool showMenu);
+		bool getShowMenu();
+		
+		void setPowerOn(bool powerOn);
+		bool getPowerOn();
+		
+		void load(wxFileConfig& fileConfig);
+		void save(wxFileConfig& fileConfig)const;
+		
 	
 	private:
 		Resource();
@@ -88,6 +98,8 @@ class Resource : public Singleton<Resource>
 		//! \brief Liste des nom d'action en fonction de leur nom de type <actionName, actTypeName>.
 		std::map<wxString, wxString> _actions;
 		
+		bool _showMenu;
+		bool _powerOn;
 		double _ttsVolume;
 		
 		#if defined(__UNIX__)

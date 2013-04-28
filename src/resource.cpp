@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.12
+//! \version 0.13
 //! \date 30.03.2013
 //!
 //! ********************************************************************
@@ -36,6 +36,9 @@ Resource::Resource()
 		_pipeline = nullptr;
 	#elif defined(__WXMSW__)
 	#endif
+	
+	//Le menu doit être afficher (par défaut)
+	_showMenu = true;
 	
 	//Volume 100%
 	_ttsVolume = 1.0;
@@ -360,6 +363,27 @@ void Resource::Tts(wxString const& text, wxString const& lg)
 	gst_element_set_state(_pipeline, GST_STATE_PLAYING);
 }
 
+void Resource::setShowMenu(bool showMenu)
+{
+	_showMenu = showMenu;
+}
+
+bool Resource::getShowMenu()
+{
+	return _showMenu;
+}
+
+// \todo a compléter pour réellement le prendre en compte coter os.
+void Resource::setPowerOn(bool powerOn)
+{
+	_powerOn = powerOn;
+}
+
+bool Resource::getPowerOn()
+{
+	return _powerOn;
+}
+
 void Resource::setTtsVolume(double volume)
 {
 	_ttsVolume = volume;
@@ -368,4 +392,18 @@ void Resource::setTtsVolume(double volume)
 double Resource::getTtsVolume()
 {
 	return _ttsVolume;
+}
+
+void Resource::load(wxFileConfig& fileConfig)
+{
+	fileConfig.Read("show_menu", &_showMenu);
+	fileConfig.Read("power_on", &_powerOn);
+	fileConfig.Read("tts_volume", &_ttsVolume);
+}
+
+void Resource::save(wxFileConfig& fileConfig)const
+{
+	fileConfig.Write("show_menu", _showMenu);
+	fileConfig.Write("power_on", _powerOn);
+	fileConfig.Write("tts_volume", _ttsVolume);
 }

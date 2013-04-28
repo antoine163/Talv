@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.3
+//! \version 1.4
 //! \date 12.12.12
 //!
 //! ********************************************************************
@@ -23,8 +23,6 @@
 
 //TEST
 #include <iostream>
-#include "action/actTranslation.hpp"
-#include "shortcut.hpp"
 
 // *********************************************************************
 // Class App
@@ -43,11 +41,12 @@ bool App::OnInit()
 	wxFileConfig fileConfig(	PROJECT_NAME,
 								wxEmptyString,
 								wxGetUserHome()+"/."+PROJECT_NAME);
-	bool showMenu = true;
-	fileConfig.Read("show_menu", &showMenu);
+	
+	//Chargement des ressource se trouvent dans le fichier de config.
+	Resource::getInstance()->load(fileConfig);
 	
 	//Création du menu ou pas.
-	if(showMenu)
+	if(Resource::getInstance()->getShowMenu())
 		creatMenuItem();
 	else
 		deleteMenuItem();
@@ -99,6 +98,7 @@ void App::deleteMenuItem()
 	}
 }
 
+//! \bug Segmentation fault quand appelle de deleteMenuItem
 void App::OnPreferences(wxCommandEvent&)
 {
 	static DialogPreferences *dlg = nullptr;
@@ -123,7 +123,7 @@ void App::OnPreferences(wxCommandEvent&)
 				ExitMainLoop();
 				
 			//Vérification si on doit afficher ou pas l'icône dans la zone de notification.
-			if(dlg->showIcon())
+			if(Resource::getInstance()->getShowMenu())
 				creatMenuItem();
 			else
 				deleteMenuItem();

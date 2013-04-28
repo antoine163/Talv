@@ -17,9 +17,10 @@
 #include <wx/colour.h>
 #include <wx/settings.h>
 #include <wx/checkbox.h>
+#include <wx/sizer.h>
+#include <wx/spinctrl.h>
 #include <wx/statline.h>
 #include <wx/tglbtn.h>
-#include <wx/sizer.h>
 #include <wx/panel.h>
 #include <wx/bitmap.h>
 #include <wx/image.h>
@@ -41,9 +42,16 @@ class GuiDialogPreferences : public wxDialog
 	private:
 	
 	protected:
-		wxPanel* _panelGeneral;
-		wxStaticText* _staticTextSetting;
+		wxPanel* _panelSetting;
+		wxStaticText* _staticTextGeneral;
+		
 		wxCheckBox* _checkBoxShowMenu;
+		
+		wxCheckBox* _checkBoxPowerOn;
+		wxStaticText* _staticTextVolumeTts;
+		
+		wxSpinCtrl* _spinCtrlVolumeTts;
+		
 		wxStaticText* _staticTextShutdown;
 		wxToggleButton* _toggleBtnTurnOff;
 		wxPanel* _panelShortcut;
