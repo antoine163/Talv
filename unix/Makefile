@@ -3,7 +3,7 @@
 #	Makfile for Linux.
 #
 # - author 	:	Antoine Maleyrie : antoine.maleyrie@gmail.com
-# - version	:	0.7
+# - version	:	0.8
 # - date 	:	10.03.2013
 #
 ########################################################################
@@ -29,7 +29,7 @@ endif
 # Flags de linkage pour les libs.
 ########################################################################
 # Flags pour wxWidgets
-LD_FLAGS+=`wx-config-2.9 --libs base,core,adv,net`
+LD_FLAGS+=`wx-config-2.9 --libs base,core,adv,net,media`
 # Flags pour la xlib
 LD_FLAGS+=-lX11
 # Flags pour libnotify (si utiliser)
