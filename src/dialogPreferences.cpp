@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.9
+//! \version 1.10
 //! \date 02.01.2013
 //!
 //! ********************************************************************
@@ -40,7 +40,7 @@ DialogPreferences::DialogPreferences()
 	//Initialise les valeurs
 	_checkBoxShowMenu->SetValue(Resource::getInstance()->getShowMenu());
 	_checkBoxPowerOn->SetValue(Resource::getInstance()->getPowerOn());
-	_spinCtrlVolumeTts->SetValue(Resource::getInstance()->getTtsVolume()*100);
+	_sliderTts->SetValue(Resource::getInstance()->getTtsVolume()*100);
 	
 	//_listCtrlAction->EnableAlternateRowColours();
 	_listCtrlAction->AppendColumn(_("Shortcut"), wxLIST_FORMAT_LEFT, 100);
@@ -180,7 +180,7 @@ void DialogPreferences::applayAndSave()
 	//Affectation des valeurs dans les ressources.
 	Resource::getInstance()->setShowMenu(_checkBoxShowMenu->GetValue());
 	Resource::getInstance()->setPowerOn(_checkBoxPowerOn->GetValue());
-	Resource::getInstance()->setTtsVolume(_spinCtrlVolumeTts->GetValue()/100.);
+	Resource::getInstance()->setTtsVolume(_sliderTts->GetValue()/100.);
 	
 	//On ouvre le fichier de config.
 	wxFileConfig fileConfig(	PROJECT_NAME,

@@ -18,7 +18,7 @@
 #include <wx/settings.h>
 #include <wx/checkbox.h>
 #include <wx/sizer.h>
-#include <wx/spinctrl.h>
+#include <wx/slider.h>
 #include <wx/statline.h>
 #include <wx/tglbtn.h>
 #include <wx/panel.h>
@@ -50,8 +50,7 @@ class GuiDialogPreferences : public wxDialog
 		wxCheckBox* _checkBoxPowerOn;
 		wxStaticText* _staticTextVolumeTts;
 		
-		wxSpinCtrl* _spinCtrlVolumeTts;
-		
+		wxSlider* _sliderTts;
 		wxStaticText* _staticTextShutdown;
 		wxToggleButton* _toggleBtnTurnOff;
 		wxPanel* _panelShortcut;
