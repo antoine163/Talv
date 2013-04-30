@@ -318,6 +318,7 @@ wxString Resource::getTranslations(
 	return mainTranslate;
 }
 
+//! \todo ajouter une timeout  
 void Resource::downloadFromUrl(wxMemoryBuffer* buffer, wxString const& sUrl)
 {
 	wxURL url(sUrl);

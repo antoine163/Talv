@@ -19,6 +19,14 @@ PROJECT_VERSION=1.0
 
 
 ########################################################################
+# Version de wxWidgets à utiliser.
+# Valeur possible; '2.9' ou une autre valeur. Dans ce dernier cas
+# la version utiliser sera celle retourner par 'wx-config --version'
+########################################################################
+WX_VERSION=2.9
+
+
+########################################################################
 # Détection de l'os (Pas de détection pour le moment, mais un simple
 # passage d'augment permer de compiler pour les différence os supporter.
 # ex pour windows: make release OS_NAME=msw).

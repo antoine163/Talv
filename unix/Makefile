@@ -3,7 +3,7 @@
 #	Makfile for Linux.
 #
 # - author 	:	Antoine Maleyrie : antoine.maleyrie@gmail.com
-# - version	:	0.8
+# - version	:	0.9
 # - date 	:	10.03.2013
 #
 ########################################################################
@@ -15,10 +15,22 @@ EXEC_NAME=$(PROJECT_NAME)
 
 
 ########################################################################
+# Préparation du wx-config
+########################################################################
+ifeq ($(WX_VERSION), 2.9)
+WX_CONFIG=wx-config-2.9
+else
+WX_CONFIG=wx-config
+endif
+
+
+
+########################################################################
 # Flags de compilation pour les libs.
 ########################################################################
 # Flags pour wxWidgets
-CXX_FLAGS+=`wx-config-2.9 --cxxflags`
+CXX_FLAGS+=`$(WX_CONFIG) --cxxflags`
+# Flags pour gstreamer
 CXX_FLAGS+=`pkg-config --cflags gstreamer-1.0`
 # Flags libnotify (si utiliser)
 ifeq ($(EMULATE_NOTIFICATION), no)
@@ -30,7 +42,8 @@ endif
 # Flags de linkage pour les libs.
 ########################################################################
 # Flags pour wxWidgets
-LD_FLAGS+=`wx-config-2.9 --libs base,core,adv,net`
+LD_FLAGS+=`$(WX_CONFIG) --libs base,core,adv,net`
+# Flags pour gstreamer
 LD_FLAGS+=`pkg-config --libs gstreamer-1.0`
 # Flags pour la xlib
 LD_FLAGS+=-lX11
