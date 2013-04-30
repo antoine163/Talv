@@ -15,21 +15,10 @@ EXEC_NAME=$(PROJECT_NAME)
 
 
 ########################################################################
-# Préparation du wx-config
-########################################################################
-ifeq ($(WX_VERSION), 2.9)
-WX_CONFIG=wx-config-2.9
-else
-WX_CONFIG=wx-config
-endif
-
-
-
-########################################################################
 # Flags de compilation pour les libs.
 ########################################################################
 # Flags pour wxWidgets
-CXX_FLAGS+=`$(WX_CONFIG) --cxxflags`
+CXX_FLAGS+=`wx-config-2.9 --cxxflags`
 # Flags pour gstreamer
 CXX_FLAGS+=`pkg-config --cflags gstreamer-1.0`
 # Flags libnotify (si utiliser)
@@ -42,7 +31,7 @@ endif
 # Flags de linkage pour les libs.
 ########################################################################
 # Flags pour wxWidgets
-LD_FLAGS+=`$(WX_CONFIG) --libs base,core,adv,net`
+LD_FLAGS+=`wx-config-2.9 --libs base,core,adv,net`
 # Flags pour gstreamer
 LD_FLAGS+=`pkg-config --libs gstreamer-1.0`
 # Flags pour la xlib
