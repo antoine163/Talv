@@ -69,7 +69,7 @@ GuiDialogActionPreferences::GuiDialogActionPreferences( wxWindow* parent, wxWind
 	
 	bSizer6->Add( bSizer7, 1, wxALIGN_CENTER_VERTICAL, 5 );
 	
-	_staticTextDescription = new wxStaticText( this, wxID_ANY, _("..."), wxDefaultPosition, wxDefaultSize, 0 );
+	_staticTextDescription = new wxStaticText( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	_staticTextDescription->Wrap( -1 );
 	bSizer6->Add( _staticTextDescription, 4, wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
 	

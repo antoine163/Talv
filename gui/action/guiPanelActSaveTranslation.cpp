@@ -152,11 +152,11 @@ GuiDialogPickMainTranslation::GuiDialogPickMainTranslation( wxWindow* parent, wx
 	wxBoxSizer* bSizer2;
 	bSizer2 = new wxBoxSizer( wxHORIZONTAL );
 	
-	_staticText = new wxStaticText( this, wxID_ANY, _("Text"), wxDefaultPosition, wxDefaultSize, 0 );
+	_staticText = new wxStaticText( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	_staticText->Wrap( -1 );
 	bSizer2->Add( _staticText, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	_buttonMainTranslation = new wxButton( this, wxID_ANY, _("Main translation"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT|wxNO_BORDER );
+	_buttonMainTranslation = new wxButton( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT|wxNO_BORDER );
 	bSizer2->Add( _buttonMainTranslation, 1, wxALL, 5 );
 	
 	bSizer1->Add( bSizer2, 0, wxEXPAND, 5 );
@@ -207,7 +207,7 @@ GuiPanelTranslation::GuiPanelTranslation( wxWindow* parent, wxWindowID id, const
 	wxBoxSizer* bSizer1;
 	bSizer1 = new wxBoxSizer( wxVERTICAL );
 	
-	_staticTextKind = new wxStaticText( this, wxID_ANY, _("Kind :"), wxDefaultPosition, wxDefaultSize, 0 );
+	_staticTextKind = new wxStaticText( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	_staticTextKind->Wrap( -1 );
 	bSizer1->Add( _staticTextKind, 0, wxALL, 5 );
 	

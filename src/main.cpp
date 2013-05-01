@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.4
+//! \version 1.5
 //! \date 12.12.12
 //!
 //! ********************************************************************
@@ -37,6 +37,10 @@ bool App::OnInit()
 	SetExitOnFrameDelete(false);
 	_menuIcon = nullptr;
 	
+	//On charge le langage par défaut de l'os.
+	_locale = new wxLocale(wxLANGUAGE_DEFAULT);
+	_locale->AddCatalog(PROJECT_NAME);
+	
 	//Chargement de la config
 	wxFileConfig fileConfig(	PROJECT_NAME,
 								wxEmptyString,
@@ -67,7 +71,10 @@ int App::OnExit()
 	
 	//Suppression des ressources.
 	Resource::kill();
-
+	
+	//Suppression du module de la traduction de l'application.
+	delete _locale;
+	
 	return 0;
 }
 
@@ -154,19 +161,19 @@ void App::OnAbout(wxCommandEvent&)
 		info.SetVersion(PROJECT_VERSION);
 		
 		wxString msg;
-		msg << _("This software using google translate to translate a word or sentence from your clipboard.");
-		msg << _("\n\nBuild on ");
+		msg << _("This software using google translate to translate a word or sentence from your clipboard.") << "\n\n";
+		msg << _("Build on") << " ";
 		#if defined(__UNIX__)
-		msg << _("Unix ");
+		msg << "Unix";
 		#elif defined(__WXMSW__)
-		msg << _("Windows ");
+		msg << "Windows";
 		#endif
 		#ifdef __i386
-		msg << _("in i386\n");
+		msg << " " << _("in") << " " << " i386\n";
 		#elif __amd64
-		msg << _("in x86_64\n");
+		msg << " " << _("in") << " " << " x86_64\n";
 		#endif
-		msg << _("Date : ") << __DATE__;
+		msg << _("Date") <<  " : " << __DATE__;
 		
 		info.SetDescription(msg);
 		info.SetCopyright("(C) 2012-1013");

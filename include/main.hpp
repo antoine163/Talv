@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.4
+//! \version 1.5
 //! \date 12.12.12
 //!
 //! ********************************************************************
@@ -17,6 +17,7 @@
 #define MAIN_H
 
 #include <wx/app.h>
+#include <wx/intl.h>
 
 #include "menuIcon.hpp"
 #include "actionManager.hpp"
@@ -55,7 +56,9 @@ class App : public wxApp
 	
 	private:
 		//! \brief Menu dans la zone de notification.
-		MenuIcon *_menuIcon;
+		MenuIcon* _menuIcon;
+		//! \brief Pour la traduction de l'application.
+		wxLocale* _locale;
 };
 
 DECLARE_APP(App);
