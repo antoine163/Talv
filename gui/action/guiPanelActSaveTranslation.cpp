@@ -73,7 +73,7 @@ GuiPanelActSaveTranslation::GuiPanelActSaveTranslation( wxWindow* parent, wxWind
 	bSizer6 = new wxBoxSizer( wxHORIZONTAL );
 	
 	wxStaticText* staticTextFile;
-	staticTextFile = new wxStaticText( this, wxID_ANY, _("Pick a file for save save the translations :"), wxDefaultPosition, wxDefaultSize, 0 );
+	staticTextFile = new wxStaticText( this, wxID_ANY, _("Pick a file for save the translations :"), wxDefaultPosition, wxDefaultSize, 0 );
 	staticTextFile->Wrap( -1 );
 	bSizer6->Add( staticTextFile, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT|wxTOP|wxBOTTOM|wxLEFT, 5 );
 	

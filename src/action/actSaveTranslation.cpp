@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.13
+//! \version 0.14
 //! \date 31.03.2013
 //!
 //! ********************************************************************
@@ -97,11 +97,10 @@ void PanelActSaveTranslation::OnOKButtonClick(wxCommandEvent& event)
 		if(tmpFileName.Exists() && tmpFileName != _act->_fileName)
 		{
 			//Si il existe, on demande si il faut remplacer le fichier.
-			wxString message = _("The file \"") + tmpFileName.GetFullPath() + _("\" already exists.\n") + _("Do you want delete this file?");
-			wxMessageDialog *dlg = new wxMessageDialog(this, message, _("Delete a file"), wxYES_NO|wxICON_QUESTION|wxICON_EXCLAMATION|wxCENTRE);
-			if(dlg->ShowModal() != wxID_YES)
+			wxString message = wxString::Format(_("The file '%s' already exists.\nDo you want delete this file?"), tmpFileName.GetFullPath());
+			wxMessageDialog dlg(this, message, _("Delete a file"), wxYES_NO|wxICON_QUESTION|wxICON_EXCLAMATION|wxCENTRE);
+			if(dlg.ShowModal() != wxID_YES)
 			{
-				dlg->Destroy();
 				return;
 			}
 			else
@@ -109,10 +108,8 @@ void PanelActSaveTranslation::OnOKButtonClick(wxCommandEvent& event)
 				//Suppression du fichier.
 				if(!wxRemoveFile(_filePickerFile->GetPath()))
 				{
-					wxLogError(_("Could not remove the file : ")+tmpFileName.GetFullPath());
+					wxLogError(wxString::Format(_("Could not remove the file : '%s'"), tmpFileName.GetFullPath()));
 				}
-				
-				dlg->Destroy();
 			}
 		}
 	}
@@ -309,11 +306,11 @@ void ActSaveTranslationFile::save(	wxString text,
 		//On le crée
 		_file.Create(_fileName.GetFullPath());
 		//On ajout la première ligne.
-		_file.AddLine(_("text")+","+_("translation"));
+		_file.AddLine(_("text")+','+_("translation"));
 	}
 	
 	//Écriture des données dans le fichier
-	_file.AddLine(text+","+mainTranslate);
+	_file.AddLine(text+','+mainTranslate);
 	_file.Write();
 }
 
@@ -339,7 +336,7 @@ void ActSaveTranslationFile::save(
 		//On le crée
 		_file.Create(_fileName.GetFullPath());
 		//On ajout la première ligne.
-		_file.AddLine(_("text")+","+_("translation"));
+		_file.AddLine(_("text")+','+_("translation"));
 		_file.Write();
 		
 		_FirstLine.Add(_("text"));
@@ -497,7 +494,7 @@ void ActSaveTranslation::execute()
 	{
 		if(file.exist(clipboard))
 		{
-			Notification::getInstance()->notify(_("Save clipboard translation"), _("The text is already existing in ")+_fileName.GetFullPath());
+			Notification::getInstance()->notify(_("Save clipboard translation"), wxString::Format(_("The text is already existing in '%s'"),_fileName.GetFullPath()));
 			return;
 		}
 	}
@@ -568,7 +565,7 @@ void ActSaveTranslation::actSave(wxFileConfig & fileConfig)const
 wxString ActSaveTranslation::getStringPreferences()const
 {
 	return 	Resource::getInstance()->abbreviationToLanguage(_lgsrc) +
-			_(" to ") +
+			' ' + _("to") + ' ' +
 			Resource::getInstance()->abbreviationToLanguage(_lgto) +
-			_(" in ") + _fileName.GetFullPath();
+			' ' + _("in") + ' ' + _fileName.GetFullPath();
 }

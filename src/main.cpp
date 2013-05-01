@@ -106,6 +106,7 @@ void App::deleteMenuItem()
 }
 
 //! \bug Segmentation fault quand appelle de deleteMenuItem
+//! \todo Désactiver le menu
 void App::OnPreferences(wxCommandEvent&)
 {
 	static DialogPreferences *dlg = nullptr;
@@ -153,6 +154,7 @@ void App::OnEnable(wxCommandEvent& event)
 	ActionManager::getInstance()->enable(event.IsChecked());
 }
 
+//! \todo Désactiver le menu
 void App::OnAbout(wxCommandEvent&)
 {
 		wxAboutDialogInfo info;
@@ -161,7 +163,7 @@ void App::OnAbout(wxCommandEvent&)
 		info.SetVersion(PROJECT_VERSION);
 		
 		wxString msg;
-		msg << _("This software using google translate to translate a word or sentence from your clipboard.") << "\n\n";
+		msg << _("This software is help for Internationalization.") << "\n\n";
 		msg << _("Build on") << " ";
 		#if defined(__UNIX__)
 		msg << "Unix";

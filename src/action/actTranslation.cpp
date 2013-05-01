@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.11
+//! \version 0.12
 //! \date 17.03.2013
 //!
 //! ********************************************************************
@@ -126,7 +126,7 @@ void ActTranslation::execute()
 	
 	//On affiche la traduction
 	Notification::getInstance()->notify(
-		_("Clipboard translation in ")+Resource::getInstance()->abbreviationToLanguage(_lgto)+" :", trans);
+		wxString::Format(_("Clipboard translation in %s :"), Resource::getInstance()->abbreviationToLanguage(_lgto)), trans);
 }
 
 wxPanel* ActTranslation::getPanelPreferences(wxWindow* parent, wxButton* buttonOK)
@@ -150,6 +150,6 @@ void ActTranslation::actSave(wxFileConfig & fileConfig)const
 wxString ActTranslation::getStringPreferences()const
 {
 	return 	Resource::getInstance()->abbreviationToLanguage(_lgsrc) +
-			_(" to ") +
+			' ' + _("to") + ' ' +
 			Resource::getInstance()->abbreviationToLanguage(_lgto);
 }

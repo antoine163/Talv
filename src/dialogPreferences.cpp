@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.10
+//! \version 1.11
 //! \date 02.01.2013
 //!
 //! ********************************************************************
@@ -35,7 +35,7 @@ DialogPreferences::DialogPreferences()
     //Magnifier 
     _staticTextGeneral->SetLabelMarkup("<b>"+_("General :")+"</b>");
     _staticTextVolumeTts->SetLabelMarkup("<b>"+_("Volume for text to speech (Say a text) :")+"</b>");
-	_staticTextShutdown->SetLabelMarkup("<b>"+_("Shutdown this application")+"</b>");
+	_staticTextShutdown->SetLabelMarkup("<b>"+_("Shutdown this application :")+"</b>");
 	
 	//Initialise les valeurs
 	_checkBoxShowMenu->SetValue(Resource::getInstance()->getShowMenu());

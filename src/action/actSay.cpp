@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.1
+//! \version 0.2
 //! \date 25.04.2013
 //!
 //! ********************************************************************
@@ -102,7 +102,7 @@ wxPanel* ActSay::getPanelPreferences(wxWindow* parent, wxButton* buttonOK)
 
 wxString ActSay::getStringPreferences()const
 {
-	return _("Say Text in ") + Resource::getInstance()->abbreviationToLanguage(_lgsrc);
+	return wxString::Format(_("Say a text in %s"), Resource::getInstance()->abbreviationToLanguage(_lgsrc));
 }
 
 void ActSay::actLoad(wxFileConfig& fileConfig)

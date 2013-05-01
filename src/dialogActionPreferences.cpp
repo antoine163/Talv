@@ -5,7 +5,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.6
+//! \version 1.7
 //! \date 02.01.2013
 //!
 //! ********************************************************************
@@ -196,7 +196,7 @@ void DialogActionPreferences::updateTextCtrlChortcut(wxChar key)
 			_textCtrlChortcut->SetValue(strShortcut);
 		}
 		else if(strShortcut.IsEmpty())
-			_textCtrlChortcut->SetValue(_("Press a key modifier and a key"));
+			_textCtrlChortcut->SetValue(_("Press your shortcut."));
 		else
 		{
 			strShortcut.MakeLower();
@@ -209,14 +209,14 @@ void DialogActionPreferences::OnLeftDown(wxMouseEvent&)
 {
 	_shortKeyIsValide = false;
 	_textCtrlChortcut->SetForegroundColour( wxSystemSettings::GetColour(wxSYS_COLOUR_GRAYTEXT));
-	_textCtrlChortcut->SetValue(_("Press a key modifier and a key"));
+	_textCtrlChortcut->SetValue(_("Press your shortcut."));
 	_textCtrlChortcut->SetFocus();
 }
 
 void DialogActionPreferences::OnKillFocus(wxFocusEvent&)
 {
 	if(!_shortKeyIsValide)
-		_textCtrlChortcut->SetValue(_("Click here"));
+		_textCtrlChortcut->SetValue(_("Click here!"));
 }
 
 void DialogActionPreferences::OnChoiceAction(wxCommandEvent& event)
