@@ -3,7 +3,7 @@
 #	Makfile.
 #
 # - author 	:	Antoine Maleyrie : antoine.maleyrie@gmail.com
-# - version	:	1.3
+# - version	:	1.4
 # - date 	:	24/11/2012
 #
 ########################################################################
@@ -24,17 +24,6 @@ PROJECT_VERSION=1.0
 # ex pour windows: make release OS_NAME=msw).
 ########################################################################
 OS_NAME=unix
-
-
-########################################################################
-# Actions à compiler.
-########################################################################
-#Traduction du mot/phrase
-ACT_TRANSLATION=yes
-#Sovgarde de la raduction du mot/phrase
-ACT_SAVE_TRANSLATION=yes
-#Dire le mot/phrase
-ACT_SAY=yes
 
 
 ########################################################################

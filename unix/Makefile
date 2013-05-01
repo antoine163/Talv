@@ -3,7 +3,7 @@
 #	Makfile for Linux.
 #
 # - author 	:	Antoine Maleyrie : antoine.maleyrie@gmail.com
-# - version	:	0.9
+# - version	:	0.10
 # - date 	:	10.03.2013
 #
 ########################################################################
@@ -63,18 +63,12 @@ ifeq ($(EMULATE_NOTIFICATION), yes)
 SRC+=../gui/guiDialogNotification.cpp
 endif
 #Action
-ifeq ($(ACT_TRANSLATION), yes)
 SRC+=../src/action/actTranslation.cpp
 SRC+=../gui/action/guiPanelActTranslation.cpp
-endif
-ifeq ($(ACT_SAY), yes)
 SRC+=../src/action/actSay.cpp
 SRC+=../gui/action/guiPanelActSay.cpp
-endif
-ifeq ($(ACT_SAVE_TRANSLATION), yes)
 SRC+=../src/action/actSaveTranslation.cpp
 SRC+=../gui/action/guiPanelActSaveTranslation.cpp
-endif
 #GUI
 SRC+=../gui/guiDialogPreferences.cpp
 SRC+=../src/dialogPreferences.cpp
