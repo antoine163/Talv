@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.12
+//! \version 0.13
 //! \date 17.03.2013
 //!
 //! ********************************************************************
@@ -111,18 +111,22 @@ void ActTranslation::execute()
 		Notification::getInstance()->notify(_("Translate clipboard"), _("Sorry, not translation."));
 		return;
 	}
+	
+	//On incrément le compteur
+	_counter[clipboard]++;
+	
 	//On mes en forme la traduction dans un wxString
-		wxString trans;
-		trans << "\n==> "<< mainTranslate;
-		
-		for(auto &it: translations)
-		{		
-			trans << "\n\n- " << it.first;
-			for(auto &itt: it.second)
-			{
-				trans << "\n\t" << itt;
-			}
+	wxString trans;
+	trans << "\n==> " << mainTranslate << " (" << _counter[clipboard] << ")";
+	
+	for(auto &it: translations)
+	{		
+		trans << "\n\n- " << it.first;
+		for(auto &itt: it.second)
+		{
+			trans << "\n\t" << itt;
 		}
+	}
 	
 	//On affiche la traduction
 	Notification::getInstance()->notify(

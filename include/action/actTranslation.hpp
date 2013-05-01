@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.12
+//! \version 0.13
 //! \date 17.03.2013
 //!
 //! ********************************************************************
@@ -18,6 +18,8 @@
 
 #include "action.hpp"
 #include "action/guiPanelActTranslation.h"
+
+#include <map>
 
 // *********************************************************************
 // Class PanelActTranslation
@@ -95,13 +97,14 @@ class ActTranslation : public Action
 		//! \param fileConfig fichier où l'action doit être sauvegarder.
 		void actSave(wxFileConfig & fileConfig)const;
 		
-		
-	
 	private:
 		//! \brief Lange source.
 		wxString _lgsrc;
 		//! \brief Lange de traduction.
 		wxString _lgto;
+		
+		//! \brief Comptage des même traductions
+		std::map<wxString, unsigned int> _counter;
 };
 
 #endif //ACTION_TRANSLATION_H
