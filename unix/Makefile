@@ -3,7 +3,7 @@
 #	Makfile for Linux.
 #
 # - author 	:	Antoine Maleyrie : antoine.maleyrie@gmail.com
-# - version	:	0.10
+# - version	:	0.11
 # - date 	:	10.03.2013
 #
 ########################################################################
@@ -56,6 +56,8 @@ SRC+=../src/menuIcon.cpp
 SRC+=../src/shortcut.cpp
 SRC+=../src/actionManager.cpp
 SRC+=../src/action.cpp
+SRC+=../src/listManager.cpp
+SRC+=../src/list.cpp
 SRC+=../src/resource.cpp
 #Notification
 SRC+=../src/notification.cpp
