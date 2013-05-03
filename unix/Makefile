@@ -56,7 +56,6 @@ SRC+=../src/menuIcon.cpp
 SRC+=../src/shortcut.cpp
 SRC+=../src/actionManager.cpp
 SRC+=../src/action.cpp
-SRC+=../src/list.cpp
 SRC+=../src/resource.cpp
 #Notification
 SRC+=../src/notification.cpp
