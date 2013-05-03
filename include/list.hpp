@@ -41,6 +41,8 @@ class List
 		//! \brief destructeur.
 		virtual ~List();
 		
+		wxString const& getName()const;
+		
 		//! \brief Pour sauvegarder un texte et ça traduction dans la liste.
 		//! \param text le texte a sauvegarder.
 		//! \param mainTranslate la traduction a sauvegarder.
@@ -57,24 +59,24 @@ class List
 					wxString mainTranslate,
 					std::map<wxString, wxArrayString> const& translations);
 					
-		bool getTranslates(	wxString const& text,
-							wxString* mainTranslate);
+		//bool getTranslates(	wxString const& text,
+							//wxString* mainTranslate);
 					
-		bool getTranslates(	wxString const& text,
-							wxString* mainTranslate,
-							std::map<wxString, wxArrayString>* translations);
+		//bool getTranslates(	wxString const& text,
+							//wxString* mainTranslate,
+							//std::map<wxString, wxArrayString>* translations);
 					
-		bool getTranslates(	int index,
-							wxString* mainTranslate);
+		//bool getTranslates(	int index,
+							//wxString* mainTranslate);
 					
-		bool getTranslates(	int index,
-							wxString* mainTranslate,
-							std::map<wxString, wxArrayString>* translations);
+		//bool getTranslates(	int index,
+							//wxString* mainTranslate,
+							//std::map<wxString, wxArrayString>* translations);
 							
-		Knowledge_e getKnowledge(wxString const& text);
-		bool setKnowledge(wxString const& text, Knowledge_e knowledge);
+		//Knowledge_e getKnowledge(wxString const& text);
+		//bool setKnowledge(wxString const& text, Knowledge_e knowledge);
 		
-		int getNumberTextByKnowledge(Knowledge_e level);
+		//int getNumberTextByKnowledge(Knowledge_e level);
 	
 		//! \brief Pour connaître l'existence d'un texte dans la liste.
 		//! \param text a vérifier.
@@ -85,6 +87,7 @@ class List
 		
 	private:
 		wxFileName _name;
+		
 		wxString _lgsrc;
 		wxString _lgto;
 };

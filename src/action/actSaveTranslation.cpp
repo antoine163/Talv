@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.15
+//! \version 0.16
 //! \date 31.03.2013
 //!
 //! ********************************************************************
@@ -47,20 +47,15 @@ PanelActSaveTranslation::PanelActSaveTranslation(wxWindow* parent, wxButton* but
 	n = _choiceLanguageOfTranslation->FindString(languages.at(_act->_lgto));
 	_choiceLanguageOfTranslation->SetSelection(n);
 	
-	//Sélectionne le bon fichier.
-	_filePickerFile->SetFileName(_act->_fileName);
+	//Affiche le non de la liste si il y une liste.
+	if(_act->_list != nullptr)
+		(*_textCtrlList) << _act->_list->getName();
 	
 	//Tout sauvegarder ?
 	if(_act->_saveAll)
 		_radioBtnSaveAllTranslations->SetValue(true);
 	else
 		_radioBtnSaveATranslation->SetValue(true);
-		
-	//Pas de doublon
-	if(_act->_noDoublon)
-		_checkBoxNoDoublon->SetValue(true);
-	else
-		_checkBoxNoDoublon->SetValue(false);
 		
 	//Dessiner un dialogue
 	if(_act->_showDialog)
@@ -78,41 +73,43 @@ PanelActSaveTranslation::~PanelActSaveTranslation()
 	_buttonOK->Unbind(wxEVT_COMMAND_BUTTON_CLICKED, &PanelActSaveTranslation::OnOKButtonClick, this, _buttonOK->GetId());
 }
 
+//! \todo revoir pour prendre en compte la liste.
 void PanelActSaveTranslation::OnOKButtonClick(wxCommandEvent& event)
 {
-	//Vérifie si il y a un fichier de sélectionner.
-	if(_filePickerFile->GetFileName().GetFullName().IsEmpty())
+	//Récupére le nom de la liste
+	wxString tmpListName = _textCtrlList->GetLineText(0);
+	
+	//Vérifie si le nom de la liste et valide.
+	if(tmpListName.IsEmpty())
 	{
-		wxMessageBox(_("The name of file is empty."), _("Name file invalid"), wxOK|wxICON_EXCLAMATION|wxCENTRE, this);
+		wxMessageBox(_("The name of list is empty."), _("Name list invalid"), wxOK|wxICON_EXCLAMATION|wxCENTRE, this);
 		return;
 	}
 	
-	//Récupérer le nom du fichier.
-	wxFileName tmpFileName = _filePickerFile->GetFileName();
-		
-	//Si fichier a été modifier ?
-	if(_act->_fileName != tmpFileName)
-	{
-		//Le fichier est déjà existent ?
-		if(tmpFileName.Exists() && tmpFileName != _act->_fileName)
-		{
-			//Si il existe, on demande si il faut remplacer le fichier.
-			wxString message = wxString::Format(_("The file '%s' already exists.\nDo you want delete this file?"), tmpFileName.GetFullPath());
-			wxMessageDialog dlg(this, message, _("Delete a file"), wxYES_NO|wxICON_QUESTION|wxICON_EXCLAMATION|wxCENTRE);
-			if(dlg.ShowModal() != wxID_YES)
-			{
-				return;
-			}
-			else
-			{
-				//Suppression du fichier.
-				if(!wxRemoveFile(_filePickerFile->GetPath()))
-				{
-					wxLogError(wxString::Format(_("Could not remove the file : '%s'"), tmpFileName.GetFullPath()));
-				}
-			}
-		}
-	}
+	//Vérifie si le fichier du non de la lise et existent.
+	//Ceci voudrai dire qu'une autre 
+	//if(List::existInFileSystem(tmpListName))
+	//{
+		////Le fichier est déjà existent ?
+		//if(tmpFileName.Exists() && tmpFileName != _act->_fileName)
+		//{
+			////Si il existe, on demande si il faut remplacer le fichier.
+			//wxString message = wxString::Format(_("The file '%s' already exists.\nDo you want delete this file?"), tmpFileName.GetFullPath());
+			//wxMessageDialog dlg(this, message, _("Delete a file"), wxYES_NO|wxICON_QUESTION|wxICON_EXCLAMATION|wxCENTRE);
+			//if(dlg.ShowModal() != wxID_YES)
+			//{
+				//return;
+			//}
+			//else
+			//{
+				////Suppression du fichier.
+				//if(!wxRemoveFile(_filePickerFile->GetPath()))
+				//{
+					//wxLogError(wxString::Format(_("Could not remove the file : '%s'"), tmpFileName.GetFullPath()));
+				//}
+			//}
+		//}
+	//}
 	
 	//Affect le langage source.
 	int n = _choiceLanguageSource->GetSelection();
@@ -125,9 +122,7 @@ void PanelActSaveTranslation::OnOKButtonClick(wxCommandEvent& event)
 	_act->_lgto = Resource::getInstance()->languageToAbbreviation(s);
 	
 	//Affect les autres arguments.
-	_act->_fileName = tmpFileName;
 	_act->_saveAll = _radioBtnSaveAllTranslations->GetValue();
-	_act->_noDoublon = _checkBoxNoDoublon->IsChecked();
 	_act->_showDialog = _checkBoxShowDialog->IsChecked();
 		
 	//Propage l'événement.
@@ -232,228 +227,32 @@ void DialogPickMainTranslation::OnButtonClick(wxCommandEvent& event)
 }
 
 // *********************************************************************
-// Class ActSaveTranslationFile
-// *********************************************************************
-
-ActSaveTranslationFile::ActSaveTranslationFile(wxFileName const& fileName)
-: _fileName(fileName)
-{
-	//Le fichier existe ?
-	if(wxFile::Exists(fileName.GetFullPath()))
-	{
-		//On ouvre le fichier
-		_file.Open(fileName.GetFullPath());
-		
-		//On analyse la première ligne
-		wxString firstLine = _file. GetFirstLine();
-		wxString beforeComma;
-		for(size_t i = 0; i<firstLine.Length(); i++)
-		{
-			if(firstLine[i] == ',')
-			{
-				_FirstLine.Add(beforeComma);
-				beforeComma.Clear();
-			}
-			else
-			{
-				beforeComma << firstLine[i];
-			}
-		}
-		//On enregistre aussi le dernier texte trouver si il n'est pas vide
-		if(!beforeComma.IsEmpty())
-		{
-			_FirstLine.Add(beforeComma);
-		}
-	}
-}
-
-ActSaveTranslationFile::~ActSaveTranslationFile()
-{
-	_file.Close();
-}
-
-bool ActSaveTranslationFile::exist(wxString text)
-{
-	//Fichier ouvert ?
-	if(_file.IsOpened())
-	{
-		//Caractère en minuscule.
-		text.MakeLower();
-		
-		//On recherche si le texte existe (avent la première ',' de tout les lignes)
-		for (wxString line = _file.GetFirstLine(); !_file.Eof(); line = _file.GetNextLine())
-		{
-			if(line.BeforeFirst(',') == text)
-			{
-				return true;
-			}
-		}
-	}
-	
-	return false;
-}
-		
-void ActSaveTranslationFile::save(	wxString text,
-									wxString mainTranslate)
-{
-	//Caractère en minuscule.
-	text.MakeLower();
-	mainTranslate.MakeLower();
-	
-	//Si le fichier n'est pas déjà existent
-	if(!wxFile::Exists(_fileName.GetFullPath()))
-	{
-		//On le crée
-		_file.Create(_fileName.GetFullPath());
-		//On ajout la première ligne.
-		_file.AddLine(_("text")+','+_("translation"));
-	}
-	
-	//Écriture des données dans le fichier
-	_file.AddLine(text+','+mainTranslate);
-	_file.Write();
-}
-
-void ActSaveTranslationFile::save(
-	wxString text,
-	wxString mainTranslate,
-	std::map<wxString, wxArrayString> const& translations)
-{
-	//translations est vide ?
-	if(translations.size() == 0)
-	{
-		save('\n'+text, mainTranslate);
-		return;
-	}
-	
-	//Caractère en minuscule.
-	text.MakeLower();
-	mainTranslate.MakeLower();
-	
-	//Si le fichier n'est pas déjà existent
-	if(!wxFile::Exists(_fileName.GetFullPath()))
-	{
-		//On le crée
-		_file.Create(_fileName.GetFullPath());
-		//On ajout la première ligne.
-		_file.AddLine(_("text")+','+_("translation"));
-		_file.Write();
-		
-		_FirstLine.Add(_("text"));
-		_FirstLine.Add(_("translation"));
-	}
-	
-	//Parcoure autant de ligne qu'il y en a dans la traduction.
-	bool loop = true;
-	for(size_t iline = 0;;iline++)
-	{
-		std::map<int, wxString> strline;
-		int nbColumn = 0;
-		
-		//Parcoure tout les colonnes
-		for(auto it : translations)
-		{
-			//On vérifie si le type du mot et connue dans la première ligne.
-			int column = _FirstLine.Index(it.first, false);
-			if(column == wxNOT_FOUND)
-			{
-				//Si il n'existe pas on l'ajoute.
-				column = _FirstLine.Add(it.first);
-			}
-			
-			//Le nombre de colonne et égale a l'index de la colonne la plus élever.
-			if(nbColumn < column)
-			{
-				nbColumn = column;
-			}
-			
-			//Si il n'y a plus de texte a cette colonne et a cette ligne
-			if(iline >= it.second.GetCount())
-			{
-				//On a plus besoin de boucler pour cette ligne.
-				loop = false;
-			}
-			else
-			{
-				//On a besoin de boucler pour cette ligne.
-				loop = true;
-				//On ajoute le texte dans la bonne colonne et la bonne ligne
-				strline[column] = it.second[iline];
-			}
-		}
-		
-		//Si on ne doit plus boucler.
-		if(!loop)
-		{
-			break;
-		}
-		
-		//La ligne a ajouter
-		wxString addLine;
-		
-		//Première ligne (du texte) ?
-		if(iline == 0)
-		{
-			_file.AddLine(wxEmptyString);
-			addLine << text << ',' << mainTranslate;
-		}
-		else
-		{
-			addLine << ',';
-		}
-		
-		//On parcoure tout les colonne (soft les deux première).
-		for(int iColumn = 2; iColumn <= nbColumn; iColumn++)
-		{
-			addLine << ',';
-			if(strline.count(iColumn) > 0)
-			{
-				addLine << strline[iColumn];
-			}
-		}
-		//Écriture des données dans le fichier.
-		_file.AddLine(addLine);
-	}
-	
-	//Réécriture de la première ligne du fichier.
-	wxString addFirstLine;
-	for(auto it : _FirstLine)
-	{
-		addFirstLine << it << ',';
-	}
-	_file.RemoveLine(0);
-	_file.InsertLine(addFirstLine, 0);
-	
-	//Écriture des données dans le fichier.
-	_file.Write();
-}
-
-// *********************************************************************
 // Class ActSaveTranslation
 // *********************************************************************
 
-//! \todo a compléter avec les local
+//! \todo a compléter avec les locals
 ActSaveTranslation::ActSaveTranslation()
-: ActSaveTranslation(	"en", "fr", wxFileName(wxGetUserHome(), ""),
-						true, true, true)
+: ActSaveTranslation(	"en", "fr", wxEmptyString,
+						true, true)
 {
 }
 
 ActSaveTranslation::ActSaveTranslation(wxString const& lgsrc,
 							wxString const& lgto,
-							wxFileName const& fileName,
+							wxString const& listName,
 							bool soveAll,
-							bool noDoublon,
 							bool showDialog)
 : Action(_("Save a translation"), "ActSaveTranslation",
 _("Translation a text with google and save in a file.")),
-_lgsrc(lgsrc), _lgto(lgto), _fileName(fileName),
-_saveAll(soveAll), _noDoublon(noDoublon), _showDialog(showDialog)
+_lgsrc(lgsrc), _lgto(lgto),
+_saveAll(soveAll), _showDialog(showDialog)
 {
+	newList(listName);
 }
 
 ActSaveTranslation::~ActSaveTranslation()
 {
+	deleteList();
 }
 
 void ActSaveTranslation::execute()
@@ -479,47 +278,43 @@ void ActSaveTranslation::execute()
 		return;
 	}
 	
-	//On vérifie la validités du fichier.
-	if(_fileName.GetFullName().IsEmpty())
+	//On vérifie la validités de la liste.
+	if(_list == nullptr)
 	{
 		wxMessageBox(_("The name of file is wrong."), _("Name file invalid."), wxOK|wxICON_EXCLAMATION|wxCENTRE);
 		return;
 	}
 	
-	//Fichier de sauvegarde
-	ActSaveTranslationFile file(_fileName);
-	
-	//Si on dois vérifier l'existence du texte dans le fichier
-	if(_noDoublon)
+	//On vérifier l'existence du texte dans le fichier
+	if(_list->exist(clipboard))
 	{
-		if(file.exist(clipboard))
-		{
-			Notification::getInstance()->notify(_("Save clipboard translation"), wxString::Format(_("The text is already existing in '%s'"),_fileName.GetFullPath()));
-			return;
-		}
+		Notification::getInstance()->notify(_("Save clipboard translation"), wxString::Format(_("The text is already existing in '%s'"), _list->getName()));
+		return;
 	}
 	
-	//Si on doit afficher le dialogue pour choisie la principale traduction.
+	//Si on doit afficher le dialogue pour choisie la traduction principale.
 	if(_showDialog)
 	{
 		DialogPickMainTranslation dlg(nullptr, clipboard, mainTranslate, translations);
 		if(dlg.ShowModal() == wxID_CANCEL)
 		{
+			//L'utilisateur à quitter le dialogue.
 			Notification::getInstance()->notify(_("Save clipboard translation"), _("The text is not saved."));
 			return;
 		}
 		
+		//mainTranslate deviens le chois de l'utilisateur
 		mainTranslate = dlg.GetChoice();
 	}
 	
 	//Sinon on le sauvegarde.
 	if(_saveAll)//Doit ton tout sauvegarder ?
 	{
-		file.save(clipboard, mainTranslate, translations);
+		_list->save(clipboard, mainTranslate, translations);
 	}
 	else
 	{
-		file.save(clipboard, mainTranslate);
+		_list->save(clipboard, mainTranslate);
 	}
 	
 	Notification::getInstance()->notify(_("Save clipboard translation"), _("The text has be saved."));
@@ -536,14 +331,13 @@ void ActSaveTranslation::actLoad(wxFileConfig & fileConfig)
 	fileConfig.Read("lgsrc", &_lgsrc);
 	fileConfig.Read("lgto", &_lgto);
 	
-	//On récupère le fichier.
-	wxString file;
-	fileConfig.Read("fileName", &file);
-	_fileName.Assign(file);
+	//On récupère la list.
+	wxString listName;
+	fileConfig.Read("listName", &listName);
+	newList(listName);
 	
 	//On récupère le reste
 	fileConfig.Read("saveAll", &_saveAll);		
-	fileConfig.Read("noDoublon", &_noDoublon);
 	fileConfig.Read("showDialog", &_showDialog);
 }
 		
@@ -554,11 +348,10 @@ void ActSaveTranslation::actSave(wxFileConfig & fileConfig)const
 	fileConfig.Write("lgto", _lgto);
 	
 	//On sauvegarde le fichier.
-	fileConfig.Write("fileName", _fileName.GetFullPath());
+	fileConfig.Write("listName", _list->getName());
 	
 	//On sauvegarde le reste
-	fileConfig.Write("saveAll", _saveAll);		
-	fileConfig.Write("noDoublon", _noDoublon);
+	fileConfig.Write("saveAll", _saveAll);
 	fileConfig.Write("showDialog", _showDialog);
 }
 
@@ -567,5 +360,23 @@ wxString ActSaveTranslation::getStringPreferences()const
 	return 	Resource::getInstance()->abbreviationToLanguage(_lgsrc) +
 			' ' + _("to") + ' ' +
 			Resource::getInstance()->abbreviationToLanguage(_lgto) +
-			' ' + _("in") + ' ' + _fileName.GetFullPath();
+			' ' + _("in list") + ' ' + _list->getName();
+}
+
+void ActSaveTranslation::newList(wxString const& listName)
+{
+	//Suppression de la liste au préalable.
+	deleteList();
+	
+	//Création de la liste si il y a un non de liste
+	if(listName != wxEmptyString)
+		_list = new List(listName);
+}
+
+void ActSaveTranslation::deleteList()
+{
+	if(_list != nullptr)
+		delete _list;
+		
+	_list = nullptr;
 }

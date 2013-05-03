@@ -19,7 +19,7 @@
 #include <wx/choice.h>
 #include <wx/sizer.h>
 #include <wx/statline.h>
-#include <wx/filepicker.h>
+#include <wx/combobox.h>
 #include <wx/radiobut.h>
 #include <wx/checkbox.h>
 #include <wx/panel.h>
@@ -39,10 +39,9 @@ class GuiPanelActSaveTranslation : public wxPanel
 	protected:
 		wxChoice* _choiceLanguageSource;
 		wxChoice* _choiceLanguageOfTranslation;
-		wxFilePickerCtrl* _filePickerFile;
+		wxComboBox* _comboBoxList;
 		wxRadioButton* _radioBtnSaveAllTranslations;
 		wxRadioButton* _radioBtnSaveATranslation;
-		wxCheckBox* _checkBoxNoDoublon;
 		wxCheckBox* _checkBoxShowDialog;
 		
 		// Virtual event handlers, overide them in your derived class

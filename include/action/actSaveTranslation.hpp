@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.15
+//! \version 0.16
 //! \date 31.03.2013
 //!
 //! ********************************************************************
@@ -19,6 +19,7 @@
 #include "action/guiPanelActSaveTranslation.h"
 #include "notification.hpp"
 #include "action.hpp"
+#include "list.hpp"
 
 #include <wx/dialog.h>
 #include <wx/filename.h>
@@ -69,8 +70,8 @@ class PanelPickTranslation : public GuiPanelTranslation
 		//! \param kind fenêtre parant.
 		//! \param translations les traductions à afficher dans les boutons.
 		PanelPickTranslation(	DialogPickMainTranslation* parent,
-							wxString const& kind,
-							wxArrayString const& translations);
+								wxString const& kind,
+								wxArrayString const& translations);
 		
 		//! \brief Destructeur.
 		~PanelPickTranslation();
@@ -118,49 +119,6 @@ class DialogPickMainTranslation : public GuiDialogPickMainTranslation
 };
 
 // *********************************************************************
-// Class ActSaveTranslationFile
-// *********************************************************************
-
-//! \brief Classe permettent de sauvegarder des textes et leur traductions dans un fichier.
-//! \see ActSaveTranslation
-class ActSaveTranslationFile
-{
-	public:
-		//! \brief Constructeur.
-		//! \param fileName le non du fichier.
-		ActSaveTranslationFile(wxFileName const& fileName);
-						
-		//! \brief Destructeur.
-		~ActSaveTranslationFile();
-	
-		//! \brief Pour connaître l'existence d'un texte dans le fichier.
-		//! \param text a vérifier.
-		bool exist(wxString text);
-		
-		//! \brief Pour sauvegarder un texte et ça traduction dans le fichier.
-		//! \param text le texte a sauvegarder.
-		//! \param mainTranslate la traduction a sauvegarder.
-		void save(	wxString text,
-					wxString mainTranslate);
-					
-		//! \brief Pour sauvegarder un texte et c'est traductions dans le fichier.
-		//! \param text le texte a sauvegarder.
-		//! \param mainTranslate la traduction principale a sauvegarder.
-		//! \param translations les traductions a sauvegarder.
-		void save(	wxString text,
-					wxString mainTranslate,
-					std::map<wxString, wxArrayString> const& translations);
-
-	private:
-		//! \brief Le non nu fichier.
-		wxFileName _fileName;
-		//! \brief Représente la première ligne du fichier sous la forme d'un wxArrayString.
-		wxArrayString _FirstLine;
-		//! \brief C'est le fichier.
-		wxTextFile _file;
-};
-
-// *********************************************************************
 // Class ActSaveTranslation
 // *********************************************************************
 
@@ -180,15 +138,13 @@ class ActSaveTranslation : public Action
 		//!
 		//! \param lgsrc lange source.
 		//! \param lgto lange de traduction.
-		//! \param fileName Le non du fichier où sauvegarder les traductions.
+		//! \param listName Le non de la liste où sauvegarder les traductions.
 		//! \param saveAll true pour enregistre tout les traductions, false pour enregistre juste la traduction principale.
-		//! \param noDoublon true pour ne pas enregistre de doublon.
 		//! \param showDialog true pour affiche une dialogue l'or d'une sauvegarde pour choisir la traduction a sauvegarder
 		ActSaveTranslation(	wxString const& lgsrc,
 							wxString const& lgto,
-							wxFileName const& fileName,
+							wxString const& listName,
 							bool saveAll,
-							bool noDoublon,
 							bool showDialog);
 						
 		//! \brief Destructeur.
@@ -214,15 +170,21 @@ class ActSaveTranslation : public Action
 		//! \param fileConfig fichier où l'action doit être sauvegarder.
 		void actSave(wxFileConfig & fileConfig)const;
 		
+		//! \brief nouvelle instance de la _list
+		//! \param listName nom de la liste. Si cette valeur vaut wxEmptiString, ceci reviens a faire un \ref deleteList().
+		void newList(wxString const& listName);
+		
+		//! \brief Supprime de l'instance de la _list.
+		void deleteList();
+		
 	private:
 		//! \brief Lange source.
 		wxString _lgsrc;
 		//! \brief Lange de traduction.
 		wxString _lgto;
 		
-		wxFileName _fileName;
+		List* _list;
 		bool _saveAll;
-		bool _noDoublon;
 		bool _showDialog;
 };
 

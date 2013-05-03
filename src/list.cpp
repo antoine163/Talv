@@ -19,10 +19,38 @@
 // Class List
 // *********************************************************************
 
-List::List(wxFileName const& name)
+List::List(wxString const& name)
 {
 }
 
 List::~List()
 {
+}
+
+wxString const& List::getName()const
+{
+	return "test";
+}
+
+int List::save(	wxString text,
+				wxString mainTranslate)
+{
+	return -1;
+}
+			
+int List::save(	wxString text,
+				wxString mainTranslate,
+				std::map<wxString, wxArrayString> const& translations)
+{
+	return -1;
+}
+
+bool List::exist(wxString text)
+{
+	return true;
+}
+
+bool List::existInFileSystem(wxString const& name)
+{
+	return false;
 }
