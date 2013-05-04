@@ -25,6 +25,11 @@ ListManager::ListManager()
 
 ListManager::~ListManager()
 {
+	//Suppression des listes
+	for(auto it: _lists)
+	{
+		delete it;
+	}
 }
 
 void ListManager::load(wxFileConfig & fileConfig)
@@ -33,10 +38,21 @@ void ListManager::load(wxFileConfig & fileConfig)
 
 void ListManager::save(wxFileConfig & fileConfig)const
 {
+	
 }
 
 List* ListManager::getList(wxString const& name)
 {
+	//Recherche de la liste.
+	for(auto it: _lists)
+	{
+		//La liste a été trouvée ?
+		if(it->getName() == name)
+			return it;
+	}
+	
+	//La liste n'a pas été trouvée.
+	return nullptr;
 }
 
 wxArrayString ListManager::getNameLists()const
@@ -55,4 +71,6 @@ List* ListManager::add(	wxString const& name,
 
 bool ListManager::remove(wxString const& name)
 {
+	
+	//_lists
 }

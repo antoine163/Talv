@@ -35,6 +35,16 @@ class ListManager : public Singleton<ListManager>
 		void load(wxFileConfig & fileConfig);
 		void save(wxFileConfig & fileConfig)const;
 		
+		//! \brief Obtenir une lite en fonction de son nom.
+		//!
+		//! Une bonne utilisation serai d'éviter d'affecter le pointeur 
+		//! retourner a une variable pour une utilisation ultérieur.
+		//! Une utilisation directe du pointeur est préférable.
+		//! Par exemple dans un bock de code.
+		//! Tout de mois si vous ne fait pas cela, fait attention a ce que
+		//! la méthode \ref remove() ne sois pas appeler avec le non de
+		//! la liste que vous utilisez. Sent quoi vous vous retrouveriez
+		//! avec un pointeur non valide.
 		List* getList(wxString const& name);
 		wxArrayString getNameLists()const;
 		

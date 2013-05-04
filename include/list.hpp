@@ -33,8 +33,12 @@ enum Knowledge_e
 // Class List
 // *********************************************************************
 
+class ListManager;
+
 class List
 {
+	friend class ListManager;
+	
 	public:		
 		wxString const& getName()const;
 		
