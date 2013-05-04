@@ -20,8 +20,9 @@
 // *********************************************************************
 
 List::List(	wxString const& name,
-			wxString const& _lgsrc,
-			wxString const& _lgto)
+			wxString const& lgsrc,
+			wxString const& lgto)
+: _lgsrc(lgsrc), _lgto(lgto)
 {
 }
 
@@ -50,4 +51,8 @@ int List::save(	wxString text,
 bool List::exist(wxString text)
 {
 	return true;
+}
+
+void List::removeFile()
+{
 }

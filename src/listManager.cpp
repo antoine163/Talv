@@ -34,29 +34,58 @@ ListManager::~ListManager()
 
 void ListManager::load(wxFileConfig & fileConfig)
 {
+	wxString tmpNameList;
+	long lIndex;
+	
 	//Avent de charger quoi que se soi on supprime tout les instance des liste.
 	for(auto &it: _lists)
 		delete it;
 		
 	_lists.clear();
 	
+	//On positionne le path.
+	fileConfig.SetPath("/ListManager");
 	
+	//On récupère la première list.
+	if(!fileConfig.GetFirstGroup(tmpNameList, lIndex))
+		return;
+		
+	do
+	{
+		//On positionne le path.
+		fileConfig.SetPath(tmpNameList);
+		
+		//Récupération des paramètres de la liste.
+		wxString tmplgsrc;
+		wxString tmplgto;
+		fileConfig.Read("lgsrc", &tmplgsrc);
+		fileConfig.Read("tmplgto", &tmplgto);
+		
+		//Création de la liste.
+		create(tmpNameList, tmplgsrc, tmplgto);
+		
+		//On positionne le path.
+		fileConfig.SetPath("../");
+		
+	}//Puis toutes les autres.
+	while(fileConfig.GetNextGroup(tmpNameList, lIndex));
+	
+	//On positionne le path a la racine.
+	fileConfig.SetPath("/");
 }
 
 void ListManager::save(wxFileConfig & fileConfig)const
 {
-	//int iList = 0;
-	
-	//for(auto &it: _lists)
-	//{
-		////Crée un groupe pour cette liste.
-		//fileConfig.SetPath("/list"+i);
+	//Parcoure tout les lites.
+	for(auto it: _lists)
+	{
+		//Crée un groupe pour cette liste.
+		fileConfig.SetPath("/ListManager/"+it->getName());
 		
-		////Sauvegarde de la liste dans le fichier de config.
-		//it->save(fileConfig);
-		
-		//i++;
-	//}
+		//Sauvegarde des paramètres de la liste.
+		fileConfig.Write("lgsrc", it->_lgsrc);
+		fileConfig.Write("lgto", it->_lgto);
+	}
 }
 
 List* ListManager::getList(wxString const& name)
@@ -117,19 +146,19 @@ List* ListManager::create(	wxString const& name,
 	return tmpList;
 }
 
-//! \todo supprimer le fichier
 bool ListManager::remove(wxString const& name)
 {
 	//Recherche de la liste.
-	for(auto it: _lists)
+	for(size_t i = 0; _lists.size(); i++)
 	{
 		//La liste a été trouvée ?
-		if(it->getName() == name)
+		if(_lists[i]->getName() == name)
 		{
 			//Suppression de la liste
-			//it->removeFile();
-			//it=_lists.erase(it);
-			delete it;
+			_lists[i]->removeFile();
+			delete _lists[i];
+			_lists.erase(_lists.begin()+i);
+			
 			return true;
 		}
 	}

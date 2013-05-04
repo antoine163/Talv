@@ -85,11 +85,14 @@ class List
 		//! \return true si le texte existe sinon flase.
 		bool exist(wxString text);
 		
+		
+		void removeFile();
+		
 	private:
 		//! \brief Constructeur.
 		List(	wxString const& name,
-				wxString const& _lgsrc,
-				wxString const& _lgto);
+				wxString const& lgsrc,
+				wxString const& lgto);
 		//! \brief destructeur.
 		virtual ~List();
 		
