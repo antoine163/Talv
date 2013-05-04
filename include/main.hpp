@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.5
+//! \version 1.6
 //! \date 12.12.12
 //!
 //! ********************************************************************
@@ -20,7 +20,6 @@
 #include <wx/intl.h>
 
 #include "menuIcon.hpp"
-#include "actionManager.hpp"
 
 // *********************************************************************
 // Class App

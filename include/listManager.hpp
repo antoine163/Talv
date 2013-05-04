@@ -36,7 +36,7 @@ class ListManager : public Singleton<ListManager>
 		void save(wxFileConfig & fileConfig)const;
 		
 		List* getList(wxString const& name);
-		wxArrayString  getNameLists()const;
+		wxArrayString getNameLists()const;
 		
 		bool exist(wxString const& name)const;
 		List* add(	wxString const& name,
@@ -45,13 +45,12 @@ class ListManager : public Singleton<ListManager>
 		bool remove(wxString const& name);
 
 	private:
-		
 		//! \brief Constructeur.
 		ListManager();
 		//! \brief destructeur.
 		virtual ~ListManager();
 		
-		std::vector<List> _lists;
+		std::vector<List*> _lists;
 };
 
 #endif //LIST_MANAGER_H

@@ -26,3 +26,33 @@ ListManager::ListManager()
 ListManager::~ListManager()
 {
 }
+
+void ListManager::load(wxFileConfig & fileConfig)
+{
+}
+
+void ListManager::save(wxFileConfig & fileConfig)const
+{
+}
+
+List* ListManager::getList(wxString const& name)
+{
+}
+
+wxArrayString ListManager::getNameLists()const
+{
+}
+
+bool ListManager::exist(wxString const& name)const
+{
+}
+
+List* ListManager::add(	wxString const& name,
+						wxString const& lgsrc,
+						wxString const& lgto)
+{
+}
+
+bool ListManager::remove(wxString const& name)
+{
+}

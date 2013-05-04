@@ -28,7 +28,7 @@
 // *********************************************************************
 // Class PanelActSaveTranslation
 // *********************************************************************
-
+//! \todo a implémenter avec ListManager
 PanelActSaveTranslation::PanelActSaveTranslation(wxWindow* parent, wxButton* buttonOK, ActSaveTranslation * act)
 : GuiPanelActSaveTranslation(parent), _act(act), _buttonOK(buttonOK)
 {
@@ -48,8 +48,8 @@ PanelActSaveTranslation::PanelActSaveTranslation(wxWindow* parent, wxButton* but
 	_choiceLanguageOfTranslation->SetSelection(n);
 	
 	//Affiche le non de la liste si il y une liste.
-	if(_act->_list != nullptr)
-		(*_textCtrlList) << _act->_list->getName();
+	//if(_act->_list != nullptr)
+		//(*_textCtrlList) << _act->_list->getName();
 	
 	//Tout sauvegarder ?
 	if(_act->_saveAll)
@@ -73,7 +73,7 @@ PanelActSaveTranslation::~PanelActSaveTranslation()
 	_buttonOK->Unbind(wxEVT_COMMAND_BUTTON_CLICKED, &PanelActSaveTranslation::OnOKButtonClick, this, _buttonOK->GetId());
 }
 
-//! \todo revoir pour prendre en compte la liste.
+//! \todo a implémenter avec ListManager
 void PanelActSaveTranslation::OnOKButtonClick(wxCommandEvent& event)
 {
 	//Récupére le nom de la liste
@@ -237,6 +237,7 @@ ActSaveTranslation::ActSaveTranslation()
 {
 }
 
+//! \todo a implémenter avec ListManager
 ActSaveTranslation::ActSaveTranslation(wxString const& lgsrc,
 							wxString const& lgto,
 							wxString const& listName,
@@ -247,12 +248,11 @@ _("Translation a text with google and save in a file.")),
 _lgsrc(lgsrc), _lgto(lgto),
 _saveAll(soveAll), _showDialog(showDialog)
 {
-	newList(listName);
+	//_list
 }
 
 ActSaveTranslation::~ActSaveTranslation()
 {
-	deleteList();
 }
 
 void ActSaveTranslation::execute()
@@ -325,6 +325,7 @@ wxPanel* ActSaveTranslation::getPanelPreferences(wxWindow* parent, wxButton* but
 	return new PanelActSaveTranslation(parent, buttonOK, this);
 }
 
+//! \todo a implémenter avec ListManager
 void ActSaveTranslation::actLoad(wxFileConfig & fileConfig)
 {	
 	//On récupère les langages.
@@ -332,23 +333,24 @@ void ActSaveTranslation::actLoad(wxFileConfig & fileConfig)
 	fileConfig.Read("lgto", &_lgto);
 	
 	//On récupère la list.
-	wxString listName;
-	fileConfig.Read("listName", &listName);
-	newList(listName);
+	//wxString listName;
+	//fileConfig.Read("listName", &listName);
+	//newList(listName);
 	
 	//On récupère le reste
 	fileConfig.Read("saveAll", &_saveAll);		
 	fileConfig.Read("showDialog", &_showDialog);
 }
 		
+//! \todo a implémenter avec ListManager
 void ActSaveTranslation::actSave(wxFileConfig & fileConfig)const
 {	
 	//On sauvegarde les langages.
 	fileConfig.Write("lgsrc", _lgsrc);
 	fileConfig.Write("lgto", _lgto);
 	
-	//On sauvegarde le fichier.
-	fileConfig.Write("listName", _list->getName());
+	//On sauvegarde la liste.
+	//fileConfig.Write("listName", _list->getName());
 	
 	//On sauvegarde le reste
 	fileConfig.Write("saveAll", _saveAll);
@@ -361,22 +363,4 @@ wxString ActSaveTranslation::getStringPreferences()const
 			' ' + _("to") + ' ' +
 			Resource::getInstance()->abbreviationToLanguage(_lgto) +
 			' ' + _("in list") + ' ' + _list->getName();
-}
-
-void ActSaveTranslation::newList(wxString const& listName)
-{
-	//Suppression de la liste au préalable.
-	deleteList();
-	
-	//Création de la liste si il y a un non de liste
-	if(listName != wxEmptyString)
-		_list = new List(listName);
-}
-
-void ActSaveTranslation::deleteList()
-{
-	if(_list != nullptr)
-		delete _list;
-		
-	_list = nullptr;
 }

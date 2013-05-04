@@ -35,12 +35,7 @@ enum Knowledge_e
 
 class List
 {
-	public:
-		//! \brief Constructeur.
-		List(wxString const& name);
-		//! \brief destructeur.
-		virtual ~List();
-		
+	public:		
 		wxString const& getName()const;
 		
 		//! \brief Pour sauvegarder un texte et ça traduction dans la liste.
@@ -86,6 +81,12 @@ class List
 		static bool existInFileSystem(wxString const& name);
 		
 	private:
+		//! \brief Constructeur.
+		List(wxString const& name);
+		//! \brief destructeur.
+		virtual ~List();
+		
+		
 		wxFileName _name;
 		
 		wxString _lgsrc;

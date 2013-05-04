@@ -170,13 +170,6 @@ class ActSaveTranslation : public Action
 		//! \param fileConfig fichier où l'action doit être sauvegarder.
 		void actSave(wxFileConfig & fileConfig)const;
 		
-		//! \brief nouvelle instance de la _list
-		//! \param listName nom de la liste. Si cette valeur vaut wxEmptiString, ceci reviens a faire un \ref deleteList().
-		void newList(wxString const& listName);
-		
-		//! \brief Supprime de l'instance de la _list.
-		void deleteList();
-		
 	private:
 		//! \brief Lange source.
 		wxString _lgsrc;

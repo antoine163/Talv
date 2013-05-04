@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.5
+//! \version 1.6
 //! \date 12.12.12
 //!
 //! ********************************************************************
@@ -15,6 +15,8 @@
 
 #include "main.hpp"
 #include "resource.hpp"
+#include "actionManager.hpp"
+#include "listManager.hpp"
 #include "dialogPreferences.hpp"
 
 #include <wx/aboutdlg.h>
@@ -49,14 +51,17 @@ bool App::OnInit()
 	//Chargement des ressource se trouvent dans le fichier de config.
 	Resource::getInstance()->load(fileConfig);
 	
+	//Chargement des listes se trouvent dans le fichier de config.
+	ListManager::getInstance()->load(fileConfig);
+		
+	//Crée de l'instance de ActionManager et Installation des raccourcis/actions
+	ActionManager::getInstance()->load(fileConfig);
+	
 	//Création du menu ou pas.
 	if(Resource::getInstance()->getShowMenu())
 		creatMenuItem();
 	else
 		deleteMenuItem();
-		
-	//Crée de l'instance de ActionManager et Installation des raccourcis/actions
-	ActionManager::getInstance()->load(fileConfig);
 	
 	return true;
 }
@@ -71,6 +76,9 @@ int App::OnExit()
 	
 	//Suppression des ressources.
 	Resource::kill();
+	
+	//Suppression des liste.
+	ListManager::kill();
 	
 	//Suppression du module de la traduction de l'application.
 	delete _locale;
