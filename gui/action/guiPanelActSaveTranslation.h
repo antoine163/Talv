@@ -19,7 +19,7 @@
 #include <wx/choice.h>
 #include <wx/sizer.h>
 #include <wx/statline.h>
-#include <wx/combobox.h>
+#include <wx/textctrl.h>
 #include <wx/radiobut.h>
 #include <wx/checkbox.h>
 #include <wx/panel.h>
@@ -39,7 +39,7 @@ class GuiPanelActSaveTranslation : public wxPanel
 	protected:
 		wxChoice* _choiceLanguageSource;
 		wxChoice* _choiceLanguageOfTranslation;
-		wxComboBox* _comboBoxList;
+		wxTextCtrl* _textCtrlList;
 		wxRadioButton* _radioBtnSaveAllTranslations;
 		wxRadioButton* _radioBtnSaveATranslation;
 		wxCheckBox* _checkBoxShowDialog;

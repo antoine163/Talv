@@ -77,8 +77,8 @@ GuiPanelActSaveTranslation::GuiPanelActSaveTranslation( wxWindow* parent, wxWind
 	staticTextList->Wrap( -1 );
 	bSizer6->Add( staticTextList, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT|wxTOP|wxBOTTOM|wxLEFT, 5 );
 	
-	_comboBoxList = new wxComboBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
-	bSizer6->Add( _comboBoxList, 0, wxALL, 5 );
+	_textCtrlList = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer6->Add( _textCtrlList, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	bSizer1->Add( bSizer6, 0, wxEXPAND, 5 );
 	

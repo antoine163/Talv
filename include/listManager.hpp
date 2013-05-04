@@ -19,6 +19,8 @@
 #include "singleton.hpp"
 #include "list.hpp"
 
+#include <wx/fileconf.h>
+#include <wx/arrstr.h>
 #include <vector>
 
 // *********************************************************************
@@ -30,17 +32,19 @@ class ListManager : public Singleton<ListManager>
 	friend class Singleton<ListManager>;
 	
 	public:	
-		//! \attention utiliser la \ref List retourner mais ne pas la garder pour une utilisation ultérieur.
-		List* getList(wxString const& name);
-		wxArryString getNameLists();
+		void load(wxFileConfig & fileConfig);
+		void save(wxFileConfig & fileConfig)const;
 		
-		bool exist(wxString const& name);
-		List* add(wxString const& name);
-		//bool remove(wxString const& name);
+		List* getList(wxString const& name);
+		wxArrayString  getNameLists()const;
+		
+		bool exist(wxString const& name)const;
+		List* add(	wxString const& name,
+					wxString const& lgsrc,
+					wxString const& lgto);
+		bool remove(wxString const& name);
 
 	private:
-		//Chargement des liste a partir du dossier (a appeler dans le constructeur)
-		void load();
 		
 		//! \brief Constructeur.
 		ListManager();

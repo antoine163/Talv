@@ -21,7 +21,6 @@
 
 ListManager::ListManager()
 {
-	//Chargement des listes
 }
 
 ListManager::~ListManager()
