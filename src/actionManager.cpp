@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.8
+//! \version 0.9
 //! \date 20.03.2013
 //!
 //! ********************************************************************
@@ -88,18 +88,21 @@ void ActionManager::load(wxFileConfig & fileConfig)
 	//Avent de charger quoi que se soi on supprime tout les raccourcis/actions
 	removeAll();
 	
+	//On positionne le path
+	fileConfig.SetPath("/ActionManager");
+	
 	//On récupère le premier raccourci
 	if(!fileConfig.GetFirstGroup(stringShortcut, lIndex))
 		return;
 		
 	do
-	{		
+	{
 		//On positionne le path
 		fileConfig.SetPath(stringShortcut);
 		
 		//Récupérer le type de l'action.
 		wxString actTypeName;
-		fileConfig.Read("ActTypeName", &actTypeName);	
+		fileConfig.Read("ActTypeName", &actTypeName);
 		
 		//Création d'une action a parte de son nom.
 		Action* tmpAct = Action::newAction(actTypeName);
@@ -113,6 +116,9 @@ void ActionManager::load(wxFileConfig & fileConfig)
 		
 	}//Puis tous les autres
 	while(fileConfig.GetNextGroup(stringShortcut, lIndex));
+	
+	//On positionne le path a la racine.
+	fileConfig.SetPath("/");
 }
 
 void ActionManager::save(wxFileConfig & fileConfig)const
@@ -122,7 +128,7 @@ void ActionManager::save(wxFileConfig & fileConfig)const
 		//Obtenir la version string du raccourci.
 		wxString stringShortcut = ShortcutKey::shortcutKeyToString(it.first);
 		//Crée un groupe pour ce raccourci.
-		fileConfig.SetPath("/"+stringShortcut);
+		fileConfig.SetPath("/ActTypeName/"+stringShortcut);
 		
 		//Sauvegarde de l'action
 		it.second->save(fileConfig);

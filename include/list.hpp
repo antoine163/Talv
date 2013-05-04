@@ -35,6 +35,9 @@ enum Knowledge_e
 
 class ListManager;
 
+//! \brief Pour manipuler une liste son fichier associer.
+//!
+//! Seul ListManager peut crée et supprimer des instance de la class \ref List.
 class List
 {
 	friend class ListManager;
@@ -82,11 +85,11 @@ class List
 		//! \return true si le texte existe sinon flase.
 		bool exist(wxString text);
 		
-		static bool existInFileSystem(wxString const& name);
-		
 	private:
 		//! \brief Constructeur.
-		List(wxString const& name);
+		List(	wxString const& name,
+				wxString const& _lgsrc,
+				wxString const& _lgto);
 		//! \brief destructeur.
 		virtual ~List();
 		

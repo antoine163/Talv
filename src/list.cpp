@@ -19,7 +19,9 @@
 // Class List
 // *********************************************************************
 
-List::List(wxString const& name)
+List::List(	wxString const& name,
+			wxString const& _lgsrc,
+			wxString const& _lgto)
 {
 }
 
@@ -29,7 +31,7 @@ List::~List()
 
 wxString const& List::getName()const
 {
-	return "test";
+	return _name.GetName();
 }
 
 int List::save(	wxString text,
@@ -48,9 +50,4 @@ int List::save(	wxString text,
 bool List::exist(wxString text)
 {
 	return true;
-}
-
-bool List::existInFileSystem(wxString const& name)
-{
-	return false;
 }

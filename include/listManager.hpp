@@ -27,12 +27,16 @@
 // Class ListManager
 // *********************************************************************
 
+//! \brief Gestion des listes
 class ListManager : public Singleton<ListManager>
 {
 	friend class Singleton<ListManager>;
 	
 	public:	
+		//! \brief Charger les listes à partir du fichier de config.
 		void load(wxFileConfig & fileConfig);
+		
+		//! \brief Sauvegarde des listes dans le fichier de config.
 		void save(wxFileConfig & fileConfig)const;
 		
 		//! \brief Obtenir une lite en fonction de son nom.
@@ -45,13 +49,33 @@ class ListManager : public Singleton<ListManager>
 		//! la méthode \ref remove() ne sois pas appeler avec le non de
 		//! la liste que vous utilisez. Sent quoi vous vous retrouveriez
 		//! avec un pointeur non valide.
+		//! \param name le non de la liste à obtenir.
 		List* getList(wxString const& name);
+		
+		//! \brief Obtenir une lite en fonction de son nom.
+		//! \return le nom de tout les listes.
 		wxArrayString getNameLists()const;
 		
+		//! \brief Pour connaître si une liste existe.
+		//! \return true si elle existe, sinon false.
 		bool exist(wxString const& name)const;
-		List* add(	wxString const& name,
-					wxString const& lgsrc,
-					wxString const& lgto);
+		
+		//! \brief Créer une nouvelle liste.
+		//! Les paramètres \b lgsrc et \b lgto doive être écrit en abrégé.
+		//! ex: pour le français "fr" ex: pour l'anglais "en".
+		//! \param name le non de la liste à créer.
+		//! \param lgsrc langue de source.
+		//! \param lgto langue de traduction.
+		//! \return nullptr si la liste n'a pas été créé. Dans ce cas 
+		//! Il est probable que la liste est déjà existent.
+		List* create(	wxString const& name,
+						wxString const& lgsrc,
+						wxString const& lgto);
+					
+		//! \brief Supprimer une liste.
+		//! \param name le non de la liste à supprimer.
+		//! \return true si la liste a bien été supprimer. false si la
+		//! liste n'est pas existante.
 		bool remove(wxString const& name);
 
 	private:
@@ -60,6 +84,7 @@ class ListManager : public Singleton<ListManager>
 		//! \brief destructeur.
 		virtual ~ListManager();
 		
+		//! \brief Les différente listes.
 		std::vector<List*> _lists;
 };
 
