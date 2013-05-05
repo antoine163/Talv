@@ -50,6 +50,9 @@ class List
 		//! \return le non de la liste.
 		wxString getName()const;
 		
+		//! \brief Récupérée les deux langues de la liste.
+		void getlanguages(wxString* lgsrc, wxString* lgto);
+		
 		//! \brief Pour connaître l'existence d'un texte dans la liste.
 		//! \param texte à vérifier.
 		//! \return true si le texte existe sinon flase.

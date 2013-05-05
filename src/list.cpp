@@ -68,6 +68,12 @@ wxString List::getName()const
 	return _fileName.GetName();
 }
 
+void List::getlanguages(wxString* lgsrc, wxString* lgto)
+{
+	*lgsrc = _lgsrc;
+	*lgto = _lgto;
+}
+
 bool List::exist(wxString const& text)
 {
 	if(getTextLine(text) != 0)

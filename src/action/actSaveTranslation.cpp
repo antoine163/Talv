@@ -15,6 +15,7 @@
 
 #include "action/actSaveTranslation.hpp"
 #include "resource.hpp"
+#include "listManager.hpp"
 
 #include <wx/wfstream.h>
 #include <wx/msgdlg.h>
@@ -48,7 +49,7 @@ PanelActSaveTranslation::PanelActSaveTranslation(wxWindow* parent, wxButton* but
 	_choiceLanguageOfTranslation->SetSelection(n);
 	
 	//Affiche le non de la liste si il y une liste.
-	//if(_act->_list != nullptr)
+	//if(_act->_listName != wxEmptyString)
 		//(*_textCtrlList) << _act->_list->getName();
 		
 	//Dessiner un dialogue
@@ -225,7 +226,7 @@ void DialogPickMainTranslation::OnButtonClick(wxCommandEvent& event)
 
 //! \todo a compléter avec les locals
 ActSaveTranslation::ActSaveTranslation()
-: ActSaveTranslation(	"en", "fr", wxEmptyString, true)
+: ActSaveTranslation("en", "fr", wxEmptyString, true)
 {
 }
 
@@ -236,9 +237,8 @@ ActSaveTranslation::ActSaveTranslation(	wxString const& lgsrc,
 										bool showDialog)
 : Action(_("Save a translation"), "ActSaveTranslation",
 _("Translation a text with google and save in a list.")),
-_lgsrc(lgsrc), _lgto(lgto), _showDialog(showDialog)
+_lgsrc(lgsrc), _lgto(lgto), _listName(listName), _showDialog(showDialog)
 {
-	//_list
 }
 
 ActSaveTranslation::~ActSaveTranslation()
@@ -268,46 +268,52 @@ void ActSaveTranslation::execute()
 		return;
 	}
 	
-	////On vérifie la validités de la liste.
-	//if(_list == nullptr)
-	//{
-		//wxMessageBox(_("The name of file is wrong."), _("Name file invalid."), wxOK|wxICON_EXCLAMATION|wxCENTRE);
-		//return;
-	//}
+	//On récupère la liste.
+	List* tmpList = ListManager::getInstance()->getList(_listName);
 	
-	////On vérifier l'existence du texte dans le fichier
-	//if(_list->exist(clipboard))
-	//{
-		//Notification::getInstance()->notify(_("Save clipboard translation"), wxString::Format(_("The text is already existing in '%s'"), _list->getName()));
-		//return;
-	//}
+	//On vérifie la validités de la liste.
+	if(tmpList == nullptr)
+	{
+		wxMessageBox(_("Sorry, the list is nonexistent.\nPlease correct this problem in delete this action."), _("List invalid."), wxOK|wxICON_EXCLAMATION|wxCENTRE);
+		return;
+	}
 	
-	////Si on doit afficher le dialogue pour choisie la traduction principale.
-	//if(_showDialog)
-	//{
-		//DialogPickMainTranslation dlg(nullptr, clipboard, mainTranslate, translations);
-		//if(dlg.ShowModal() == wxID_CANCEL)
-		//{
-			////L'utilisateur à quitter le dialogue.
-			//Notification::getInstance()->notify(_("Save clipboard translation"), _("The text is not saved."));
-			//return;
-		//}
+	//Vérification des lange de la liste.
+	wxString tmplgsrc;
+	wxString tmplgto;
+	tmpList->getlanguages(&tmplgsrc, &tmplgto);
+	wxASSERT(tmplgsrc==_lgsrc);
+	wxASSERT(tmplgto==_lgto);
+	
+	//On vérifier l'existence du texte dans le fichier
+	if(tmpList->exist(clipboard))
+	{
+		Notification::getInstance()->notify(_("Save clipboard translation"), wxString::Format(_("The text is already existing in '%s'"), _listName));
+		return;
+	}
+	
+	//Si on doit afficher le dialogue pour choisie la traduction principale.
+	if(_showDialog)
+	{
+		DialogPickMainTranslation dlg(nullptr, clipboard, mainTranslate, translations);
+		if(dlg.ShowModal() == wxID_CANCEL)
+		{
+			//L'utilisateur à quitter le dialogue.
+			Notification::getInstance()->notify(_("Save clipboard translation"), _("The text is not saved."));
+			return;
+		}
 		
-		////mainTranslate deviens le chois de l'utilisateur
-		//mainTranslate = dlg.GetChoice();
-	//}
+		//mainTranslate deviens le chois de l'utilisateur
+		mainTranslate = dlg.GetChoice();
+	}
 	
-	////Sinon on le sauvegarde.
-	//if(_saveAll)//Doit ton tout sauvegarder ?
-	//{
-		//_list->save(clipboard, mainTranslate, translations);
-	//}
-	//else
-	//{
-		//_list->save(clipboard, mainTranslate);
-	//}
+	//Sinon on le sauvegarde.
+	if(tmpList->save(clipboard, mainTranslate, translations) != 1)
+	{
+		return;
+	}
 	
-	//Notification::getInstance()->notify(_("Save clipboard translation"), _("The text has be saved."));
+	Notification::getInstance()->notify(_("Save clipboard translation"), _("The text has be saved."));
 }
 
 wxPanel* ActSaveTranslation::getPanelPreferences(wxWindow* parent, wxButton* buttonOK)
@@ -315,7 +321,6 @@ wxPanel* ActSaveTranslation::getPanelPreferences(wxWindow* parent, wxButton* but
 	return new PanelActSaveTranslation(parent, buttonOK, this);
 }
 
-//! \todo a implémenter avec ListManager
 void ActSaveTranslation::actLoad(wxFileConfig & fileConfig)
 {	
 	//On récupère les langages.
@@ -323,15 +328,12 @@ void ActSaveTranslation::actLoad(wxFileConfig & fileConfig)
 	fileConfig.Read("lgto", &_lgto);
 	
 	//On récupère la list.
-	//wxString listName;
-	//fileConfig.Read("listName", &listName);
-	//newList(listName);
+	fileConfig.Read("listName", &_listName);
 	
 	//On sauvegarde si on doit dessiner un dialogue a la sauvage d'un texts.
 	fileConfig.Read("showDialog", &_showDialog);
 }
 		
-//! \todo a implémenter avec ListManager
 void ActSaveTranslation::actSave(wxFileConfig & fileConfig)const
 {	
 	//On sauvegarde les langages.
@@ -339,7 +341,7 @@ void ActSaveTranslation::actSave(wxFileConfig & fileConfig)const
 	fileConfig.Write("lgto", _lgto);
 	
 	//On sauvegarde la liste.
-	//fileConfig.Write("listName", _list->getName());
+	fileConfig.Write("listName", _listName);
 	
 	//On sauvegarde si on doit dessiner un dialogue a la sauvage d'un texts.
 	fileConfig.Write("showDialog", _showDialog);
@@ -350,5 +352,5 @@ wxString ActSaveTranslation::getStringPreferences()const
 	return 	Resource::getInstance()->abbreviationToLanguage(_lgsrc) +
 			' ' + _("to") + ' ' +
 			Resource::getInstance()->abbreviationToLanguage(_lgto) +
-			' ' + _("in list") + ' ' + "_list->getName()";
+			' ' + _("in list") + ' ' + _listName;
 }

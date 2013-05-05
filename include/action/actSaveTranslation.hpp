@@ -175,7 +175,7 @@ class ActSaveTranslation : public Action
 		//! \brief Lange de traduction.
 		wxString _lgto;
 		
-		List* _list;
+		wxString _listName;
 		bool _showDialog;
 };
 
