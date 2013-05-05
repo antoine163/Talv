@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.16
+//! \version 0.17
 //! \date 31.03.2013
 //!
 //! ********************************************************************
@@ -144,7 +144,6 @@ class ActSaveTranslation : public Action
 		ActSaveTranslation(	wxString const& lgsrc,
 							wxString const& lgto,
 							wxString const& listName,
-							bool saveAll,
 							bool showDialog);
 						
 		//! \brief Destructeur.
@@ -177,7 +176,6 @@ class ActSaveTranslation : public Action
 		wxString _lgto;
 		
 		List* _list;
-		bool _saveAll;
 		bool _showDialog;
 };
 

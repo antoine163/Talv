@@ -50,6 +50,7 @@ class ListManager : public Singleton<ListManager>
 		//! la liste que vous utilisez. Sent quoi vous vous retrouveriez
 		//! avec un pointeur non valide.
 		//! \param name le non de la liste à obtenir.
+		//! \return nullptr si la liste n'a pas été trouver.
 		List* getList(wxString const& name);
 		
 		//! \brief Obtenir une lite en fonction de son nom.

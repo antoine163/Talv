@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.14
+//! \version 0.15
 //! \date 30.03.2013
 //!
 //! ********************************************************************
@@ -43,6 +43,8 @@ Resource::Resource()
 	//Volume 100%
 	_ttsVolume = 1.0;
 	
+	//Par défaut on ne démarre pas l'application au démarrage.
+	_powerOn = false;
 	
 	//Liste des langues
 	_languages["af"] = _("Afrikaans");

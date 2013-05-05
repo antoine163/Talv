@@ -77,44 +77,14 @@ GuiPanelActSaveTranslation::GuiPanelActSaveTranslation( wxWindow* parent, wxWind
 	staticTextList->Wrap( -1 );
 	bSizer6->Add( staticTextList, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT|wxTOP|wxBOTTOM|wxLEFT, 5 );
 	
-	_textCtrlList = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer6->Add( _textCtrlList, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	_comboBoxList = new wxComboBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
+	bSizer6->Add( _comboBoxList, 1, wxALL, 5 );
 	
 	bSizer1->Add( bSizer6, 0, wxEXPAND, 5 );
 	
-	wxStaticLine* staticline2;
-	staticline2 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
-	bSizer1->Add( staticline2, 0, wxEXPAND | wxALL, 5 );
-	
-	wxBoxSizer* bSizer9;
-	bSizer9 = new wxBoxSizer( wxHORIZONTAL );
-	
-	wxBoxSizer* bSizer10;
-	bSizer10 = new wxBoxSizer( wxHORIZONTAL );
-	
-	wxBoxSizer* bSizer11;
-	bSizer11 = new wxBoxSizer( wxVERTICAL );
-	
-	_radioBtnSaveAllTranslations = new wxRadioButton( this, wxID_ANY, _("Save all translations from google."), wxDefaultPosition, wxDefaultSize, 0 );
-	_radioBtnSaveAllTranslations->SetValue( true ); 
-	bSizer11->Add( _radioBtnSaveAllTranslations, 0, wxRIGHT|wxLEFT, 5 );
-	
-	_radioBtnSaveATranslation = new wxRadioButton( this, wxID_ANY, _("Save a translation from google."), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer11->Add( _radioBtnSaveATranslation, 0, wxRIGHT|wxLEFT, 5 );
-	
-	bSizer10->Add( bSizer11, 1, wxEXPAND, 5 );
-	
-	wxStaticLine* staticline3;
-	staticline3 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
-	bSizer10->Add( staticline3, 0, wxALL|wxEXPAND, 5 );
-	
-	_checkBoxShowDialog = new wxCheckBox( this, wxID_ANY, _("Show a dialog for select \nthe main translation."), wxDefaultPosition, wxDefaultSize, 0 );
+	_checkBoxShowDialog = new wxCheckBox( this, wxID_ANY, _("Show a dialog for select the main translation."), wxDefaultPosition, wxDefaultSize, 0 );
 	_checkBoxShowDialog->SetValue(true); 
-	bSizer10->Add( _checkBoxShowDialog, 0, wxRIGHT|wxLEFT|wxALIGN_CENTER_VERTICAL, 5 );
-	
-	bSizer9->Add( bSizer10, 1, wxEXPAND, 5 );
-	
-	bSizer1->Add( bSizer9, 1, wxEXPAND, 5 );
+	bSizer1->Add( _checkBoxShowDialog, 0, wxRIGHT|wxLEFT|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	this->SetSizer( bSizer1 );
 	this->Layout();
