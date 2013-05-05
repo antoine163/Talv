@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.9
+//! \version 0.10
 //! \date 20.03.2013
 //!
 //! ********************************************************************
@@ -128,7 +128,7 @@ void ActionManager::save(wxFileConfig & fileConfig)const
 		//Obtenir la version string du raccourci.
 		wxString stringShortcut = ShortcutKey::shortcutKeyToString(it.first);
 		//Crée un groupe pour ce raccourci.
-		fileConfig.SetPath("/ActTypeName/"+stringShortcut);
+		fileConfig.SetPath("/ActionManager/"+stringShortcut);
 		
 		//Sauvegarde de l'action
 		it.second->save(fileConfig);
