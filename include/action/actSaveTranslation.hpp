@@ -42,6 +42,11 @@ class PanelActSaveTranslation : public GuiPanelActSaveTranslation
 		PanelActSaveTranslation(wxWindow* parent, wxButton* buttonOK, ActSaveTranslation * act);
 		~PanelActSaveTranslation();
 		
+		void updateComboBoxList();
+		
+		void OnChoiceSrc(wxCommandEvent&);
+		void OnChoiceTo(wxCommandEvent&);
+		
 		//! \brief Méthode appeler si appuis sur bouton "ok" du parent.
 		//! Elle valide les modifications et les installe dans l'action
 		void OnOKButtonClick(wxCommandEvent& event);

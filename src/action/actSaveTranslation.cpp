@@ -48,9 +48,8 @@ PanelActSaveTranslation::PanelActSaveTranslation(wxWindow* parent, wxButton* but
 	n = _choiceLanguageOfTranslation->FindString(languages.at(_act->_lgto));
 	_choiceLanguageOfTranslation->SetSelection(n);
 	
-	//Affiche le non de la liste si il y une liste.
-	//if(_act->_listName != wxEmptyString)
-		//(*_textCtrlList) << _act->_list->getName();
+	//Métre a jour le combo box
+	//updateComboBoxList();
 		
 	//Dessiner un dialogue
 	if(_act->_showDialog)
@@ -68,23 +67,71 @@ PanelActSaveTranslation::~PanelActSaveTranslation()
 	_buttonOK->Unbind(wxEVT_COMMAND_BUTTON_CLICKED, &PanelActSaveTranslation::OnOKButtonClick, this, _buttonOK->GetId());
 }
 
-//! \todo a implémenter avec ListManager
+//! \todo a implémenter avec ListManager/panel
+void PanelActSaveTranslation::updateComboBoxList()
+{	
+	//Récupération du langage source.
+	int n = _choiceLanguageSource->GetSelection();
+	wxString s = _choiceLanguageSource->GetString(n);
+	wxString tmplgsrc = Resource::getInstance()->languageToAbbreviation(s);
+	
+	//Récupération du langage de destination.
+	n = _choiceLanguageOfTranslation->GetSelection();
+	s = _choiceLanguageOfTranslation->GetString(n);
+	wxString tmplgto = Resource::getInstance()->languageToAbbreviation(s);
+	
+	//Récupération de la liste des listes en fonction des langes.
+	wxArrayString tmpLists = ListManager::getInstance()->getNameListsByLanguages(tmplgsrc, tmplgto);
+	
+	//Chois de la valeur proposer.
+	wxString value = wxEmptyString;
+	if(tmpLists.Index(_act->_listName) != wxNOT_FOUND)
+		value = _act->_listName;
+	
+	//Création du nouveau combo box
+	_comboBoxList->Create(this, wxID_ANY, value, wxDefaultPosition, wxDefaultSize, tmpLists);
+}
+
+void PanelActSaveTranslation::OnChoiceSrc(wxCommandEvent&)
+{
+	//updateComboBoxList();
+}
+
+void PanelActSaveTranslation::OnChoiceTo(wxCommandEvent&)
+{
+	//updateComboBoxList();
+}
+
+//! \todo a implémenter avec ListManager/panel
 void PanelActSaveTranslation::OnOKButtonClick(wxCommandEvent& event)
 {
-	////Récupére le nom de la liste
-	//wxString tmpListName = _textCtrlList->GetLineText(0);
+	//Récupération du langage source.
+	int n = _choiceLanguageSource->GetSelection();
+	wxString s = _choiceLanguageSource->GetString(n);
+	wxString tmplgsrc = Resource::getInstance()->languageToAbbreviation(s);
 	
-	////Vérifie si le nom de la liste et valide.
+	//Récupération du langage de destination.
+	n = _choiceLanguageOfTranslation->GetSelection();
+	s = _choiceLanguageOfTranslation->GetString(n);
+	wxString tmplgto = Resource::getInstance()->languageToAbbreviation(s);
+	
+	//Récupère le nom de la liste
+	wxString tmpListName = _comboBoxList->GetStringSelection();
+	
+	//Vérifie si le nom de la liste et valide.
 	//if(tmpListName.IsEmpty())
 	//{
 		//wxMessageBox(_("The name of list is empty."), _("Name list invalid"), wxOK|wxICON_EXCLAMATION|wxCENTRE, this);
 		//return;
 	//}
 	
-	//Vérifie si le fichier du non de la lise et existent.
-	//Ceci voudrai dire qu'une autre 
-	//if(List::existInFileSystem(tmpListName))
+	////Vérifie si la liste est déjà existante
+	//if(ListManager::getInstance()->exist(tmpListName))
 	//{
+		////Vérifie si la lite est configurer avec les même langage.
+		//ListManager::getInstance()->getList(tmpListName);
+		
+		
 		////Le fichier est déjà existent ?
 		//if(tmpFileName.Exists() && tmpFileName != _act->_fileName)
 		//{
@@ -105,16 +152,17 @@ void PanelActSaveTranslation::OnOKButtonClick(wxCommandEvent& event)
 			//}
 		//}
 	//}
+	////Sinon on la crée
+	//else
+	//{
+		////ListManager::getInstance()->create(tmpListName, tmplgsrc, tmplgto);
+	//}
 	
 	//Affect à l'action le langage source.
-	int n = _choiceLanguageSource->GetSelection();
-	wxString s = _choiceLanguageSource->GetString(n);
-	_act->_lgsrc = Resource::getInstance()->languageToAbbreviation(s);
+	_act->_lgsrc = Resource::getInstance()->languageToAbbreviation(tmplgsrc);
 	
 	//Affect à l'action le langage de destination.
-	n = _choiceLanguageOfTranslation->GetSelection();
-	s = _choiceLanguageOfTranslation->GetString(n);
-	_act->_lgto = Resource::getInstance()->languageToAbbreviation(s);
+	_act->_lgto = Resource::getInstance()->languageToAbbreviation(tmplgto);
 	
 	//Affect à l'action si il doit afficher un dialogue.
 	_act->_showDialog = _checkBoxShowDialog->IsChecked();
