@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.2
+//! \version 0.3
 //! \date 02.05.2013
 //!
 //! ********************************************************************
@@ -113,6 +113,26 @@ wxArrayString ListManager::getNameLists()const
 	{
 		//Ajout de la liste au wxArrayString.
 		tmpArrayString.Add(it->getName());
+	}
+	
+	return tmpArrayString;
+}
+
+wxArrayString ListManager::getNameListsByLanguages(
+	wxString const& lgsrc,
+	wxString const& lgto)const
+{
+	wxArrayString tmpArrayString;
+	
+	//Parcoure des lites.
+	for(auto it: _lists)
+	{
+		//Si les lange son équivalente.
+		if(it->_lgsrc == lgsrc && it->_lgto == lgto)
+		{
+			//Ajout de la liste au wxArrayString.
+			tmpArrayString.Add(it->getName());
+		}
 	}
 	
 	return tmpArrayString;

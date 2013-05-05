@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.2
+//! \version 0.3
 //! \date 02.05.2013
 //!
 //! ********************************************************************
@@ -53,9 +53,15 @@ class ListManager : public Singleton<ListManager>
 		//! \return nullptr si la liste n'a pas été trouver.
 		List* getList(wxString const& name);
 		
-		//! \brief Obtenir une lite en fonction de son nom.
+		//! \brief Obtenir le nom de touts les lites.
 		//! \return le nom de tout les listes.
 		wxArrayString getNameLists()const;
+		
+		//! \brief Obtenir le nom de touts les lites en fonction de leur lange.
+		//! \return le nom de tout les listes.
+		wxArrayString getNameListsByLanguages(
+			wxString const& lgsrc,
+			wxString const& lgto)const;
 		
 		//! \brief Pour connaître si une liste existe.
 		//! \return true si elle existe, sinon false.
