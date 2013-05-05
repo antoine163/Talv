@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.1
+//! \version 0.2
 //! \date 02.05.2013
 //!
 //! ********************************************************************
@@ -14,6 +14,8 @@
 */
 
 #include "listManager.hpp"
+#include <wx/utils.h> 
+#include <wx/debug.h> 
 
 // *********************************************************************
 // Class ListManager
@@ -139,7 +141,7 @@ List* ListManager::create(	wxString const& name,
 		return nullptr;
 		
 	//Création et ajout de la liste.
-	List* tmpList = new List(name, lgsrc, lgto);
+	List* tmpList = new List(wxGetUserHome()+"/"+PROJECT_NAME+"List/"+name, lgsrc, lgto);
 	if(tmpList != nullptr)
 		_lists.push_back(tmpList);
 	
