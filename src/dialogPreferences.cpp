@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 2.0
+//! \version 2.2
 //! \date 02.01.2013
 //!
 //! ********************************************************************
@@ -29,8 +29,8 @@
 // Class PanelList
 // *********************************************************************
 
-PanelList::PanelList(wxWindow* parent)
-: GuiPanelList(parent)
+PanelList::PanelList(wxWindow* parent, wxString name)
+: GuiPanelList(parent), _name(name)
 {
 }
 
@@ -38,6 +38,103 @@ PanelList::~PanelList()
 {
 }
 
+void PanelList::addItem(wxArrayString const& item, bool select)
+{
+	//Vérifie si l'item est vide.
+	if(item.GetCount() == 0)
+		return;
+		
+	//Ajout l'item au débute.
+	_listCtrl->InsertItem(0, item[0]);
+	for(size_t i = 1; i < item.GetCount(); i++)
+	{
+		_listCtrl->SetItem(0, i, item[i]);
+	}
+	
+	//Rend visible l'item.
+	_listCtrl->EnsureVisible(0);
+	
+	//On sélectionne l'items au besoins.
+	if(select)
+		_listCtrl->SetItemState(0, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+}
+
+void PanelList::OnButtonClickDelete(wxCommandEvent&)
+{
+	wxMessageDialog *dlg = nullptr;
+	
+	//Création du dialog.
+	if(_listItemSelected.size() > 1)
+		dlg = new wxMessageDialog(this, wxString::Format(_("Do you want really delete this %ss ?"), _name), wxString::Format(_("Delete %ss"), _name), wxYES_NO|wxICON_QUESTION|wxCENTRE);
+	else
+		dlg = new wxMessageDialog(this, wxString::Format(_("Do you want really delete this %s ?"), _name), wxString::Format(_("Delete %s"), _name), wxYES_NO|wxICON_QUESTION|wxCENTRE);
+    
+    //Affichage du dialog
+    if(dlg->ShowModal() == wxID_YES)
+	{
+		//Supprimer tous les items sélectionnés
+		while(!_listItemSelected.empty())
+		{	
+			//L'item a supprimer.
+			wxString tmpItem = _listItemSelected.back().GetText();
+			
+			//On cherche l'id de l'item.
+			long idItem = _listCtrl->FindItem(-1, tmpItem);
+			
+			//On le supprime de la liste.
+			_listCtrl->DeleteItem(idItem);
+			_listItemSelected.pop_back();
+			OnDeleteItem(tmpItem);
+			
+			//On désactive les boutons
+			_buttonDelete->Enable(false);
+			_menuItemListDelete->Enable(false);
+			_buttonPreferences->Enable(false);
+			_menuItemListPreferences->Enable(false);
+		}
+	}
+	
+    dlg->Destroy();
+}
+
+
+void PanelList::OnButtonClickPreferences(wxCommandEvent&)
+{	
+	//Préférence de l'item.
+	wxArrayString tmpItem = OnPreferencesItem(_listItemSelected[0].GetText());
+	
+	//Mise à jour de l'item dans la liste.
+	long idItem = _listItemSelected[0].GetId();
+	for(size_t i = 0; i < tmpItem.GetCount(); i++)
+	{
+		_listCtrl->SetItem(idItem, i, tmpItem[i]);
+	}
+}
+
+void PanelList::OnButtonClickAdd(wxCommandEvent&)
+{
+	//Ajout d'un nouveau item.
+	wxArrayString newItem = OnAddItem();
+	
+	//tmpItem n'est pas vide ?
+	if(newItem.GetCount() > 0)
+	{
+		//Désélectionne tout les items
+		long tmpItem = -1;
+		for(;;)
+		{
+			tmpItem = _listCtrl->GetNextItem(tmpItem, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+			if(tmpItem == -1)
+				break;
+				
+			_listCtrl->SetItemState(tmpItem, 0, wxLIST_STATE_SELECTED);
+		}
+	
+		//Ajout de l'item
+		addItem(newItem);
+	}
+}
+		
 void PanelList::OnListItemDeselected(wxListEvent& event)
 {
 	//Recherche et suppression de l'item désélectionner.
@@ -96,7 +193,7 @@ void PanelList::OnListItemSelected(wxListEvent& event)
 // *********************************************************************
 
 PanelListActions::PanelListActions(wxWindow* parent)
-: PanelList(parent)
+: PanelList(parent, _("action"))
 {
 	//_listCtrlAction->EnableAlternateRowColours();
 	_listCtrl->AppendColumn(_("Shortcut"), wxLIST_FORMAT_LEFT, 100);
@@ -106,7 +203,22 @@ PanelListActions::PanelListActions(wxWindow* parent)
 	//Rempli la liste.
 	auto actions = ActionManager::getInstance()->getActions();
 	for(auto it: *actions)
-		addListShortcutAction(ShortcutKey::shortcutKeyToString(it.first), it.second, -1);
+	{
+		//Récupération du raccourci
+		wxString shortcut = ShortcutKey::shortcutKeyToString(it.first);
+		
+		//Préparation d'un wxArrayString pour l'ajout d'un item
+		wxArrayString tmpItem;
+		tmpItem.Add(shortcut);
+		tmpItem.Add(it.second->getName());
+		tmpItem.Add(it.second->getStringPreferences());
+		
+		//Ajout de l'item dans la liste
+		addItem(tmpItem, false);
+		
+		//On ajout la nouvelle action au _listShortcutAction.
+		_listShortcutAction[shortcut] = Action::newAction(it.second);
+	}
 }
 
 PanelListActions::~PanelListActions()
@@ -131,52 +243,35 @@ void PanelListActions::applayAndSave(wxFileConfig & fileConfig)
 	ActionManager::getInstance()->save(fileConfig);
 }
 
-void PanelListActions::OnButtonClickDelete(wxCommandEvent&)
+void PanelListActions::OnDeleteItem(wxString const& item)
 {
-	wxMessageDialog *dlg = nullptr;
-	
-	//Création du dialog.
-	if(_listItemSelected.size() > 1)
-		dlg = new wxMessageDialog(this, _("Do you want really delete this actions ?"), _("Delete actions"), wxYES_NO|wxICON_QUESTION|wxCENTRE);
-	else
-		dlg = new wxMessageDialog(this, _("Do you want really delete this action ?"), _("Delete action"), wxYES_NO|wxICON_QUESTION|wxCENTRE);
-    
-    //Affichage du dialog
-    if(dlg->ShowModal() == wxID_YES)
-	{
-		//Supprimer tous les items sélectionnés
-		while(!_listItemSelected.empty())
-		{	
-			//On le supprime de la liste.
-			deleteListShortcutAction(_listItemSelected.back().GetText());
-			_listItemSelected.pop_back();
-		}
-	}
-	
-    dlg->Destroy();
+	//Suppression de l'action.
+	delete _listShortcutAction[item];
+	_listShortcutAction.erase(item);
 }
 
-void PanelListActions::OnButtonClickPreferences(wxCommandEvent&)
+wxArrayString PanelListActions::OnPreferencesItem(wxString const& item)
 {
-	//Récupération du raccourci.
-	wxString tmpShortcut = _listItemSelected[0].GetText();
-	//Récupération de l'action.
-	Action const* tmpAct = _listShortcutAction[tmpShortcut];
+	//wxArrayString de retours.
+	wxArrayString newItem;
 	
-	DialogActionPreferences dlg(this, tmpShortcut, tmpAct);
+	//Récupération de l'action.
+	Action const* tmpAct = _listShortcutAction[item];
+	
+	DialogActionPreferences dlg(this, item, tmpAct);
 	while(1)
 	{
-		//Montre le dialogue
+		//Montre le dialogue.
 		if(dlg.ShowModal() == wxID_OK)
 		{
 			//Récupère le raccourci sélectionner.
 			wxString tmpNewShortcut = dlg.getShortcut();
 			
 			//Si le raccourci a été modifier.
-			if(tmpShortcut != tmpNewShortcut)
+			if(item != tmpNewShortcut)
 			{
-				//vérifie si le raccourci n'est pas déjà existent.
-				if(existListShortcutAction(tmpNewShortcut))
+				//Vérifie si le raccourci n'est pas déjà existent.
+				if(_listShortcutAction.count(tmpNewShortcut) > 0)
 				{
 					wxMessageDialog dlg(this, _("The shortcut already exist!"), _("Shortcut exist"), wxOK|wxICON_EXCLAMATION|wxCENTRE);
 					dlg.ShowModal();
@@ -185,17 +280,30 @@ void PanelListActions::OnButtonClickPreferences(wxCommandEvent&)
 				}
 			}
 			
-			//On supprime l'ancien raccourci.
-			long n = deleteListShortcutAction(tmpShortcut);
-			//Et on ajoute le nouveau
-			addListShortcutAction(tmpNewShortcut, dlg.getAction(), n);
+			//Libère la mémoire de l'ancienne action.
+			delete _listShortcutAction[item];
+			_listShortcutAction.erase(item);
+			
+			//Nouvelle action.
+			Action* tmpAct = Action::newAction(dlg.getAction());
+			_listShortcutAction[tmpNewShortcut] = tmpAct;
+			
+			//Mise à jour de l'item.
+			newItem.Add(tmpNewShortcut);
+			newItem.Add(tmpAct->getName());
+			newItem.Add(tmpAct->getStringPreferences());
 		}
 		break;
 	}
+	
+	return newItem;
 }
 
-void PanelListActions::OnButtonClickAdd(wxCommandEvent&)
+wxArrayString PanelListActions::OnAddItem()
 {
+	//wxArrayString de retours.
+	wxArrayString newItem;
+	
 	DialogActionPreferences dlg(this);
 	while(1)
 	{
@@ -206,7 +314,7 @@ void PanelListActions::OnButtonClickAdd(wxCommandEvent&)
 			wxString tmpNewShortcut = dlg.getShortcut();
 			
 			//vérifie si le raccourci n'est pas déjà existent.
-			if(existListShortcutAction(tmpNewShortcut))
+			if(_listShortcutAction.count(tmpNewShortcut) > 0)
 			{
 				wxMessageDialog dlg(this, _("The shortcut already exist!"), _("Shortcut exist"), wxOK|wxICON_EXCLAMATION|wxCENTRE);
 				dlg.ShowModal();
@@ -214,117 +322,59 @@ void PanelListActions::OnButtonClickAdd(wxCommandEvent&)
 				continue;
 			}
 			
-			//On ajoute le nouveau raccourci
-			addListShortcutAction(tmpNewShortcut, dlg.getAction(), _listCtrl->GetItemCount());
+			//Nouvelle action
+			Action* tmpAct = Action::newAction(dlg.getAction());
+			_listShortcutAction[tmpNewShortcut] = tmpAct;
+			
+			//Un nouveau item
+			newItem.Add(tmpNewShortcut);
+			newItem.Add(tmpAct->getName());
+			newItem.Add(tmpAct->getStringPreferences());
 		}
 		break;
 	}
-}
-
-bool PanelListActions::addListShortcutAction(wxString const& shortcut, Action const* act, long item)
-{
-	//Si le raccourci existe déjà.
-	if(_listShortcutAction.count(shortcut) > 0)
-		return false;
-		
-	//Sinon on l'ajoute.
-	long tmpItem = -1;
 	
-	//Désélectionne tout les items
-	for(;;)
-	{
-		tmpItem = _listCtrl->GetNextItem(tmpItem, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
-		if(tmpItem == -1)
-			break;
-			
-		_listCtrl->SetItemState(tmpItem, 0, wxLIST_STATE_SELECTED);
-	}
-	
-	//L'item doit être ajouter au début de la liste ?
-	if(item == -1)
-		tmpItem = 0;
-	else
-		tmpItem = item;
-		
-	//Ajout du texte de l'item
-	_listCtrl->InsertItem(tmpItem, shortcut);
-	_listCtrl->SetItem(tmpItem, 1, act->getName());
-	_listCtrl->SetItem(tmpItem, 2, act->getStringPreferences());
-	_listCtrl->EnsureVisible(tmpItem);
-	
-	//On sélectionne l'items si on ne la pas ajouter au début de la liste
-	if(item != -1)
-		_listCtrl->SetItemState(tmpItem, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
-	
-	//On ajout la nouvelle action au _listShortcutAction (une copie de act)
-	_listShortcutAction[shortcut] = Action::newAction(act);
-		
-	return true;
-}
-
-long PanelListActions::deleteListShortcutAction(wxString const& shortcut)
-{		
-	//Si le raccourci existe.
-	if(existListShortcutAction(shortcut))
-	{
-		//On cherche l'id de l'item.
-		long idItem = _listCtrl->FindItem(-1, shortcut);
-		//On le désélectionne
-		//_listCtrl->SetItemState(idItem, 0, wxLIST_STATE_SELECTED);
-		//Et on le supprime.
-		_listCtrl->DeleteItem(idItem);
-
-		//On le supprime
-		delete _listShortcutAction[shortcut];
-		_listShortcutAction.erase(shortcut);
-		
-		return idItem;
-	}
-	
-	return -1;
-}
-
-bool PanelListActions::existListShortcutAction(wxString const& shortcut)
-{
-	//Si le raccourci existe.
-	if(_listShortcutAction.count(shortcut) > 0)
-		return true;
-	
-	return false;
+	return newItem;
 }
 
 // *********************************************************************
 // Class PanelListLists
 // *********************************************************************
 
-PanelListLists::PanelListLists(wxWindow* parent)
-: PanelList(parent)
-{
-	//_listCtrlAction->EnableAlternateRowColours();
-	_listCtrl->AppendColumn(_("Name"), wxLIST_FORMAT_LEFT, 158);
-	_listCtrl->AppendColumn(_("Language source"), wxLIST_FORMAT_LEFT, 158);
-	_listCtrl->AppendColumn(_("Language of translation"), wxLIST_FORMAT_LEFT, 158);
-}
+//PanelListLists::PanelListLists(wxWindow* parent)
+//: PanelList(parent)
+//{
+	////_listCtrlAction->EnableAlternateRowColours();
+	//_listCtrl->AppendColumn(_("Name"), wxLIST_FORMAT_LEFT, 158);
+	//_listCtrl->AppendColumn(_("Language source"), wxLIST_FORMAT_LEFT, 158);
+	//_listCtrl->AppendColumn(_("Language of translation"), wxLIST_FORMAT_LEFT, 158);
+	
+	////Rempli la liste.
+	////auto actions = listManager::getInstance()->getActions();
+	////for(auto it: *actions)
+	////{
+	////}
+//}
 
-PanelListLists::~PanelListLists()
-{
-}
+//PanelListLists::~PanelListLists()
+//{
+//}
 
-void PanelListLists::applayAndSave(wxFileConfig & fileConfig)
-{
-}
+//void PanelListLists::applayAndSave(wxFileConfig & fileConfig)
+//{
+//}
 
-void PanelListLists::OnButtonClickDelete(wxCommandEvent&)
-{
-}
+//void PanelListLists::OnButtonClickDelete(wxCommandEvent&)
+//{
+//}
 
-void PanelListLists::OnButtonClickPreferences(wxCommandEvent&)
-{
-}
+//void PanelListLists::OnButtonClickPreferences(wxCommandEvent&)
+//{
+//}
 
-void PanelListLists::OnButtonClickAdd(wxCommandEvent&)
-{
-}
+//void PanelListLists::OnButtonClickAdd(wxCommandEvent&)
+//{
+//}
 
 // *********************************************************************
 // Class DialogPreferences
@@ -348,8 +398,8 @@ DialogPreferences::DialogPreferences()
 	_notebook->AddPage(_PanelListActions, _("Actions"), false);
 	
 	//Ajout du panel List
-	_PanelListLists = new PanelListLists(_notebook);
-	_notebook->AddPage(_PanelListLists, _("Lists"), false);
+	//_PanelListLists = new PanelListLists(_notebook);
+	//_notebook->AddPage(_PanelListLists, _("Lists"), false);
 }
 
 DialogPreferences::~DialogPreferences()
@@ -393,6 +443,6 @@ void DialogPreferences::applayAndSave()
 	_PanelListActions->applayAndSave(fileConfig);
 	
 	//On sauvegarde les EN DEUXIÈME actions
-	_PanelListActions->applayAndSave(fileConfig);
+	//_PanelListActions->applayAndSave(fileConfig);
 }
 		

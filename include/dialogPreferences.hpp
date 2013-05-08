@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 2.0
+//! \version 2.2
 //! \date 02.01.2013
 //!
 //! ********************************************************************
@@ -31,28 +31,56 @@ class PanelList : public GuiPanelList
 {
 	public:
 		
-		PanelList(wxWindow* parent);
+		PanelList(wxWindow* parent, wxString name);
 		virtual ~PanelList();
 		
 		//! \brief Applique les modification et les sauvegarde dans le fichier de configuration.
 		virtual void applayAndSave(wxFileConfig & fileConfig)=0;
 		
 	protected:
+		//! \brief Ajout un item a la liste.
+		//! \param item a ajouter. Si il est vide il ne sera pas jouter.
+		//! Chaque wxString correspond à une colonne.
+		//! \param select true pour sélectionner l'item ajouter.
+		void addItem(wxArrayString const& item, bool select = true);
+		
+		//! \brief Suppression d'item.
+		//!
+		//! Quand l'utilisateur clique sue le bouton "delete" cette méthode est appeler.
+		//! \param l'item à supprimer.
+		virtual void OnDeleteItem(wxString const& item)=0;
+		
+		//! \brief Préférence d'un item.
+		//!
+		//! Quand l'utilisateur clique sue le bouton "preference" cette méthode est appeler.
+		//! \param l'item à modifier.
+		//! \return l'item modifier. Chaque wxString correspond à une colonne.
+		virtual wxArrayString OnPreferencesItem(wxString const& item)=0;
+		
+		//! \brief ajouter d'un item.
+		//!
+		//! Quand l'utilisateur clique sue le bouton "add" cette méthode est appeler.
+		//! \return le nouveau item. Si le wxArrayString est vide l'item ne sera pas ajouter.
+		//! Chaque wxString correspond à une colonne.
+		virtual wxArrayString OnAddItem()=0;
+		
 		//! \brief Liste des Item qui sont sélectionner.
 		std::vector<wxListItem> _listItemSelected;
-			
-		//! \brief Supprimer un item.
-		virtual void OnButtonClickDelete(wxCommandEvent& event){event.Skip();}
-		//! \brief Préférence d'un item.
-		virtual void OnButtonClickPreferences(wxCommandEvent& event){event.Skip();}
-		//! \brief Ajouter un item
-		virtual void OnButtonClickAdd(wxCommandEvent& event){event.Skip();}
 		
 	private:
+		//! \brief Supprimer un item.
+		void OnButtonClickDelete(wxCommandEvent&);
+		//! \brief Préférence d'un item.
+		void OnButtonClickPreferences(wxCommandEvent&);
+		//! \brief Ajouter un item
+		void OnButtonClickAdd(wxCommandEvent&);
+		
 		//! \brief Un item a été désélectionner.
 		void OnListItemDeselected(wxListEvent& event);
 		//! \brief Un item a été sélectionner.
 		void OnListItemSelected(wxListEvent& event);
+		
+		wxString _name;
 };
 
 // *********************************************************************
@@ -70,32 +98,13 @@ class PanelListActions : public PanelList
 		void applayAndSave(wxFileConfig & fileConfig);
 		
 	private:	
-		//! \brief Supprimer un item.
-		void OnButtonClickDelete(wxCommandEvent&);
-		
-		//! \brief Préférence d'un item.
-		void OnButtonClickPreferences(wxCommandEvent&);
-		
-		//! \brief Ajouter un item.
-		void OnButtonClickAdd(wxCommandEvent&);
-		
-		//! \brief Ajout un raccourci/action.
-		//! \return true si le raccourci a bien été ajouter. false si le raccourci existe déjà.
-		//! \param shortcut le raccourci à ajouter (en version wxString).
-		//! \param act l'action a ajouter.
-		//! \param item pour préciser ça position dans la liste. 
-		//! -1 pour l'ajouter au début de la liste
-		bool addListShortcutAction(wxString const& shortcut, Action const* act, long item = -1);
-		
-		//! \brief Supprime un raccourci/action.
-		//! \param shortcut le raccourci à supprimer (en version wxString).
-		//! \return le numéro de l'item supprimer. -1 si le raccourci n'existe pas.
-		long deleteListShortcutAction(wxString const& shortcut);
-		
-		//! \brief Pour savoir si un raccourci existe.
-		//! \param shortcut le raccourci à vérifier (en version wxString).
-		//! \return true si le raccourci existe, false sinon.
-		bool existListShortcutAction(wxString const& shortcut);
+	
+		//! \brief Suppression d'une action.
+		void OnDeleteItem(wxString const& item);
+		//! \brief Préférence de l'action.
+		wxArrayString OnPreferencesItem(wxString const& item);
+		//! \brief ajouter d'une action.
+		wxArrayString OnAddItem();
 
 		//! \brief Liste des raccourcis/actions dans l'êta du dialogue (raccourci en version wxString).
 		std::map<wxString, Action*> _listShortcutAction;
@@ -105,24 +114,24 @@ class PanelListActions : public PanelList
 // Class PanelListLists
 // *********************************************************************
 
-class PanelListLists : public PanelList 
-{
-	public:
+//class PanelListLists : public PanelList 
+//{
+	//public:
 		
-		PanelListLists(wxWindow* parent);
-		virtual ~PanelListLists();
+		//PanelListLists(wxWindow* parent);
+		//virtual ~PanelListLists();
 		
-		//! \brief Applique les modification et les sauvegarde dans le fichier de configuration.
-		void applayAndSave(wxFileConfig & fileConfig);
+		////! \brief Applique les modification et les sauvegarde dans le fichier de configuration.
+		//void applayAndSave(wxFileConfig & fileConfig);
 		
-	private:		
-		//! \brief Supprimer un item.
-		void OnButtonClickDelete(wxCommandEvent&);
-		//! \brief Préférence d'un item.
-		void OnButtonClickPreferences(wxCommandEvent&);
-		//! \brief Ajouter un item
-		void OnButtonClickAdd(wxCommandEvent&);
-};
+	//private:		
+		////! \brief Supprimer un item.
+		//void OnButtonClickDelete(wxCommandEvent&);
+		////! \brief Préférence d'un item.
+		//void OnButtonClickPreferences(wxCommandEvent&);
+		////! \brief Ajouter un item
+		//void OnButtonClickAdd(wxCommandEvent&);
+//};
 
 // *********************************************************************
 // Class DialogPreferences
@@ -151,7 +160,7 @@ class DialogPreferences : public GuiDialogPreferences
 		void applayAndSave();
 		
 		PanelListActions* _PanelListActions;
-		PanelListLists* _PanelListLists;
+		//PanelListLists* _PanelListLists;
 };
 
 #endif //DIALOG_PREFERENCES_H
