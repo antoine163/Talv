@@ -5,7 +5,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.7
+//! \version 1.8
 //! \date 02.01.2013
 //!
 //! ********************************************************************
@@ -51,12 +51,12 @@ DialogActionPreferences::DialogActionPreferences(wxWindow* parent)
 }
 
 DialogActionPreferences::DialogActionPreferences(	wxWindow* parent,
-													ShortcutKey const& inShortcutKey,
-													Action const* inAct)
+													wxString const& shortcut,
+													Action const* act)
 : GuiDialogActionPreferences(parent)
 {
 	//copie de l'action
-	_action = Action::newAction(inAct);
+	_action = Action::newAction(act);
 	
 	//Initialisation des variable
 	_keyCtrlIsPressed = false;
@@ -75,7 +75,7 @@ DialogActionPreferences::DialogActionPreferences(	wxWindow* parent,
 	_choiceAction->SetSelection(n);
 	
 	//Affiche du raccourci.
-	_textCtrlChortcut->SetValue(ShortcutKey::shortcutKeyToString(inShortcutKey));
+	_textCtrlChortcut->SetValue(shortcut);
 	_textCtrlChortcut->SetForegroundColour(wxNullColour);
 	
 	//Affiche de la description de l'action
@@ -260,9 +260,9 @@ void DialogActionPreferences::OnOKButtonClick(wxCommandEvent& event)
 	event.Skip();
 }
 
-ShortcutKey DialogActionPreferences::getShortcutKey()const
+wxString DialogActionPreferences::getShortcut()const
 {
-	return ShortcutKey::stringToShortcutKey(_textCtrlChortcut->GetValue());
+	return _textCtrlChortcut->GetValue();
 }
 
 Action const* DialogActionPreferences::getAction()
