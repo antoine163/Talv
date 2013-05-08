@@ -3,7 +3,7 @@
 #	Makfile.
 #
 # - author 	:	Antoine Maleyrie : antoine.maleyrie@gmail.com
-# - version	:	1.4
+# - version	:	1.5
 # - date 	:	24/11/2012
 #
 ########################################################################
@@ -58,21 +58,6 @@ CXX_FLAGS_DEBUG=-g
 DEFINE=PROJECT_NAME=\"$(PROJECT_NAME)\"
 # Numéro de version
 DEFINE+=PROJECT_VERSION=\"$(PROJECT_VERSION)\"
-
-######## Les Actions > ######## 
-#Traduction du mot/phrase
-ifeq ($(ACT_TRANSLATION), yes)
-DEFINE+=USE_ACT_TRANSLATION
-endif
-#Sovgarde de la raduction du mot/phrase
-ifeq ($(ACT_SAVE_TRANSLATION), yes)
-DEFINE+=USE_ACT_SAVE_TRANSLATION
-endif
-#Dire le mot/phrase
-ifeq ($(ACT_SAY), yes)
-DEFINE+=USE_ACT_SAY
-endif
-######## Les Actions < ########
 
 #Émuler les notifications.
 ifeq ($(EMULATE_NOTIFICATION), yes)
