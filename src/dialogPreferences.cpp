@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 2.2
+//! \version 2.3
 //! \date 02.01.2013
 //!
 //! ********************************************************************
@@ -341,40 +341,58 @@ wxArrayString PanelListActions::OnAddItem()
 // Class PanelListLists
 // *********************************************************************
 
-//PanelListLists::PanelListLists(wxWindow* parent)
-//: PanelList(parent)
-//{
-	////_listCtrlAction->EnableAlternateRowColours();
-	//_listCtrl->AppendColumn(_("Name"), wxLIST_FORMAT_LEFT, 158);
-	//_listCtrl->AppendColumn(_("Language source"), wxLIST_FORMAT_LEFT, 158);
-	//_listCtrl->AppendColumn(_("Language of translation"), wxLIST_FORMAT_LEFT, 158);
+PanelListLists::PanelListLists(wxWindow* parent)
+: PanelList(parent, _("list"))
+{
+	//_listCtrlAction->EnableAlternateRowColours();
+	_listCtrl->AppendColumn(_("Name"), wxLIST_FORMAT_LEFT, 158);
+	_listCtrl->AppendColumn(_("Language source"), wxLIST_FORMAT_LEFT, 158);
+	_listCtrl->AppendColumn(_("Language of translation"), wxLIST_FORMAT_LEFT, 158);
 	
-	////Rempli la liste.
-	////auto actions = listManager::getInstance()->getActions();
-	////for(auto it: *actions)
-	////{
-	////}
-//}
+	//Rempli la liste.
+	wxArrayString lists = ListManager::getInstance()->getNameLists();
+	for(auto it: lists)
+	{		
+		//Récupération de la liste.
+		List* tmpList = ListManager::getInstance()->getList(it);
+		
+		//Récupération des paramètres de la liste.
+		wxString lgsrc;
+		wxString lgto;
+		tmpList->getlanguages(&lgsrc, &lgto);
+		
+		//Préparation d'un wxArrayString pour l'ajout d'un item.
+		wxArrayString tmpItem;
+		tmpItem.Add(it);
+		tmpItem.Add(Resource::getInstance()->abbreviationToLanguage(lgsrc));
+		tmpItem.Add(Resource::getInstance()->abbreviationToLanguage(lgto));
+		
+		//Ajout de l'item dans la liste.
+		addItem(tmpItem, false);
+	}
+}
 
-//PanelListLists::~PanelListLists()
-//{
-//}
+PanelListLists::~PanelListLists()
+{
+}
 
-//void PanelListLists::applayAndSave(wxFileConfig & fileConfig)
-//{
-//}
+void PanelListLists::applayAndSave(wxFileConfig & fileConfig)
+{
+}
 
-//void PanelListLists::OnButtonClickDelete(wxCommandEvent&)
-//{
-//}
+void PanelListLists::OnDeleteItem(wxString const& item)
+{
+}
 
-//void PanelListLists::OnButtonClickPreferences(wxCommandEvent&)
-//{
-//}
+wxArrayString PanelListLists::OnPreferencesItem(wxString const& item)
+{
+	return wxArrayString();
+}
 
-//void PanelListLists::OnButtonClickAdd(wxCommandEvent&)
-//{
-//}
+wxArrayString PanelListLists::OnAddItem()
+{
+	return wxArrayString();
+}
 
 // *********************************************************************
 // Class DialogPreferences
@@ -398,8 +416,8 @@ DialogPreferences::DialogPreferences()
 	_notebook->AddPage(_PanelListActions, _("Actions"), false);
 	
 	//Ajout du panel List
-	//_PanelListLists = new PanelListLists(_notebook);
-	//_notebook->AddPage(_PanelListLists, _("Lists"), false);
+	_PanelListLists = new PanelListLists(_notebook);
+	_notebook->AddPage(_PanelListLists, _("Lists"), false);
 }
 
 DialogPreferences::~DialogPreferences()
@@ -442,7 +460,7 @@ void DialogPreferences::applayAndSave()
 	//On sauvegarde EN PREMIER les listes
 	_PanelListActions->applayAndSave(fileConfig);
 	
-	//On sauvegarde les EN DEUXIÈME actions
-	//_PanelListActions->applayAndSave(fileConfig);
+	//On sauvegarde EN DEUXIÈME les actions
+	_PanelListActions->applayAndSave(fileConfig);
 }
 		

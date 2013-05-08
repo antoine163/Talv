@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 2.2
+//! \version 2.3
 //! \date 02.01.2013
 //!
 //! ********************************************************************
@@ -18,6 +18,7 @@
 
 #include "guiDialogPreferences.h"
 #include "actionManager.hpp"
+#include "listManager.hpp"
 #include "shortcut.hpp"
 
 #include <wx/listctrl.h>
@@ -27,11 +28,15 @@
 // Class PanelList
 // *********************************************************************
 
+//! \brief Panel de base pour les listes.
 class PanelList : public GuiPanelList 
 {
 	public:
-		
+		//! \brief Constructeur.
+		//! \param parent fenêtre parent.
+		//! \param name non de la liste
 		PanelList(wxWindow* parent, wxString name);
+		//! \brief Destructeur.
 		virtual ~PanelList();
 		
 		//! \brief Applique les modification et les sauvegarde dans le fichier de configuration.
@@ -87,23 +92,25 @@ class PanelList : public GuiPanelList
 // Class PanelListActions
 // *********************************************************************
 
+//! \brief Panel la liste de actions.
 class PanelListActions : public PanelList 
 {
 	public:
-		
+		//! \brief Constructeur.
+		//! \param parent fenêtre parent.
 		PanelListActions(wxWindow* parent);
+		//! \brief Destructeur.
 		virtual ~PanelListActions();
 		
 		//! \brief Applique les modification et les sauvegarde dans le fichier de configuration.
 		void applayAndSave(wxFileConfig & fileConfig);
 		
 	private:	
-	
-		//! \brief Suppression d'une action.
+		//! \brief Suppression de l'action.
 		void OnDeleteItem(wxString const& item);
 		//! \brief Préférence de l'action.
 		wxArrayString OnPreferencesItem(wxString const& item);
-		//! \brief ajouter d'une action.
+		//! \brief Ajouter d'une action.
 		wxArrayString OnAddItem();
 
 		//! \brief Liste des raccourcis/actions dans l'êta du dialogue (raccourci en version wxString).
@@ -114,24 +121,27 @@ class PanelListActions : public PanelList
 // Class PanelListLists
 // *********************************************************************
 
-//class PanelListLists : public PanelList 
-//{
-	//public:
+//! \brief Panel la liste de listes.
+class PanelListLists : public PanelList 
+{
+	public:
+		//! \brief Constructeur.
+		//! \param parent fenêtre parent.
+		PanelListLists(wxWindow* parent);
+		//! \brief Destructeur.
+		virtual ~PanelListLists();
 		
-		//PanelListLists(wxWindow* parent);
-		//virtual ~PanelListLists();
+		//! \brief Applique les modification et les sauvegarde dans le fichier de configuration.
+		void applayAndSave(wxFileConfig & fileConfig);
 		
-		////! \brief Applique les modification et les sauvegarde dans le fichier de configuration.
-		//void applayAndSave(wxFileConfig & fileConfig);
-		
-	//private:		
-		////! \brief Supprimer un item.
-		//void OnButtonClickDelete(wxCommandEvent&);
-		////! \brief Préférence d'un item.
-		//void OnButtonClickPreferences(wxCommandEvent&);
-		////! \brief Ajouter un item
-		//void OnButtonClickAdd(wxCommandEvent&);
-//};
+	private:		
+		//! \brief Suppression de la liste.
+		void OnDeleteItem(wxString const& item);
+		//! \brief Préférence de la liste.
+		wxArrayString OnPreferencesItem(wxString const& item);
+		//! \brief Ajouter d'une liste.
+		wxArrayString OnAddItem();
+};
 
 // *********************************************************************
 // Class DialogPreferences
@@ -142,7 +152,9 @@ class DialogPreferences : public GuiDialogPreferences
 {
 	public:
 		
+		//! \brief Constructeur.
 		DialogPreferences();
+		//! \brief Destructeur.
 		~DialogPreferences();
 		
 		//! \brief Pour savoir si le bouton shutdown et actionner.
@@ -160,7 +172,7 @@ class DialogPreferences : public GuiDialogPreferences
 		void applayAndSave();
 		
 		PanelListActions* _PanelListActions;
-		//PanelListLists* _PanelListLists;
+		PanelListLists* _PanelListLists;
 };
 
 #endif //DIALOG_PREFERENCES_H

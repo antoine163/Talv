@@ -61,7 +61,7 @@ void ListManager::load(wxFileConfig & fileConfig)
 		wxString tmplgsrc;
 		wxString tmplgto;
 		fileConfig.Read("lgsrc", &tmplgsrc);
-		fileConfig.Read("tmplgto", &tmplgto);
+		fileConfig.Read("lgto", &tmplgto);
 		
 		//Création de la liste.
 		create(tmpNameList, tmplgsrc, tmplgto);
