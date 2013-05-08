@@ -118,6 +118,17 @@ PanelListActions::~PanelListActions()
 
 void PanelListActions::applayAndSave(wxFileConfig & fileConfig)
 {
+	//Récupération de l'instance de ActionManager
+	ActionManager* actionManager = ActionManager::getInstance();
+	
+	//On commence par supprimer tout les raccourcis
+	actionManager->removeAll();
+	//Et on ajoute les raccourcis.
+	for(auto &it: _listShortcutAction)
+		actionManager->add(ShortcutKey::stringToShortcutKey(it.first), Action::newAction(it.second));
+		
+	//Sauvegarde des actions.
+	ActionManager::getInstance()->save(fileConfig);
 }
 
 void PanelListActions::OnButtonClickDelete(wxCommandEvent&)
@@ -364,30 +375,24 @@ void DialogPreferences::OnButtonClickApply(wxCommandEvent& event)
 
 void DialogPreferences::applayAndSave()
 {
-	////Récupération de l'instance de ActionManager
-	//ActionManager* actionManager = ActionManager::getInstance();
+	//On ouvre le fichier de config.
+	wxFileConfig fileConfig(	PROJECT_NAME,
+								wxEmptyString,
+								wxGetUserHome()+"/."+PROJECT_NAME);
+	fileConfig.DeleteAll();
 	
-	////On commence par supprimer tout les raccourcis
-	//actionManager->removeAll();
-	////Et on ajoute les raccourcis.
-	//for(auto &it: _listShortcutAction)
-		//actionManager->add(it.first, Action::newAction(it.second));
+	//Affectation des valeurs dans les ressources.
+	Resource::getInstance()->setShowMenu(_checkBoxShowMenu->GetValue());
+	Resource::getInstance()->setPowerOn(_checkBoxPowerOn->GetValue());
+	Resource::getInstance()->setTtsVolume(_sliderTts->GetValue()/100.);
 	
-	////Affectation des valeurs dans les ressources.
-	//Resource::getInstance()->setShowMenu(_checkBoxShowMenu->GetValue());
-	//Resource::getInstance()->setPowerOn(_checkBoxPowerOn->GetValue());
-	//Resource::getInstance()->setTtsVolume(_sliderTts->GetValue()/100.);
+	//On sauvegarde les ressources.
+	Resource::getInstance()->save(fileConfig);
 	
-	////On ouvre le fichier de config.
-	//wxFileConfig fileConfig(	PROJECT_NAME,
-								//wxEmptyString,
-								//wxGetUserHome()+"/."+PROJECT_NAME);
-	//fileConfig.DeleteAll();
+	//On sauvegarde EN PREMIER les listes
+	_PanelListActions->applayAndSave(fileConfig);
 	
-	////On sauvegarde les ressources.
-	//Resource::getInstance()->save(fileConfig);
-	
-	////Sauvegarde des actions.
-	//ActionManager::getInstance()->save(fileConfig);
+	//On sauvegarde les EN DEUXIÈME actions
+	_PanelListActions->applayAndSave(fileConfig);
 }
 		
