@@ -80,6 +80,8 @@ class ListManager : public Singleton<ListManager>
 						wxString const& lgto);
 					
 		//! \brief Supprimer une liste.
+		//!
+		//! Supprimer aussi le fichier associer à la liste.
 		//! \param name le non de la liste à supprimer.
 		//! \return true si la liste a bien été supprimer. false si la
 		//! liste n'est pas existante.

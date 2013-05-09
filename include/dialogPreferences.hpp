@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 2.4
+//! \version 2.5
 //! \date 02.01.2013
 //!
 //! ********************************************************************
@@ -146,11 +146,16 @@ class PanelListLists : public PanelList
 		
 	private:		
 		//! \brief Suppression de la liste.
-		void OnDeleteItem(wxString const&);
+		void OnDeleteItem(wxString const& item);
 		//! \brief Préférence de la liste.
 		wxArrayString OnPreferencesItem(wxString const& item);
 		//! \brief Ajouter d'une liste.
 		wxArrayString OnAddItem();
+		
+		//! \brief Les liste nouvellement ajouter.
+		wxArrayString _newLists;
+		//! \brief Les liste nouvellement supprimer.
+		wxArrayString _deleteLists;
 };
 
 // *********************************************************************

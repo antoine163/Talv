@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 2.4
+//! \version 2.5
 //! \date 02.01.2013
 //!
 //! ********************************************************************
@@ -412,10 +412,35 @@ PanelListLists::~PanelListLists()
 
 void PanelListLists::applayAndSave(wxFileConfig & fileConfig)
 {
+	//Suppression des listes au-pré de ListManager
+	for(auto it : _deleteLists)
+		ListManager::getInstance()->remove(it);
+	
+	//Ajout des listes au-pré de ListManager
+	for(auto it : _newLists)
+	{
+		//Récupération des langue pour cette liste.
+		long item = _listCtrl->FindItem(-1, it);
+		wxString lgsrc = Resource::getInstance()->languageToAbbreviation(_listCtrl->GetItemText(item, 1));
+		wxString lgto = Resource::getInstance()->languageToAbbreviation(_listCtrl->GetItemText(item, 2));
+		
+		ListManager::getInstance()->create(it, lgsrc, lgto);
+	}
+	
+	_newLists.Clear();
+	_deleteLists.Clear();
+	
+	//Sauvegarde des listes.
+	ListManager::getInstance()->save(fileConfig);
 }
 
-void PanelListLists::OnDeleteItem(wxString const&)
+void PanelListLists::OnDeleteItem(wxString const& item)
 {
+	//Si il existe dans _newLists on le supprime de celui ci;
+	if(_newLists.Index(item) != wxNOT_FOUND)
+		_newLists.Remove(item);
+	else//Sinon on le supprimer de _deleteLists
+		_deleteLists.Add(item);
 }
 
 wxArrayString PanelListLists::OnPreferencesItem(wxString const& item)
@@ -459,6 +484,13 @@ wxArrayString PanelListLists::OnAddItem()
 			newItem.Add(newList);
 			newItem.Add(lgsrc);
 			newItem.Add(lgto);
+			
+			//Si il existe dans _deleteLists on le supprime de celui ci;
+			if(_deleteLists.Index(newList) != wxNOT_FOUND)
+				_deleteLists.Remove(newList);
+		
+			//Une liste à ajouter;
+			_newLists.Add(newList);
 		}
 		break;
 	}
@@ -530,7 +562,7 @@ void DialogPreferences::applayAndSave()
 	Resource::getInstance()->save(fileConfig);
 	
 	//On sauvegarde EN PREMIER les listes
-	_PanelListActions->applayAndSave(fileConfig);
+	_PanelListLists->applayAndSave(fileConfig);
 	
 	//On sauvegarde EN DEUXIÈME les actions
 	_PanelListActions->applayAndSave(fileConfig);
