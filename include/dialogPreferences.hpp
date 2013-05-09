@@ -93,7 +93,6 @@ class PanelList : public GuiPanelList
 		
 		//menu
 		wxMenu* _menu;
-		
 		wxMenuItem* _menuItemListAdd;
 		wxMenuItem* _menuItemListPreferences;
 		wxMenuItem* _menuItemListDelete;
@@ -147,7 +146,7 @@ class PanelListLists : public PanelList
 		
 	private:		
 		//! \brief Suppression de la liste.
-		void OnDeleteItem(wxString const& item);
+		void OnDeleteItem(wxString const&);
 		//! \brief Préférence de la liste.
 		wxArrayString OnPreferencesItem(wxString const& item);
 		//! \brief Ajouter d'une liste.

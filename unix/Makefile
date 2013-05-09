@@ -3,7 +3,7 @@
 #	Makfile for Linux.
 #
 # - author 	:	Antoine Maleyrie : antoine.maleyrie@gmail.com
-# - version	:	0.11
+# - version	:	0.12
 # - date 	:	10.03.2013
 #
 ########################################################################
@@ -76,6 +76,8 @@ SRC+=../gui/guiDialogPreferences.cpp
 SRC+=../src/dialogPreferences.cpp
 SRC+=../gui/guiDialogActionPreferences.cpp
 SRC+=../src/dialogActionPreferences.cpp
+SRC+=../gui/guiDialogListAdd.cpp
+SRC+=../src/dialogListAdd.cpp
 
 
 ########################################################################

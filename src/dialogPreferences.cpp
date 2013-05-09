@@ -15,6 +15,7 @@
 
 #include "dialogPreferences.hpp"
 #include "dialogActionPreferences.hpp"
+#include "dialogListAdd.hpp"
 #include "shortcut.hpp"
 #include "resource.hpp"
 
@@ -32,6 +33,10 @@
 PanelList::PanelList(wxWindow* parent, wxString name)
 : GuiPanelList(parent), _name(name)
 {
+	#if wxCHECK_VERSION(2, 9, 5)
+		_listCtrlAction->EnableAlternateRowColours();
+	#endif
+	
 	//Construction du menu
 	_menu = new wxMenu();
 		
@@ -226,7 +231,6 @@ void PanelList::OnListItemSelected(wxListEvent& event)
 PanelListActions::PanelListActions(wxWindow* parent)
 : PanelList(parent, _("action"))
 {
-	//_listCtrlAction->EnableAlternateRowColours();
 	_listCtrl->AppendColumn(_("Shortcut"), wxLIST_FORMAT_LEFT, 100);
 	_listCtrl->AppendColumn(_("Action"), wxLIST_FORMAT_LEFT, 120);
 	_listCtrl->AppendColumn(_("Preferences"), wxLIST_FORMAT_LEFT, 255);
@@ -375,7 +379,6 @@ wxArrayString PanelListActions::OnAddItem()
 PanelListLists::PanelListLists(wxWindow* parent)
 : PanelList(parent, _("list"))
 {
-	//_listCtrlAction->EnableAlternateRowColours();
 	_listCtrl->AppendColumn(_("Name"), wxLIST_FORMAT_LEFT, 158);
 	_listCtrl->AppendColumn(_("Language source"), wxLIST_FORMAT_LEFT, 158);
 	_listCtrl->AppendColumn(_("Language of translation"), wxLIST_FORMAT_LEFT, 158);
@@ -411,7 +414,7 @@ void PanelListLists::applayAndSave(wxFileConfig & fileConfig)
 {
 }
 
-void PanelListLists::OnDeleteItem(wxString const& item)
+void PanelListLists::OnDeleteItem(wxString const&)
 {
 }
 
@@ -421,8 +424,46 @@ wxArrayString PanelListLists::OnPreferencesItem(wxString const& item)
 }
 
 wxArrayString PanelListLists::OnAddItem()
-{
-	return wxArrayString();
+{	
+	//wxArrayString de retours.
+	wxArrayString newItem;
+	
+	DialogListAdd dlg(this);
+	while(1)
+	{
+		//Montre le dialogue
+		if(dlg.ShowModal() == wxID_OK)
+		{
+			//Récupère la nouvelle liste.
+			wxString newList = dlg.getNamelist();
+			
+			//newList est vide ?
+			if(newList.IsEmpty())
+				break;
+			
+			//vérifie si la liste n'est pas déjà existent.
+			if(_listCtrl->FindItem(-1, newList) != wxNOT_FOUND)
+			{
+				wxMessageDialog dlg(this, _("The list already exist!"), _("List exist"), wxOK|wxICON_EXCLAMATION|wxCENTRE);
+				dlg.ShowModal();
+				
+				continue;
+			}
+			
+			//Récupération des langue.
+			wxString lgsrc;
+			wxString lgto;
+			dlg.getlanguages(&lgsrc, &lgto);
+			
+			//Un nouveau item
+			newItem.Add(newList);
+			newItem.Add(lgsrc);
+			newItem.Add(lgto);
+		}
+		break;
+	}
+	
+	return newItem;
 }
 
 // *********************************************************************
