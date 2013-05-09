@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.0
+//! \version 1.1
 //! \date 20.03.2013
 //!
 //! ********************************************************************
@@ -196,4 +196,36 @@ void ActionManager::enable(bool val)
 void ActionManager::OnShortcut(ShortcutEvent& event)
 {
 	_actions[event.getShortcutKey()]->execute();
+}
+
+// *********************************************************************
+// Class TmpActionManager
+// *********************************************************************
+
+TmpActionManager::TmpActionManager()
+{
+}
+
+TmpActionManager::~TmpActionManager()
+{
+}
+
+void TmpActionManager::init()
+{
+	auto act = ActionManager::getInstance()->getActions();
+	
+	for(auto it : *act)
+		add(it.first,it.second);
+}
+	
+void TmpActionManager::apply()
+{
+	ActionManager* actionManager = ActionManager::getInstance();
+	
+	//On supprime tout
+	actionManager->removeAll();
+	
+	//Et on remplie
+	for(auto it : _actions)
+		actionManager->add(it.first,it.second);
 }
