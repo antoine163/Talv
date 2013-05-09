@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.10
+//! \version 1.0
 //! \date 20.03.2013
 //!
 //! ********************************************************************
@@ -16,7 +16,76 @@
 #include "actionManager.hpp"
 
 // *********************************************************************
-// Class Action
+// Class ActionManagerBase
+// *********************************************************************
+
+ActionManagerBase::ActionManagerBase()
+{
+}
+
+ActionManagerBase::~ActionManagerBase()
+{
+	removeAll();
+}
+
+bool ActionManagerBase::add(ShortcutKey const &shortcut, Action* act)
+{
+	//Si le raccourci existe déjà.
+	if(_actions.count(shortcut) > 0)
+		return false;
+		
+	//Sinon on l'ajoute.
+	_actions[shortcut] = act;
+	
+	return true;
+}
+
+bool ActionManagerBase::remove(ShortcutKey const &shortcut)
+{
+	//Si le raccourci existe.
+	if(_actions.count(shortcut) > 0)
+	{
+		//On le supprime
+		delete _actions[shortcut];
+		_actions.erase(shortcut);
+		return true;
+	}
+	
+	return false;
+}
+
+void ActionManagerBase::removeAll()
+{
+	//Suppression des actions.	
+	_actions.clear();
+}
+
+bool ActionManagerBase::exist(ShortcutKey const &shortcut)
+{
+	//Si le raccourci existe.
+	if(_actions.count(shortcut) > 0)
+		return true;
+	
+	return false;
+}
+
+std::map<ShortcutKey, Action*> const* ActionManagerBase::getActions()const
+{
+	return &_actions;
+}
+
+Action const* ActionManagerBase::getAction(ShortcutKey const& shortcutKey)const
+{
+	std::map<ShortcutKey, Action*>::const_iterator it = _actions.find(shortcutKey);
+	
+	if(it == _actions.end())
+		return nullptr;
+	
+	return it->second;
+}
+
+// *********************************************************************
+// Class ActionManager
 // *********************************************************************
 
 ActionManager::ActionManager() : _shortcut(this)
@@ -25,17 +94,13 @@ ActionManager::ActionManager() : _shortcut(this)
 
 ActionManager::~ActionManager()
 {
-	removeAll();
 }
 
 bool ActionManager::add(ShortcutKey const &shortcut, Action* act)
 {
-	//Si le raccourci existe déjà.
-	if(_actions.count(shortcut) > 0)
+	//Ajout à la liste des actions.
+	if(!ActionManagerBase::add(shortcut, act))
 		return false;
-		
-	//Sinon on l'ajoute.
-	_actions[shortcut] = act;
 	
 	//Et on l'ajouter à la liste des raccourcis.
 	int id = _shortcut.creat(shortcut);
@@ -46,12 +111,9 @@ bool ActionManager::add(ShortcutKey const &shortcut, Action* act)
 
 bool ActionManager::remove(ShortcutKey const &shortcut)
 {
-	//Si le raccourci existe.
-	if(_actions.count(shortcut) > 0)
+	if(ActionManagerBase::remove(shortcut))
 	{
-		//On le supprime
-		delete _actions[shortcut];
-		_actions.erase(shortcut);
+		//Suppression du accourcie.
 		_shortcut.remove(shortcut);
 		return true;
 	}
@@ -68,16 +130,7 @@ void ActionManager::removeAll()
 		_shortcut.remove(it.first);
 	}
 		
-	_actions.clear();
-}
-
-bool ActionManager::exist(ShortcutKey const &shortcut)
-{
-	//Si le raccourci existe.
-	if(_actions.count(shortcut) > 0)
-		return true;
-	
-	return false;
+	ActionManagerBase::removeAll();
 }
 
 void ActionManager::load(wxFileConfig & fileConfig)
@@ -138,21 +191,6 @@ void ActionManager::save(wxFileConfig & fileConfig)const
 void ActionManager::enable(bool val)
 {
 	_shortcut.enable(val);
-}
-
-std::map<ShortcutKey, Action*> const* ActionManager::getActions()const
-{
-	return &_actions;
-}
-
-Action const* ActionManager::getAction(ShortcutKey const& shortcutKey)const
-{
-	std::map<ShortcutKey, Action*>::const_iterator it = _actions.find(shortcutKey);
-	
-	if(it == _actions.end())
-		return nullptr;
-	
-	return it->second;
 }
 
 void ActionManager::OnShortcut(ShortcutEvent& event)

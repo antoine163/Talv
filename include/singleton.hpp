@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.2
+//! \version 0.3
 //! \date 30.03.2013
 //!
 //! ********************************************************************
@@ -46,7 +46,7 @@ class Singleton
 		Singleton(){}
 		Singleton(Singleton const&){}
 		Singleton & operator=(Singleton const&){}
-		~Singleton(){}
+		virtual ~Singleton(){}
 		
 	private:
 		//! \brief Instance de la classe.
