@@ -22,6 +22,7 @@
 #include "shortcut.hpp"
 
 #include <wx/listctrl.h>
+#include <wx/menu.h>
 #include <vector>
 
 // *********************************************************************
@@ -80,12 +81,22 @@ class PanelList : public GuiPanelList
 		//! \brief Ajouter un item
 		void OnButtonClickAdd(wxCommandEvent&);
 		
+		void OnListItemRightClick(wxListEvent& event);
+		
 		//! \brief Un item a été désélectionner.
 		void OnListItemDeselected(wxListEvent& event);
 		//! \brief Un item a été sélectionner.
 		void OnListItemSelected(wxListEvent& event);
 		
+		//! \brief Nom de la liste
 		wxString _name;
+		
+		//menu
+		wxMenu* _menu;
+		
+		wxMenuItem* _menuItemListAdd;
+		wxMenuItem* _menuItemListPreferences;
+		wxMenuItem* _menuItemListDelete;
 };
 
 // *********************************************************************

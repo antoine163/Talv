@@ -32,10 +32,33 @@
 PanelList::PanelList(wxWindow* parent, wxString name)
 : GuiPanelList(parent), _name(name)
 {
+	//Construction du menu
+	_menu = new wxMenu();
+		
+	_menuItemListAdd = new wxMenuItem(_menu,  wxID_ADD);
+	_menu->Append(_menuItemListAdd);
+	_menuItemListPreferences = new wxMenuItem(_menu, wxID_PREFERENCES);
+	_menu->Append(_menuItemListPreferences);
+	_menuItemListDelete = new wxMenuItem(_menu, wxID_DELETE);
+	_menu->Append(_menuItemListDelete);
+	
+	_menuItemListPreferences->Enable(false);
+	_menuItemListDelete->Enable(false);
+	
+	_menu->Bind(wxEVT_COMMAND_MENU_SELECTED, &PanelList::OnButtonClickAdd, this, wxID_ADD);
+	_menu->Bind(wxEVT_COMMAND_MENU_SELECTED, &PanelList::OnButtonClickPreferences, this, wxID_PREFERENCES);
+	_menu->Bind(wxEVT_COMMAND_MENU_SELECTED, &PanelList::OnButtonClickDelete, this, wxID_DELETE);
 }
 
 PanelList::~PanelList()
 {
+	//Destruction du menu
+	_menu->Unbind(wxEVT_COMMAND_MENU_SELECTED, &PanelList::OnButtonClickAdd, this, wxID_ADD);
+	_menu->Unbind(wxEVT_COMMAND_MENU_SELECTED, &PanelList::OnButtonClickPreferences, this, wxID_PREFERENCES);
+	_menu->Unbind(wxEVT_COMMAND_MENU_SELECTED, &PanelList::OnButtonClickDelete, this, wxID_DELETE);
+
+
+	delete _menu;
 }
 
 void PanelList::addItem(wxArrayString const& item, bool select)
@@ -133,6 +156,15 @@ void PanelList::OnButtonClickAdd(wxCommandEvent&)
 		//Ajout de l'item
 		addItem(newItem);
 	}
+}
+
+void PanelList::OnListItemRightClick(wxListEvent& event)
+{
+	//Propagation de l'événement.
+	event.Skip();
+	
+	//Affichage du menu
+	_listCtrl->PopupMenu(_menu);
 }
 		
 void PanelList::OnListItemDeselected(wxListEvent& event)

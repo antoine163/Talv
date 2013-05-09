@@ -130,7 +130,7 @@
                         <event name="OnListItemDeselected">OnListItemDeselected</event>
                         <event name="OnListItemFocused"></event>
                         <event name="OnListItemMiddleClick"></event>
-                        <event name="OnListItemRightClick"></event>
+                        <event name="OnListItemRightClick">OnListItemRightClick</event>
                         <event name="OnListItemSelected">OnListItemSelected</event>
                         <event name="OnListKeyDown"></event>
                         <event name="OnMiddleDClick"></event>
@@ -146,56 +146,6 @@
                         <event name="OnSetFocus"></event>
                         <event name="OnSize"></event>
                         <event name="OnUpdateUI"></event>
-                        <object class="wxMenu" expanded="1">
-                            <property name="label"></property>
-                            <property name="name">_menuList</property>
-                            <property name="permission">protected</property>
-                            <object class="wxMenuItem" expanded="0">
-                                <property name="bitmap">; Load From File</property>
-                                <property name="checked">1</property>
-                                <property name="enabled">0</property>
-                                <property name="help">Add an action</property>
-                                <property name="id">wxID_ADD</property>
-                                <property name="kind">wxITEM_NORMAL</property>
-                                <property name="label">Add</property>
-                                <property name="name">_menuItemListAdd</property>
-                                <property name="permission">protected</property>
-                                <property name="shortcut"></property>
-                                <property name="unchecked_bitmap">; Load From File [-1; -1]</property>
-                                <event name="OnMenuSelection">OnButtonClickAdd</event>
-                                <event name="OnUpdateUI"></event>
-                            </object>
-                            <object class="wxMenuItem" expanded="0">
-                                <property name="bitmap"></property>
-                                <property name="checked">0</property>
-                                <property name="enabled">0</property>
-                                <property name="help">Preferences of this actions</property>
-                                <property name="id">wxID_ANY</property>
-                                <property name="kind">wxITEM_NORMAL</property>
-                                <property name="label">Preferences</property>
-                                <property name="name">_menuItemListPreferences</property>
-                                <property name="permission">protected</property>
-                                <property name="shortcut"></property>
-                                <property name="unchecked_bitmap"></property>
-                                <event name="OnMenuSelection">OnButtonClickPreferences</event>
-                                <event name="OnUpdateUI"></event>
-                            </object>
-                            <object class="wxMenuItem" expanded="0">
-                                <property name="bitmap">; Load From File [-1; -1]</property>
-                                <property name="checked">0</property>
-                                <property name="enabled">0</property>
-                                <property name="help">Delete this actions</property>
-                                <property name="id">wxID_DELETE</property>
-                                <property name="kind">wxITEM_NORMAL</property>
-                                <property name="label">Delete</property>
-                                <property name="name">_menuItemListDelete</property>
-                                <property name="permission">protected</property>
-                                <property name="shortcut"></property>
-                                <property name="unchecked_bitmap">; Load From File</property>
-                                <event name="OnMenuSelection">OnButtonClickDelete</event>
-                                <event name="OnUpdateUI"></event>
-                            </object>
-                        </object>
                     </object>
                 </object>
                 <object class="sizeritem" expanded="1">
@@ -221,7 +171,7 @@
                                 <property name="font"></property>
                                 <property name="hidden">0</property>
                                 <property name="id">wxID_DELETE</property>
-                                <property name="label">Delete</property>
+                                <property name="label"></property>
                                 <property name="maximum_size"></property>
                                 <property name="minimum_size"></property>
                                 <property name="name">_buttonDelete</property>
@@ -287,8 +237,8 @@
                                 <property name="fg"></property>
                                 <property name="font"></property>
                                 <property name="hidden">0</property>
-                                <property name="id">wxID_ANY</property>
-                                <property name="label">Preferences</property>
+                                <property name="id">wxID_PREFERENCES</property>
+                                <property name="label"></property>
                                 <property name="maximum_size"></property>
                                 <property name="minimum_size"></property>
                                 <property name="name">_buttonPreferences</property>
@@ -344,8 +294,8 @@
                                 <property name="fg"></property>
                                 <property name="font"></property>
                                 <property name="hidden">0</property>
-                                <property name="id">wxID_ANY</property>
-                                <property name="label">Add</property>
+                                <property name="id">wxID_ADD</property>
+                                <property name="label"></property>
                                 <property name="maximum_size"></property>
                                 <property name="minimum_size"></property>
                                 <property name="name">_buttonAdd</property>
