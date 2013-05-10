@@ -128,10 +128,10 @@ class TmpActionManager : public ActionManagerBase, public Singleton<ActionManage
 	friend class Singleton<TmpActionManager>;
 	
 	public:
-		//Initialisation à par tire de ActionManager
+		//! \brief Initialisation à par tire de ActionManager
 		void init();
 		
-		//Applique à ActionManager
+		//! \brief Applique à ActionManager
 		void apply();
 		
 	private:
