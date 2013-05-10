@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.1
+//! \version 1.2
 //! \date 20.03.2013
 //!
 //! ********************************************************************
@@ -199,18 +199,18 @@ void ActionManager::OnShortcut(ShortcutEvent& event)
 }
 
 // *********************************************************************
-// Class TmpActionManager
+// Class EditActionManager
 // *********************************************************************
 
-TmpActionManager::TmpActionManager()
+EditActionManager::EditActionManager()
 {
 }
 
-TmpActionManager::~TmpActionManager()
+EditActionManager::~EditActionManager()
 {
 }
 
-void TmpActionManager::init()
+void EditActionManager::init()
 {
 	auto act = ActionManager::getInstance()->getActions();
 	
@@ -218,7 +218,7 @@ void TmpActionManager::init()
 		add(it.first,it.second);
 }
 	
-void TmpActionManager::apply()
+void EditActionManager::apply()
 {
 	ActionManager* actionManager = ActionManager::getInstance();
 	

@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.1
+//! \version 1.2
 //! \date 20.03.2013
 //!
 //! ********************************************************************
@@ -119,13 +119,13 @@ class ActionManager : public wxEvtHandler, public ActionManagerBase, public Sing
 };
 
 // *********************************************************************
-// Class TmpActionManager
+// Class EditActionManager
 // *********************************************************************
 
 //! \brief Gestions des actions avec leur raccourcis associer de façon temporaire aven de modifier ActionManager.
-class TmpActionManager : public ActionManagerBase, public Singleton<ActionManager>
+class EditActionManager : public ActionManagerBase, public Singleton<ActionManager>
 {	
-	friend class Singleton<TmpActionManager>;
+	friend class Singleton<EditActionManager>;
 	
 	public:
 		//! \brief Initialisation à par tire de ActionManager
