@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.3
+//! \version 1.4
 //! \date 20.03.2013
 //!
 //! ********************************************************************
@@ -30,7 +30,7 @@
 // *********************************************************************
 
 //! \brief Interface utilisateur pour les gestions des actions avec leur raccourcis associer.
-class ActionManager : public wxEvtHandler, public ManagerBase<ShortcutKey, Action*>, public Singleton<ActionManager>
+class ActionManager : public wxEvtHandler, public ManagerBase<ShortcutKey, Action>, public Singleton<ActionManager>
 {	
 	friend class Singleton<ActionManager>;
 	
@@ -44,18 +44,18 @@ class ActionManager : public wxEvtHandler, public ManagerBase<ShortcutKey, Actio
 		
 		//! \brief Supprimer d'un raccourci/action.
 		//! \return true si réussite, false si le raccourcis/actions n'est pas connue.
-		bool remove(ShortcutKey const &shortcut);
+		bool remove(ShortcutKey const& shortcut);
 		
 		//! \brief Supprimer tout les raccourcis/actions.
 		void removeAll();
 		
 		//! \brief Charger les raccourcis/actions à partir du fichier de config.
 		//! \note Cette méthode appellera \ref removeAll() au préalable.
-		void load(wxFileConfig & fileConfig);
+		void load(wxFileConfig& fileConfig);
 		
 		//! \brief Sauvegarde des action dans le fichier de config.
 		//! Ne supprime pas les enceint raccourcis/actions qui pourrai déjà existé dans le wxFileConfig.
-		void save(wxFileConfig & fileConfig)const;
+		void save(wxFileConfig& fileConfig)const;
 		
 		//! \brief Active ou désactive les raccourcis. 
 		void enable(bool val=true);
@@ -79,7 +79,7 @@ class ActionManager : public wxEvtHandler, public ManagerBase<ShortcutKey, Actio
 // *********************************************************************
 
 //! \brief Gestions des actions avec leur raccourcis associer de façon temporaire aven de modifier ActionManager.
-class EditActionManager : public ManagerBase<ShortcutKey, Action*>, public Singleton<EditActionManager>
+class EditActionManager : public ManagerBase<ShortcutKey, Action>, public Singleton<EditActionManager>
 {	
 	friend class Singleton<EditActionManager>;
 	

@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.3
+//! \version 1.4
 //! \date 20.03.2013
 //!
 //! ********************************************************************
@@ -30,7 +30,7 @@ ActionManager::~ActionManager()
 bool ActionManager::add(ShortcutKey const &shortcut, Action* act)
 {
 	//Ajout à la liste des actions.
-	if(!ManagerBase<ShortcutKey, Action*>::add(shortcut, act))
+	if(!ManagerBase<ShortcutKey, Action>::add(shortcut, act))
 		return false;
 	
 	//Et on l'ajouter à la liste des raccourcis.
@@ -40,9 +40,9 @@ bool ActionManager::add(ShortcutKey const &shortcut, Action* act)
 	return true;
 }
 
-bool ActionManager::remove(ShortcutKey const &shortcut)
+bool ActionManager::remove(ShortcutKey const& shortcut)
 {
-	if(ManagerBase<ShortcutKey, Action*>::remove(shortcut))
+	if(ManagerBase<ShortcutKey, Action>::remove(shortcut))
 	{
 		//Suppression du accourcie.
 		_shortcut.remove(shortcut);
@@ -54,17 +54,15 @@ bool ActionManager::remove(ShortcutKey const &shortcut)
 
 void ActionManager::removeAll()
 {
-	//Suppression des actions.
+	//Désinstalle les raccourcis.
 	for(auto &it: _data)
-	{
-		delete it.second;
 		_shortcut.remove(it.first);
-	}
 		
-	ManagerBase<ShortcutKey, Action*>::removeAll();
+	//Suppression des actions.
+	ManagerBase<ShortcutKey, Action>::removeAll();
 }
 
-void ActionManager::load(wxFileConfig & fileConfig)
+void ActionManager::load(wxFileConfig& fileConfig)
 {
 	wxString stringShortcut;
 	long lIndex;
@@ -105,7 +103,7 @@ void ActionManager::load(wxFileConfig & fileConfig)
 	fileConfig.SetPath("/");
 }
 
-void ActionManager::save(wxFileConfig & fileConfig)const
+void ActionManager::save(wxFileConfig& fileConfig)const
 {
 	for(auto &it: _data)
 	{
