@@ -88,6 +88,7 @@ class GuiDialogPreferences : public wxDialog
 		wxButton* _sdbSizerCancel;
 		
 		// Virtual event handlers, overide them in your derived class
+		virtual void OnNotebookPageChanging( wxNotebookEvent& event ) { event.Skip(); }
 		virtual void OnButtonClickApply( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnButtonClickOK( wxCommandEvent& event ) { event.Skip(); }
 		

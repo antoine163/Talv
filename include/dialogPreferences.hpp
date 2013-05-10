@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 2.5
+//! \version 3.0
 //! \date 02.01.2013
 //!
 //! ********************************************************************
@@ -41,7 +41,7 @@ class PanelList : public GuiPanelList
 		virtual ~PanelList();
 		
 		//! \brief Applique les modification et les sauvegarde dans le fichier de configuration.
-		virtual void applayAndSave(wxFileConfig & fileConfig)=0;
+		//virtual void applayAndSave(wxFileConfig & fileConfig)=0;
 		
 	protected:
 		//! \brief Ajout un item a la liste.
@@ -112,8 +112,11 @@ class PanelListActions : public PanelList
 		//! \brief Destructeur.
 		virtual ~PanelListActions();
 		
+		//! \brief Mise à jour de la liste avec \ref EditActionManager
+		void update();
+		
 		//! \brief Applique les modification et les sauvegarde dans le fichier de configuration.
-		void applayAndSave(wxFileConfig & fileConfig);
+		//void applayAndSave(wxFileConfig & fileConfig);
 		
 	private:	
 		//! \brief Suppression de l'action.
@@ -124,7 +127,7 @@ class PanelListActions : public PanelList
 		wxArrayString OnAddItem();
 
 		//! \brief Liste des raccourcis/actions dans l'êta du dialogue (raccourci en version wxString).
-		std::map<wxString, Action*> _listShortcutAction;
+		//std::map<wxString, Action*> _listShortcutAction;
 };
 
 // *********************************************************************
@@ -141,8 +144,11 @@ class PanelListLists : public PanelList
 		//! \brief Destructeur.
 		virtual ~PanelListLists();
 		
+		//! \brief Mise à jour de la liste avec \ref EditListManager
+		void update();
+		
 		//! \brief Applique les modification et les sauvegarde dans le fichier de configuration.
-		void applayAndSave(wxFileConfig & fileConfig);
+		//void applayAndSave(wxFileConfig & fileConfig);
 		
 	private:		
 		//! \brief Suppression de la liste.
@@ -176,15 +182,17 @@ class DialogPreferences : public GuiDialogPreferences
 		bool shutdownIsToggle()const;
 		
 	private:
-		//! \brief Applique les modification et les sauvegarder dans le fichier de config.
+		//! \brief applique les modification et les sauvegarde dans le fichier de configuration.
 		void applyAndSave();
 		
+		//! \brief quand l'utilisateur change de page.
+		void OnNotebookPageChanging(wxNotebookEvent& event);
 		//! \brief Applique les modifications et quitte le dialog.
 		void OnButtonClickOK(wxCommandEvent& event);
 		//! \brief Applique les modifications.
 		void OnButtonClickApply(wxCommandEvent& event);
-		//! \brief applique les modification et les sauvegarde dans le fichier de configuration.
-		void applayAndSave();
+		
+		
 		
 		PanelListActions* _PanelListActions;
 		PanelListLists* _PanelListLists;

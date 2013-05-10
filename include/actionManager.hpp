@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.2
+//! \version 1.3
 //! \date 20.03.2013
 //!
 //! ********************************************************************
@@ -39,7 +39,7 @@ class ActionManagerBase
 		virtual ~ActionManagerBase();
 		
 		//! \brief Ajout d'une action.
-		//! Le paramètre \b act devra étre allouer dynamiquement au préalable, \ref ActionManager se charge de libérer la mémoire après utilisation.
+		//! Le paramètre \b act devra étre allouer dynamiquement au préalable, \ref ActionManagerBase se charge de libérer la mémoire après utilisation.
 		//! \param shortcut c'est le raccourci à ajouter.
 		//! \param act c'est l'action à ajouter est qui sera lier au raccourci \b shortcut.
 		//! \return true si réussite, false si le raccourcie de l'action et déjà connue.
@@ -80,7 +80,7 @@ class ActionManager : public wxEvtHandler, public ActionManagerBase, public Sing
 	
 	public:			
 		//! \brief Ajout d'une action.
-		//! Le paramètre \b act devra étre allouer dynamiquement au préalable, \ref ActionManager se charge de libérer la mémoire après utilisation.
+		//! Le paramètre \b act devra étre allouer dynamiquement au préalable, \ref ActionManagerBase se charge de libérer la mémoire après utilisation.
 		//! \param shortcut c'est le raccourci à ajouter.
 		//! \param act c'est l'action à ajouter est qui sera lier au raccourci \b shortcut.
 		//! \return true si réussite, false si le raccourcie de l'action et déjà connue.
@@ -123,7 +123,7 @@ class ActionManager : public wxEvtHandler, public ActionManagerBase, public Sing
 // *********************************************************************
 
 //! \brief Gestions des actions avec leur raccourcis associer de façon temporaire aven de modifier ActionManager.
-class EditActionManager : public ActionManagerBase, public Singleton<ActionManager>
+class EditActionManager : public ActionManagerBase, public Singleton<EditActionManager>
 {	
 	friend class Singleton<EditActionManager>;
 	
@@ -136,10 +136,10 @@ class EditActionManager : public ActionManagerBase, public Singleton<ActionManag
 		
 	private:
 		//! \brief Constructeur.
-		TmpActionManager();
+		EditActionManager();
 		
 		//! \brief destructeur.
-		virtual ~TmpActionManager();
+		virtual ~EditActionManager();
 };
 
 #endif //ACTION_MANAGER_H

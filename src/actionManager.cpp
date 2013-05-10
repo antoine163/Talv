@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.2
+//! \version 1.3
 //! \date 20.03.2013
 //!
 //! ********************************************************************
@@ -215,7 +215,7 @@ void EditActionManager::init()
 	auto act = ActionManager::getInstance()->getActions();
 	
 	for(auto it : *act)
-		add(it.first,it.second);
+		add(it.first, Action::newAction(it.second));
 }
 	
 void EditActionManager::apply()
@@ -227,5 +227,5 @@ void EditActionManager::apply()
 	
 	//Et on remplie
 	for(auto it : _actions)
-		actionManager->add(it.first,it.second);
+		actionManager->add(it.first, Action::newAction(it.second));
 }
