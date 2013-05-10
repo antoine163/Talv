@@ -16,75 +16,6 @@
 #include "actionManager.hpp"
 
 // *********************************************************************
-// Class ActionManagerBase
-// *********************************************************************
-
-ActionManagerBase::ActionManagerBase()
-{
-}
-
-ActionManagerBase::~ActionManagerBase()
-{
-	removeAll();
-}
-
-bool ActionManagerBase::add(ShortcutKey const &shortcut, Action* act)
-{
-	//Si le raccourci existe déjà.
-	if(_actions.count(shortcut) > 0)
-		return false;
-		
-	//Sinon on l'ajoute.
-	_actions[shortcut] = act;
-	
-	return true;
-}
-
-bool ActionManagerBase::remove(ShortcutKey const &shortcut)
-{
-	//Si le raccourci existe.
-	if(_actions.count(shortcut) > 0)
-	{
-		//On le supprime
-		delete _actions[shortcut];
-		_actions.erase(shortcut);
-		return true;
-	}
-	
-	return false;
-}
-
-void ActionManagerBase::removeAll()
-{
-	//Suppression des actions.	
-	_actions.clear();
-}
-
-bool ActionManagerBase::exist(ShortcutKey const &shortcut)
-{
-	//Si le raccourci existe.
-	if(_actions.count(shortcut) > 0)
-		return true;
-	
-	return false;
-}
-
-std::map<ShortcutKey, Action*> const* ActionManagerBase::getActions()const
-{
-	return &_actions;
-}
-
-Action const* ActionManagerBase::getAction(ShortcutKey const& shortcutKey)const
-{
-	std::map<ShortcutKey, Action*>::const_iterator it = _actions.find(shortcutKey);
-	
-	if(it == _actions.end())
-		return nullptr;
-	
-	return it->second;
-}
-
-// *********************************************************************
 // Class ActionManager
 // *********************************************************************
 
@@ -99,7 +30,7 @@ ActionManager::~ActionManager()
 bool ActionManager::add(ShortcutKey const &shortcut, Action* act)
 {
 	//Ajout à la liste des actions.
-	if(!ActionManagerBase::add(shortcut, act))
+	if(!ManagerBase<ShortcutKey, Action*>::add(shortcut, act))
 		return false;
 	
 	//Et on l'ajouter à la liste des raccourcis.
@@ -111,7 +42,7 @@ bool ActionManager::add(ShortcutKey const &shortcut, Action* act)
 
 bool ActionManager::remove(ShortcutKey const &shortcut)
 {
-	if(ActionManagerBase::remove(shortcut))
+	if(ManagerBase<ShortcutKey, Action*>::remove(shortcut))
 	{
 		//Suppression du accourcie.
 		_shortcut.remove(shortcut);
@@ -124,13 +55,13 @@ bool ActionManager::remove(ShortcutKey const &shortcut)
 void ActionManager::removeAll()
 {
 	//Suppression des actions.
-	for(auto &it: _actions)
+	for(auto &it: _data)
 	{
 		delete it.second;
 		_shortcut.remove(it.first);
 	}
 		
-	ActionManagerBase::removeAll();
+	ManagerBase<ShortcutKey, Action*>::removeAll();
 }
 
 void ActionManager::load(wxFileConfig & fileConfig)
@@ -176,7 +107,7 @@ void ActionManager::load(wxFileConfig & fileConfig)
 
 void ActionManager::save(wxFileConfig & fileConfig)const
 {
-	for(auto &it: _actions)
+	for(auto &it: _data)
 	{
 		//Obtenir la version string du raccourci.
 		wxString stringShortcut = ShortcutKey::shortcutKeyToString(it.first);
@@ -195,7 +126,7 @@ void ActionManager::enable(bool val)
 
 void ActionManager::OnShortcut(ShortcutEvent& event)
 {
-	_actions[event.getShortcutKey()]->execute();
+	_data[event.getShortcutKey()]->execute();
 }
 
 // *********************************************************************
@@ -212,20 +143,20 @@ EditActionManager::~EditActionManager()
 
 void EditActionManager::init()
 {
-	auto act = ActionManager::getInstance()->getActions();
+	//auto act = ActionManager::getInstance()->getData();
 	
-	for(auto it : *act)
-		add(it.first, Action::newAction(it.second));
+	//for(auto it : *act)
+		//add(it.first, Action::newAction(it.second));
 }
 	
 void EditActionManager::apply()
 {
-	ActionManager* actionManager = ActionManager::getInstance();
+	//ActionManager* actionManager = ActionManager::getInstance();
 	
-	//On supprime tout
-	actionManager->removeAll();
+	////On supprime tout
+	//actionManager->removeAll();
 	
-	//Et on remplie
-	for(auto it : _actions)
-		actionManager->add(it.first, Action::newAction(it.second));
+	////Et on remplie
+	//for(auto it : _actions)
+		//actionManager->add(it.first, Action::newAction(it.second));
 }

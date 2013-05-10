@@ -59,9 +59,8 @@ class ListManager : public Singleton<ListManager>
 		
 		//! \brief Obtenir le nom de touts les lites en fonction de leur lange.
 		//! \return le nom de tout les listes.
-		wxArrayString getNameListsByLanguages(
-			wxString const& lgsrc,
-			wxString const& lgto)const;
+		wxArrayString getNameListsByLanguages(	wxString const& lgsrc,
+												wxString const& lgto)const;
 		
 		//! \brief Pour connaître si une liste existe.
 		//! \return true si elle existe, sinon false.

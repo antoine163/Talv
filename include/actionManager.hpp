@@ -18,6 +18,7 @@
 
 #include "action.hpp"
 #include "singleton.hpp"
+#include "managerBase.hpp"
 #include "shortcut.hpp"
 
 #include <wx/event.h>
@@ -25,56 +26,11 @@
 #include <map>
 
 // *********************************************************************
-// Class ActionManagerBase
-// *********************************************************************
-
-//! \brief Classe de base pour la manipulation des actions
-class ActionManagerBase
-{
-	public:			
-		//! \brief Constructeur.
-		ActionManagerBase();
-		
-		//! \brief destructeur.
-		virtual ~ActionManagerBase();
-		
-		//! \brief Ajout d'une action.
-		//! Le paramètre \b act devra étre allouer dynamiquement au préalable, \ref ActionManagerBase se charge de libérer la mémoire après utilisation.
-		//! \param shortcut c'est le raccourci à ajouter.
-		//! \param act c'est l'action à ajouter est qui sera lier au raccourci \b shortcut.
-		//! \return true si réussite, false si le raccourcie de l'action et déjà connue.
-		virtual bool add(ShortcutKey const &shortcut, Action* act);
-		
-		//! \brief Supprimer d'un raccourci/action.
-		//! \return true si réussite, false si le raccourcis/actions n'est pas connue.
-		virtual bool remove(ShortcutKey const &shortcut);
-		
-		//! \brief Supprimer tout les raccourcis/actions.
-		virtual void removeAll();
-		
-		//! \brief Pour savoir si d'un raccourci/action existe.
-		//! \return true si le raccourci/action existe (est connue).
-		bool exist(ShortcutKey const &shortcut);
-		
-		//! \brief Obtenir la lites des raccourcis/actions.
-		std::map<ShortcutKey, Action*> const* getActions()const;
-		
-		//! \brief Obtenir l'action d'un raccourcis.
-		//! \param shortcutKey est le raccourcis à rechercher.
-		//! \return nullptr si raccourci/action n'existe pas.
-		Action const* getAction(ShortcutKey const& shortcutKey)const;
-		
-	protected:
-		//! \brief Lites des raccourcis/actions.
-		std::map<ShortcutKey, Action*> _actions;	
-};
-
-// *********************************************************************
 // Class ActionManager
 // *********************************************************************
 
 //! \brief Interface utilisateur pour les gestions des actions avec leur raccourcis associer.
-class ActionManager : public wxEvtHandler, public ActionManagerBase, public Singleton<ActionManager>
+class ActionManager : public wxEvtHandler, public ManagerBase<ShortcutKey, Action*>, public Singleton<ActionManager>
 {	
 	friend class Singleton<ActionManager>;
 	
@@ -123,7 +79,7 @@ class ActionManager : public wxEvtHandler, public ActionManagerBase, public Sing
 // *********************************************************************
 
 //! \brief Gestions des actions avec leur raccourcis associer de façon temporaire aven de modifier ActionManager.
-class EditActionManager : public ActionManagerBase, public Singleton<EditActionManager>
+class EditActionManager : public ManagerBase<ShortcutKey, Action*>, public Singleton<EditActionManager>
 {	
 	friend class Singleton<EditActionManager>;
 	
