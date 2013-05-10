@@ -31,7 +31,10 @@ class ManagerBase
 		ManagerBase(){};
 		
 		//! \brief destructeur.
-		virtual ~ManagerBase(){};
+		virtual ~ManagerBase()
+		{
+			removeAll();
+		};
 		
 		//! \brief Ajout d'un élément.
 		//! \param key c'est la clef à ajouter.

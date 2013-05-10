@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.4
+//! \version 1.5
 //! \date 20.03.2013
 //!
 //! ********************************************************************
@@ -25,6 +25,7 @@ ActionManager::ActionManager() : _shortcut(this)
 
 ActionManager::~ActionManager()
 {
+	removeAll();
 }
 
 bool ActionManager::add(ShortcutKey const &shortcut, Action* act)
