@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.3
+//! \version 1.4
 //! \date 20.03.2013
 //!
 //! ********************************************************************
@@ -30,7 +30,7 @@ ActionManager::~ActionManager()
 bool ActionManager::add(ShortcutKey const &shortcut, Action* act)
 {
 	//Ajout à la liste des actions.
-	if(!ManagerBase<ShortcutKey, Action*>::add(shortcut, act))
+	if(!ManagerBase<ShortcutKey, Action>::add(shortcut, act))
 		return false;
 	
 	//Et on l'ajouter à la liste des raccourcis.
@@ -42,7 +42,7 @@ bool ActionManager::add(ShortcutKey const &shortcut, Action* act)
 
 bool ActionManager::remove(ShortcutKey const &shortcut)
 {
-	if(ManagerBase<ShortcutKey, Action*>::remove(shortcut))
+	if(ManagerBase<ShortcutKey, Action>::remove(shortcut))
 	{
 		//Suppression du accourcie.
 		_shortcut.remove(shortcut);
@@ -54,14 +54,12 @@ bool ActionManager::remove(ShortcutKey const &shortcut)
 
 void ActionManager::removeAll()
 {
-	//Suppression des actions.
+	//Désinstalle les raccourcis.
 	for(auto &it: _data)
-	{
-		delete it.second;
 		_shortcut.remove(it.first);
-	}
 		
-	ManagerBase<ShortcutKey, Action*>::removeAll();
+	//Suppression des actions.
+	ManagerBase<ShortcutKey, Action>::removeAll();
 }
 
 void ActionManager::load(wxFileConfig & fileConfig)

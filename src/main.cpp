@@ -52,7 +52,7 @@ bool App::OnInit()
 	Resource::getInstance()->load(fileConfig);
 	
 	//Chargement des listes se trouvent dans le fichier de config.
-	ListManager::getInstance()->load(fileConfig);
+	//ListManager::getInstance()->load(fileConfig);
 		
 	//Crée de l'instance de ActionManager et Installation des raccourcis/actions
 	ActionManager::getInstance()->load(fileConfig);
@@ -78,7 +78,7 @@ int App::OnExit()
 	Resource::kill();
 	
 	//Suppression des liste.
-	ListManager::kill();
+	//ListManager::kill();
 	
 	//Suppression du module de la traduction de l'application.
 	delete _locale;

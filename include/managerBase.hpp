@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.1
+//! \version 0.2
 //! \date 10.05.2013
 //!
 //! ********************************************************************
@@ -34,10 +34,10 @@ class ManagerBase
 		virtual ~ManagerBase(){};
 		
 		//! \brief Ajout d'un élément.
-		//! \param key c'est la clé de la valeur à ajouter.
-		//! \param val c'est la valeur a jouter.
-		//! \return true si réussite, false si val1 est déjà connue.
-		virtual bool add(T1 const& key, T2 val)
+		//! \param key c'est la clef à ajouter.
+		//! \param val c'est la valeur à ajouter.
+		//! \return true si réussite, false si la clef est déjà connue.
+		virtual bool add(T1 const& key, T2* val)
 		{
 			//Si key existe déjà.
 			if(exist(key))
@@ -49,15 +49,16 @@ class ManagerBase
 			return true;
 		}
 		
-		//! \brief Supprimer une clés et ça valeurs.
-		//! \param key c'est la clé à supprimer.
-		//! \return true si réussite, false si la clé n'est pas existante.
+		//! \brief Supprimer une clefs et ça valeurs.
+		//! \param key c'est la clef à supprimer.
+		//! \return true si réussite, false si la clef n'est pas existante.
 		virtual bool remove(T1 const& key)
 		{
 			//Si la clé existe.
 			if(exist(key))
 			{
 				//On le supprime
+				delete _data[key];
 				_data.erase(key);
 				return true;
 			}
@@ -65,16 +66,19 @@ class ManagerBase
 			return false;
 		}
 		
-		//! \brief Supprimer tout les clés et valeurs.
+		//! \brief Supprimer tout les clefs et valeurs.
 		virtual void removeAll()
 		{
 			//Suppression de tout les données.	
+			for(auto &it: _data)
+				delete it.second;
+
 			_data.clear();
 		}
 		
-		//! \brief Pour savoir si une clé existe.
-		//! \param key c'est la clé à chercher.
-		//! \return true si la clé existe.
+		//! \brief Pour savoir si une clef existe.
+		//! \param key c'est la clef à chercher.
+		//! \return true si la clef existe.
 		bool exist(T1 const& key)
 		{
 			//Si la clé existe.
@@ -84,28 +88,21 @@ class ManagerBase
 			return false;
 		}
 		
-		//! \brief Obtenir la lites des clés et valeurs.
-		std::map<T1, T2> const& getData()const
+		//! \brief Obtenir la lites des clef et valeurs.
+		std::map<T1, T2*> const& getData()const
 		{
 			return _data;
 		}
 		
-		//! \brief Obtenir un élément.
-		//! \param key est le clé à rechercher.
-		//! \return nullptr si la clé n'existe pas.
-		T2 const* getElement(T1 const& key)const
+		//! \brief Obtenir la lites des clef et valeurs.
+		T2* getValue(T1 const& key)
 		{
-			auto it = _data.find(key);
-	
-			if(it == _data.end())
-				return nullptr;
-			
-			return it->second;
+			return _data[key];
 		}
 		
 	protected:
 		//! \brief Lites des données.
-		std::map<T1, T2> _data;	
+		std::map<T1, T2*> _data;	
 };
 
 #endif //MANAGER_BASE_H

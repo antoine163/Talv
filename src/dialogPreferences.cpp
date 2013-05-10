@@ -368,26 +368,26 @@ PanelListLists::PanelListLists(wxWindow* parent)
 	_listCtrl->AppendColumn(_("Language of translation"), wxLIST_FORMAT_LEFT, 158);
 	
 	//Rempli la liste.
-	wxArrayString lists = ListManager::getInstance()->getNameLists();
-	for(auto it: lists)
-	{		
-		//Récupération de la liste.
-		List* tmpList = ListManager::getInstance()->getList(it);
+	//wxArrayString lists = ListManager::getInstance()->getNameLists();
+	//for(auto it: lists)
+	//{		
+		////Récupération de la liste.
+		//List* tmpList = ListManager::getInstance()->getList(it);
 		
-		//Récupération des paramètres de la liste.
-		wxString lgsrc;
-		wxString lgto;
-		tmpList->getlanguages(&lgsrc, &lgto);
+		////Récupération des paramètres de la liste.
+		//wxString lgsrc;
+		//wxString lgto;
+		//tmpList->getlanguages(&lgsrc, &lgto);
 		
-		//Préparation d'un wxArrayString pour l'ajout d'un item.
-		wxArrayString tmpItem;
-		tmpItem.Add(it);
-		tmpItem.Add(Resource::getInstance()->abbreviationToLanguage(lgsrc));
-		tmpItem.Add(Resource::getInstance()->abbreviationToLanguage(lgto));
+		////Préparation d'un wxArrayString pour l'ajout d'un item.
+		//wxArrayString tmpItem;
+		//tmpItem.Add(it);
+		//tmpItem.Add(Resource::getInstance()->abbreviationToLanguage(lgsrc));
+		//tmpItem.Add(Resource::getInstance()->abbreviationToLanguage(lgto));
 		
-		//Ajout de l'item dans la liste.
-		addItem(tmpItem, false);
-	}
+		////Ajout de l'item dans la liste.
+		//addItem(tmpItem, false);
+	//}
 }
 
 PanelListLists::~PanelListLists()
