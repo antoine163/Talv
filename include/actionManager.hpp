@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.4
+//! \version 1.3
 //! \date 20.03.2013
 //!
 //! ********************************************************************
@@ -30,7 +30,7 @@
 // *********************************************************************
 
 //! \brief Interface utilisateur pour les gestions des actions avec leur raccourcis associer.
-class ActionManager : public wxEvtHandler, public ManagerBase<ShortcutKey, Action>, public Singleton<ActionManager>
+class ActionManager : public wxEvtHandler, public ManagerBase<ShortcutKey, Action*>, public Singleton<ActionManager>
 {	
 	friend class Singleton<ActionManager>;
 	
