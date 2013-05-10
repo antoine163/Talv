@@ -128,7 +128,7 @@ class EditActionManager : public ActionManagerBase, public Singleton<EditActionM
 	friend class Singleton<EditActionManager>;
 	
 	public:
-		//! \brief Initialisation à par tire de ActionManager
+		//! \brief Initialisation à partir de ActionManager
 		void init();
 		
 		//! \brief Applique à ActionManager

@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.3
+//! \version 0.4
 //! \date 30.03.2013
 //!
 //! ********************************************************************
@@ -40,6 +40,8 @@ class Singleton
 		{
 			if(_singleton != nullptr)
 				delete _singleton;
+				
+			_singleton = nullptr;
 		}
 	
 	protected:

@@ -262,21 +262,6 @@ void PanelListActions::update()
 	}
 }
 
-//void PanelListActions::applayAndSave(wxFileConfig & fileConfig)
-//{
-	////Récupération de l'instance de ActionManager
-	//ActionManager* actionManager = ActionManager::getInstance();
-	
-	////On commence par supprimer tout les raccourcis
-	//actionManager->removeAll();
-	////Et on ajoute les raccourcis.
-	//for(auto &it: _listShortcutAction)
-		//actionManager->add(ShortcutKey::stringToShortcutKey(it.first), Action::newAction(it.second));
-		
-	////Sauvegarde des actions.
-	//ActionManager::getInstance()->save(fileConfig);
-//}
-
 void PanelListActions::OnDeleteItem(wxString const& item)
 {
 	//Suppression de l'action.
@@ -413,30 +398,6 @@ void PanelListLists::update()
 {
 }
 
-//void PanelListLists::applayAndSave(wxFileConfig & fileConfig)
-//{
-	////Suppression des listes au-pré de ListManager
-	//for(auto it : _deleteLists)
-		//ListManager::getInstance()->remove(it);
-	
-	////Ajout des listes au-pré de ListManager
-	//for(auto it : _newLists)
-	//{
-		////Récupération des langue pour cette liste.
-		//long item = _listCtrl->FindItem(-1, it);
-		//wxString lgsrc = Resource::getInstance()->languageToAbbreviation(_listCtrl->GetItemText(item, 1));
-		//wxString lgto = Resource::getInstance()->languageToAbbreviation(_listCtrl->GetItemText(item, 2));
-		
-		//ListManager::getInstance()->create(it, lgsrc, lgto);
-	//}
-	
-	//_newLists.Clear();
-	//_deleteLists.Clear();
-	
-	////Sauvegarde des listes.
-	//ListManager::getInstance()->save(fileConfig);
-//}
-
 void PanelListLists::OnDeleteItem(wxString const& item)
 {
 	//Si il existe dans _newLists on le supprime de celui ci;
@@ -558,10 +519,10 @@ void DialogPreferences::applyAndSave()
 	Resource::getInstance()->save(fileConfig);
 	
 	//On sauvegarde EN PREMIER les listes
-	//_PanelListLists->applayAndSave(fileConfig);
 	
 	//On sauvegarde EN DEUXIÈME les actions
-	//_PanelListActions->applayAndSave(fileConfig);
+	EditActionManager::getInstance()->apply();
+	ActionManager::getInstance()->save(fileConfig);
 }
 
 void DialogPreferences::OnNotebookPageChanging(wxNotebookEvent& event)
