@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.1
+//! \version 0.2
 //! \date 02.05.2013
 //!
 //! ********************************************************************
@@ -20,66 +20,41 @@
 // Class List
 // *********************************************************************
 
-List::List(	wxFileName const& fileName,
-			wxString const& lgsrc,
-			wxString const& lgto)
-: _fileName(fileName), _lgsrc(lgsrc), _lgto(lgto)
+List::List()
 {
-	//Le fichier existe ?
-	if(wxFileExists(_fileName.GetFullPath()))
-	{
-		//On ouvre le fichier
-		_file.Open(_fileName.GetFullPath());
-
-		//On analyse la première ligne
-		wxString firstLine = _file.GetFirstLine();
-		wxString beforeComma;
-		for(size_t i = 0; i<firstLine.Length(); i++)
-		{
-			if(firstLine[i] == ',')
-			{
-				_FirstLine.Add(beforeComma);
-				beforeComma.Clear();
-			}
-			else
-			{
-				beforeComma << firstLine[i];
-			}
-		}
-		//On enregistre aussi le dernier texte trouver si il n'est pas vide
-		if(!beforeComma.IsEmpty())
-		{
-			_FirstLine.Add(beforeComma);
-		}
-		
-		//On vérifie les langages.
-		wxASSERT(_FirstLine[1]==_lgsrc);
-		wxASSERT(_FirstLine[2]==_lgto);
-	}
 }
 
 List::~List()
 {
-	_file.Close();
 }
 
-wxString List::getName()const
+bool List::init(	wxFileName const& fileName,
+					wxString const& lgsrc,
+					wxString const& lgto)
 {
-	return _fileName.GetName();
+	_fileName = fileName;
+	_lgsrc = lgsrc;
+	_lgto = lgto;
+	
+	//Le fichier existe ?
+	if(wxFileExists(_fileName.GetFullPath()))
+	{
+		//On ouvre le fichier. Se qui aura pour effet d'analyser
+		//le fichier et de vérifier sa validités.
+		if(openFile() != true)
+			return false;
+		
+		//Fermeture du fichier
+		closeFile();
+	}
+	
+	return true;
 }
 
 void List::getlanguages(wxString* lgsrc, wxString* lgto)
 {
 	*lgsrc = _lgsrc;
 	*lgto = _lgto;
-}
-
-bool List::exist(wxString const& text)
-{
-	if(getTextLine(text) != 0)
-		return true;
-		
-	return false;
 }
 
 int List::save(	wxString const& text,
@@ -92,30 +67,24 @@ int List::save(	wxString const& text,
 int List::save(	wxString text,
 				wxString mainTranslate,
 				std::map<wxString, wxArrayString> const& translations)
-{
-	//On vérifie si le texte est existent.
-	if(exist(text))
+{		
+	if(openFile() != true)
+		return -1;
+			
+	//Le texte est existent ?
+	if(getTextLine(text) != 0)
+	{
+		//Fermeture du fichier
+		closeFile();
+		
 		return 0;
+	}
 	
 	//Caractère en minuscule.
 	text.MakeLower();
 	mainTranslate.MakeLower();
 
-	//Si le fichier n'est pas déjà existent
-	if(!wxFileExists(_fileName.GetFullPath()))
-	{
-		//On le crée
-		if(!_file.Create(_fileName.GetFullPath()))
-			return -1;
-		//On ajout la première ligne.
-		_file.AddLine("knowledge,"+_lgsrc+','+_lgto);
-
-		_FirstLine.Add("knowledge");
-		_FirstLine.Add(_lgsrc);
-		_FirstLine.Add(_lgto);
-	}
-
-	//Parcoure autant de ligne qu'il y en a dans "translations".
+	//Parcoure autant de ligne qu'il y en à dans "translations".
 	bool loop = true;
 	for(size_t iline = 0;;iline++)
 	{
@@ -126,11 +95,11 @@ int List::save(	wxString text,
 		for(auto it : translations)
 		{
 			//On vérifie si le type du mot et connue dans la première ligne.
-			int column = _FirstLine.Index(it.first, false);
+			int column = _firstLine.Index(it.first, false);
 			if(column == wxNOT_FOUND)
 			{
 				//Si il n'existe pas on l'ajoute.
-				column = _FirstLine.Add(it.first);
+				column = _firstLine.Add(it.first);
 			}
 
 			//Le nombre de colonne et égale à l'index de la colonne la plus élever.
@@ -180,7 +149,7 @@ int List::save(	wxString text,
 
 	//Réécriture de la première ligne du fichier.
 	wxString addFirstLine;
-	for(auto it : _FirstLine)
+	for(auto it : _firstLine)
 	{
 		addFirstLine << it << ',';
 	}
@@ -189,14 +158,22 @@ int List::save(	wxString text,
 
 	//Écriture des données dans le fichier.
 	if(!_file.Write())
+	{
+		//Fermeture du fichier
+		closeFile();
+		
 		return -1;
+	}
 	
+	//Fermeture du fichier
+	closeFile();
+		
 	return 1;
 }
 
 void List::removeFile()
 {
-	//Récupération du non du fichier
+	//Récupération du non du fichier.
 	wxString fileName = _fileName.GetFullPath();
 	
 	//Si le fichier est existent, on le supprime.
@@ -204,22 +181,113 @@ void List::removeFile()
 		wxRemoveFile(fileName);
 }
 
+bool List::openFile()
+{
+	//le non de fichier est valide ?
+	if(_fileName.IsOk())
+		return false;
+		
+	//Si le fichier n'est pas déjà existent.
+	if(!wxFileExists(_fileName.GetFullPath()))
+	{
+		//On le crée.
+		if(!_file.Create(_fileName.GetFullPath()))
+			return -1;
+		//On ajout la première ligne.
+		_file.AddLine("knowledge,"+_lgsrc+','+_lgto);
+
+		_firstLine.Add("knowledge");
+		_firstLine.Add(_lgsrc);
+		_firstLine.Add(_lgto);
+	}
+	else
+	{		
+		//On ouvre le fichier.
+		if(!_file.Open(_fileName.GetFullPath()))
+			return false;
+			
+		//Le fichier à t'il été accéder (par une autre instance de la liste ou par un autre programme) depuis le dernier accès ?
+		if(_lastModificationFile < _fileName.GetModificationTime())
+		{
+			//Dans se cas on analyse la première ligne.
+			parseFirstLine();
+			
+			//Vérifie la validité des langues.
+			if((_lgsrc != _firstLine[1]) || (_lgto != _firstLine[2]))
+			{
+				//Fermeture du fichier.
+				closeFile();
+				
+				return false;
+			}
+			
+			//Et on analyse les connaissance.
+			parseKnowledge();
+		}
+	}
+	
+	return true;
+}
+
+void List::closeFile()
+{
+	_file.Close();
+	
+	//Mise a jour de la date de modification.
+	if(_fileName.IsOk())
+		_lastModificationFile = _fileName.GetModificationTime();
+}
+
+void List::parseFirstLine()
+{
+	//On supprime l'analyse précédant.
+	_firstLine.Clear();
+	
+	//On analyse la première ligne
+	wxString firstLine = _file.GetFirstLine();
+	wxString beforeComma;
+	for(size_t i = 0; i<firstLine.Length(); i++)
+	{
+		if(firstLine[i] == ',')
+		{
+			_firstLine.Add(beforeComma);
+			beforeComma.Clear();
+		}
+		else
+			beforeComma << firstLine[i];
+	}
+	if(!beforeComma.IsEmpty())
+		_firstLine.Add(beforeComma);
+}
+
+void List::parseKnowledge()
+{
+	//On supprime l'analyse précédant.
+	_knowledges.clear();
+	
+	//Lire tout le fichier ligne par ligne.
+	_file.GetFirstLine();
+	long nb;
+	for(wxString line = _file.GetNextLine(); !_file.Eof(); line = _file.GetNextLine())
+	{
+		//Extraction de la connaissance.
+		line.BeforeFirst(',').ToLong(&nb);
+		_knowledges[(Knowledge_e)nb]++;
+	}
+}
+
 size_t List::getTextLine(wxString text)
 {
-	//Fichier ouvert ?
-	if(_file.IsOpened())
-	{
-		//Caractère en minuscule.
-		text.MakeLower();
+	//Caractère en minuscule.
+	text.MakeLower();
 
-		//On recherche si le texte existe (avent le deuxième ',' de tout les lignes)
-		for(wxString line = _file.GetFirstLine(); !_file.Eof(); line = _file.GetNextLine())
+	//On recherche si le texte existe (avent la deuxième ',').
+	for(wxString line = _file.GetFirstLine(); !_file.Eof(); line = _file.GetNextLine())
+	{
+		//Texte trouver ?
+		if(line.BeforeFirst(',').BeforeFirst(',') == text)
 		{
-			//Texte trouver ?
-			if(line.BeforeFirst(',').BeforeFirst(',') == text)
-			{
-				return _file.GetCurrentLine();
-			}
+			return _file.GetCurrentLine();
 		}
 	}
 

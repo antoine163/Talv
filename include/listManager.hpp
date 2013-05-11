@@ -17,6 +17,7 @@
 #define LIST_MANAGER_H
 
 #include "singleton.hpp"
+#include "managerBase.hpp"
 #include "list.hpp"
 
 #include <wx/fileconf.h>
@@ -34,19 +35,10 @@ class ListManager : public ManagerBase<wxString, List>, public Singleton<ListMan
 	
 	public:	
 		//! \brief Charger les listes à partir du fichier de config.
-		void load(wxFileConfig & fileConfig);
+		void load(wxFileConfig& fileConfig);
 		
 		//! \brief Sauvegarde des listes dans le fichier de config.
-		void save(wxFileConfig & fileConfig)const;
-		
-		//! \brief Obtenir le nom de touts les lites.
-		//! \return le nom de tout les listes.
-		wxArrayString getNameLists()const;
-		
-		//! \brief Obtenir le nom de touts les lites en fonction de leur lange.
-		//! \return le nom de tout les listes.
-		wxArrayString getNameListsByLanguages(	wxString const& lgsrc,
-												wxString const& lgto)const;
+		void save(wxFileConfig& fileConfig)const;
 
 	private:
 		//! \brief Constructeur.
@@ -59,7 +51,7 @@ class ListManager : public ManagerBase<wxString, List>, public Singleton<ListMan
  //Class EditActionManager
  //*********************************************************************
 
-class EditListManager : public ManagerBase<wxString, List*>, public Singleton<EditListManager>
+class EditListManager : public ManagerBase<wxString, List>, public Singleton<EditListManager>
 {	
 	friend class Singleton<EditListManager>;
 	
@@ -69,6 +61,15 @@ class EditListManager : public ManagerBase<wxString, List*>, public Singleton<Ed
 		
 		//! \brief Applique à ListManager
 		void apply();
+		
+		//! \brief Obtenir le nom de touts les lites.
+		//! \return le nom de tout les listes.
+		wxArrayString getNameLists()const;
+		
+		//! \brief Obtenir le nom de touts les lites en fonction de leur lange.
+		//! \return le nom de tout les listes.
+		wxArrayString getNameListsByLanguages(	wxString const& lgsrc,
+												wxString const& lgto)const;
 		
 	private:
 		//! \brief Constructeur.
