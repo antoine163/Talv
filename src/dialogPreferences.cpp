@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 3.0
+//! \version 3.1
 //! \date 02.01.2013
 //!
 //! ********************************************************************
@@ -241,31 +241,31 @@ PanelListActions::~PanelListActions()
 
 void PanelListActions::update()
 {
-	////Vide la liste
-	//_listCtrl->DeleteAllItems();
+	//Vide la liste
+	_listCtrl->DeleteAllItems();
 	
-	////Rempli la liste.
-	//auto actions = EditActionManager::getInstance()->getActions();
-	//for(auto it: *actions)
-	//{
-		////Récupération du raccourci
-		//wxString shortcut = ShortcutKey::shortcutKeyToString(it.first);
+	//Rempli la liste.
+	auto actions = EditActionManager::getInstance()->getData();
+	for(auto it: actions)
+	{
+		//Récupération du raccourci
+		wxString shortcut = ShortcutKey::shortcutKeyToString(it.first);
 		
-		////Préparation d'un wxArrayString pour l'ajout d'un item
-		//wxArrayString tmpItem;
-		//tmpItem.Add(shortcut);
-		//tmpItem.Add(it.second->getName());
-		//tmpItem.Add(it.second->getStringPreferences());
+		//Préparation d'un wxArrayString pour l'ajout d'un item
+		wxArrayString tmpItem;
+		tmpItem.Add(shortcut);
+		tmpItem.Add(it.second->getName());
+		tmpItem.Add(it.second->getStringPreferences());
 		
-		////Ajout de l'item dans la liste
-		//addItem(tmpItem, false);
-	//}
+		//Ajout de l'item dans la liste
+		addItem(tmpItem, false);
+	}
 }
 
 void PanelListActions::OnDeleteItem(wxString const& item)
 {
-	////Suppression de l'action.
-	//EditActionManager::getInstance()->remove(ShortcutKey::stringToShortcutKey(item));
+	//Suppression de l'action.
+	EditActionManager::getInstance()->remove(ShortcutKey::stringToShortcutKey(item));
 }
 
 wxArrayString PanelListActions::OnPreferencesItem(wxString const& item)
@@ -273,47 +273,47 @@ wxArrayString PanelListActions::OnPreferencesItem(wxString const& item)
 	//wxArrayString de retours.
 	wxArrayString newItem;
 	
-	////Récupération du vieux raccourci.
-	//ShortcutKey oldShortcutKey = ShortcutKey::stringToShortcutKey(item);
+	//Récupération du vieux raccourci.
+	ShortcutKey oldShortcutKey = ShortcutKey::stringToShortcutKey(item);
 	
-	////Récupération de l'action.
-	//Action const* tmpAct = EditActionManager::getInstance()->getAction(oldShortcutKey);
+	//Récupération de l'action.
+	auto tmpAct = EditActionManager::getInstance()->getValue(oldShortcutKey);
 	
-	//DialogActionPreferences dlg(this, item, tmpAct);
-	//while(1)
-	//{
-		////Montre le dialogue.
-		//if(dlg.ShowModal() == wxID_OK)
-		//{
-			////Récupère le nouveau raccourci sélectionner.
-			//ShortcutKey newShortcutKey = ShortcutKey::stringToShortcutKey(dlg.getShortcut());
+	DialogActionPreferences dlg(this, item, tmpAct);
+	while(1)
+	{
+		//Montre le dialogue.
+		if(dlg.ShowModal() == wxID_OK)
+		{
+			//Récupère le nouveau raccourci sélectionner.
+			ShortcutKey newShortcutKey = ShortcutKey::stringToShortcutKey(dlg.getShortcut());
 			
-			////Si le raccourci a été modifier.
-			//if(oldShortcutKey != newShortcutKey)
-			//{				
-				////Vérifie si le raccourci n'est pas déjà existent.
-				//if(EditActionManager::getInstance()->exist(newShortcutKey))
-				//{
-					//wxMessageDialog dlg(this, _("The shortcut already exist!"), _("Shortcut exist"), wxOK|wxICON_EXCLAMATION|wxCENTRE);
-					//dlg.ShowModal();
+			//Si le raccourci a été modifier.
+			if(oldShortcutKey != newShortcutKey)
+			{				
+				//Vérifie si le raccourci n'est pas déjà existent.
+				if(EditActionManager::getInstance()->exist(newShortcutKey))
+				{
+					wxMessageDialog dlg(this, _("The shortcut already exist!"), _("Shortcut exist"), wxOK|wxICON_EXCLAMATION|wxCENTRE);
+					dlg.ShowModal();
 					
-					//continue;
-				//}
-			//}
+					continue;
+				}
+			}
 			
-			////Libère la mémoire de l'ancienne action.
-			//EditActionManager::getInstance()->remove(oldShortcutKey);
+			//Libère la mémoire de l'ancienne action.
+			EditActionManager::getInstance()->remove(oldShortcutKey);
 			
-			////Nouvelle action.
-			//EditActionManager::getInstance()->add(newShortcutKey, Action::newAction(dlg.getAction()));
+			//Nouvelle action.
+			EditActionManager::getInstance()->add(newShortcutKey, Action::newAction(dlg.getAction()));
 			
-			////Mise à jour de l'item.
-			//newItem.Add(ShortcutKey::shortcutKeyToString(newShortcutKey));
-			//newItem.Add(tmpAct->getName());
-			//newItem.Add(tmpAct->getStringPreferences());
-		//}
-		//break;
-	//}
+			//Mise à jour de l'item.
+			newItem.Add(ShortcutKey::shortcutKeyToString(newShortcutKey));
+			newItem.Add(tmpAct->getName());
+			newItem.Add(tmpAct->getStringPreferences());
+		}
+		break;
+	}
 	
 	return newItem;
 }
@@ -323,35 +323,35 @@ wxArrayString PanelListActions::OnAddItem()
 	//wxArrayString de retours.
 	wxArrayString newItem;
 	
-	//DialogActionPreferences dlg(this);
-	//while(1)
-	//{
-		////Montre le dialogue
-		//if(dlg.ShowModal() == wxID_OK)
-		//{
-			////Récupère le nouveau raccourci sélectionner.
-			//ShortcutKey shortcutKey = ShortcutKey::stringToShortcutKey(dlg.getShortcut());
+	DialogActionPreferences dlg(this);
+	while(1)
+	{
+		//Montre le dialogue
+		if(dlg.ShowModal() == wxID_OK)
+		{
+			//Récupère le nouveau raccourci sélectionner.
+			ShortcutKey shortcutKey = ShortcutKey::stringToShortcutKey(dlg.getShortcut());
 			
-			////Vérifie si le raccourci n'est pas déjà existent.
-			//if(EditActionManager::getInstance()->exist(shortcutKey))
-			//{
-				//wxMessageDialog dlg(this, _("The shortcut already exist!"), _("Shortcut exist"), wxOK|wxICON_EXCLAMATION|wxCENTRE);
-				//dlg.ShowModal();
+			//Vérifie si le raccourci n'est pas déjà existent.
+			if(EditActionManager::getInstance()->exist(shortcutKey))
+			{
+				wxMessageDialog dlg(this, _("The shortcut already exist!"), _("Shortcut exist"), wxOK|wxICON_EXCLAMATION|wxCENTRE);
+				dlg.ShowModal();
 				
-				//continue;
-			//}
+				continue;
+			}
 			
-			////Nouvelle action
-			//Action* tmpAct = Action::newAction(dlg.getAction());
-			//EditActionManager::getInstance()->add(shortcutKey, tmpAct);
+			//Nouvelle action
+			Action* tmpAct = Action::newAction(dlg.getAction());
+			EditActionManager::getInstance()->add(shortcutKey, tmpAct);
 			
-			////Un nouveau item
-			//newItem.Add(ShortcutKey::shortcutKeyToString(shortcutKey));
-			//newItem.Add(tmpAct->getName());
-			//newItem.Add(tmpAct->getStringPreferences());
-		//}
-		//break;
-	//}
+			//Un nouveau item
+			newItem.Add(ShortcutKey::shortcutKeyToString(shortcutKey));
+			newItem.Add(tmpAct->getName());
+			newItem.Add(tmpAct->getStringPreferences());
+		}
+		break;
+	}
 	
 	return newItem;
 }

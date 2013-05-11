@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.5
+//! \version 1.6
 //! \date 20.03.2013
 //!
 //! ********************************************************************
@@ -142,20 +142,21 @@ EditActionManager::~EditActionManager()
 
 void EditActionManager::init()
 {
-	//auto act = ActionManager::getInstance()->getData();
+	auto act = ActionManager::getInstance()->getData();
 	
-	//for(auto it : *act)
-		//add(it.first, Action::newAction(it.second));
+	//Copie de tout les actions.
+	for(auto it : act)
+		add(it.first, Action::newAction(it.second));
 }
 	
 void EditActionManager::apply()
 {
-	//ActionManager* actionManager = ActionManager::getInstance();
+	ActionManager* actionManager = ActionManager::getInstance();
 	
-	////On supprime tout
-	//actionManager->removeAll();
+	//On supprime tout
+	actionManager->removeAll();
 	
-	////Et on remplie
-	//for(auto it : _actions)
-		//actionManager->add(it.first, Action::newAction(it.second));
+	//Et on remplie en copient tout les actions.
+	for(auto it : _data)
+		actionManager->add(it.first, Action::newAction(it.second));
 }
