@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 3.1
+//! \version 3.2
 //! \date 02.01.2013
 //!
 //! ********************************************************************
@@ -376,22 +376,28 @@ PanelListLists::~PanelListLists()
 
 void PanelListLists::update()
 {
-	////Vide la liste.
-	//_listCtrl->DeleteAllItems();
+	//Vide la liste.
+	_listCtrl->DeleteAllItems();
 	
-	////Rempli la liste.
-	//auto lists = EditListManager::getInstance()->getData();
-	//for(auto it: lists)
-	//{		
-		////Préparation d'un wxArrayString pour l'ajout d'un item.
-		//wxArrayString tmpItem;
-		//tmpItem.Add(it.first);
-		//tmpItem.Add(it.second->getName());
-		//tmpItem.Add(it.second->getStringPreferences());
+	wxString tmplgsrc;
+	wxString tmplgto;
+	
+	//Rempli la liste.
+	auto lists = EditListManager::getInstance()->getData();
+	for(auto it: lists)
+	{		
+		//Récupération des langues
+		it.second->getlanguages(&tmplgsrc, &tmplgto);
 		
-		////Ajout de l'item dans la liste.
-		//addItem(tmpItem, false);
-	//}
+		//Préparation d'un wxArrayString pour l'ajout d'un item.
+		wxArrayString tmpItem;
+		tmpItem.Add(it.first);
+		tmpItem.Add(tmplgsrc);
+		tmpItem.Add(tmplgto);
+		
+		//Ajout de l'item dans la liste.
+		addItem(tmpItem, false);
+	}
 }
 
 void PanelListLists::OnDeleteItem(wxString const& item)

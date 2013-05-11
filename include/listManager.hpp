@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.4
+//! \version 0.5
 //! \date 02.05.2013
 //!
 //! ********************************************************************
@@ -40,7 +40,7 @@ class ListManager : public ManagerBase<wxString, List>, public Singleton<ListMan
 		//! \brief Sauvegarde des listes dans le fichier de config.
 		void save(wxFileConfig& fileConfig)const;
 		
-		wxString getPath()const;
+		static wxString getPath();
 
 	private:
 		//! \brief Constructeur.
@@ -72,7 +72,7 @@ class EditListManager : public ManagerBase<wxString, List>, public Singleton<Edi
 		//! \return le nom de tout les listes.
 		wxArrayString getNameListsByLanguages(	wxString const& lgsrc,
 												wxString const& lgto)const;
-		wxString getPath()const;
+		static wxString getPath();
 		
 	private:
 		//! \brief Constructeur.

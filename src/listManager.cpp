@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.4
+//! \version 0.5
 //! \date 02.05.2013
 //!
 //! ********************************************************************
@@ -97,7 +97,7 @@ void ListManager::save(wxFileConfig& fileConfig)const
 }
 
 //! \todo à modifier
-wxString ListManager::getPath()const
+wxString ListManager::getPath()
 {
 	return wxStandardPaths::Get().GetUserDataDir();
 }
@@ -116,37 +116,59 @@ EditListManager::~EditListManager()
 
 void EditListManager::init()
 {
-	std::cout << "GetAppDocumentsDir : " << wxStandardPaths::Get().GetAppDocumentsDir() << std::endl;
-	std::cout << "GetConfigDir : " << wxStandardPaths::Get().GetConfigDir() << std::endl;
-	std::cout << "GetDataDir : " << wxStandardPaths::Get().GetDataDir() << std::endl;
-	std::cout << "GetDocumentsDir : " << wxStandardPaths::Get().GetDocumentsDir() << std::endl;
-	std::cout << "GetExecutablePath : " << wxStandardPaths::Get().GetExecutablePath() << std::endl;
-	std::cout << "GetInstallPrefix : " << wxStandardPaths::Get().GetInstallPrefix() << std::endl;
-	std::cout << "GetLocalDataDir : " << wxStandardPaths::Get().GetLocalDataDir() << std::endl;
-	std::cout << "GetPluginsDir : " << wxStandardPaths::Get().GetPluginsDir() << std::endl;
-	std::cout << "GetResourcesDir : " << wxStandardPaths::Get().GetResourcesDir() << std::endl;
-	std::cout << "GetTempDir : " << wxStandardPaths::Get().GetTempDir() << std::endl;
-	std::cout << "GetUserConfigDir : " << wxStandardPaths::Get().GetUserConfigDir() << std::endl;
-	std::cout << "GetUserDataDir : " << wxStandardPaths::Get().GetUserDataDir() << std::endl;
-	std::cout << "GetUserLocalDataDir : " << wxStandardPaths::Get().GetUserLocalDataDir() << std::endl;
+	auto lists = ListManager::getInstance()->getData();
 	
-	
-	//auto lists = ListManager::getInstance()->getData();
-	
-	////Copie de tout les listes.
-	//for(auto it : lists)
-	//{
-		//add(it.first, it.second);
-	//}
-	
-	
+	wxString tmplgsrc;
+	wxString tmplgto;
+		
+	//Copie de tout les listes.
+	for(auto it : lists)
+	{
+		//Récupération des langues
+		it.second->getlanguages(&tmplgsrc, &tmplgto);
+		
+		//Création et initialisation d'une nouvelle liste.
+		List* tmpList = new List();
+		if(tmpList->init(EditListManager::getPath()+it.first, tmplgsrc, tmplgto))
+		{
+			//Si l'init est ok, on l'ajout.
+			add(it.first, tmpList);
+		}
+		else
+			delete tmpList;
+	}
 }
 
 void EditListManager::apply()
 {
+	//ListManager* listManager = ListManager::getInstance();
+	
+	////On supprime tout
+	//listManager->removeAll();
+	
+	////Et on remplie en recopient tout les liste.
+	//for(auto it : _data)
+		//actionManager->add(it.first, Action::newAction(it.second));
+		
+	////Copie de tout les listes.
+	//for(auto it : _data)
+	//{
+		////Récupération des langues
+		//it.second->getlanguages(&tmplgsrc, &tmplgto);
+		
+		////Création et initialisation d'une nouvelle liste.
+		//List* tmpList = new List();
+		//if(tmpList->init(ListManager::getPath()+it.first, tmplgsrc, tmplgto))
+		//{
+			////Si l'init est ok, on l'ajout.
+			//listManager(it.first, tmpList);
+		//}
+		//else
+			//delete tmpList;
+	//}
 }
 
-wxString EditListManager::getPath()const
+wxString EditListManager::getPath()
 {
 	return wxStandardPaths::Get().GetTempDir()+"/"+PROJECT_NAME;
 }
