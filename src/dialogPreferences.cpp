@@ -18,6 +18,8 @@
 #include "dialogListAdd.hpp"
 #include "shortcut.hpp"
 #include "resource.hpp"
+#include "actionManager.hpp"
+#include "listManager.hpp"
 
 #include <wx/fileconf.h>
 #include <wx/msgdlg.h>
@@ -366,28 +368,6 @@ PanelListLists::PanelListLists(wxWindow* parent)
 	_listCtrl->AppendColumn(_("Name"), wxLIST_FORMAT_LEFT, 158);
 	_listCtrl->AppendColumn(_("Language source"), wxLIST_FORMAT_LEFT, 158);
 	_listCtrl->AppendColumn(_("Language of translation"), wxLIST_FORMAT_LEFT, 158);
-	
-	////Rempli la liste.
-	//wxArrayString lists = ListManager::getInstance()->getNameLists();
-	//for(auto it: lists)
-	//{		
-		////Récupération de la liste.
-		//List* tmpList = ListManager::getInstance()->getList(it);
-		
-		////Récupération des paramètres de la liste.
-		//wxString lgsrc;
-		//wxString lgto;
-		//tmpList->getlanguages(&lgsrc, &lgto);
-		
-		////Préparation d'un wxArrayString pour l'ajout d'un item.
-		//wxArrayString tmpItem;
-		//tmpItem.Add(it);
-		//tmpItem.Add(Resource::getInstance()->abbreviationToLanguage(lgsrc));
-		//tmpItem.Add(Resource::getInstance()->abbreviationToLanguage(lgto));
-		
-		////Ajout de l'item dans la liste.
-		//addItem(tmpItem, false);
-	//}
 }
 
 PanelListLists::~PanelListLists()
@@ -396,34 +376,31 @@ PanelListLists::~PanelListLists()
 
 void PanelListLists::update()
 {
-	////Vide la liste
+	////Vide la liste.
 	//_listCtrl->DeleteAllItems();
 	
 	////Rempli la liste.
-	//auto lists = EditListManager::getInstance()->getlists();
-	//for(auto it: *lists)
-	//{
-		////Récupération du raccourci
-		//wxString shortcut = ShortcutKey::shortcutKeyToString(it.first);
-		
-		////Préparation d'un wxArrayString pour l'ajout d'un item
+	//auto lists = EditListManager::getInstance()->getData();
+	//for(auto it: lists)
+	//{		
+		////Préparation d'un wxArrayString pour l'ajout d'un item.
 		//wxArrayString tmpItem;
-		//tmpItem.Add(shortcut);
+		//tmpItem.Add(it.first);
 		//tmpItem.Add(it.second->getName());
 		//tmpItem.Add(it.second->getStringPreferences());
 		
-		////Ajout de l'item dans la liste
+		////Ajout de l'item dans la liste.
 		//addItem(tmpItem, false);
 	//}
 }
 
 void PanelListLists::OnDeleteItem(wxString const& item)
 {
-	//Si il existe dans _newLists on le supprime de celui ci;
-	if(_newLists.Index(item) != wxNOT_FOUND)
-		_newLists.Remove(item);
-	else//Sinon on le supprimer de _deleteLists
-		_deleteLists.Add(item);
+	////Si il existe dans _newLists on le supprime de celui ci;
+	//if(_newLists.Index(item) != wxNOT_FOUND)
+		//_newLists.Remove(item);
+	//else//Sinon on le supprimer de _deleteLists
+		//_deleteLists.Add(item);
 }
 
 wxArrayString PanelListLists::OnPreferencesItem(wxString const& item)
@@ -436,47 +413,47 @@ wxArrayString PanelListLists::OnAddItem()
 	//wxArrayString de retours.
 	wxArrayString newItem;
 	
-	DialogListAdd dlg(this);
-	while(1)
-	{
-		//Montre le dialogue
-		if(dlg.ShowModal() == wxID_OK)
-		{
-			//Récupère la nouvelle liste.
-			wxString newList = dlg.getNamelist();
+	//DialogListAdd dlg(this);
+	//while(1)
+	//{
+		////Montre le dialogue
+		//if(dlg.ShowModal() == wxID_OK)
+		//{
+			////Récupère la nouvelle liste.
+			//wxString newList = dlg.getNamelist();
 			
-			//newList est vide ?
-			if(newList.IsEmpty())
-				break;
+			////newList est vide ?
+			//if(newList.IsEmpty())
+				//break;
 			
-			//vérifie si la liste n'est pas déjà existent.
-			if(_listCtrl->FindItem(-1, newList) != wxNOT_FOUND)
-			{
-				wxMessageDialog dlg(this, _("The list already exist!"), _("List exist"), wxOK|wxICON_EXCLAMATION|wxCENTRE);
-				dlg.ShowModal();
+			////vérifie si la liste n'est pas déjà existent.
+			//if(_listCtrl->FindItem(-1, newList) != wxNOT_FOUND)
+			//{
+				//wxMessageDialog dlg(this, _("The list already exist!"), _("List exist"), wxOK|wxICON_EXCLAMATION|wxCENTRE);
+				//dlg.ShowModal();
 				
-				continue;
-			}
+				//continue;
+			//}
 			
-			//Récupération des langue.
-			wxString lgsrc;
-			wxString lgto;
-			dlg.getlanguages(&lgsrc, &lgto);
+			////Récupération des langue.
+			//wxString lgsrc;
+			//wxString lgto;
+			//dlg.getlanguages(&lgsrc, &lgto);
 			
-			//Un nouveau item
-			newItem.Add(newList);
-			newItem.Add(lgsrc);
-			newItem.Add(lgto);
+			////Un nouveau item
+			//newItem.Add(newList);
+			//newItem.Add(lgsrc);
+			//newItem.Add(lgto);
 			
-			//Si il existe dans _deleteLists on le supprime de celui ci;
-			if(_deleteLists.Index(newList) != wxNOT_FOUND)
-				_deleteLists.Remove(newList);
+			////Si il existe dans _deleteLists on le supprime de celui ci;
+			//if(_deleteLists.Index(newList) != wxNOT_FOUND)
+				//_deleteLists.Remove(newList);
 		
-			//Une liste à ajouter;
-			_newLists.Add(newList);
-		}
-		break;
-	}
+			////Une liste à ajouter;
+			//_newLists.Add(newList);
+		//}
+		//break;
+	//}
 	
 	return newItem;
 }
@@ -500,6 +477,8 @@ DialogPreferences::DialogPreferences()
 	
 	//init EditActionManager
 	EditActionManager::getInstance()->init();
+	//init EditListManager
+	EditListManager::getInstance()->init();
 	
 	//Ajout du panel Action
 	_PanelListActions = new PanelListActions(_notebook);
@@ -514,6 +493,8 @@ DialogPreferences::~DialogPreferences()
 {
 	//Destruction de EditActionManager
 	EditActionManager::kill();
+	//Destruction de EditListManager
+	EditListManager::kill();
 }
 
 bool DialogPreferences::shutdownIsToggle()const
@@ -538,6 +519,8 @@ void DialogPreferences::applyAndSave()
 	Resource::getInstance()->save(fileConfig);
 	
 	//On sauvegarde EN PREMIER les listes
+	EditListManager::getInstance()->apply();
+	ListManager::getInstance()->save(fileConfig);
 	
 	//On sauvegarde EN DEUXIÈME les actions
 	EditActionManager::getInstance()->apply();

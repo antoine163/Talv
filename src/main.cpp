@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.6
+//! \version 1.7
 //! \date 12.12.12
 //!
 //! ********************************************************************
@@ -21,6 +21,7 @@
 
 #include <wx/aboutdlg.h>
 #include <wx/fileconf.h>
+#include <wx/stdpaths.h>
 #include <unistd.h>
 
 //TEST
@@ -39,20 +40,23 @@ bool App::OnInit()
 	SetExitOnFrameDelete(false);
 	_menuIcon = nullptr;
 	
+	//Changement du Préfixe seulement sous unix
+	#if defined(__UNIX__)
+	wxStandardPaths::Get().SetInstallPrefix("/usr");
+	#endif
+	
 	//On charge le langage par défaut de l'os.
 	_locale = new wxLocale(wxLANGUAGE_DEFAULT);
 	_locale->AddCatalog(PROJECT_NAME);
 	
 	//Chargement de la config
-	wxFileConfig fileConfig(	PROJECT_NAME,
-								wxEmptyString,
-								wxGetUserHome()+"/."+PROJECT_NAME);
+	wxFileConfig fileConfig;
 	
 	//Chargement des ressource se trouvent dans le fichier de config.
 	Resource::getInstance()->load(fileConfig);
 	
 	//Chargement des listes se trouvent dans le fichier de config.
-	//ListManager::getInstance()->load(fileConfig);
+	ListManager::getInstance()->load(fileConfig);
 		
 	//Crée de l'instance de ActionManager et Installation des raccourcis/actions
 	ActionManager::getInstance()->load(fileConfig);
@@ -78,7 +82,7 @@ int App::OnExit()
 	Resource::kill();
 	
 	//Suppression des liste.
-	//ListManager::kill();
+	ListManager::kill();
 	
 	//Suppression du module de la traduction de l'application.
 	delete _locale;
