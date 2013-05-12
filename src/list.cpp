@@ -181,13 +181,12 @@ void List::removeFile()
 	//Récupération du non du fichier.
 	wxString fileName = _fileName.GetFullPath();
 	
-	std::cout << fileName << std::endl;
-	
 	//Si le fichier est existent, on le supprime.
 	if(wxFileExists(fileName))
 		wxRemoveFile(fileName);
 }
 
+//! \bug n'analyse pas le fichier à l'init.
 bool List::openFile()
 {
 	//le non de fichier est valide ?

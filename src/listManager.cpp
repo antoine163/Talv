@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.7
+//! \version 0.11
 //! \date 02.05.2013
 //!
 //! ********************************************************************
@@ -21,6 +21,68 @@
 
 //TEST
 #include <iostream>
+
+// *********************************************************************
+// Class ListManagerBase
+// *********************************************************************
+
+ListManagerBase::ListManagerBase()
+{
+}
+
+ListManagerBase::~ListManagerBase()
+{
+}
+
+bool ListManagerBase::createAndAddList(	wxString const &listName,
+										wxString const &lgsrc,
+										wxString const &lgto)
+{
+	//Création et initialisation d'une nouvelle liste.
+	List* tmpList = new List();
+	if(tmpList->init(getPath()+'/'+listName, lgsrc, lgto))
+	{
+		//Si l'init est ok, on l'ajout.
+		if(add(listName, tmpList))
+			return true;
+	}
+
+	delete tmpList;
+	return false;
+}
+
+wxArrayString ListManagerBase::getNameLists()const
+{
+	wxArrayString tmpArrayString;
+	
+	//Parcoure des lites.
+	//for(auto it: _data)
+	//{
+		////Ajout de la liste au wxArrayString.
+		//tmpArrayString.Add(it.first);
+	//}
+	
+	return tmpArrayString;
+}
+
+wxArrayString ListManagerBase::getNameListsByLanguages(	wxString const& lgsrc,
+														wxString const& lgto)const
+{
+	wxArrayString tmpArrayString;
+	
+	////Parcoure des lites.
+	//for(auto it: _lists)
+	//{
+		////Si les lange son équivalente.
+		//if(it->_lgsrc == lgsrc && it->_lgto == lgto)
+		//{
+			////Ajout de la liste au wxArrayString.
+			//tmpArrayString.Add(it->getName());
+		//}
+	//}
+	
+	return tmpArrayString;
+}
 
 // *********************************************************************
 // Class ListManager
@@ -61,14 +123,7 @@ void ListManager::load(wxFileConfig& fileConfig)
 		fileConfig.Read("lgto", &tmplgto);
 		
 		//Création et initialisation d'une nouvelle liste.
-		List* tmpList = new List();
-		if(tmpList->init(getPath()+'/'+tmpNameList, tmplgsrc, tmplgto))
-		{
-			//Si l'init est ok, on l'ajout.
-			add(tmpNameList, tmpList);
-		}
-		else
-			delete tmpList;
+		createAndAddList(tmpNameList, tmplgsrc, tmplgto);
 		
 		//On positionne le path.
 		fileConfig.SetPath("../");
@@ -119,11 +174,14 @@ EditListManager::~EditListManager()
 
 void EditListManager::init()
 {	
+	//Récupération de ListManager.
+	ListManager* listManager = ListManager::getInstance();
+	
 	//Création du répertoire temporaire.
-	wxDir::Make(EditListManager::getPath(),  wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
+	wxDir::Make(getPath(),  wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
 		
 	//Récupération des listes.
-	auto lists = ListManager::getInstance()->getData();
+	auto lists = listManager->getData();
 	
 	wxString tmplgsrc;
 	wxString tmplgto;
@@ -132,99 +190,57 @@ void EditListManager::init()
 	for(auto it : lists)
 	{
 		//Si le fichier de la liste existe.
-		if(wxFileExists(ListManager::getPath()+'/'+it.first))
+		if(wxFileExists(listManager->getPath()+'/'+it.first))
 		{
 			//Copie la liste dans le dossier temporaire.
-			wxCopyFile(	ListManager::getPath()+'/'+it.first,
-						EditListManager::getPath()+'/'+it.first);
+			wxCopyFile(	listManager->getPath()+'/'+it.first,
+						getPath()+'/'+it.first);
 		}
 							
 		//Récupération des langues
 		it.second->getlanguages(&tmplgsrc, &tmplgto);
 		
 		//Création et initialisation d'une nouvelle liste.
-		List* tmpList = new List();
-		if(tmpList->init(EditListManager::getPath()+'/'+it.first, tmplgsrc, tmplgto))
-		{
-			//Si l'init est ok, on l'ajout.
-			add(it.first, tmpList);
-		}
-		else
-			delete tmpList;
+		createAndAddList(it.first, tmplgsrc, tmplgto);
 	}
 }
 
 void EditListManager::apply()
 {	
+	//Récupération de ListManager.
+	ListManager* listManager = ListManager::getInstance();
+	
 	//Destruction du dossier des liste utilisateur.
-	wxDir::Remove(ListManager::getPath(), wxPATH_RMDIR_RECURSIVE);
+	wxDir::Remove(listManager->getPath(), wxPATH_RMDIR_RECURSIVE);
 	
 	//Création du dossier des liste utilisateur.
-	wxDir::Make(ListManager::getPath(),  wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
+	wxDir::Make(listManager->getPath(),  wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
 	
-	wxString tmplgsrc;
-	wxString tmplgto;
+	//On supprime tout
+	listManager->removeAll();
 		
 	//Copie de tout les listes.
+	wxString tmplgsrc;
+	wxString tmplgto;
 	for(auto it : _data)
 	{
 		//Si le fichier de la liste existe.
-		if(wxFileExists(EditListManager::getPath()+'/'+it.first))
+		if(wxFileExists(getPath()+'/'+it.first))
 		{
 			//Copie la liste dans le dossier temporaire.
-			wxCopyFile(	EditListManager::getPath()+'/'+it.first,
-						ListManager::getPath()+'/'+it.first);
+			wxCopyFile(	getPath()+'/'+it.first,
+						listManager->getPath()+'/'+it.first);
 		}
 							
 		//Récupération des langues
 		it.second->getlanguages(&tmplgsrc, &tmplgto);
 		
 		//Création et initialisation d'une nouvelle liste.
-		List* tmpList = new List();
-		if(tmpList->init(ListManager::getPath()+'/'+it.first, tmplgsrc, tmplgto))
-		{
-			//Si l'init est ok, on l'ajout.
-			ListManager::getInstance()->add(it.first, tmpList);
-		}
-		else
-			delete tmpList;
+		listManager->createAndAddList(it.first, tmplgsrc, tmplgto);
 	}
 }
 
 wxString EditListManager::getPath()
 {
 	return wxStandardPaths::Get().GetTempDir()+"/"+PROJECT_NAME;
-}
-
-wxArrayString EditListManager::getNameLists()const
-{
-	wxArrayString tmpArrayString;
-	
-	//Parcoure des lites.
-	//for(auto it: _data)
-	//{
-		////Ajout de la liste au wxArrayString.
-		//tmpArrayString.Add(it.first);
-	//}
-	
-	return tmpArrayString;
-}
-
-wxArrayString EditListManager::getNameListsByLanguages(	wxString const& lgsrc,
-													wxString const& lgto)const
-{
-	wxArrayString tmpArrayString;
-	
-	////Parcoure des lites.
-	//for(auto it: _lists)
-	//{
-		////Si les lange son équivalente.
-		//if(it->_lgsrc == lgsrc && it->_lgto == lgto)
-		//{
-			////Ajout de la liste au wxArrayString.
-			//tmpArrayString.Add(it->getName());
-		//}
-	//}
-	
-	return tmpArrayString;
 }

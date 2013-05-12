@@ -122,9 +122,6 @@ class PanelListActions : public PanelList
 		wxArrayString OnPreferencesItem(wxString const& item);
 		//! \brief Ajouter d'une action.
 		wxArrayString OnAddItem();
-
-		//! \brief Liste des raccourcis/actions dans l'êta du dialogue (raccourci en version wxString).
-		//std::map<wxString, Action*> _listShortcutAction;
 };
 
 // *********************************************************************

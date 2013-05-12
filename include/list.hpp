@@ -48,7 +48,11 @@ class List
 		//! \brief destructeur.
 		virtual ~List();
 		
-		//! \brief Constructeur.
+		//! \brief Initialise la liste.
+		//! \param fileName le fichier de la liste.
+		//! \param lgsrc le langage source de la liste.
+		//! \param lgto le langage de traduction de la liste.
+		//! \return true si la liste à put être initialiser.
 		bool init(	wxFileName const& fileName,
 					wxString const& lgsrc,
 					wxString const& lgto);

@@ -416,10 +416,12 @@ void PanelListLists::update()
 //! \todo Vérifier si des actions utilise cette liste.
 void PanelListLists::OnDeleteItem(wxString const& item)
 {
+	
 	EditListManager::getInstance()->getValue(item)->removeFile();
 	EditListManager::getInstance()->remove(item);
 }
 
+//! \todo A implémenter.
 wxArrayString PanelListLists::OnPreferencesItem(wxString const& item)
 {
 	wxMessageDialog dlg(this, _("Sorry, No implemented!"), _("No implemented"), wxOK|wxICON_INFORMATION|wxCENTRE);
@@ -446,7 +448,7 @@ wxArrayString PanelListLists::OnAddItem()
 				//break;
 			
 			////vérifie si la liste n'est pas déjà existent.
-			//if(_listCtrl->FindItem(-1, newList) != wxNOT_FOUND)
+			//if(EditListManager::getInstance->exist(newList))
 			//{
 				//wxMessageDialog dlg(this, _("The list already exist!"), _("List exist"), wxOK|wxICON_EXCLAMATION|wxCENTRE);
 				//dlg.ShowModal();
@@ -459,14 +461,21 @@ wxArrayString PanelListLists::OnAddItem()
 			//wxString lgto;
 			//dlg.getlanguages(&lgsrc, &lgto);
 			
+			//////On crée une nouvelle liste
+			////List* tmpList = new List();
+			//////On l'initialise et vérifie si c'est ok.
+			////if(tmpList->init(EditListManager::getPath()+'/'+newList, tmplgsrc, tmplgto))
+			////{
+				////wxMessageDialog dlg(this, _("The list already exist!"), _("List exist"), wxOK|wxICON_EXCLAMATION|wxCENTRE);
+				////dlg.ShowModal();
+				
+				////continue;
+			////}
+			
 			////Un nouveau item
 			//newItem.Add(newList);
 			//newItem.Add(lgsrc);
 			//newItem.Add(lgto);
-			
-			////Si il existe dans _deleteLists on le supprime de celui ci;
-			//if(_deleteLists.Index(newList) != wxNOT_FOUND)
-				//_deleteLists.Remove(newList);
 		
 			////Une liste à ajouter;
 			//_newLists.Add(newList);
