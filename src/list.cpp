@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.2
+//! \version 0.3
 //! \date 02.05.2013
 //!
 //! ********************************************************************
@@ -169,16 +169,6 @@ int List::save(	wxString text,
 	closeFile();
 		
 	return 1;
-}
-
-void List::removeFile()
-{
-	//Récupération du non du fichier.
-	wxString fileName = _fileName.GetFullPath();
-	
-	//Si le fichier est existent, on le supprime.
-	if(wxFileExists(fileName))
-		wxRemoveFile(fileName);
 }
 
 bool List::openFile()

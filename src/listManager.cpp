@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.5
+//! \version 0.6
 //! \date 02.05.2013
 //!
 //! ********************************************************************
@@ -17,6 +17,7 @@
 
 #include <wx/stdpaths.h>
 #include <wx/utils.h> 
+#include <wx/dir.h>
 
 //TEST
 #include <iostream>
@@ -99,7 +100,7 @@ void ListManager::save(wxFileConfig& fileConfig)const
 //! \todo à modifier
 wxString ListManager::getPath()
 {
-	return wxStandardPaths::Get().GetUserDataDir();
+	return wxStandardPaths::Get().GetUserDataDir()+"/lists";
 }
 
 // *********************************************************************
@@ -112,10 +113,16 @@ EditListManager::EditListManager()
 
 EditListManager::~EditListManager()
 {
+	//Destruction du dossier temporaire.
+	wxDir::Remove(EditListManager::getPath(), wxPATH_RMDIR_RECURSIVE);
 }
 
 void EditListManager::init()
-{
+{	
+	//Création du répertoire temporaire.
+	wxDir::Make(EditListManager::getPath(),  wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
+		
+	//Récupération des listes.
 	auto lists = ListManager::getInstance()->getData();
 	
 	wxString tmplgsrc;
@@ -124,6 +131,14 @@ void EditListManager::init()
 	//Copie de tout les listes.
 	for(auto it : lists)
 	{
+		//Si le fichier de la liste existe.
+		if(wxFileExists(ListManager::getPath()+'/'+it.first))
+		{
+			//Copie la liste dans le dossier temporaire.
+			wxCopyFile(	ListManager::getPath()+'/'+it.first,
+						EditListManager::getPath()+'/'+it.first);
+		}
+							
 		//Récupération des langues
 		it.second->getlanguages(&tmplgsrc, &tmplgto);
 		
@@ -140,32 +155,40 @@ void EditListManager::init()
 }
 
 void EditListManager::apply()
-{
-	//ListManager* listManager = ListManager::getInstance();
+{	
+	//Destruction du dossier des liste utilisateur.
+	wxDir::Remove(ListManager::getPath(), wxPATH_RMDIR_RECURSIVE);
 	
-	////On supprime tout
-	//listManager->removeAll();
+	//Création du dossier des liste utilisateur.
+	wxDir::Make(ListManager::getPath(),  wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
 	
-	////Et on remplie en recopient tout les liste.
-	//for(auto it : _data)
-		//actionManager->add(it.first, Action::newAction(it.second));
+	wxString tmplgsrc;
+	wxString tmplgto;
 		
-	////Copie de tout les listes.
-	//for(auto it : _data)
-	//{
-		////Récupération des langues
-		//it.second->getlanguages(&tmplgsrc, &tmplgto);
+	//Copie de tout les listes.
+	for(auto it : _data)
+	{
+		//Si le fichier de la liste existe.
+		if(wxFileExists(EditListManager::getPath()+'/'+it.first))
+		{
+			//Copie la liste dans le dossier temporaire.
+			wxCopyFile(	EditListManager::getPath()+'/'+it.first,
+						ListManager::getPath()+'/'+it.first);
+		}
+							
+		//Récupération des langues
+		it.second->getlanguages(&tmplgsrc, &tmplgto);
 		
-		////Création et initialisation d'une nouvelle liste.
-		//List* tmpList = new List();
-		//if(tmpList->init(ListManager::getPath()+it.first, tmplgsrc, tmplgto))
-		//{
-			////Si l'init est ok, on l'ajout.
-			//listManager(it.first, tmpList);
-		//}
-		//else
-			//delete tmpList;
-	//}
+		//Création et initialisation d'une nouvelle liste.
+		List* tmpList = new List();
+		if(tmpList->init(ListManager::getPath()+it.first, tmplgsrc, tmplgto))
+		{
+			//Si l'init est ok, on l'ajout.
+			ListManager::getInstance()->add(it.first, tmpList);
+		}
+		else
+			delete tmpList;
+	}
 }
 
 wxString EditListManager::getPath()

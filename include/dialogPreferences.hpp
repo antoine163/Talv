@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 3.2
+//! \version 3.3
 //! \date 02.01.2013
 //!
 //! ********************************************************************
@@ -39,9 +39,6 @@ class PanelList : public GuiPanelList
 		PanelList(wxWindow* parent, wxString name);
 		//! \brief Destructeur.
 		virtual ~PanelList();
-		
-		//! \brief Applique les modification et les sauvegarde dans le fichier de configuration.
-		//virtual void applayAndSave(wxFileConfig & fileConfig)=0;
 		
 	protected:
 		//! \brief Ajout un item a la liste.
@@ -112,11 +109,8 @@ class PanelListActions : public PanelList
 		//! \brief Destructeur.
 		virtual ~PanelListActions();
 		
-		//! \brief Mise à jour de la liste avec \ref EditActionManager
+		//! \brief Mise à jour de l'affichage de la liste avec \ref EditActionManager
 		void update();
-		
-		//! \brief Applique les modification et les sauvegarde dans le fichier de configuration.
-		//void applayAndSave(wxFileConfig & fileConfig);
 		
 	private:	
 		//! \brief Suppression de l'action.
@@ -144,11 +138,8 @@ class PanelListLists : public PanelList
 		//! \brief Destructeur.
 		virtual ~PanelListLists();
 		
-		//! \brief Mise à jour de la liste avec \ref EditListManager
+		//! \brief Mise à jour de l'affichage de la liste avec \ref EditListManager
 		void update();
-		
-		//! \brief Applique les modification et les sauvegarde dans le fichier de configuration.
-		//void applayAndSave(wxFileConfig & fileConfig);
 		
 	private:		
 		//! \brief Suppression de la liste.
@@ -191,8 +182,6 @@ class DialogPreferences : public GuiDialogPreferences
 		void OnButtonClickOK(wxCommandEvent& event);
 		//! \brief Applique les modifications.
 		void OnButtonClickApply(wxCommandEvent& event);
-		
-		
 		
 		PanelListActions* _PanelListActions;
 		PanelListLists* _PanelListLists;

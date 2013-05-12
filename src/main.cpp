@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.7
+//! \version 1.8
 //! \date 12.12.12
 //!
 //! ********************************************************************
@@ -50,7 +50,9 @@ bool App::OnInit()
 	_locale->AddCatalog(PROJECT_NAME);
 	
 	//Chargement de la config
-	wxFileConfig fileConfig;
+	wxFileConfig fileConfig(	PROJECT_NAME,
+								wxEmptyString,
+								wxStandardPaths::Get().GetUserDataDir()+'/'+PROJECT_NAME);
 	
 	//Chargement des ressource se trouvent dans le fichier de config.
 	Resource::getInstance()->load(fileConfig);

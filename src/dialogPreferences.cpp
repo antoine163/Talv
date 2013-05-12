@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 3.2
+//! \version 3.3
 //! \date 02.01.2013
 //!
 //! ********************************************************************
@@ -21,6 +21,7 @@
 #include "actionManager.hpp"
 #include "listManager.hpp"
 
+#include <wx/stdpaths.h>
 #include <wx/fileconf.h>
 #include <wx/msgdlg.h>
 #include <wx/menu.h>
@@ -513,7 +514,7 @@ void DialogPreferences::applyAndSave()
 	//On ouvre le fichier de config.
 	wxFileConfig fileConfig(	PROJECT_NAME,
 								wxEmptyString,
-								wxGetUserHome()+"/."+PROJECT_NAME);
+								wxStandardPaths::Get().GetUserDataDir()+'/'+PROJECT_NAME);
 	fileConfig.DeleteAll();
 	
 	//Affectation des valeurs dans les ressources.
