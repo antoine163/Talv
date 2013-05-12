@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.1
+//! \version 0.2
 //! \date 09.05.2013
 //!
 //! ********************************************************************
@@ -54,8 +54,10 @@ void DialogListAdd::getlanguages(wxString* lgsrc, wxString* lgto)const
 	//Affect le langage source.
 	int n = _choiceLanguageSource->GetSelection();
 	*lgsrc = _choiceLanguageSource->GetString(n);
+	*lgsrc = Resource::getInstance()->languageToAbbreviation(*lgsrc);
 	
 	//Affect le langage de destination.
 	n = _choiceLanguageOfTranslation->GetSelection();
 	*lgto = _choiceLanguageOfTranslation->GetString(n);
+	*lgto = Resource::getInstance()->languageToAbbreviation(*lgto);
 }

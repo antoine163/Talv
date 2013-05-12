@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 3.4
+//! \version 3.5
 //! \date 02.01.2013
 //!
 //! ********************************************************************
@@ -434,54 +434,52 @@ wxArrayString PanelListLists::OnAddItem()
 	//wxArrayString de retours.
 	wxArrayString newItem;
 	
-	//DialogListAdd dlg(this);
-	//while(1)
-	//{
-		////Montre le dialogue
-		//if(dlg.ShowModal() == wxID_OK)
-		//{
-			////Récupère la nouvelle liste.
-			//wxString newList = dlg.getNamelist();
+	DialogListAdd dlg(this);
+	while(1)
+	{
+		//Montre le dialogue
+		if(dlg.ShowModal() == wxID_OK)
+		{
+			//Récupère la nouvelle liste.
+			wxString newList = dlg.getNamelist();
 			
-			////newList est vide ?
-			//if(newList.IsEmpty())
-				//break;
+			//newList est vide ?
+			if(newList.IsEmpty())
+				break;
 			
-			////vérifie si la liste n'est pas déjà existent.
-			//if(EditListManager::getInstance->exist(newList))
-			//{
-				//wxMessageDialog dlg(this, _("The list already exist!"), _("List exist"), wxOK|wxICON_EXCLAMATION|wxCENTRE);
-				//dlg.ShowModal();
+			//vérifie si la liste n'est pas déjà existent.
+			if(EditListManager::getInstance()->exist(newList))
+			{
+				wxMessageDialog dlg(this, _("The list already exist!"), _("List exist"), wxOK|wxICON_EXCLAMATION|wxCENTRE);
+				dlg.ShowModal();
 				
-				//continue;
-			//}
+				continue;
+			}
 			
-			////Récupération des langue.
-			//wxString lgsrc;
-			//wxString lgto;
-			//dlg.getlanguages(&lgsrc, &lgto);
+			//Récupération des langue.
+			wxString lgsrc;
+			wxString lgto;
+			dlg.getlanguages(&lgsrc, &lgto);
 			
-			//////On crée une nouvelle liste
-			////List* tmpList = new List();
-			//////On l'initialise et vérifie si c'est ok.
-			////if(tmpList->init(EditListManager::getPath()+'/'+newList, tmplgsrc, tmplgto))
-			////{
-				////wxMessageDialog dlg(this, _("The list already exist!"), _("List exist"), wxOK|wxICON_EXCLAMATION|wxCENTRE);
-				////dlg.ShowModal();
+			//On crée une nouvelle liste.
+			if(!EditListManager::getInstance()->createAndAddList(newList, lgsrc, lgto))
+			{
+				wxMessageDialog dlg(this, _("A problem is occured, the list can't add!"), _("List corrupt"), wxOK|wxICON_INFORMATION|wxCENTRE);
+				dlg.ShowModal();
 				
-				////continue;
-			////}
+				continue;
+			}
 			
-			////Un nouveau item
-			//newItem.Add(newList);
-			//newItem.Add(lgsrc);
-			//newItem.Add(lgto);
+			//Un nouveau item
+			newItem.Add(newList);
+			newItem.Add(Resource::getInstance()->abbreviationToLanguage(lgsrc));
+			newItem.Add(Resource::getInstance()->abbreviationToLanguage(lgto));
 		
-			////Une liste à ajouter;
-			//_newLists.Add(newList);
-		//}
-		//break;
-	//}
+			//Une liste à ajouter;
+			_newLists.Add(newList);
+		}
+		break;
+	}
 	
 	return newItem;
 }
