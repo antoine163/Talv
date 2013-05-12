@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.11
+//! \version 0.12
 //! \date 02.05.2013
 //!
 //! ********************************************************************
@@ -56,11 +56,11 @@ wxArrayString ListManagerBase::getNameLists()const
 	wxArrayString tmpArrayString;
 	
 	//Parcoure des lites.
-	//for(auto it: _data)
-	//{
-		////Ajout de la liste au wxArrayString.
-		//tmpArrayString.Add(it.first);
-	//}
+	for(auto it: _data)
+	{
+		//Ajout de la liste au wxArrayString.
+		tmpArrayString.Add(it.first);
+	}
 	
 	return tmpArrayString;
 }
@@ -69,17 +69,22 @@ wxArrayString ListManagerBase::getNameListsByLanguages(	wxString const& lgsrc,
 														wxString const& lgto)const
 {
 	wxArrayString tmpArrayString;
+	wxString tmplgsrc;
+	wxString tmplgto;
 	
-	////Parcoure des lites.
-	//for(auto it: _lists)
-	//{
-		////Si les lange son équivalente.
-		//if(it->_lgsrc == lgsrc && it->_lgto == lgto)
-		//{
-			////Ajout de la liste au wxArrayString.
-			//tmpArrayString.Add(it->getName());
-		//}
-	//}
+	//Parcoure des lites.
+	for(auto it: _data)
+	{
+		//Récupère les langages de la liste.
+		it.second->getlanguages(&tmplgsrc, &tmplgto);
+		
+		//Si les lange son équivalente.
+		if(tmplgsrc == lgsrc && tmplgto == lgto)
+		{
+			//Ajout le nom de la liste au wxArrayString.
+			tmpArrayString.Add(it.first);
+		}
+	}
 	
 	return tmpArrayString;
 }
@@ -152,7 +157,6 @@ void ListManager::save(wxFileConfig& fileConfig)const
 	}
 }
 
-//! \todo à modifier
 wxString ListManager::getPath()
 {
 	return wxStandardPaths::Get().GetUserDataDir()+"/lists";
