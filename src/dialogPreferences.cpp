@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 3.3
+//! \version 3.4
 //! \date 02.01.2013
 //!
 //! ********************************************************************
@@ -413,17 +413,17 @@ void PanelListLists::update()
 	}
 }
 
+//! \todo Vérifier si des actions utilise cette liste.
 void PanelListLists::OnDeleteItem(wxString const& item)
 {
-	////Si il existe dans _newLists on le supprime de celui ci;
-	//if(_newLists.Index(item) != wxNOT_FOUND)
-		//_newLists.Remove(item);
-	//else//Sinon on le supprimer de _deleteLists
-		//_deleteLists.Add(item);
+	EditListManager::getInstance()->getValue(item)->removeFile();
+	EditListManager::getInstance()->remove(item);
 }
 
 wxArrayString PanelListLists::OnPreferencesItem(wxString const& item)
 {
+	wxMessageDialog dlg(this, _("Sorry, No implemented!"), _("No implemented"), wxOK|wxICON_INFORMATION|wxCENTRE);
+	dlg.ShowModal();
 	return wxArrayString();
 }
 

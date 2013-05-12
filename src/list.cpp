@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.3
+//! \version 0.5
 //! \date 02.05.2013
 //!
 //! ********************************************************************
@@ -15,6 +15,9 @@
 
 #include "list.hpp"
 #include <wx/filefn.h> 
+
+//TEST
+#include <iostream>
 
 // *********************************************************************
 // Class List
@@ -39,11 +42,13 @@ bool List::init(	wxFileName const& fileName,
 	//Le fichier existe ?
 	if(wxFileExists(_fileName.GetFullPath()))
 	{
+		//On récupère la date de la dernière modification du fichier.
+		_lastModificationFile = _fileName.GetModificationTime();
+		
 		//On ouvre le fichier. Se qui aura pour effet d'analyser
 		//le fichier et de vérifier sa validités.
-		if(openFile() != true)
+		if(!openFile())
 			return false;
-		
 		//Fermeture du fichier
 		closeFile();
 	}
@@ -68,7 +73,7 @@ int List::save(	wxString text,
 				wxString mainTranslate,
 				std::map<wxString, wxArrayString> const& translations)
 {		
-	if(openFile() != true)
+	if(!openFile())
 		return -1;
 			
 	//Le texte est existent ?
@@ -171,12 +176,24 @@ int List::save(	wxString text,
 	return 1;
 }
 
+void List::removeFile()
+{
+	//Récupération du non du fichier.
+	wxString fileName = _fileName.GetFullPath();
+	
+	std::cout << fileName << std::endl;
+	
+	//Si le fichier est existent, on le supprime.
+	if(wxFileExists(fileName))
+		wxRemoveFile(fileName);
+}
+
 bool List::openFile()
 {
 	//le non de fichier est valide ?
-	if(_fileName.IsOk())
+	if(!_fileName.IsOk())
 		return false;
-		
+
 	//Si le fichier n'est pas déjà existent.
 	if(!wxFileExists(_fileName.GetFullPath()))
 	{
@@ -189,13 +206,23 @@ bool List::openFile()
 		_firstLine.Add("knowledge");
 		_firstLine.Add(_lgsrc);
 		_firstLine.Add(_lgto);
+		
+		if(!_file.Write())
+		{
+			//Fermeture du fichier
+			closeFile();
+			return false;
+		}
+		
+		//On récupère la date du fichier.
+		_lastModificationFile = _fileName.GetModificationTime();
 	}
 	else
 	{		
 		//On ouvre le fichier.
 		if(!_file.Open(_fileName.GetFullPath()))
 			return false;
-			
+		
 		//Le fichier à t'il été accéder (par une autre instance de la liste ou par un autre programme) depuis le dernier accès ?
 		if(_lastModificationFile < _fileName.GetModificationTime())
 		{

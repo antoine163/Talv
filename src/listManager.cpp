@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.6
+//! \version 0.7
 //! \date 02.05.2013
 //!
 //! ********************************************************************
@@ -62,7 +62,7 @@ void ListManager::load(wxFileConfig& fileConfig)
 		
 		//Création et initialisation d'une nouvelle liste.
 		List* tmpList = new List();
-		if(tmpList->init(getPath()+tmpNameList, tmplgsrc, tmplgto))
+		if(tmpList->init(getPath()+'/'+tmpNameList, tmplgsrc, tmplgto))
 		{
 			//Si l'init est ok, on l'ajout.
 			add(tmpNameList, tmpList);
@@ -144,7 +144,7 @@ void EditListManager::init()
 		
 		//Création et initialisation d'une nouvelle liste.
 		List* tmpList = new List();
-		if(tmpList->init(EditListManager::getPath()+it.first, tmplgsrc, tmplgto))
+		if(tmpList->init(EditListManager::getPath()+'/'+it.first, tmplgsrc, tmplgto))
 		{
 			//Si l'init est ok, on l'ajout.
 			add(it.first, tmpList);
@@ -181,7 +181,7 @@ void EditListManager::apply()
 		
 		//Création et initialisation d'une nouvelle liste.
 		List* tmpList = new List();
-		if(tmpList->init(ListManager::getPath()+it.first, tmplgsrc, tmplgto))
+		if(tmpList->init(ListManager::getPath()+'/'+it.first, tmplgsrc, tmplgto))
 		{
 			//Si l'init est ok, on l'ajout.
 			ListManager::getInstance()->add(it.first, tmpList);

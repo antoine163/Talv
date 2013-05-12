@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.3
+//! \version 0.5
 //! \date 02.05.2013
 //!
 //! ********************************************************************
@@ -94,6 +94,9 @@ class List
 		//bool setKnowledge(wxString const& text, Knowledge_e knowledge);
 		
 		//int getNumberTextByKnowledge(Knowledge_e level);
+		
+		//! \brief Supprimer le fichier du système.
+		void removeFile();
 		
 	private:
 		//! \brief Ouverture le fichier.
