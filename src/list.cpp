@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.5
+//! \version 0.6
 //! \date 02.05.2013
 //!
 //! ********************************************************************
@@ -60,6 +60,30 @@ void List::getlanguages(wxString* lgsrc, wxString* lgto)
 {
 	*lgsrc = _lgsrc;
 	*lgto = _lgto;
+}
+
+int List::exist(wxString text)
+{
+	//Caractère en minuscule.
+	text.MakeLower();
+	
+	//Ouverture du fichier.
+	if(!openFile())
+		return -1;
+			
+	//Le texte est existent ?
+	if(getTextLine(text) != 0)
+	{
+		//Fermeture du fichier
+		closeFile();
+		
+		return 1;
+	}
+	
+	//Fermeture du fichier
+	closeFile();
+		
+	return 0;
 }
 
 int List::save(	wxString const& text,
@@ -298,10 +322,11 @@ size_t List::getTextLine(wxString text)
 	text.MakeLower();
 
 	//On recherche si le texte existe (avent la deuxième ',').
-	for(wxString line = _file.GetFirstLine(); !_file.Eof(); line = _file.GetNextLine())
-	{
+	wxString line = _file.GetFirstLine();
+	for(line = _file.GetNextLine(); !_file.Eof(); line = _file.GetNextLine())
+	{		
 		//Texte trouver ?
-		if(line.BeforeFirst(',').BeforeFirst(',') == text)
+		if(line.AfterFirst(',').BeforeFirst(',') == text)
 		{
 			return _file.GetCurrentLine();
 		}

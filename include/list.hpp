@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.5
+//! \version 0.6
 //! \date 02.05.2013
 //!
 //! ********************************************************************
@@ -59,6 +59,12 @@ class List
 		
 		//! \brief Récupérée les deux langues de la liste.
 		void getlanguages(wxString* lgsrc, wxString* lgto);
+		
+		//! \brief Pour savoirs si un texte existe dans la liste.
+		//! \return -1 problème au niveau du fichier.
+		//!			0 le texte n'a pas été trouver.
+		//!			1 le texte est existent dans la liste.
+		int exist(wxString text);
 		
 		//! \brief Pour sauvegarder un texte et ça traduction dans la liste.
 		//! \param text le texte à sauvegarder.

@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.19
+//! \version 0.20
 //! \date 31.03.2013
 //!
 //! ********************************************************************
@@ -295,73 +295,73 @@ ActTranslationToList::~ActTranslationToList()
 
 void ActTranslationToList::execute()
 {
-	////On récupère le contenue de la presse papier.
-	//wxString clipboard = Resource::getClipboard();
+	//On récupère le contenue de la presse papier.
+	wxString clipboard = Resource::getClipboard();
 	
-	////La presse papier est t'elle vide ?
-	//if(clipboard.IsEmpty())
-	//{
-		////Pas de texte à traduire.
-		//Notification::getInstance()->notify(_("Save clipboard translation"), _("Sorry, nothing at save."));
-		//return;
-	//}
+	//La presse papier est t'elle vide ?
+	if(clipboard.IsEmpty())
+	{
+		//Pas de texte à traduire.
+		Notification::getInstance()->notify(_("Save clipboard translation"), _("Sorry, nothing at save."));
+		return;
+	}
 
-	////On récupère le texte traduit.
-	//std::map<wxString, wxArrayString> translations;
-	//wxString mainTranslate = Resource::getTranslations(&translations, clipboard, _lgsrc, _lgto);
-	////On vérifie si une traduction existe.
-	//if(mainTranslate.IsEmpty())
-	//{
-		//Notification::getInstance()->notify(_("Save clipboard translation"), _("Sorry, nothing at save."));
-		//return;
-	//}
+	//On récupère le texte traduit.
+	std::map<wxString, wxArrayString> translations;
+	wxString mainTranslate = Resource::getTranslations(&translations, clipboard, _lgsrc, _lgto);
+	//On vérifie si une traduction existe.
+	if(mainTranslate.IsEmpty())
+	{
+		Notification::getInstance()->notify(_("Save clipboard translation"), _("Sorry, nothing at save."));
+		return;
+	}
 	
-	////On récupère la liste.
-	//List* tmpList = ListManager::getInstance()->getList(_listName);
+	//On récupère la liste.
+	List* tmpList = ListManager::getInstance()->getValue(_listName);
 	
-	////On vérifie la validités de la liste.
-	//if(tmpList == nullptr)
-	//{
-		//wxMessageBox(_("Sorry, the list is nonexistent.\nPlease correct this problem in delete this action."), _("List invalid."), wxOK|wxICON_EXCLAMATION|wxCENTRE);
-		//return;
-	//}
+	//On vérifie la validités de la liste.
+	if(tmpList == nullptr)
+	{
+		wxMessageBox(_("Sorry, the list is nonexistent.\nPlease correct this problem in delete this action."), _("List invalid."), wxOK|wxICON_EXCLAMATION|wxCENTRE);
+		return;
+	}
 	
-	////Vérification des lange de la liste.
-	//wxString tmplgsrc;
-	//wxString tmplgto;
-	//tmpList->getlanguages(&tmplgsrc, &tmplgto);
-	//wxASSERT(tmplgsrc==_lgsrc);
-	//wxASSERT(tmplgto==_lgto);
+	//Vérification des lange de la liste.
+	wxString tmplgsrc;
+	wxString tmplgto;
+	tmpList->getlanguages(&tmplgsrc, &tmplgto);
+	wxASSERT(tmplgsrc==_lgsrc);
+	wxASSERT(tmplgto==_lgto);
 	
-	////On vérifier l'existence du texte dans le fichier
-	//if(tmpList->exist(clipboard))
-	//{
-		//Notification::getInstance()->notify(_("Save clipboard translation"), wxString::Format(_("The text is already existing in '%s'"), _listName));
-		//return;
-	//}
+	//On vérifier l'existence du texte dans la liste
+	if(tmpList->exist(clipboard) == 1)
+	{
+		Notification::getInstance()->notify(_("Save clipboard translation"), wxString::Format(_("The text is already existing in '%s'"), _listName));
+		return;
+	}
 	
-	////Si on doit afficher le dialogue pour choisie la traduction principale.
-	//if(_showDialog)
-	//{
-		//DialogPickMainTranslation dlg(nullptr, clipboard, mainTranslate, translations);
-		//if(dlg.ShowModal() == wxID_CANCEL)
-		//{
-			////L'utilisateur à quitter le dialogue.
-			//Notification::getInstance()->notify(_("Save clipboard translation"), _("The text is not saved."));
-			//return;
-		//}
+	//Si on doit afficher le dialogue pour choisie la traduction principale.
+	if(_showDialog)
+	{
+		DialogPickMainTranslation dlg(nullptr, clipboard, mainTranslate, translations);
+		if(dlg.ShowModal() == wxID_CANCEL)
+		{
+			//L'utilisateur à quitter le dialogue.
+			Notification::getInstance()->notify(_("Save clipboard translation"), _("The text is not saved."));
+			return;
+		}
 		
-		////mainTranslate deviens le chois de l'utilisateur
-		//mainTranslate = dlg.GetChoice();
-	//}
+		//mainTranslate deviens le chois de l'utilisateur
+		mainTranslate = dlg.GetChoice();
+	}
 	
-	////Sinon on le sauvegarde.
-	//if(tmpList->save(clipboard, mainTranslate, translations) != 1)
-	//{
-		//return;
-	//}
+	//Sinon on le sauvegarde.
+	if(tmpList->save(clipboard, mainTranslate, translations) != 1)
+	{
+		return;
+	}
 	
-	//Notification::getInstance()->notify(_("Save clipboard translation"), _("The text has be saved."));
+	Notification::getInstance()->notify(_("Clipboard translation to list"), _("The text has be saved."));
 }
 
 wxPanel* ActTranslationToList::getPanelPreferences(wxWindow* parent, wxButton* buttonOK)
