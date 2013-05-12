@@ -89,6 +89,18 @@ void PanelList::addItem(wxArrayString const& item, bool select)
 		_listCtrl->SetItemState(0, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
 }
 
+void PanelList::clear()
+{
+	_listCtrl->DeleteAllItems();
+	_listItemSelected.clear();
+	
+	//On désactive les boutons
+	_buttonDelete->Enable(false);
+	_menuItemListDelete->Enable(false);
+	_buttonPreferences->Enable(false);
+	_menuItemListPreferences->Enable(false);
+}
+
 void PanelList::OnButtonClickDelete(wxCommandEvent&)
 {
 	wxMessageDialog *dlg = nullptr;
@@ -245,7 +257,7 @@ PanelListActions::~PanelListActions()
 void PanelListActions::update()
 {
 	//Vide la liste
-	_listCtrl->DeleteAllItems();
+	clear();
 	
 	//Rempli la liste.
 	auto actions = EditActionManager::getInstance()->getData();
@@ -378,7 +390,7 @@ PanelListLists::~PanelListLists()
 void PanelListLists::update()
 {
 	//Vide la liste.
-	_listCtrl->DeleteAllItems();
+	clear();
 	
 	wxString tmplgsrc;
 	wxString tmplgto;
@@ -393,8 +405,8 @@ void PanelListLists::update()
 		//Préparation d'un wxArrayString pour l'ajout d'un item.
 		wxArrayString tmpItem;
 		tmpItem.Add(it.first);
-		tmpItem.Add(tmplgsrc);
-		tmpItem.Add(tmplgto);
+		tmpItem.Add(Resource::getInstance()->abbreviationToLanguage(tmplgsrc));
+		tmpItem.Add(Resource::getInstance()->abbreviationToLanguage(tmplgto));
 		
 		//Ajout de l'item dans la liste.
 		addItem(tmpItem, false);

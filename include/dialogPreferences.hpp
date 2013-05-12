@@ -67,6 +67,9 @@ class PanelList : public GuiPanelList
 		//! Chaque wxString correspond à une colonne.
 		virtual wxArrayString OnAddItem()=0;
 		
+		//! \brief Supprimer tout les items de la liste. État par défaut.
+		void clear();
+		
 		//! \brief Liste des Item qui sont sélectionner.
 		std::vector<wxListItem> _listItemSelected;
 		
