@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.15
+//! \version 0.16
 //! \date 30.03.2013
 //!
 //! ********************************************************************
@@ -116,7 +116,7 @@ Resource::Resource()
 	
 	//Liste des actions
 	_actions[_("Translation")] = "ActTranslation";
-	_actions[_("Save a translation")] = "ActSaveTranslation";
+	_actions[_("Translation to list")] = "ActTranslationToList";
 	_actions[_("Say a text")] = "ActSay";
 }
 

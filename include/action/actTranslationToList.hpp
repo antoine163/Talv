@@ -1,10 +1,10 @@
 //! \file **************************************************************
-//! \brief Header Action de sauvegarde de traduction.
+//! \brief Header Action, traduction et sauvegarde dans une liste.
 //! 
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.17
+//! \version 0.18
 //! \date 31.03.2013
 //!
 //! ********************************************************************
@@ -13,10 +13,10 @@
 *	Copyright © 2013 - Antoine Maleyrie.
 */
 
-#ifndef ACTION_SAVE_TRANSLATION_H
-#define ACTION_SAVE_TRANSLATION_H
+#ifndef ACTION__TRANSLATION_TO_LIST_H
+#define ACTION__TRANSLATION_TO_LIST_H
 
-#include "action/guiPanelActSaveTranslation.h"
+#include "action/guiPanelActTranslationToList.h"
 #include "notification.hpp"
 #include "action.hpp"
 #include "list.hpp"
@@ -30,17 +30,17 @@
 #include <map>
 
 // *********************************************************************
-// Class PanelActSaveTranslation
+// Class PanelActTranslationToList
 // *********************************************************************
 
-class ActSaveTranslation;
+class ActTranslationToList;
 
-//! \brief GUI pour la modification des préférences des actions de sauvegarde de traductions \ref ActSaveTranslation.
-class PanelActSaveTranslation : public GuiPanelActSaveTranslation
+//! \brief GUI pour la modification des préférences de l'action de traduction et sauvegarde dans une liste. \ref ActTranslationToList.
+class PanelActTranslationToList : public GuiPanelActTranslationToList
 {
 	public:
-		PanelActSaveTranslation(wxWindow* parent, wxButton* buttonOK, ActSaveTranslation * act);
-		~PanelActSaveTranslation();
+		PanelActTranslationToList(wxWindow* parent, wxButton* buttonOK, ActTranslationToList* act);
+		~PanelActTranslationToList();
 		
 		void updateComboBoxList();
 		
@@ -53,7 +53,7 @@ class PanelActSaveTranslation : public GuiPanelActSaveTranslation
 	
 	private:
 		//! \brief ActSoveTranslation à modifier.
-		ActSaveTranslation * _act;
+		ActTranslationToList* _act;
 		
 		//! \brief bouton "OK" du dialogue parent.
 		wxButton* _buttonOK;
@@ -93,7 +93,7 @@ class PanelPickTranslation : public GuiPanelTranslation
 // *********************************************************************
 
 //! \brief GUI pour choisir la traduction principale à sauvegarder.
-//! \see ActSaveTranslation
+//! \see ActTranslationToList
 class DialogPickMainTranslation : public GuiDialogPickMainTranslation
 {
 	friend PanelPickTranslation;
@@ -124,17 +124,17 @@ class DialogPickMainTranslation : public GuiDialogPickMainTranslation
 };
 
 // *********************************************************************
-// Class ActSaveTranslation
+// Class ActTranslationToList
 // *********************************************************************
 
-//! \brief Action de sauvegarde de traductions.
-class ActSaveTranslation : public Action
+//! \brief Action de traduction et sauvegarde la traduction dans une liste.
+class ActTranslationToList : public Action
 {
-	friend PanelActSaveTranslation;
+	friend PanelActTranslationToList;
 	
 	public:
 		//! \brief Constructeur par défaut.
-		ActSaveTranslation();
+		ActTranslationToList();
 		
 		//! \brief Constructeur.
 		//! Les deux premier paramètres doive être écrit en abrégé.
@@ -146,13 +146,13 @@ class ActSaveTranslation : public Action
 		//! \param listName Le non de la liste où sauvegarder les traductions.
 		//! \param saveAll true pour enregistre tout les traductions, false pour enregistre juste la traduction principale.
 		//! \param showDialog true pour affiche une dialogue l'or d'une sauvegarde pour choisir la traduction a sauvegarder
-		ActSaveTranslation(	wxString const& lgsrc,
-							wxString const& lgto,
-							wxString const& listName,
-							bool showDialog);
+		ActTranslationToList(	wxString const& lgsrc,
+								wxString const& lgto,
+								wxString const& listName,
+								bool showDialog);
 						
 		//! \brief Destructeur.
-		~ActSaveTranslation();
+		~ActTranslationToList();
 		
 		//! \brief Exécuter l'action.
 		void execute();
@@ -184,4 +184,4 @@ class ActSaveTranslation : public Action
 		bool _showDialog;
 };
 
-#endif //ACTION_SAVE_TRANSLATION_H
+#endif //ACTION__TRANSLATION_TO_LIST_H

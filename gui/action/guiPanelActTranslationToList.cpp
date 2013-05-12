@@ -5,11 +5,11 @@
 // PLEASE DO "NOT" EDIT THIS FILE!
 ///////////////////////////////////////////////////////////////////////////
 
-#include "guiPanelActSaveTranslation.h"
+#include "guiPanelActTranslationToList.h"
 
 ///////////////////////////////////////////////////////////////////////////
 
-GuiPanelActSaveTranslation::GuiPanelActSaveTranslation( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
+GuiPanelActTranslationToList::GuiPanelActTranslationToList( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
 {
 	wxBoxSizer* bSizer1;
 	bSizer1 = new wxBoxSizer( wxVERTICAL );
@@ -91,15 +91,15 @@ GuiPanelActSaveTranslation::GuiPanelActSaveTranslation( wxWindow* parent, wxWind
 	bSizer1->Fit( this );
 	
 	// Connect Events
-	_choiceLanguageSource->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( GuiPanelActSaveTranslation::OnChoiceSrc ), NULL, this );
-	_choiceLanguageOfTranslation->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( GuiPanelActSaveTranslation::OnChoiceTo ), NULL, this );
+	_choiceLanguageSource->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( GuiPanelActTranslationToList::OnChoiceSrc ), NULL, this );
+	_choiceLanguageOfTranslation->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( GuiPanelActTranslationToList::OnChoiceTo ), NULL, this );
 }
 
-GuiPanelActSaveTranslation::~GuiPanelActSaveTranslation()
+GuiPanelActTranslationToList::~GuiPanelActTranslationToList()
 {
 	// Disconnect Events
-	_choiceLanguageSource->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( GuiPanelActSaveTranslation::OnChoiceSrc ), NULL, this );
-	_choiceLanguageOfTranslation->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( GuiPanelActSaveTranslation::OnChoiceTo ), NULL, this );
+	_choiceLanguageSource->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( GuiPanelActTranslationToList::OnChoiceSrc ), NULL, this );
+	_choiceLanguageOfTranslation->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( GuiPanelActTranslationToList::OnChoiceTo ), NULL, this );
 	
 }
 

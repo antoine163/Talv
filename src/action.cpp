@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.11
+//! \version 0.12
 //! \date 04.01.2013
 //!
 //! ********************************************************************
@@ -16,7 +16,7 @@
 #include "action.hpp"
 
 #include "action/actTranslation.hpp"
-#include "action/actSaveTranslation.hpp"
+#include "action/actTranslationToList.hpp"
 #include "action/actSay.hpp"
 
 // *********************************************************************
@@ -48,8 +48,8 @@ Action* Action::newAction(wxString const& actTypeName)
 	if(actTypeName == "ActTranslation")
 		return new ActTranslation();
 
-	if(actTypeName == "ActSaveTranslation")
-		return new ActSaveTranslation();
+	if(actTypeName == "ActTranslationToList")
+		return new ActTranslationToList();
 
 	if(actTypeName == "ActSay")
 		return new ActSay();
@@ -62,8 +62,8 @@ Action* Action::newAction(Action const* act)
 	if(act->_actTypeName == "ActTranslation")
 		return new ActTranslation(static_cast<ActTranslation const&>(*act));
 
-	if(act->_actTypeName == "ActSaveTranslation")
-		return new ActSaveTranslation(static_cast<ActSaveTranslation const&>(*act));
+	if(act->_actTypeName == "ActTranslationToList")
+		return new ActTranslationToList(static_cast<ActTranslationToList const&>(*act));
 
 	if(act->_actTypeName == "ActSay")
 		return new ActSay(static_cast<ActSay const&>(*act));

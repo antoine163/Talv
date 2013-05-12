@@ -9,11 +9,11 @@
         <property name="disconnect_python_events">0</property>
         <property name="encoding">UTF-8</property>
         <property name="event_generation">connect</property>
-        <property name="file">guiPanelActSaveTranslation</property>
+        <property name="file">guiPanelActTranslationToList</property>
         <property name="first_id">1000</property>
         <property name="help_provider">none</property>
         <property name="internationalize">1</property>
-        <property name="name">PanelActSaveTranslation</property>
+        <property name="name">PanelActTranslationToList</property>
         <property name="namespace"></property>
         <property name="path">.</property>
         <property name="precompiled_header"></property>
@@ -33,7 +33,7 @@
             <property name="id">wxID_ANY</property>
             <property name="maximum_size"></property>
             <property name="minimum_size"></property>
-            <property name="name">GuiPanelActSaveTranslation</property>
+            <property name="name">GuiPanelActTranslationToList</property>
             <property name="pos"></property>
             <property name="size">-1,-1</property>
             <property name="subclass"></property>

@@ -5,8 +5,8 @@
 // PLEASE DO "NOT" EDIT THIS FILE!
 ///////////////////////////////////////////////////////////////////////////
 
-#ifndef __guiPanelActSaveTranslation__
-#define __guiPanelActSaveTranslation__
+#ifndef __guiPanelActTranslationToList__
+#define __guiPanelActTranslationToList__
 
 #include <wx/intl.h>
 
@@ -29,9 +29,9 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
-/// Class GuiPanelActSaveTranslation
+/// Class GuiPanelActTranslationToList
 ///////////////////////////////////////////////////////////////////////////////
-class GuiPanelActSaveTranslation : public wxPanel 
+class GuiPanelActTranslationToList : public wxPanel 
 {
 	private:
 	
@@ -48,8 +48,8 @@ class GuiPanelActSaveTranslation : public wxPanel
 	
 	public:
 		
-		GuiPanelActSaveTranslation( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL );
-		~GuiPanelActSaveTranslation();
+		GuiPanelActTranslationToList( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL );
+		~GuiPanelActTranslationToList();
 	
 };
 
@@ -90,4 +90,4 @@ class GuiPanelTranslation : public wxPanel
 	
 };
 
-#endif //__guiPanelActSaveTranslation__
+#endif //__guiPanelActTranslationToList__

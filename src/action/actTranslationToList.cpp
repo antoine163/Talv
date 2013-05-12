@@ -1,10 +1,10 @@
 //! \file **************************************************************
-//! \brief Source Action de sauvegarde de traduction.
+//! \brief Source Action, traduction et sauvegarde dans une liste.
 //! 
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.17
+//! \version 0.18
 //! \date 31.03.2013
 //!
 //! ********************************************************************
@@ -13,7 +13,7 @@
 *	Copyright © 2013 - Antoine Maleyrie.
 */
 
-#include "action/actSaveTranslation.hpp"
+#include "action/actTranslationToList.hpp"
 #include "resource.hpp"
 #include "listManager.hpp"
 
@@ -27,48 +27,49 @@
 
 
 // *********************************************************************
-// Class PanelActSaveTranslation
+// Class PanelActTranslationToList
 // *********************************************************************
+
 //! \todo a implémenter avec ListManager
-PanelActSaveTranslation::PanelActSaveTranslation(wxWindow* parent, wxButton* buttonOK, ActSaveTranslation * act)
-: GuiPanelActSaveTranslation(parent), _act(act), _buttonOK(buttonOK)
+PanelActTranslationToList::PanelActTranslationToList(wxWindow* parent, wxButton* buttonOK, ActTranslationToList* act)
+: GuiPanelActTranslationToList(parent), _act(act), _buttonOK(buttonOK)
 {
-	std::map<wxString, wxString> const& languages = Resource::getInstance()->getLanguages();	
+	//std::map<wxString, wxString> const& languages = Resource::getInstance()->getLanguages();	
 	
-	//Ajout des langues.
-	for(auto &it: languages)
-	{
-		_choiceLanguageSource->Append(it.second);
-		_choiceLanguageOfTranslation->Append(it.second);
-	}
+	////Ajout des langues.
+	//for(auto &it: languages)
+	//{
+		//_choiceLanguageSource->Append(it.second);
+		//_choiceLanguageOfTranslation->Append(it.second);
+	//}
 	
-	//Sélectionne les bonnes langues.
-	int n = _choiceLanguageSource->FindString(languages.at(_act->_lgsrc));
-	_choiceLanguageSource->SetSelection(n);
-	n = _choiceLanguageOfTranslation->FindString(languages.at(_act->_lgto));
-	_choiceLanguageOfTranslation->SetSelection(n);
+	////Sélectionne les bonnes langues.
+	//int n = _choiceLanguageSource->FindString(languages.at(_act->_lgsrc));
+	//_choiceLanguageSource->SetSelection(n);
+	//n = _choiceLanguageOfTranslation->FindString(languages.at(_act->_lgto));
+	//_choiceLanguageOfTranslation->SetSelection(n);
 	
-	//Métre a jour le combo box
-	//updateComboBoxList();
+	////Métre a jour le combo box
+	////updateComboBoxList();
 		
-	//Dessiner un dialogue
-	if(_act->_showDialog)
-		_checkBoxShowDialog->SetValue(true);
-	else
-		_checkBoxShowDialog->SetValue(false);
+	////Dessiner un dialogue
+	//if(_act->_showDialog)
+		//_checkBoxShowDialog->SetValue(true);
+	//else
+		//_checkBoxShowDialog->SetValue(false);
 		
 		
 	//Lier l'événement du bouton OK du wxWindow parent.
-	_buttonOK->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &PanelActSaveTranslation::OnOKButtonClick, this, _buttonOK->GetId());
+	_buttonOK->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &PanelActTranslationToList::OnOKButtonClick, this, _buttonOK->GetId());
 }
 
-PanelActSaveTranslation::~PanelActSaveTranslation()
+PanelActTranslationToList::~PanelActTranslationToList()
 {
-	_buttonOK->Unbind(wxEVT_COMMAND_BUTTON_CLICKED, &PanelActSaveTranslation::OnOKButtonClick, this, _buttonOK->GetId());
+	_buttonOK->Unbind(wxEVT_COMMAND_BUTTON_CLICKED, &PanelActTranslationToList::OnOKButtonClick, this, _buttonOK->GetId());
 }
 
 //! \todo a implémenter avec ListManager/panel
-void PanelActSaveTranslation::updateComboBoxList()
+void PanelActTranslationToList::updateComboBoxList()
 {	
 	////Récupération du langage source.
 	//int n = _choiceLanguageSource->GetSelection();
@@ -92,31 +93,31 @@ void PanelActSaveTranslation::updateComboBoxList()
 	//_comboBoxList->Create(this, wxID_ANY, value, wxDefaultPosition, wxDefaultSize, tmpLists);
 }
 
-void PanelActSaveTranslation::OnChoiceSrc(wxCommandEvent&)
+void PanelActTranslationToList::OnChoiceSrc(wxCommandEvent&)
 {
 	//updateComboBoxList();
 }
 
-void PanelActSaveTranslation::OnChoiceTo(wxCommandEvent&)
+void PanelActTranslationToList::OnChoiceTo(wxCommandEvent&)
 {
 	//updateComboBoxList();
 }
 
 //! \todo a implémenter avec ListManager/panel
-void PanelActSaveTranslation::OnOKButtonClick(wxCommandEvent& event)
+void PanelActTranslationToList::OnOKButtonClick(wxCommandEvent& event)
 {
-	//Récupération du langage source.
-	int n = _choiceLanguageSource->GetSelection();
-	wxString s = _choiceLanguageSource->GetString(n);
-	wxString tmplgsrc = Resource::getInstance()->languageToAbbreviation(s);
+	////Récupération du langage source.
+	//int n = _choiceLanguageSource->GetSelection();
+	//wxString s = _choiceLanguageSource->GetString(n);
+	//wxString tmplgsrc = Resource::getInstance()->languageToAbbreviation(s);
 	
-	//Récupération du langage de destination.
-	n = _choiceLanguageOfTranslation->GetSelection();
-	s = _choiceLanguageOfTranslation->GetString(n);
-	wxString tmplgto = Resource::getInstance()->languageToAbbreviation(s);
+	////Récupération du langage de destination.
+	//n = _choiceLanguageOfTranslation->GetSelection();
+	//s = _choiceLanguageOfTranslation->GetString(n);
+	//wxString tmplgto = Resource::getInstance()->languageToAbbreviation(s);
 	
-	//Récupère le nom de la liste
-	wxString tmpListName = _comboBoxList->GetStringSelection();
+	////Récupère le nom de la liste
+	//wxString tmpListName = _comboBoxList->GetStringSelection();
 	
 	//Vérifie si le nom de la liste et valide.
 	//if(tmpListName.IsEmpty())
@@ -158,14 +159,14 @@ void PanelActSaveTranslation::OnOKButtonClick(wxCommandEvent& event)
 		////ListManager::getInstance()->create(tmpListName, tmplgsrc, tmplgto);
 	//}
 	
-	//Affect à l'action le langage source.
-	_act->_lgsrc = Resource::getInstance()->languageToAbbreviation(tmplgsrc);
+	////Affect à l'action le langage source.
+	//_act->_lgsrc = Resource::getInstance()->languageToAbbreviation(tmplgsrc);
 	
-	//Affect à l'action le langage de destination.
-	_act->_lgto = Resource::getInstance()->languageToAbbreviation(tmplgto);
+	////Affect à l'action le langage de destination.
+	//_act->_lgto = Resource::getInstance()->languageToAbbreviation(tmplgto);
 	
-	//Affect à l'action si il doit afficher un dialogue.
-	_act->_showDialog = _checkBoxShowDialog->IsChecked();
+	////Affect à l'action si il doit afficher un dialogue.
+	//_act->_showDialog = _checkBoxShowDialog->IsChecked();
 		
 	//Propage l'événement.
 	event.Skip();
@@ -269,31 +270,31 @@ void DialogPickMainTranslation::OnButtonClick(wxCommandEvent& event)
 }
 
 // *********************************************************************
-// Class ActSaveTranslation
+// Class ActTranslationToList
 // *********************************************************************
 
 //! \todo a compléter avec les locals
-ActSaveTranslation::ActSaveTranslation()
-: ActSaveTranslation("en", "fr", wxEmptyString, true)
+ActTranslationToList::ActTranslationToList()
+: ActTranslationToList("en", "fr", wxEmptyString, true)
 {
 }
 
 //! \todo a implémenter avec ListManager
-ActSaveTranslation::ActSaveTranslation(	wxString const& lgsrc,
+ActTranslationToList::ActTranslationToList(	wxString const& lgsrc,
 										wxString const& lgto,
 										wxString const& listName,
 										bool showDialog)
-: Action(_("Save a translation"), "ActSaveTranslation",
+: Action(_("Translation to list"), "ActTranslationToList",
 _("Translation a text with google and save in a list.")),
 _lgsrc(lgsrc), _lgto(lgto), _listName(listName), _showDialog(showDialog)
 {
 }
 
-ActSaveTranslation::~ActSaveTranslation()
+ActTranslationToList::~ActTranslationToList()
 {
 }
 
-void ActSaveTranslation::execute()
+void ActTranslationToList::execute()
 {
 	////On récupère le contenue de la presse papier.
 	//wxString clipboard = Resource::getClipboard();
@@ -364,12 +365,12 @@ void ActSaveTranslation::execute()
 	//Notification::getInstance()->notify(_("Save clipboard translation"), _("The text has be saved."));
 }
 
-wxPanel* ActSaveTranslation::getPanelPreferences(wxWindow* parent, wxButton* buttonOK)
+wxPanel* ActTranslationToList::getPanelPreferences(wxWindow* parent, wxButton* buttonOK)
 {
-	return new PanelActSaveTranslation(parent, buttonOK, this);
+	return new PanelActTranslationToList(parent, buttonOK, this);
 }
 
-void ActSaveTranslation::actLoad(wxFileConfig & fileConfig)
+void ActTranslationToList::actLoad(wxFileConfig & fileConfig)
 {	
 	//On récupère les langages.
 	fileConfig.Read("lgsrc", &_lgsrc);
@@ -382,7 +383,7 @@ void ActSaveTranslation::actLoad(wxFileConfig & fileConfig)
 	fileConfig.Read("showDialog", &_showDialog);
 }
 		
-void ActSaveTranslation::actSave(wxFileConfig & fileConfig)const
+void ActTranslationToList::actSave(wxFileConfig & fileConfig)const
 {	
 	//On sauvegarde les langages.
 	fileConfig.Write("lgsrc", _lgsrc);
@@ -395,7 +396,7 @@ void ActSaveTranslation::actSave(wxFileConfig & fileConfig)const
 	fileConfig.Write("showDialog", _showDialog);
 }
 
-wxString ActSaveTranslation::getStringPreferences()const
+wxString ActTranslationToList::getStringPreferences()const
 {
 	return 	Resource::getInstance()->abbreviationToLanguage(_lgsrc) +
 			' ' + _("to") + ' ' +
