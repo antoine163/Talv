@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.18
+//! \version 0.19
 //! \date 31.03.2013
 //!
 //! ********************************************************************
@@ -30,34 +30,32 @@
 // Class PanelActTranslationToList
 // *********************************************************************
 
-//! \todo a implémenter avec ListManager
 PanelActTranslationToList::PanelActTranslationToList(wxWindow* parent, wxButton* buttonOK, ActTranslationToList* act)
 : GuiPanelActTranslationToList(parent), _act(act), _buttonOK(buttonOK)
 {
-	//std::map<wxString, wxString> const& languages = Resource::getInstance()->getLanguages();	
+	std::map<wxString, wxString> const& languages = Resource::getInstance()->getLanguages();	
 	
-	////Ajout des langues.
-	//for(auto &it: languages)
-	//{
-		//_choiceLanguageSource->Append(it.second);
-		//_choiceLanguageOfTranslation->Append(it.second);
-	//}
+	//Ajout des langues.
+	for(auto &it: languages)
+	{
+		_choiceLanguageSource->Append(it.second);
+		_choiceLanguageOfTranslation->Append(it.second);
+	}
 	
-	////Sélectionne les bonnes langues.
-	//int n = _choiceLanguageSource->FindString(languages.at(_act->_lgsrc));
-	//_choiceLanguageSource->SetSelection(n);
-	//n = _choiceLanguageOfTranslation->FindString(languages.at(_act->_lgto));
-	//_choiceLanguageOfTranslation->SetSelection(n);
+	//Sélectionne les bonnes langues.
+	int n = _choiceLanguageSource->FindString(languages.at(_act->_lgsrc));
+	_choiceLanguageSource->SetSelection(n);
+	n = _choiceLanguageOfTranslation->FindString(languages.at(_act->_lgto));
+	_choiceLanguageOfTranslation->SetSelection(n);
 	
-	////Métre a jour le combo box
-	////updateComboBoxList();
+	//Métre a jour le combo box
+	updateComboBoxList();
 		
-	////Dessiner un dialogue
-	//if(_act->_showDialog)
-		//_checkBoxShowDialog->SetValue(true);
-	//else
-		//_checkBoxShowDialog->SetValue(false);
-		
+	//Dessiner un dialogue
+	if(_act->_showDialog)
+		_checkBoxShowDialog->SetValue(true);
+	else
+		_checkBoxShowDialog->SetValue(false);
 		
 	//Lier l'événement du bouton OK du wxWindow parent.
 	_buttonOK->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &PanelActTranslationToList::OnOKButtonClick, this, _buttonOK->GetId());
@@ -68,105 +66,106 @@ PanelActTranslationToList::~PanelActTranslationToList()
 	_buttonOK->Unbind(wxEVT_COMMAND_BUTTON_CLICKED, &PanelActTranslationToList::OnOKButtonClick, this, _buttonOK->GetId());
 }
 
-//! \todo a implémenter avec ListManager/panel
 void PanelActTranslationToList::updateComboBoxList()
 {	
-	////Récupération du langage source.
-	//int n = _choiceLanguageSource->GetSelection();
-	//wxString s = _choiceLanguageSource->GetString(n);
-	//wxString tmplgsrc = Resource::getInstance()->languageToAbbreviation(s);
+	//Récupération du langage source.
+	int n = _choiceLanguageSource->GetSelection();
+	wxString s = _choiceLanguageSource->GetString(n);
+	wxString tmplgsrc = Resource::getInstance()->languageToAbbreviation(s);
 	
-	////Récupération du langage de destination.
-	//n = _choiceLanguageOfTranslation->GetSelection();
-	//s = _choiceLanguageOfTranslation->GetString(n);
-	//wxString tmplgto = Resource::getInstance()->languageToAbbreviation(s);
+	//Récupération du langage de traduction.
+	n = _choiceLanguageOfTranslation->GetSelection();
+	s = _choiceLanguageOfTranslation->GetString(n);
+	wxString tmplgto = Resource::getInstance()->languageToAbbreviation(s);
 	
-	////Récupération de la liste des listes en fonction des langes.
-	//wxArrayString tmpLists = ListManager::getInstance()->getNameListsByLanguages(tmplgsrc, tmplgto);
+	//Récupération de la liste des listes en fonction des langes.
+	wxArrayString tmpLists = EditListManager::getInstance()->getNameListsByLanguages(tmplgsrc, tmplgto);
 	
-	////Chois de la valeur proposer.
-	//wxString value = wxEmptyString;
-	//if(tmpLists.Index(_act->_listName) != wxNOT_FOUND)
-		//value = _act->_listName;
+	//On modifie le combo box pour les nouveau chois de liste.
+	_comboBoxList->Clear();
+	_comboBoxList->Append(tmpLists);
+	_comboBoxList->AutoComplete(tmpLists);
 	
-	////Création du nouveau combo box
-	//_comboBoxList->Create(this, wxID_ANY, value, wxDefaultPosition, wxDefaultSize, tmpLists);
+	//Chois de la liste de l'action si elle existe dans tmpLists.
+	int selec = _comboBoxList->FindString(_act->_listName);
+	if(selec != wxNOT_FOUND)
+		_comboBoxList->SetSelection(selec);
 }
 
 void PanelActTranslationToList::OnChoiceSrc(wxCommandEvent&)
 {
-	//updateComboBoxList();
+	updateComboBoxList();
 }
 
 void PanelActTranslationToList::OnChoiceTo(wxCommandEvent&)
 {
-	//updateComboBoxList();
+	updateComboBoxList();
 }
 
-//! \todo a implémenter avec ListManager/panel
 void PanelActTranslationToList::OnOKButtonClick(wxCommandEvent& event)
 {
-	////Récupération du langage source.
-	//int n = _choiceLanguageSource->GetSelection();
-	//wxString s = _choiceLanguageSource->GetString(n);
-	//wxString tmplgsrc = Resource::getInstance()->languageToAbbreviation(s);
+	//Récupération du langage source.
+	int n = _choiceLanguageSource->GetSelection();
+	wxString s = _choiceLanguageSource->GetString(n);
+	wxString tmpChoiceLgsrc = Resource::getInstance()->languageToAbbreviation(s);
 	
-	////Récupération du langage de destination.
-	//n = _choiceLanguageOfTranslation->GetSelection();
-	//s = _choiceLanguageOfTranslation->GetString(n);
-	//wxString tmplgto = Resource::getInstance()->languageToAbbreviation(s);
+	//Récupération du langage de traduction.
+	n = _choiceLanguageOfTranslation->GetSelection();
+	s = _choiceLanguageOfTranslation->GetString(n);
+	wxString tmpChoiceLgto = Resource::getInstance()->languageToAbbreviation(s);
 	
-	////Récupère le nom de la liste
-	//wxString tmpListName = _comboBoxList->GetStringSelection();
+	//Récupère le nom de la liste
+	wxString tmpListName = _comboBoxList->GetValue();
 	
 	//Vérifie si le nom de la liste et valide.
-	//if(tmpListName.IsEmpty())
-	//{
-		//wxMessageBox(_("The name of list is empty."), _("Name list invalid"), wxOK|wxICON_EXCLAMATION|wxCENTRE, this);
-		//return;
-	//}
+	if(tmpListName.IsEmpty())
+	{
+		wxMessageBox(_("The name of list is empty."), _("Name list invalid"), wxOK|wxICON_EXCLAMATION|wxCENTRE, this);
+		return;
+	}
 	
-	////Vérifie si la liste est déjà existante
-	//if(ListManager::getInstance()->exist(tmpListName))
-	//{
-		////Vérifie si la lite est configurer avec les même langage.
-		//ListManager::getInstance()->getList(tmpListName);
+	//Vérifie si la liste est déjà existante
+	if(EditListManager::getInstance()->exist(tmpListName))
+	{
+		//Vérifie si la lite est configurer avec les même langage.
+		List* tmpList = EditListManager::getInstance()->getValue(tmpListName);
+		wxString tmplgsrc;
+		wxString tmplgto;
+		tmpList->getlanguages(&tmplgsrc, &tmplgto);
 		
-		
-		////Le fichier est déjà existent ?
-		//if(tmpFileName.Exists() && tmpFileName != _act->_fileName)
-		//{
-			////Si il existe, on demande si il faut remplacer le fichier.
-			//wxString message = wxString::Format(_("The file '%s' already exists.\nDo you want delete this file?"), tmpFileName.GetFullPath());
-			//wxMessageDialog dlg(this, message, _("Delete a file"), wxYES_NO|wxICON_QUESTION|wxICON_EXCLAMATION|wxCENTRE);
-			//if(dlg.ShowModal() != wxID_YES)
-			//{
-				//return;
-			//}
-			//else
-			//{
-				////Suppression du fichier.
-				//if(!wxRemoveFile(_filePickerFile->GetPath()))
-				//{
-					//wxLogError(wxString::Format(_("Could not remove the file : '%s'"), tmpFileName.GetFullPath()));
-				//}
-			//}
-		//}
-	//}
-	////Sinon on la crée
-	//else
-	//{
-		////ListManager::getInstance()->create(tmpListName, tmplgsrc, tmplgto);
-	//}
+		if((tmplgsrc != tmpChoiceLgsrc) || (tmplgto != tmpChoiceLgto))
+		{
+			wxMessageDialog dlg(this,
+								_("The list is already existing and isn't compatible with the preference of your action."),
+								_("List already existing"),
+								wxOK|wxICON_INFORMATION|wxCENTRE);
+			dlg.ShowModal();
+			return;
+		}
+
+	}
+	//Sinon on la crée
+	else
+	{
+		if(!EditListManager::getInstance()->createAndAddList(tmpListName, tmpChoiceLgsrc, tmpChoiceLgto))
+		{
+			wxMessageDialog dlg(this, _("A problem is occured, the list can't add!"), _("List corrupt"), wxOK|wxICON_INFORMATION|wxCENTRE);
+			dlg.ShowModal();
+			return;
+		}
+	}
 	
-	////Affect à l'action le langage source.
-	//_act->_lgsrc = Resource::getInstance()->languageToAbbreviation(tmplgsrc);
+	//Affect le nom de la list.
+	_act->_listName = tmpListName;
 	
-	////Affect à l'action le langage de destination.
-	//_act->_lgto = Resource::getInstance()->languageToAbbreviation(tmplgto);
+	//Affect à l'action le langage source.
+	_act->_lgsrc = tmpChoiceLgsrc;
 	
-	////Affect à l'action si il doit afficher un dialogue.
-	//_act->_showDialog = _checkBoxShowDialog->IsChecked();
+	//Affect à l'action le langage de destination.
+	_act->_lgto = tmpChoiceLgto;
+	
+	//Affect à l'action si il doit afficher un dialogue.
+	_act->_showDialog = _checkBoxShowDialog->IsChecked();
 		
 	//Propage l'événement.
 	event.Skip();

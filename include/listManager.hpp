@@ -37,7 +37,7 @@ class ListManagerBase : public ManagerBase<wxString, List>
 		//! \brief destructeur.
 		virtual ~ListManagerBase();
 
-		//! \brief Obtenir le nom de touts les lites.
+		//! \brief Crées et ajout à la liste.
 		//! \param ListName le non de la liste.
 		//! \param lgsrc le langage source de la liste.
 		//! \param lgto le langage de traduction de la liste.
