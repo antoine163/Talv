@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.6
+//! \version 0.7
 //! \date 02.05.2013
 //!
 //! ********************************************************************
@@ -14,7 +14,9 @@
 */
 
 #include "list.hpp"
+
 #include <wx/filefn.h> 
+#include <vector>
 
 //TEST
 #include <iostream>
@@ -112,69 +114,61 @@ int List::save(	wxString text,
 	//Caractère en minuscule.
 	text.MakeLower();
 	mainTranslate.MakeLower();
-
-	//Parcoure autant de ligne qu'il y en à dans "translations".
-	bool loop = true;
-	for(size_t iline = 0;;iline++)
+	
+	//Les ligne à ajouter au fichier
+	std::vector<wxString> newLignes;
+	
+	//Il y a des traductions. 
+	if(translations.size())
 	{
-		std::map<int, wxString> strline;
-		int nbColumn = 0;
-
-		//Parcoure tout les colonnes du fichier
-		for(auto it : translations)
+		//Détermine le nombre de ligne.
+		//Et ajout de nouvelle valeur a la première ligne au besoin.
+		size_t nbLine = 0;
+		size_t tmpNbLine = 0;
+		for(auto it: translations)
 		{
+			tmpNbLine = it.second.GetCount();
+			if(nbLine < tmpNbLine)
+				nbLine = tmpNbLine;
+				
 			//On vérifie si le type du mot et connue dans la première ligne.
-			int column = _firstLine.Index(it.first, false);
-			if(column == wxNOT_FOUND)
+			if(_firstLine.Index(it.first, false) == wxNOT_FOUND)
 			{
 				//Si il n'existe pas on l'ajoute.
-				column = _firstLine.Add(it.first);
-			}
-
-			//Le nombre de colonne et égale à l'index de la colonne la plus élever.
-			if(nbColumn < column)
-				nbColumn = column;
-
-			//Si il n'y a plus de texte à cette colonne et à cette ligne
-			if(iline >= it.second.GetCount())
-			{
-				//On a plus besoin de boucler pour cette ligne.
-				loop = false;
-			}
-			else
-			{
-				//On a besoin de boucler pour cette ligne.
-				loop = true;
-				//On ajoute le texte dans la bonne colonne et la bonne ligne
-				strline[column] = it.second[iline];
+				_firstLine.Add(it.first);
 			}
 		}
-
-		//Si on ne doit plus boucler.
-		if(!loop)
-			break;
-
-		//La ligne à ajouter
-		wxString addLine;
-
-		//Première ligne (à sauvegarder) ?
-		if(iline == 0)
-			addLine << KNOWLEDGE_UNKNOWN << ',' << text << ',' << mainTranslate;
-		else
-			addLine << ",,";
-
-		//On parcoure tout les colonne (soft les deux première).
-		for(int iColumn = 2; iColumn <= nbColumn; iColumn++)
+		
+		//Obtenir le nombre de colonne
+		//(avec les nouvelles colonnes qui doive être ajouter au besoin).
+		size_t nbColumn = _firstLine.GetCount();
+		
+		//Parcoure tout les lignes de la traduction.
+		for(size_t l = 0; l < nbLine; l++)
 		{
-			addLine << ',';
-			if(strline.count(iColumn) > 0)
+			//Création de la première ligne de la traduction.
+			if(l == 0)
+				newLignes.push_back("1,"+text+","+mainTranslate);
+			else
+				newLignes.push_back(",,");
+
+			//Parcoure les colonnes.
+			for(size_t c = 3; c < nbColumn; c++)
 			{
-				addLine << strline[iColumn];
+				newLignes[l] << ',';
+
+				if(translations.count(_firstLine[c]) > 0)
+				{
+					auto tr = translations.at(_firstLine[c]);
+					if(l < tr.GetCount())
+						newLignes[l] << tr[l];
+				}
 			}
 		}
-		//Écriture des données dans le fichier.
-		_file.AddLine(addLine);
 	}
+	//Il y a que la traduction principale
+	else
+		newLignes.push_back("1,"+text+","+mainTranslate);
 
 	//Réécriture de la première ligne du fichier.
 	wxString addFirstLine;
@@ -184,6 +178,10 @@ int List::save(	wxString text,
 	}
 	_file.RemoveLine(0);
 	_file.InsertLine(addFirstLine, 0);
+	
+	//Ajout des nouvelles lignes au fichier.
+	for(auto it: newLignes)
+		_file.AddLine(it);
 
 	//Écriture des données dans le fichier.
 	if(!_file.Write())

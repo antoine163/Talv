@@ -357,9 +357,7 @@ void ActTranslationToList::execute()
 	
 	//Sinon on le sauvegarde.
 	if(tmpList->save(clipboard, mainTranslate, translations) != 1)
-	{
 		return;
-	}
 	
 	Notification::getInstance()->notify(_("Clipboard translation to list"), _("The text has be saved."));
 }
