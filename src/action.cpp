@@ -76,7 +76,7 @@ wxString const& Action::getDescription()const
 	return _actDescription;
 }
 
-wxString Action::getLisNameUsed()const
+wxString Action::getListNameUsed()const
 {
 	return wxEmptyString;
 }

@@ -166,7 +166,7 @@ class ActTranslationToList : public Action
 		wxString getStringPreferences()const;
 		
 		//! \brief Obtenir le nom de la liste utiliser.
-		wxString getLisNameUsed()const;
+		wxString getListNameUsed()const;
 		
 	protected:		
 		//! \brief Permet de charger les préférences de l'action à partir du wxFileConfig.

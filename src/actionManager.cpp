@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.6
+//! \version 1.7
 //! \date 20.03.2013
 //!
 //! ********************************************************************
@@ -159,4 +159,18 @@ void EditActionManager::apply()
 	//Et on remplie en copient tout les actions.
 	for(auto it : _data)
 		actionManager->add(it.first, Action::newAction(it.second));
+}
+
+std::vector<ShortcutKey> EditActionManager::getShortcutUsedList(wxString const& listName)
+{
+	std::vector<ShortcutKey> shortcuts;
+	
+	//Parcoure de tout les raccourcis/actions
+	for(auto it: _data)
+	{
+		if(it.second->getListNameUsed() == listName)
+			shortcuts.push_back(it.first);
+	}
+	
+	return shortcuts;
 }

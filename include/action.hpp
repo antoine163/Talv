@@ -64,7 +64,7 @@ class Action
 		
 		//! \brief Obtenir le nom de la liste utiliser.
 		//! \return wxEmptyString si l(action n'utilise pas de liste.
-		virtual wxString getLisNameUsed()const;
+		virtual wxString getListNameUsed()const;
 		
 		//! \brief Obtenir le non de l'action.
 		//! Peut être utiliser avec les GUI.

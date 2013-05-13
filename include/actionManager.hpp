@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.6
+//! \version 1.7
 //! \date 20.03.2013
 //!
 //! ********************************************************************
@@ -23,7 +23,7 @@
 
 #include <wx/event.h>
 #include <wx/fileconf.h>
-#include <map>
+#include <vector>
 
 // *********************************************************************
 // Class ActionManager
@@ -89,6 +89,9 @@ class EditActionManager : public ManagerBase<ShortcutKey, Action>, public Single
 		
 		//! \brief Applique à ActionManager
 		void apply();
+		
+		//! \brief Obtenir la liste des raccourcis utiliser une liste.
+		std::vector<ShortcutKey> getShortcutUsedList(wxString const& listName);
 		
 	private:
 		//! \brief Constructeur.

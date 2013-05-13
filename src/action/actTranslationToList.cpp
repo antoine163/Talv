@@ -401,7 +401,7 @@ wxString ActTranslationToList::getStringPreferences()const
 			' ' + _("in list") + ' ' + _listName;
 }
 
-wxString ActTranslationToList::getLisNameUsed()const
+wxString ActTranslationToList::getListNameUsed()const
 {
 	return _listName;
 }
