@@ -119,6 +119,14 @@ class List
 		//! Mai aussi a jour \ref _lastModificationFile.
 		void closeFile();
 	
+		//! \brief Analyse le fichier. Appelle de \ref parseFirstLine et de parseKnowledge.
+		//! 
+		//! Cette méthode remplie l'attribut \ref _firstLine.
+		//! \note Le fichier à besoin d'être ouvert au préalable.
+		//! \note Le fichier doit être au moins constituer de la première ligne.
+		//! \return true si ok. Si les langage du fichier et de la liste ne son pas les même ceci peut provoquer false.
+		bool parseFile();
+		
 		//! \brief Analyse la première ligne du fichier.
 		//! 
 		//! Cette méthode remplie l'attribut \ref _firstLine.
@@ -159,6 +167,9 @@ class List
 		wxString _lgsrc;
 		//! \brief Lange de traduction de liste.
 		wxString _lgto;
+		
+		//! \brief pour savoirs si l'objet a été initialiser.
+		bool _init;
 };
 
 #endif //LIST_H

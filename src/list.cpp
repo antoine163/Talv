@@ -27,6 +27,7 @@
 
 List::List()
 {
+	_init = false;
 }
 
 List::~List()
@@ -41,12 +42,11 @@ bool List::init(	wxFileName const& fileName,
 	_lgsrc = lgsrc;
 	_lgto = lgto;
 	
+	_init = false;
+	
 	//Le fichier existe ?
 	if(wxFileExists(_fileName.GetFullPath()))
-	{
-		//On récupère la date de la dernière modification du fichier.
-		_lastModificationFile = _fileName.GetModificationTime();
-		
+	{	
 		//On ouvre le fichier. Se qui aura pour effet d'analyser
 		//le fichier et de vérifier sa validités.
 		if(!openFile())
@@ -55,6 +55,7 @@ bool List::init(	wxFileName const& fileName,
 		closeFile();
 	}
 	
+	_init = true;
 	return true;
 }
 
@@ -208,7 +209,6 @@ void List::removeFile()
 		wxRemoveFile(fileName);
 }
 
-//! \bug n'analyse pas le fichier à l'init.
 bool List::openFile()
 {
 	//le non de fichier est valide ?
@@ -234,9 +234,6 @@ bool List::openFile()
 			closeFile();
 			return false;
 		}
-		
-		//On récupère la date du fichier.
-		_lastModificationFile = _fileName.GetModificationTime();
 	}
 	else
 	{		
@@ -244,23 +241,18 @@ bool List::openFile()
 		if(!_file.Open(_fileName.GetFullPath()))
 			return false;
 		
-		//Le fichier à t'il été accéder (par une autre instance de la liste ou par un autre programme) depuis le dernier accès ?
-		if(_lastModificationFile < _fileName.GetModificationTime())
+		//Si l'init na pas encore été fait.
+		if(!_init)
 		{
-			//Dans se cas on analyse la première ligne.
-			parseFirstLine();
-			
-			//Vérifie la validité des langues.
-			if((_lgsrc != _firstLine[1]) || (_lgto != _firstLine[2]))
-			{
-				//Fermeture du fichier.
-				closeFile();
-				
+			if(!parseFile())
 				return false;
-			}
-			
-			//Et on analyse les connaissance.
-			parseKnowledge();
+		}
+		
+		//Le fichier à t'il été accéder (par une autre instance de la liste ou par un autre programme) depuis le dernier accès ?
+		else if(_lastModificationFile < _fileName.GetModificationTime())
+		{
+			if(!parseFile())
+				return false;
 		}
 	}
 	
@@ -274,6 +266,24 @@ void List::closeFile()
 	//Mise a jour de la date de modification.
 	if(_fileName.IsOk())
 		_lastModificationFile = _fileName.GetModificationTime();
+}
+
+bool List::parseFile()
+{
+	//1nalyse la première ligne.
+	parseFirstLine();
+	
+	//Vérifie la validité des langues.
+	if((_lgsrc != _firstLine[1]) || (_lgto != _firstLine[2]))
+	{
+		//Fermeture du fichier.
+		closeFile();
+		
+		return false;
+	}
+	
+	//Et on analyse les connaissance.
+	parseKnowledge();
 }
 
 void List::parseFirstLine()
