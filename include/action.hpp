@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.12
+//! \version 0.13
 //! \date 04.01.2013
 //!
 //! ********************************************************************
@@ -61,6 +61,10 @@ class Action
 		//! \brief Obtenir la description de l'action.
 		//! \return La description.
 		wxString const& getDescription()const;
+		
+		//! \brief Obtenir le nom de la liste utiliser.
+		//! \return wxEmptyString si l(action n'utilise pas de liste.
+		virtual wxString getLisNameUsed()const;
 		
 		//! \brief Obtenir le non de l'action.
 		//! Peut être utiliser avec les GUI.

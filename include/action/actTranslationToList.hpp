@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.20
+//! \version 0.21
 //! \date 31.03.2013
 //!
 //! ********************************************************************
@@ -164,6 +164,9 @@ class ActTranslationToList : public Action
 		
 		//! \brief Préférences de l'action au format string.
 		wxString getStringPreferences()const;
+		
+		//! \brief Obtenir le nom de la liste utiliser.
+		wxString getLisNameUsed()const;
 		
 	protected:		
 		//! \brief Permet de charger les préférences de l'action à partir du wxFileConfig.

@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.7
+//! \version 0.8
 //! \date 02.05.2013
 //!
 //! ********************************************************************
@@ -284,6 +284,8 @@ bool List::parseFile()
 	
 	//Et on analyse les connaissance.
 	parseKnowledge();
+	
+	return true;
 }
 
 void List::parseFirstLine()

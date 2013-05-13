@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.20
+//! \version 0.21
 //! \date 31.03.2013
 //!
 //! ********************************************************************
@@ -399,4 +399,9 @@ wxString ActTranslationToList::getStringPreferences()const
 			' ' + _("to") + ' ' +
 			Resource::getInstance()->abbreviationToLanguage(_lgto) +
 			' ' + _("in list") + ' ' + _listName;
+}
+
+wxString ActTranslationToList::getLisNameUsed()const
+{
+	return _listName;
 }

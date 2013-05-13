@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.12
+//! \version 0.13
 //! \date 04.01.2013
 //!
 //! ********************************************************************
@@ -74,6 +74,11 @@ Action* Action::newAction(Action const* act)
 wxString const& Action::getDescription()const
 {
 	return _actDescription;
+}
+
+wxString Action::getLisNameUsed()const
+{
+	return wxEmptyString;
 }
 
 wxString const& Action::getName()const
