@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 3.5
+//! \version 3.6
 //! \date 02.01.2013
 //!
 //! ********************************************************************
@@ -51,7 +51,8 @@ class PanelList : public GuiPanelList
 		//!
 		//! Quand l'utilisateur clique sue le bouton "delete" cette méthode est appeler.
 		//! \param l'item à supprimer.
-		virtual void OnDeleteItem(wxString const& item)=0;
+		//! \return doit retourner true pour supprimer l'item de la liste.
+		virtual bool OnDeleteItem(wxString const& item)=0;
 		
 		//! \brief Préférence d'un item.
 		//!
@@ -117,7 +118,7 @@ class PanelListActions : public PanelList
 		
 	private:	
 		//! \brief Suppression de l'action.
-		void OnDeleteItem(wxString const& item);
+		bool OnDeleteItem(wxString const& item);
 		//! \brief Préférence de l'action.
 		wxArrayString OnPreferencesItem(wxString const& item);
 		//! \brief Ajouter d'une action.
@@ -143,7 +144,7 @@ class PanelListLists : public PanelList
 		
 	private:		
 		//! \brief Suppression de la liste.
-		void OnDeleteItem(wxString const& item);
+		bool OnDeleteItem(wxString const& item);
 		//! \brief Préférence de la liste.
 		wxArrayString OnPreferencesItem(wxString const& item);
 		//! \brief Ajouter d'une liste.

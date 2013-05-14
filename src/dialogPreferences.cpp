@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 3.5
+//! \version 3.6
 //! \date 02.01.2013
 //!
 //! ********************************************************************
@@ -277,10 +277,12 @@ void PanelListActions::update()
 	}
 }
 
-void PanelListActions::OnDeleteItem(wxString const& item)
+bool PanelListActions::OnDeleteItem(wxString const& item)
 {
 	//Suppression de l'action.
 	EditActionManager::getInstance()->remove(ShortcutKey::stringToShortcutKey(item));
+	
+	return true;
 }
 
 wxArrayString PanelListActions::OnPreferencesItem(wxString const& item)
@@ -413,12 +415,29 @@ void PanelListLists::update()
 	}
 }
 
-//! \todo Vérifier si des actions utilise cette liste.
-void PanelListLists::OnDeleteItem(wxString const& item)
+bool PanelListLists::OnDeleteItem(wxString const& item)
 {
+	auto shortcuts = EditActionManager::getInstance()->getShortcutUsedList(item);
 	
+	//Des action utilise cette liste ?
+	if(shortcuts.size() != 0)
+	{
+		//Si il y a des action qui utilise cette liste,
+		//On demande confirmation de pour supprimer aussi les action utiliser cette liste.
+		wxMessageDialog dlg(this, _("Of actions use this list. Are you sure of want delete the actions and a list?"), _("Delete actions and list"), wxYES_NO|wxICON_QUESTION|wxCENTRE);
+		if(dlg.ShowModal() == wxID_NO)
+			return false;
+	}
+	
+	//Suppression des actions.
+	for(auto it: shortcuts)
+		EditActionManager::getInstance()->remove(it);
+	
+	//Suppression de la liste.
 	EditListManager::getInstance()->getValue(item)->removeFile();
 	EditListManager::getInstance()->remove(item);
+	
+	return true;
 }
 
 //! \todo A implémenter.
