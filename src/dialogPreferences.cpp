@@ -279,8 +279,37 @@ void PanelListActions::update()
 
 bool PanelListActions::OnDeleteItem(wxString const& item)
 {
+	//Récupération de EditActionManager
+	EditActionManager* editActionManager = EditActionManager::getInstance();
+	
+	//Récupération l'action à supprimer.
+	Action* action = editActionManager->getValue(ShortcutKey::stringToShortcutKey(item));
+	
+	//Récupération du nom de la liste utiliser par cette action.
+	wxString listUsed = action->getListNameUsed();
+	
 	//Suppression de l'action.
-	EditActionManager::getInstance()->remove(ShortcutKey::stringToShortcutKey(item));
+	editActionManager->remove(ShortcutKey::stringToShortcutKey(item));
+	
+	//Si une liste est utiliser par cette liste.
+	if(!listUsed.IsEmpty())
+	{
+		//Récupération des raccourcis/actions utilisent la même liste que l'action à supprimer.
+		std::vector<ShortcutKey> shortcuts = editActionManager->getShortcutUsedList(listUsed);
+		
+		//Si il n'y a pas d'autre raccourcis.
+		if(shortcuts.size() == 0)
+		{
+			//Poser la question si on dois les supprimés la liste.
+			wxMessageDialog dlg(this, wxString::Format(_("The list %s isn't used. You want delete the list?"), listUsed), _("Delete list"), wxYES_NO|wxICON_QUESTION|wxCENTRE);
+			if(dlg.ShowModal() == wxID_YES)
+			{
+				//Suppression de la liste.
+				EditListManager::getInstance()->getValue(listUsed)->removeFile();
+				EditListManager::getInstance()->remove(listUsed);
+			}
+		}
+	}
 	
 	return true;
 }
