@@ -65,6 +65,8 @@ ifeq ($(EMULATE_NOTIFICATION), yes)
 SRC+=../gui/guiDialogNotification.cpp
 endif
 #Action
+SRC+=../src/action/actLearn.cpp
+SRC+=../gui/action/guiPanelActLearn.cpp
 SRC+=../src/action/actTranslation.cpp
 SRC+=../gui/action/guiPanelActTranslation.cpp
 SRC+=../src/action/actSay.cpp

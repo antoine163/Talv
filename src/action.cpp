@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.13
+//! \version 0.14
 //! \date 04.01.2013
 //!
 //! ********************************************************************
@@ -18,6 +18,7 @@
 #include "action/actTranslation.hpp"
 #include "action/actTranslationToList.hpp"
 #include "action/actSay.hpp"
+#include "action/actLearn.hpp"
 
 // *********************************************************************
 // Class Action
@@ -53,6 +54,9 @@ Action* Action::newAction(wxString const& actTypeName)
 
 	if(actTypeName == "ActSay")
 		return new ActSay();
+
+	if(actTypeName == "ActLearn")
+		return new ActLearn();
 	
 	return nullptr;
 }
@@ -67,6 +71,9 @@ Action* Action::newAction(Action const* act)
 
 	if(act->_actTypeName == "ActSay")
 		return new ActSay(static_cast<ActSay const&>(*act));
+
+	if(act->_actTypeName == "ActLearn")
+		return new ActLearn(static_cast<ActLearn const&>(*act));
 	
 	return nullptr;
 }
