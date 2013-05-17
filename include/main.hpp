@@ -26,7 +26,9 @@
 // *********************************************************************
 
 //! \brief Poins d'entrée de l'application.
-//! Initialise l'application et libère les ressources à la fin de vie de celle ci. 
+//! Initialise l'application et libère les ressources à la fin de vie de celle ci.
+//! \bug Trop de possesseur utiliser au bout d'un certain moment.
+//! \todo Déplacer le getInstande de ressource et le créée que on en a besoin (dans les préférence).
 class App : public wxApp
 {
 	public:			

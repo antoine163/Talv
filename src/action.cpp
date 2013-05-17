@@ -27,10 +27,12 @@
 Action::Action(wxString const& name, wxString const& actTypeName, wxString const& actDescription)
 :_name(name), _actTypeName(actTypeName), _actDescription(actDescription)
 {
+	std::cout << "Creat::" << _actTypeName << std::endl;
 }
 
 Action::~Action()
 {
+	std::cout << "Delete::" << _actTypeName << std::endl;
 }
 
 void Action::load(wxFileConfig & fileConfig)

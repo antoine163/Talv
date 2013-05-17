@@ -74,7 +74,7 @@ class ActTranslation : public Action
 		//! \param lgto lange de traduction.
 		ActTranslation(wxString const& lgsrc, wxString const& lgto);
 						
-		//! \brief Obtenir le non de l'action.
+		//! \brief Destructeur.
 		~ActTranslation();
 		
 		//! \brief Exécuter l'action.

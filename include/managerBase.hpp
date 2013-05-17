@@ -23,6 +23,7 @@
 // *********************************************************************
 
 //! \brief Classe de base pour la création de Manager
+//! \bug les valeur ne son pas détruit.
 template <typename T1, typename T2>
 class ManagerBase
 {
