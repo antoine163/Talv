@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.8
+//! \version 1.9
 //! \date 12.12.12
 //!
 //! ********************************************************************
@@ -132,7 +132,7 @@ void App::OnPreferences(wxCommandEvent&)
 		ActionManager* actionManager = ActionManager::getInstance();
 	
 		//Désactivation des raccourcis.
-		actionManager->enable(false);
+		actionManager->enableShortcut(false);
 		
 		//Création du dialog.
 		dlg = new DialogPreferences();
@@ -152,7 +152,7 @@ void App::OnPreferences(wxCommandEvent&)
 		}
 		
 		//On réactive les raccourcis
-		actionManager->enable(true);
+		actionManager->enableShortcut(true);
 		
 		//Supprime le dialog
 		delete dlg;
@@ -165,7 +165,7 @@ void App::OnPreferences(wxCommandEvent&)
 
 void App::OnEnable(wxCommandEvent& event)
 {
-	ActionManager::getInstance()->enable(event.IsChecked());
+	ActionManager::getInstance()->enableShortcut(event.IsChecked());
 }
 
 //! \todo Désactiver le menu
