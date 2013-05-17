@@ -5,7 +5,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.8
+//! \version 1.9
 //! \date 02.01.2013
 //!
 //! ********************************************************************
@@ -226,7 +226,7 @@ void DialogActionPreferences::OnChoiceAction(wxCommandEvent& event)
 
 void DialogActionPreferences::setUpAction(wxString const& actTypeName)
 {
-	if(_action == nullptr)
+	if(_action != nullptr)
 		delete _action;
 
 	//Création d'une action a partir de son type.
