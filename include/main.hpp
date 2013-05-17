@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.10
+//! \version 1.11
 //! \date 12.12.12
 //!
 //! ********************************************************************
@@ -63,6 +63,9 @@ class App : public wxApp
 		MenuIcon* _menuIcon;
 		//! \brief Pour la traduction de l'application.
 		wxLocale* _locale;
+		
+		bool _enableShortcuts;
+		bool _enableActions;
 };
 
 DECLARE_APP(App);

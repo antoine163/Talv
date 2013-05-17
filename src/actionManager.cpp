@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.9
+//! \version 1.10
 //! \date 20.03.2013
 //!
 //! ********************************************************************
@@ -124,12 +124,12 @@ void ActionManager::save(wxFileConfig& fileConfig)const
 	}
 }
 
-void ActionManager::enableShortcut(bool val)
+void ActionManager::enableShortcuts(bool val)
 {
 	_shortcut.enable(val);
 }
 
-void ActionManager::enableAction(bool val)
+void ActionManager::enableActions(bool val)
 {
 	_enableAction = val;
 	

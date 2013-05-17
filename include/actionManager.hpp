@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.9
+//! \version 1.10
 //! \date 20.03.2013
 //!
 //! ********************************************************************
@@ -58,10 +58,10 @@ class ActionManager : public wxEvtHandler, public ManagerBase<ShortcutKey, Actio
 		void save(wxFileConfig& fileConfig)const;
 		
 		//! \brief Active ou désactive les raccourcis. 
-		void enableShortcut(bool val=true);
+		void enableShortcuts(bool val=true);
 		
 		//! \brief Active ou désactive les actions qui peuvent s'auto exécuter. 
-		void enableAction(bool val=true);
+		void enableActions(bool val=true);
 		
 	private:
 		//! \brief Constructeur.

@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.10
+//! \version 1.11
 //! \date 12.12.12
 //!
 //! ********************************************************************
@@ -39,6 +39,8 @@ bool App::OnInit()
 	wxInitAllImageHandlers();
 	SetExitOnFrameDelete(false);
 	_menuIcon = nullptr;
+	_enableShortcuts = true;
+	_enableActions = true;
 	
 	//Changement du Préfixe seulement sous unix
 	#if defined(__UNIX__)
@@ -134,7 +136,9 @@ void App::OnPreferences(wxCommandEvent&)
 		ActionManager* actionManager = ActionManager::getInstance();
 	
 		//Désactivation des raccourcis.
-		actionManager->enableShortcut(false);
+		actionManager->enableShortcuts(false);
+		//Désactivation des actions.
+		actionManager->enableActions(false);
 		
 		//Création du dialog.
 		dlg = new DialogPreferences();
@@ -153,8 +157,10 @@ void App::OnPreferences(wxCommandEvent&)
 				deleteMenuItem();
 		}
 		
-		//On réactive les raccourcis
-		actionManager->enableShortcut(true);
+		//On réactive les raccourcis en acore avec le menue.
+		actionManager->enableShortcuts(_enableShortcuts);
+		//On réactive les action en acore avec le menue.
+		actionManager->enableActions(_enableActions);
 		
 		//Supprime le dialog
 		delete dlg;
@@ -167,12 +173,14 @@ void App::OnPreferences(wxCommandEvent&)
 
 void App::OnEnableShortcuts(wxCommandEvent& event)
 {
-	ActionManager::getInstance()->enableShortcut(event.IsChecked());
+	_enableShortcuts = event.IsChecked();
+	ActionManager::getInstance()->enableShortcuts(_enableShortcuts);
 }
 
 void App::OnEnableActions(wxCommandEvent& event)
 {
-	ActionManager::getInstance()->enableAction(event.IsChecked());
+	_enableActions = event.IsChecked();
+	ActionManager::getInstance()->enableActions(_enableActions);
 }
 
 //! \todo Désactiver le menu
