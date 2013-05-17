@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.9
+//! \version 1.10
 //! \date 12.12.12
 //!
 //! ********************************************************************
@@ -45,9 +45,12 @@ class App : public wxApp
 		//! \brief Méthode appeler lorsque l'item Preference dans le menu à été cliquer.
 		//! Cette méthode lance le dialogue des préférences.
 		void OnPreferences(wxCommandEvent&);
-		//! \brief Méthode appeler lorsque l'item Enable dans le menu à été cliquer.
+		//! \brief Méthode appeler lorsque l'item EnableShortcuts dans le menu à été cliquer.
 		//! Cette méthode désactive ou active tout les raccourcis qui on été enregistre auprès de \ref _actionManager.
-		void OnEnable(wxCommandEvent& event);
+		void OnEnableShortcuts(wxCommandEvent& event);
+		//! \brief Méthode appeler lorsque l'item EnableActions dans le menu à été cliquer.
+		//! Cette méthode désactive ou active tout les actions qui on été enregistre auprès de \ref _actionManager.
+		void OnEnableActions(wxCommandEvent& event);
 		//! \brief Méthode appeler lorsque l'item About dans le menu à été cliquer.
 		//! Cette méthode lance le dialogue About.
 		void OnAbout(wxCommandEvent&);

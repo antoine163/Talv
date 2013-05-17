@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.9
+//! \version 1.10
 //! \date 12.12.12
 //!
 //! ********************************************************************
@@ -99,7 +99,8 @@ void App::creatMenuItem()
 		_menuIcon = new MenuIcon();
 		
 		Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnPreferences, this, _menuIcon->getIdMenuItemPreferences());
-		Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnEnable, this, _menuIcon->getIdMenuItemEnable());
+		Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnEnableShortcuts, this, _menuIcon->getIdMenuItemEnableShortcuts());
+		Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnEnableActions, this, _menuIcon->getIdMenuItemEnableActions());
 		Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnAbout, this, _menuIcon->getIdMenuItemAbout());
 		Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnExit, this, _menuIcon->getIdMenuItemExit());
 	}
@@ -110,7 +111,8 @@ void App::deleteMenuItem()
 	if(_menuIcon)
 	{
 		Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::OnPreferences, this, _menuIcon->getIdMenuItemPreferences());
-		Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::OnEnable, this, _menuIcon->getIdMenuItemEnable());
+		Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::OnEnableShortcuts, this, _menuIcon->getIdMenuItemEnableShortcuts());
+		Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::OnEnableActions, this, _menuIcon->getIdMenuItemEnableActions());
 		Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::OnAbout, this, _menuIcon->getIdMenuItemAbout());
 		Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::OnExit, this, _menuIcon->getIdMenuItemExit());
 		
@@ -163,9 +165,14 @@ void App::OnPreferences(wxCommandEvent&)
 		dlg->Raise();
 }
 
-void App::OnEnable(wxCommandEvent& event)
+void App::OnEnableShortcuts(wxCommandEvent& event)
 {
 	ActionManager::getInstance()->enableShortcut(event.IsChecked());
+}
+
+void App::OnEnableActions(wxCommandEvent& event)
+{
+	ActionManager::getInstance()->enableAction(event.IsChecked());
 }
 
 //! \todo Désactiver le menu

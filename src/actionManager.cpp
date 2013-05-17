@@ -15,11 +15,14 @@
 
 #include "actionManager.hpp"
 
+//TEST
+#include <iostream>
+
 // *********************************************************************
 // Class ActionManager
 // *********************************************************************
 
-ActionManager::ActionManager() : _shortcut(this)
+ActionManager::ActionManager() : _shortcut(this), _enableAction(true)
 {
 }
 
@@ -132,6 +135,7 @@ void ActionManager::enableAction(bool val)
 	
 	for(auto &it: _data)
 		it.second->enable(_enableAction);
+		
 }
 
 void ActionManager::OnShortcut(ShortcutEvent& event)

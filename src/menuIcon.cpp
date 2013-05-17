@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.2
+//! \version 0.3
 //! \date 10.12.12
 //!
 //! ********************************************************************
@@ -34,9 +34,13 @@ MenuIcon::MenuIcon()
 	_menuItemPreferences = new wxMenuItem(_menuTaskBarIcon, wxID_PREFERENCES, _("Preferences"), _("Open Preferences"), wxITEM_NORMAL);
 	_menuTaskBarIcon->Append(_menuItemPreferences);
 	
-	_menuItemEnable = new wxMenuItem(_menuTaskBarIcon, wxID_ANY, _("Enable"), _("Activate shortcut"), wxITEM_CHECK);
-	_menuTaskBarIcon->Append(_menuItemEnable);
-	_menuItemEnable->Check(true);
+	_menuItemEnableShortcuts = new wxMenuItem(_menuTaskBarIcon, wxID_ANY, _("Enable Shortcuts"), _("Activate Shortcuts"), wxITEM_CHECK);
+	_menuTaskBarIcon->Append(_menuItemEnableShortcuts);
+	_menuItemEnableShortcuts->Check(true);
+	
+	_menuItemEnableActions = new wxMenuItem(_menuTaskBarIcon, wxID_ANY, _("Enable Actions"), _("Activate Actions"), wxITEM_CHECK);
+	_menuTaskBarIcon->Append(_menuItemEnableActions);
+	_menuItemEnableActions->Check(true);
 	
 	_menuItemAbout = new wxMenuItem(_menuTaskBarIcon, wxID_ABOUT, _("About"), _("About")+" "+PROJECT_NAME, wxITEM_NORMAL);
 	_menuTaskBarIcon->Append(_menuItemAbout);
@@ -48,7 +52,7 @@ MenuIcon::MenuIcon()
 	_taskBarIcon = new wxTaskBarIcon;
 	_taskBarIcon->SetIcon(wxIcon(ft_xpm), PROJECT_NAME);
 	
-	//bind les événement
+	//bind l'événement
 	_taskBarIcon->Bind(wxEVT_TASKBAR_LEFT_DCLICK, &MenuIcon::OnShow, this);
 }
 
@@ -65,9 +69,14 @@ int MenuIcon::getIdMenuItemPreferences()
 	return _menuItemPreferences->GetId();
 }
 
-int MenuIcon::getIdMenuItemEnable()
+int MenuIcon::getIdMenuItemEnableShortcuts()
 {
-	return _menuItemEnable->GetId();
+	return _menuItemEnableShortcuts->GetId();
+}
+
+int MenuIcon::getIdMenuItemEnableActions()
+{
+	return _menuItemEnableActions->GetId();
 }
 
 int MenuIcon::getIdMenuItemAbout()
