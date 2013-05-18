@@ -3,7 +3,7 @@
 #	Makfile for Linux.
 #
 # - author 	:	Antoine Maleyrie : antoine.maleyrie@gmail.com
-# - version	:	0.11
+# - version	:	0.12
 # - date 	:	10.03.2013
 #
 ########################################################################
@@ -56,6 +56,8 @@ SRC+=../src/menuIcon.cpp
 SRC+=../src/shortcut.cpp
 SRC+=../src/actionManager.cpp
 SRC+=../src/action.cpp
+SRC+=../src/listManager.cpp
+SRC+=../src/list.cpp
 SRC+=../src/resource.cpp
 #Notification
 SRC+=../src/notification.cpp
@@ -63,17 +65,21 @@ ifeq ($(EMULATE_NOTIFICATION), yes)
 SRC+=../gui/guiDialogNotification.cpp
 endif
 #Action
+SRC+=../src/action/actLearn.cpp
+SRC+=../gui/action/guiPanelActLearn.cpp
 SRC+=../src/action/actTranslation.cpp
 SRC+=../gui/action/guiPanelActTranslation.cpp
 SRC+=../src/action/actSay.cpp
 SRC+=../gui/action/guiPanelActSay.cpp
-SRC+=../src/action/actSaveTranslation.cpp
-SRC+=../gui/action/guiPanelActSaveTranslation.cpp
+SRC+=../src/action/actTranslationToList.cpp
+SRC+=../gui/action/guiPanelActTranslationToList.cpp
 #GUI
 SRC+=../gui/guiDialogPreferences.cpp
 SRC+=../src/dialogPreferences.cpp
 SRC+=../gui/guiDialogActionPreferences.cpp
 SRC+=../src/dialogActionPreferences.cpp
+SRC+=../gui/guiDialogListAdd.cpp
+SRC+=../src/dialogListAdd.cpp
 
 
 ########################################################################

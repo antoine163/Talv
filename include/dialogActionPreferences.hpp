@@ -5,7 +5,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.7
+//! \version 1.9
 //! \date 02.01.2013
 //!
 //! ********************************************************************
@@ -56,16 +56,16 @@ class DialogActionPreferences : public GuiDialogActionPreferences
 		DialogActionPreferences(wxWindow* parent);
 		//! \brief Constructeur avec une action et un raccourci par défaut.
 		//! \param parent parent du dialogue.
-		//! \param inShortcutKey le raccourcis de l'action.
-		//! \param inAct l'action à modifier.
+		//! \param shortcut le raccourcis de l'action (en version string).
+		//! \param act l'action à modifier.
 		DialogActionPreferences(	wxWindow* parent,
-									ShortcutKey const& inShortcutKey,
-									Action const* inAct);
+									wxString const& shortcut,
+									Action const* act);
 		//! \brief Destructeur.
 		~DialogActionPreferences();
 		
 		//! \brief Obtenir le raccourci.
-		ShortcutKey getShortcutKey()const;
+		wxString getShortcut()const;
 		
 		//! \brief Obtenir l'action.
 		Action const* getAction();

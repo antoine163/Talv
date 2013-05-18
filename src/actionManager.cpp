@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.8
+//! \version 1.10
 //! \date 20.03.2013
 //!
 //! ********************************************************************
@@ -15,11 +15,14 @@
 
 #include "actionManager.hpp"
 
+//TEST
+#include <iostream>
+
 // *********************************************************************
-// Class Action
+// Class ActionManager
 // *********************************************************************
 
-ActionManager::ActionManager() : _shortcut(this)
+ActionManager::ActionManager() : _shortcut(this), _enableAction(true)
 {
 }
 
@@ -30,28 +33,25 @@ ActionManager::~ActionManager()
 
 bool ActionManager::add(ShortcutKey const &shortcut, Action* act)
 {
-	//Si le raccourci existe déjà.
-	if(_actions.count(shortcut) > 0)
+	//Ajout à la liste des actions.
+	if(!ManagerBase<ShortcutKey, Action>::add(shortcut, act))
 		return false;
-		
-	//Sinon on l'ajoute.
-	_actions[shortcut] = act;
 	
 	//Et on l'ajouter à la liste des raccourcis.
 	int id = _shortcut.creat(shortcut);
 	Bind(EVT_SHORTCUT, &ActionManager::OnShortcut, this, id);
 	
+	//Enfin on active l'action.
+	act->enable(_enableAction);
+	
 	return true;
 }
 
-bool ActionManager::remove(ShortcutKey const &shortcut)
+bool ActionManager::remove(ShortcutKey const& shortcut)
 {
-	//Si le raccourci existe.
-	if(_actions.count(shortcut) > 0)
+	if(ManagerBase<ShortcutKey, Action>::remove(shortcut))
 	{
-		//On le supprime
-		delete _actions[shortcut];
-		_actions.erase(shortcut);
+		//Suppression du accourcie.
 		_shortcut.remove(shortcut);
 		return true;
 	}
@@ -61,26 +61,15 @@ bool ActionManager::remove(ShortcutKey const &shortcut)
 
 void ActionManager::removeAll()
 {
-	//Suppression des actions.
-	for(auto &it: _actions)
-	{
-		delete it.second;
+	//Désinstalle les raccourcis.
+	for(auto &it: _data)
 		_shortcut.remove(it.first);
-	}
 		
-	_actions.clear();
+	//Suppression des actions.
+	ManagerBase<ShortcutKey, Action>::removeAll();
 }
 
-bool ActionManager::exist(ShortcutKey const &shortcut)
-{
-	//Si le raccourci existe.
-	if(_actions.count(shortcut) > 0)
-		return true;
-	
-	return false;
-}
-
-void ActionManager::load(wxFileConfig & fileConfig)
+void ActionManager::load(wxFileConfig& fileConfig)
 {
 	wxString stringShortcut;
 	long lIndex;
@@ -88,18 +77,21 @@ void ActionManager::load(wxFileConfig & fileConfig)
 	//Avent de charger quoi que se soi on supprime tout les raccourcis/actions
 	removeAll();
 	
+	//On positionne le path
+	fileConfig.SetPath("/ActionManager");
+	
 	//On récupère le premier raccourci
 	if(!fileConfig.GetFirstGroup(stringShortcut, lIndex))
 		return;
 		
 	do
-	{		
+	{
 		//On positionne le path
 		fileConfig.SetPath(stringShortcut);
 		
 		//Récupérer le type de l'action.
 		wxString actTypeName;
-		fileConfig.Read("ActTypeName", &actTypeName);	
+		fileConfig.Read("ActTypeName", &actTypeName);
 		
 		//Création d'une action a parte de son nom.
 		Action* tmpAct = Action::newAction(actTypeName);
@@ -113,43 +105,87 @@ void ActionManager::load(wxFileConfig & fileConfig)
 		
 	}//Puis tous les autres
 	while(fileConfig.GetNextGroup(stringShortcut, lIndex));
+	
+	//On positionne le path a la racine.
+	fileConfig.SetPath("/");
 }
 
-void ActionManager::save(wxFileConfig & fileConfig)const
+void ActionManager::save(wxFileConfig& fileConfig)const
 {
-	for(auto &it: _actions)
+	for(auto &it: _data)
 	{
 		//Obtenir la version string du raccourci.
 		wxString stringShortcut = ShortcutKey::shortcutKeyToString(it.first);
 		//Crée un groupe pour ce raccourci.
-		fileConfig.SetPath("/"+stringShortcut);
+		fileConfig.SetPath("/ActionManager/"+stringShortcut);
 		
 		//Sauvegarde de l'action
 		it.second->save(fileConfig);
 	}
 }
 
-void ActionManager::enable(bool val)
+void ActionManager::enableShortcuts(bool val)
 {
 	_shortcut.enable(val);
 }
 
-std::map<ShortcutKey, Action*> const* ActionManager::getActions()const
+void ActionManager::enableActions(bool val)
 {
-	return &_actions;
-}
-
-Action const* ActionManager::getAction(ShortcutKey const& shortcutKey)const
-{
-	std::map<ShortcutKey, Action*>::const_iterator it = _actions.find(shortcutKey);
+	_enableAction = val;
 	
-	if(it == _actions.end())
-		return nullptr;
-	
-	return it->second;
+	for(auto &it: _data)
+		it.second->enable(_enableAction);
+		
 }
 
 void ActionManager::OnShortcut(ShortcutEvent& event)
 {
-	_actions[event.getShortcutKey()]->execute();
+	_data[event.getShortcutKey()]->execute();
+}
+
+// *********************************************************************
+// Class EditActionManager
+// *********************************************************************
+
+EditActionManager::EditActionManager()
+{
+}
+
+EditActionManager::~EditActionManager()
+{
+}
+
+void EditActionManager::init()
+{
+	auto act = ActionManager::getInstance()->getData();
+	
+	//Copie de tout les actions.
+	for(auto it : act)
+		add(it.first, Action::newAction(it.second));
+}
+	
+void EditActionManager::apply()
+{
+	ActionManager* actionManager = ActionManager::getInstance();
+	
+	//On supprime tout
+	actionManager->removeAll();
+	
+	//Et on remplie en copient tout les actions.
+	for(auto it : _data)
+		actionManager->add(it.first, Action::newAction(it.second));
+}
+
+std::vector<ShortcutKey> EditActionManager::getShortcutUsedList(wxString const& listName)
+{
+	std::vector<ShortcutKey> shortcuts;
+	
+	//Parcoure de tout les raccourcis/actions
+	for(auto it: _data)
+	{
+		if(it.second->getListNameUsed() == listName)
+			shortcuts.push_back(it.first);
+	}
+	
+	return shortcuts;
 }

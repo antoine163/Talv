@@ -1,11 +1,11 @@
 //! \file **************************************************************
-//! \brief Header Action de traduction.
+//! \brief Header Action pour apprendre une liste.
 //! 
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.13
-//! \date 17.03.2013
+//! \version 0.4
+//! \date 15.05.2013
 //!
 //! ********************************************************************
 
@@ -13,39 +13,42 @@
 *	Copyright © 2013 - Antoine Maleyrie.
 */
 
-#ifndef ACTION_TRANSLATION_H
-#define ACTION_TRANSLATION_H
+#ifndef ACTION_LEARN_H
+#define ACTION_LEARN_H
 
 #include "action.hpp"
-#include "action/guiPanelActTranslation.h"
+#include "action/guiPanelActLearn.h"
 
-#include <map>
+#include <wx/event.h>
+#include <wx/timer.h>
 
 // *********************************************************************
-// Class PanelActTranslation
+// Class PanelActLearn
 // *********************************************************************
 
-class ActTranslation;
+class ActLearn;
 
-//! \brief GUI pour la modification des préférences des actions de traductions \ref ActTranslation.
-class PanelActTranslation : public GuiPanelActTranslation
+//! \brief GUI pour la modification des préférences des actions pour apprendre une liste.
+class PanelActLearn : public GuiPanelActLearn
 {
 	public:
 		//! \brief Constructeur.
 		//! \param parent wxWindow parent.
 		//! \param buttonOK bouton "OK" du dialogue parent.
-		//! \param act action de traduction a modifier.
-		PanelActTranslation(wxWindow* parent, wxButton* buttonOK, ActTranslation* act);
+		//! \param act action a modifier.
+		PanelActLearn(wxWindow* parent, wxButton* buttonOK, ActLearn* act);
 		//! \brief Destructeur.
-		~PanelActTranslation();
+		~PanelActLearn();
 		
 		//! \brief Méthode appeler si appuis sur bouton "ok" du parent.
 		//! Elle valide les modifications et les installe dans l'action
 		void OnOKButtonClick(wxCommandEvent& event);
+		
+		void OnCheckBox(wxCommandEvent& event);
 	
 	private:
-		//! \brief ActTranslation à modifier.
-		ActTranslation * _act;
+		//! \brief ActLearn à modifier.
+		ActLearn* _act;
 		
 		//! \brief bouton "OK" du dialogue parent.
 		wxButton* _buttonOK;
@@ -53,29 +56,27 @@ class PanelActTranslation : public GuiPanelActTranslation
 
 
 // *********************************************************************
-// Class ActTranslation
+// Class ActLearn
 // *********************************************************************
 
-//! \brief Action de traduction.
-class ActTranslation : public Action
+//! \brief Action pour apprendre une liste.
+class ActLearn : public wxTimer, public Action
 {
-	friend PanelActTranslation;
+	friend PanelActLearn;
 	
 	public:
 		//! \brief Constructeur par défaut.
-		ActTranslation();
-		
+		ActLearn();
 		//! \brief Constructeur.
-		//! Les deux paramètres doive être écrit en abrégé.
-		//! ex: pour le français "fr"
-		//! ex: pour l'anglais "en"
-		//!
-		//! \param lgsrc lange source.
-		//! \param lgto lange de traduction.
-		ActTranslation(wxString const& lgsrc, wxString const& lgto);
+		//! \param listName le non de la liste à apprendre.
+		//! \param callTime temps d'appelle pour exécuter l'action.
+		//! En minute et 0 pour ne jamais exécuter l'action au bout d'un temps.
+		ActLearn(wxString const& listName, unsigned int callTime);
+		//! \brief Constructeur par recopie.
+		ActLearn(ActLearn const& other);
 						
 		//! \brief Destructeur.
-		~ActTranslation();
+		~ActLearn();
 		
 		//! \brief Exécuter l'action.
 		void execute();
@@ -88,6 +89,12 @@ class ActTranslation : public Action
 		//! \brief Préférences de l'action au format string.
 		wxString getStringPreferences()const;
 		
+		//! \brief Obtenir le nom de la liste utiliser.
+		wxString getListNameUsed()const;
+		
+		//! \brief Permet à l'action de s'auto exécuter.
+		virtual void enable(bool enable = true);
+		
 	protected:		
 		//! \brief Permet de charger les préférences de l'action à partir du wxFileConfig.
 		//! \param fileConfig fichier à partir du quelle l'action doit être charger.
@@ -97,14 +104,13 @@ class ActTranslation : public Action
 		//! \param fileConfig fichier où l'action doit être sauvegarder.
 		void actSave(wxFileConfig & fileConfig)const;
 		
-	private:
-		//! \brief Lange source.
-		wxString _lgsrc;
-		//! \brief Lange de traduction.
-		wxString _lgto;
+		void Notify();
 		
-		//! \brief Comptage des même traductions
-		std::map<wxString, unsigned int> _counter;
+	private:
+		//! \brief Nom de la liste de révision.
+		wxString _listName;
+		//! \brief Temps pour laquelle l'action est exécuter. En minute.
+		unsigned int _callTime;
 };
 
-#endif //ACTION_TRANSLATION_H
+#endif //ACTION_LEARN_H

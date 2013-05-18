@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.2
+//! \version 0.5
 //! \date 30.03.2013
 //!
 //! ********************************************************************
@@ -21,7 +21,7 @@
 // *********************************************************************
 
 //! \brief Pour la création de classe singleton.
-template <class T>
+template <typename T>
 class Singleton
 {
 	public:
@@ -40,13 +40,15 @@ class Singleton
 		{
 			if(_singleton != nullptr)
 				delete _singleton;
+				
+			_singleton = nullptr;
 		}
 	
 	protected:
 		Singleton(){}
 		Singleton(Singleton const&){}
 		Singleton & operator=(Singleton const&){}
-		~Singleton(){}
+		virtual ~Singleton(){}
 		
 	private:
 		//! \brief Instance de la classe.
@@ -55,6 +57,6 @@ class Singleton
 
 //Initialisation de l'instance
 template <class T>
-T *Singleton<T>::_singleton = nullptr;
+T* Singleton<T>::_singleton = nullptr;
 
 #endif //SINGLETON_H

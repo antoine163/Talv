@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.14
+//! \version 0.17
 //! \date 30.03.2013
 //!
 //! ********************************************************************
@@ -43,6 +43,8 @@ Resource::Resource()
 	//Volume 100%
 	_ttsVolume = 1.0;
 	
+	//Par défaut on ne démarre pas l'application au démarrage.
+	_powerOn = false;
 	
 	//Liste des langues
 	_languages["af"] = _("Afrikaans");
@@ -114,8 +116,9 @@ Resource::Resource()
 	
 	//Liste des actions
 	_actions[_("Translation")] = "ActTranslation";
-	_actions[_("Save a translation")] = "ActSaveTranslation";
+	_actions[_("Translation to list")] = "ActTranslationToList";
 	_actions[_("Say a text")] = "ActSay";
+	_actions[_("Learn a list")] = "ActLearn";
 }
 
 Resource::~Resource()
@@ -368,7 +371,7 @@ bool Resource::getShowMenu()
 	return _showMenu;
 }
 
-// \todo a compléter pour réellement le prendre en compte coter os.
+//! \todo a compléter pour réellement le prendre en compte coter os.
 void Resource::setPowerOn(bool powerOn)
 {
 	_powerOn = powerOn;

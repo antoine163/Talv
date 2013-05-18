@@ -9,6 +9,60 @@
 
 ///////////////////////////////////////////////////////////////////////////
 
+GuiPanelList::GuiPanelList( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
+{
+	wxBoxSizer* bSizer1;
+	bSizer1 = new wxBoxSizer( wxVERTICAL );
+	
+	_listCtrl = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_VRULES );
+	bSizer1->Add( _listCtrl, 1, wxALL|wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer2;
+	bSizer2 = new wxBoxSizer( wxHORIZONTAL );
+	
+	_buttonDelete = new wxButton( this, wxID_DELETE, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	_buttonDelete->Enable( false );
+	
+	bSizer2->Add( _buttonDelete, 0, wxALL, 5 );
+	
+	
+	bSizer2->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	_buttonPreferences = new wxButton( this, wxID_PREFERENCES, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	_buttonPreferences->Enable( false );
+	
+	bSizer2->Add( _buttonPreferences, 0, wxALL, 5 );
+	
+	_buttonAdd = new wxButton( this, wxID_ADD, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	bSizer2->Add( _buttonAdd, 0, wxALL, 5 );
+	
+	bSizer1->Add( bSizer2, 0, wxEXPAND, 5 );
+	
+	this->SetSizer( bSizer1 );
+	this->Layout();
+	bSizer1->Fit( this );
+	
+	// Connect Events
+	_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_DESELECTED, wxListEventHandler( GuiPanelList::OnListItemDeselected ), NULL, this );
+	_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_RIGHT_CLICK, wxListEventHandler( GuiPanelList::OnListItemRightClick ), NULL, this );
+	_listCtrl->Connect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( GuiPanelList::OnListItemSelected ), NULL, this );
+	_buttonDelete->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiPanelList::OnButtonClickDelete ), NULL, this );
+	_buttonPreferences->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiPanelList::OnButtonClickPreferences ), NULL, this );
+	_buttonAdd->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiPanelList::OnButtonClickAdd ), NULL, this );
+}
+
+GuiPanelList::~GuiPanelList()
+{
+	// Disconnect Events
+	_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_DESELECTED, wxListEventHandler( GuiPanelList::OnListItemDeselected ), NULL, this );
+	_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_RIGHT_CLICK, wxListEventHandler( GuiPanelList::OnListItemRightClick ), NULL, this );
+	_listCtrl->Disconnect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( GuiPanelList::OnListItemSelected ), NULL, this );
+	_buttonDelete->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiPanelList::OnButtonClickDelete ), NULL, this );
+	_buttonPreferences->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiPanelList::OnButtonClickPreferences ), NULL, this );
+	_buttonAdd->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiPanelList::OnButtonClickAdd ), NULL, this );
+	
+}
+
 GuiDialogPreferences::GuiDialogPreferences( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
 {
 	this->SetSizeHints( wxSize( 500,300 ), wxDefaultSize );
@@ -16,7 +70,6 @@ GuiDialogPreferences::GuiDialogPreferences( wxWindow* parent, wxWindowID id, con
 	wxBoxSizer* bSizer1;
 	bSizer1 = new wxBoxSizer( wxVERTICAL );
 	
-	wxNotebook* _notebook;
 	_notebook = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
 	_panelSetting = new wxPanel( _notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer2;
@@ -45,7 +98,6 @@ GuiDialogPreferences::GuiDialogPreferences( wxWindow* parent, wxWindowID id, con
 	bSizer4->Add( 0, 0, 1, wxEXPAND, 5 );
 	
 	_checkBoxPowerOn = new wxCheckBox( _panelSetting, wxID_ANY, _("Launch after power on."), wxDefaultPosition, wxDefaultSize, 0 );
-	_checkBoxPowerOn->SetValue(true); 
 	bSizer4->Add( _checkBoxPowerOn, 20, wxRIGHT|wxLEFT, 5 );
 	
 	bSizer2->Add( bSizer4, 0, wxEXPAND, 5 );
@@ -90,53 +142,7 @@ GuiDialogPreferences::GuiDialogPreferences( wxWindow* parent, wxWindowID id, con
 	_panelSetting->SetSizer( bSizer2 );
 	_panelSetting->Layout();
 	bSizer2->Fit( _panelSetting );
-	_notebook->AddPage( _panelSetting, _("Setting"), true );
-	_panelShortcut = new wxPanel( _notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	wxBoxSizer* bSizer7;
-	bSizer7 = new wxBoxSizer( wxVERTICAL );
-	
-	_listCtrlAction = new wxListCtrl( _panelShortcut, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_VRULES );
-	_menuListAction = new wxMenu();
-	_menuItemListAdd = new wxMenuItem( _menuListAction, wxID_ADD, wxString( _("Add") ) , _("Add an action"), wxITEM_NORMAL );
-	_menuListAction->Append( _menuItemListAdd );
-	
-	_menuItemListPreferences = new wxMenuItem( _menuListAction, wxID_ANY, wxString( _("Preferences") ) , _("Preferences of this actions"), wxITEM_NORMAL );
-	_menuListAction->Append( _menuItemListPreferences );
-	_menuItemListPreferences->Enable( false );
-	
-	_menuItemListDelete = new wxMenuItem( _menuListAction, wxID_DELETE, wxString( _("Delete") ) , _("Delete this actions"), wxITEM_NORMAL );
-	_menuListAction->Append( _menuItemListDelete );
-	_menuItemListDelete->Enable( false );
-	
-	_listCtrlAction->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( GuiDialogPreferences::_listCtrlActionOnContextMenu ), NULL, this ); 
-	
-	bSizer7->Add( _listCtrlAction, 1, wxALL|wxEXPAND, 5 );
-	
-	wxBoxSizer* bSizer8;
-	bSizer8 = new wxBoxSizer( wxHORIZONTAL );
-	
-	_buttonActDelete = new wxButton( _panelShortcut, wxID_DELETE, _("Delete"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
-	_buttonActDelete->Enable( false );
-	
-	bSizer8->Add( _buttonActDelete, 0, wxALL, 5 );
-	
-	
-	bSizer8->Add( 0, 0, 1, wxEXPAND, 5 );
-	
-	_buttonActPreferences = new wxButton( _panelShortcut, wxID_PREFERENCES, _("Preferences"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
-	_buttonActPreferences->Enable( false );
-	
-	bSizer8->Add( _buttonActPreferences, 0, wxALL, 5 );
-	
-	_buttonActAdd = new wxButton( _panelShortcut, wxID_ADD, _("Add"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
-	bSizer8->Add( _buttonActAdd, 0, wxALL, 5 );
-	
-	bSizer7->Add( bSizer8, 0, wxEXPAND, 5 );
-	
-	_panelShortcut->SetSizer( bSizer7 );
-	_panelShortcut->Layout();
-	bSizer7->Fit( _panelShortcut );
-	_notebook->AddPage( _panelShortcut, _("Shortcut"), false );
+	_notebook->AddPage( _panelSetting, _("Setting"), false );
 	
 	bSizer1->Add( _notebook, 1, wxEXPAND | wxALL, 5 );
 	
@@ -156,14 +162,7 @@ GuiDialogPreferences::GuiDialogPreferences( wxWindow* parent, wxWindowID id, con
 	this->Centre( wxBOTH );
 	
 	// Connect Events
-	_listCtrlAction->Connect( wxEVT_COMMAND_LIST_ITEM_DESELECTED, wxListEventHandler( GuiDialogPreferences::OnListItemDeselectedAction ), NULL, this );
-	_listCtrlAction->Connect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( GuiDialogPreferences::OnListItemSelectedAction ), NULL, this );
-	this->Connect( _menuItemListAdd->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickActAdd ) );
-	this->Connect( _menuItemListPreferences->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickActPreferences ) );
-	this->Connect( _menuItemListDelete->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickActDelete ) );
-	_buttonActDelete->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickActDelete ), NULL, this );
-	_buttonActPreferences->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickActPreferences ), NULL, this );
-	_buttonActAdd->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickActAdd ), NULL, this );
+	_notebook->Connect( wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGING, wxNotebookEventHandler( GuiDialogPreferences::OnNotebookPageChanging ), NULL, this );
 	_sdbSizerApply->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickApply ), NULL, this );
 	_sdbSizerOK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickOK ), NULL, this );
 }
@@ -171,16 +170,8 @@ GuiDialogPreferences::GuiDialogPreferences( wxWindow* parent, wxWindowID id, con
 GuiDialogPreferences::~GuiDialogPreferences()
 {
 	// Disconnect Events
-	_listCtrlAction->Disconnect( wxEVT_COMMAND_LIST_ITEM_DESELECTED, wxListEventHandler( GuiDialogPreferences::OnListItemDeselectedAction ), NULL, this );
-	_listCtrlAction->Disconnect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( GuiDialogPreferences::OnListItemSelectedAction ), NULL, this );
-	this->Disconnect( wxID_ADD, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickActAdd ) );
-	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickActPreferences ) );
-	this->Disconnect( wxID_DELETE, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickActDelete ) );
-	_buttonActDelete->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickActDelete ), NULL, this );
-	_buttonActPreferences->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickActPreferences ), NULL, this );
-	_buttonActAdd->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickActAdd ), NULL, this );
+	_notebook->Disconnect( wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGING, wxNotebookEventHandler( GuiDialogPreferences::OnNotebookPageChanging ), NULL, this );
 	_sdbSizerApply->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickApply ), NULL, this );
 	_sdbSizerOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogPreferences::OnButtonClickOK ), NULL, this );
 	
-	delete _menuListAction; 
 }

@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.11
+//! \version 0.15
 //! \date 04.01.2013
 //!
 //! ********************************************************************
@@ -62,6 +62,10 @@ class Action
 		//! \return La description.
 		wxString const& getDescription()const;
 		
+		//! \brief Obtenir le nom de la liste utiliser.
+		//! \return wxEmptyString si l(action n'utilise pas de liste.
+		virtual wxString getListNameUsed()const;
+		
 		//! \brief Obtenir le non de l'action.
 		//! Peut être utiliser avec les GUI.
 		//! \return Le non de l'action.
@@ -71,6 +75,11 @@ class Action
 		//! La différence avec \ref getName() est que cette méthode n'est pas influencer par la traduction de l'application.
 		//! \return Le non de l'action.
 		wxString const& getActTypeName()const;
+	
+		//! \brief Permet à l'action de s'auto exécuter.
+		//! Cette méthode est utile seulement pour les action peuvent s'exécuter
+		//! elle même. Par exemple si elle dispose d'un timer...
+		virtual void enable(bool enable = true);
 		
 		//! \brief Crée une nouvelle action à partir de son nom (invariant).
 		//! \param actTypeName le non de l'action (invarient)

@@ -1,10 +1,10 @@
 //! \file **************************************************************
-//! \brief Header Action de sauvegarde de traduction.
+//! \brief Header Action, traduction et sauvegarde dans une liste.
 //! 
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.15
+//! \version 0.21
 //! \date 31.03.2013
 //!
 //! ********************************************************************
@@ -13,12 +13,13 @@
 *	Copyright © 2013 - Antoine Maleyrie.
 */
 
-#ifndef ACTION_SAVE_TRANSLATION_H
-#define ACTION_SAVE_TRANSLATION_H
+#ifndef ACTION__TRANSLATION_TO_LIST_H
+#define ACTION__TRANSLATION_TO_LIST_H
 
-#include "action/guiPanelActSaveTranslation.h"
+#include "action/guiPanelActTranslationToList.h"
 #include "notification.hpp"
 #include "action.hpp"
+#include "list.hpp"
 
 #include <wx/dialog.h>
 #include <wx/filename.h>
@@ -29,17 +30,22 @@
 #include <map>
 
 // *********************************************************************
-// Class PanelActSaveTranslation
+// Class PanelActTranslationToList
 // *********************************************************************
 
-class ActSaveTranslation;
+class ActTranslationToList;
 
-//! \brief GUI pour la modification des préférences des actions de sauvegarde de traductions \ref ActSaveTranslation.
-class PanelActSaveTranslation : public GuiPanelActSaveTranslation
+//! \brief GUI pour la modification des préférences de l'action de traduction et sauvegarde dans une liste. \ref ActTranslationToList.
+class PanelActTranslationToList : public GuiPanelActTranslationToList
 {
 	public:
-		PanelActSaveTranslation(wxWindow* parent, wxButton* buttonOK, ActSaveTranslation * act);
-		~PanelActSaveTranslation();
+		PanelActTranslationToList(wxWindow* parent, wxButton* buttonOK, ActTranslationToList* act);
+		~PanelActTranslationToList();
+		
+		void updateComboBoxList();
+		
+		void OnChoiceSrc(wxCommandEvent&);
+		void OnChoiceTo(wxCommandEvent&);
 		
 		//! \brief Méthode appeler si appuis sur bouton "ok" du parent.
 		//! Elle valide les modifications et les installe dans l'action
@@ -47,7 +53,7 @@ class PanelActSaveTranslation : public GuiPanelActSaveTranslation
 	
 	private:
 		//! \brief ActSoveTranslation à modifier.
-		ActSaveTranslation * _act;
+		ActTranslationToList* _act;
 		
 		//! \brief bouton "OK" du dialogue parent.
 		wxButton* _buttonOK;
@@ -69,8 +75,8 @@ class PanelPickTranslation : public GuiPanelTranslation
 		//! \param kind fenêtre parant.
 		//! \param translations les traductions à afficher dans les boutons.
 		PanelPickTranslation(	DialogPickMainTranslation* parent,
-							wxString const& kind,
-							wxArrayString const& translations);
+								wxString const& kind,
+								wxArrayString const& translations);
 		
 		//! \brief Destructeur.
 		~PanelPickTranslation();
@@ -87,7 +93,7 @@ class PanelPickTranslation : public GuiPanelTranslation
 // *********************************************************************
 
 //! \brief GUI pour choisir la traduction principale à sauvegarder.
-//! \see ActSaveTranslation
+//! \see ActTranslationToList
 class DialogPickMainTranslation : public GuiDialogPickMainTranslation
 {
 	friend PanelPickTranslation;
@@ -118,60 +124,17 @@ class DialogPickMainTranslation : public GuiDialogPickMainTranslation
 };
 
 // *********************************************************************
-// Class ActSaveTranslationFile
+// Class ActTranslationToList
 // *********************************************************************
 
-//! \brief Classe permettent de sauvegarder des textes et leur traductions dans un fichier.
-//! \see ActSaveTranslation
-class ActSaveTranslationFile
+//! \brief Action de traduction et sauvegarde la traduction dans une liste.
+class ActTranslationToList : public Action
 {
-	public:
-		//! \brief Constructeur.
-		//! \param fileName le non du fichier.
-		ActSaveTranslationFile(wxFileName const& fileName);
-						
-		//! \brief Destructeur.
-		~ActSaveTranslationFile();
-	
-		//! \brief Pour connaître l'existence d'un texte dans le fichier.
-		//! \param text a vérifier.
-		bool exist(wxString text);
-		
-		//! \brief Pour sauvegarder un texte et ça traduction dans le fichier.
-		//! \param text le texte a sauvegarder.
-		//! \param mainTranslate la traduction a sauvegarder.
-		void save(	wxString text,
-					wxString mainTranslate);
-					
-		//! \brief Pour sauvegarder un texte et c'est traductions dans le fichier.
-		//! \param text le texte a sauvegarder.
-		//! \param mainTranslate la traduction principale a sauvegarder.
-		//! \param translations les traductions a sauvegarder.
-		void save(	wxString text,
-					wxString mainTranslate,
-					std::map<wxString, wxArrayString> const& translations);
-
-	private:
-		//! \brief Le non nu fichier.
-		wxFileName _fileName;
-		//! \brief Représente la première ligne du fichier sous la forme d'un wxArrayString.
-		wxArrayString _FirstLine;
-		//! \brief C'est le fichier.
-		wxTextFile _file;
-};
-
-// *********************************************************************
-// Class ActSaveTranslation
-// *********************************************************************
-
-//! \brief Action de sauvegarde de traductions.
-class ActSaveTranslation : public Action
-{
-	friend PanelActSaveTranslation;
+	friend PanelActTranslationToList;
 	
 	public:
 		//! \brief Constructeur par défaut.
-		ActSaveTranslation();
+		ActTranslationToList();
 		
 		//! \brief Constructeur.
 		//! Les deux premier paramètres doive être écrit en abrégé.
@@ -180,19 +143,16 @@ class ActSaveTranslation : public Action
 		//!
 		//! \param lgsrc lange source.
 		//! \param lgto lange de traduction.
-		//! \param fileName Le non du fichier où sauvegarder les traductions.
+		//! \param listName Le non de la liste où sauvegarder les traductions.
 		//! \param saveAll true pour enregistre tout les traductions, false pour enregistre juste la traduction principale.
-		//! \param noDoublon true pour ne pas enregistre de doublon.
 		//! \param showDialog true pour affiche une dialogue l'or d'une sauvegarde pour choisir la traduction a sauvegarder
-		ActSaveTranslation(	wxString const& lgsrc,
-							wxString const& lgto,
-							wxFileName const& fileName,
-							bool saveAll,
-							bool noDoublon,
-							bool showDialog);
+		ActTranslationToList(	wxString const& lgsrc,
+								wxString const& lgto,
+								wxString const& listName,
+								bool showDialog);
 						
 		//! \brief Destructeur.
-		~ActSaveTranslation();
+		~ActTranslationToList();
 		
 		//! \brief Exécuter l'action.
 		void execute();
@@ -204,6 +164,9 @@ class ActSaveTranslation : public Action
 		
 		//! \brief Préférences de l'action au format string.
 		wxString getStringPreferences()const;
+		
+		//! \brief Obtenir le nom de la liste utiliser.
+		wxString getListNameUsed()const;
 		
 	protected:		
 		//! \brief Permet de charger les préférences de l'action à partir du wxFileConfig.
@@ -220,10 +183,8 @@ class ActSaveTranslation : public Action
 		//! \brief Lange de traduction.
 		wxString _lgto;
 		
-		wxFileName _fileName;
-		bool _saveAll;
-		bool _noDoublon;
+		wxString _listName;
 		bool _showDialog;
 };
 
-#endif //ACTION_SAVE_TRANSLATION_H
+#endif //ACTION__TRANSLATION_TO_LIST_H

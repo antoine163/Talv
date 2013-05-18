@@ -5,11 +5,11 @@
 // PLEASE DO "NOT" EDIT THIS FILE!
 ///////////////////////////////////////////////////////////////////////////
 
-#include "guiPanelActSaveTranslation.h"
+#include "guiPanelActTranslationToList.h"
 
 ///////////////////////////////////////////////////////////////////////////
 
-GuiPanelActSaveTranslation::GuiPanelActSaveTranslation( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
+GuiPanelActTranslationToList::GuiPanelActTranslationToList( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
 {
 	wxBoxSizer* bSizer1;
 	bSizer1 = new wxBoxSizer( wxVERTICAL );
@@ -72,73 +72,34 @@ GuiPanelActSaveTranslation::GuiPanelActSaveTranslation( wxWindow* parent, wxWind
 	wxBoxSizer* bSizer6;
 	bSizer6 = new wxBoxSizer( wxHORIZONTAL );
 	
-	wxStaticText* staticTextFile;
-	staticTextFile = new wxStaticText( this, wxID_ANY, _("Pick a file for save the translations :"), wxDefaultPosition, wxDefaultSize, 0 );
-	staticTextFile->Wrap( -1 );
-	bSizer6->Add( staticTextFile, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT|wxTOP|wxBOTTOM|wxLEFT, 5 );
+	wxStaticText* staticTextList;
+	staticTextList = new wxStaticText( this, wxID_ANY, _("Choose list for save the translations :"), wxDefaultPosition, wxDefaultSize, 0 );
+	staticTextList->Wrap( -1 );
+	bSizer6->Add( staticTextList, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT|wxTOP|wxBOTTOM|wxLEFT, 5 );
 	
-	_filePickerFile = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, _("Select a file"), wxT("*.*"), wxDefaultPosition, wxDefaultSize, wxFLP_USE_TEXTCTRL );
-	bSizer6->Add( _filePickerFile, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
+	_comboBoxList = new wxComboBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
+	bSizer6->Add( _comboBoxList, 1, wxALL, 5 );
 	
 	bSizer1->Add( bSizer6, 0, wxEXPAND, 5 );
 	
-	wxStaticLine* staticline2;
-	staticline2 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
-	bSizer1->Add( staticline2, 0, wxEXPAND | wxALL, 5 );
-	
-	wxBoxSizer* bSizer9;
-	bSizer9 = new wxBoxSizer( wxHORIZONTAL );
-	
-	wxBoxSizer* bSizer10;
-	bSizer10 = new wxBoxSizer( wxHORIZONTAL );
-	
-	wxBoxSizer* bSizer11;
-	bSizer11 = new wxBoxSizer( wxVERTICAL );
-	
-	_radioBtnSaveAllTranslations = new wxRadioButton( this, wxID_ANY, _("Save all translations from google."), wxDefaultPosition, wxDefaultSize, 0 );
-	_radioBtnSaveAllTranslations->SetValue( true ); 
-	bSizer11->Add( _radioBtnSaveAllTranslations, 0, wxRIGHT|wxLEFT, 5 );
-	
-	_radioBtnSaveATranslation = new wxRadioButton( this, wxID_ANY, _("Save a translation from google."), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer11->Add( _radioBtnSaveATranslation, 0, wxRIGHT|wxLEFT, 5 );
-	
-	bSizer10->Add( bSizer11, 1, wxEXPAND, 5 );
-	
-	wxStaticLine* staticline3;
-	staticline3 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
-	bSizer10->Add( staticline3, 0, wxALL|wxEXPAND, 5 );
-	
-	wxBoxSizer* bSizer12;
-	bSizer12 = new wxBoxSizer( wxVERTICAL );
-	
-	_checkBoxNoDoublon = new wxCheckBox( this, wxID_ANY, _("Don't create doublon."), wxDefaultPosition, wxDefaultSize, 0 );
-	_checkBoxNoDoublon->SetValue(true); 
-	bSizer12->Add( _checkBoxNoDoublon, 0, wxRIGHT|wxLEFT, 5 );
-	
-	_checkBoxShowDialog = new wxCheckBox( this, wxID_ANY, _("Show a dialog for select the translation."), wxDefaultPosition, wxDefaultSize, 0 );
+	_checkBoxShowDialog = new wxCheckBox( this, wxID_ANY, _("Show a dialog for select the main translation."), wxDefaultPosition, wxDefaultSize, 0 );
 	_checkBoxShowDialog->SetValue(true); 
-	bSizer12->Add( _checkBoxShowDialog, 0, wxRIGHT|wxLEFT, 5 );
-	
-	bSizer10->Add( bSizer12, 1, wxEXPAND, 5 );
-	
-	bSizer9->Add( bSizer10, 1, wxEXPAND, 5 );
-	
-	bSizer1->Add( bSizer9, 1, wxEXPAND, 5 );
+	bSizer1->Add( _checkBoxShowDialog, 0, wxRIGHT|wxLEFT|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	this->SetSizer( bSizer1 );
 	this->Layout();
 	bSizer1->Fit( this );
 	
 	// Connect Events
-	_choiceLanguageSource->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( GuiPanelActSaveTranslation::OnChoiceSrc ), NULL, this );
-	_choiceLanguageOfTranslation->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( GuiPanelActSaveTranslation::OnChoiceTo ), NULL, this );
+	_choiceLanguageSource->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( GuiPanelActTranslationToList::OnChoiceSrc ), NULL, this );
+	_choiceLanguageOfTranslation->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( GuiPanelActTranslationToList::OnChoiceTo ), NULL, this );
 }
 
-GuiPanelActSaveTranslation::~GuiPanelActSaveTranslation()
+GuiPanelActTranslationToList::~GuiPanelActTranslationToList()
 {
 	// Disconnect Events
-	_choiceLanguageSource->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( GuiPanelActSaveTranslation::OnChoiceSrc ), NULL, this );
-	_choiceLanguageOfTranslation->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( GuiPanelActSaveTranslation::OnChoiceTo ), NULL, this );
+	_choiceLanguageSource->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( GuiPanelActTranslationToList::OnChoiceSrc ), NULL, this );
+	_choiceLanguageOfTranslation->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( GuiPanelActTranslationToList::OnChoiceTo ), NULL, this );
 	
 }
 

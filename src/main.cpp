@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.5
+//! \version 1.11
 //! \date 12.12.12
 //!
 //! ********************************************************************
@@ -15,10 +15,13 @@
 
 #include "main.hpp"
 #include "resource.hpp"
+#include "actionManager.hpp"
+#include "listManager.hpp"
 #include "dialogPreferences.hpp"
 
 #include <wx/aboutdlg.h>
 #include <wx/fileconf.h>
+#include <wx/stdpaths.h>
 #include <unistd.h>
 
 //TEST
@@ -36,6 +39,13 @@ bool App::OnInit()
 	wxInitAllImageHandlers();
 	SetExitOnFrameDelete(false);
 	_menuIcon = nullptr;
+	_enableShortcuts = true;
+	_enableActions = true;
+	
+	//Changement du Préfixe seulement sous unix
+	#if defined(__UNIX__)
+	wxStandardPaths::Get().SetInstallPrefix("/usr");
+	#endif
 	
 	//On charge le langage par défaut de l'os.
 	_locale = new wxLocale(wxLANGUAGE_DEFAULT);
@@ -44,19 +54,22 @@ bool App::OnInit()
 	//Chargement de la config
 	wxFileConfig fileConfig(	PROJECT_NAME,
 								wxEmptyString,
-								wxGetUserHome()+"/."+PROJECT_NAME);
+								wxStandardPaths::Get().GetUserDataDir()+'/'+PROJECT_NAME);
 	
 	//Chargement des ressource se trouvent dans le fichier de config.
 	Resource::getInstance()->load(fileConfig);
+	
+	//Chargement des listes se trouvent dans le fichier de config.
+	ListManager::getInstance()->load(fileConfig);
+		
+	//Crée de l'instance de ActionManager et Installation des raccourcis/actions
+	ActionManager::getInstance()->load(fileConfig);
 	
 	//Création du menu ou pas.
 	if(Resource::getInstance()->getShowMenu())
 		creatMenuItem();
 	else
 		deleteMenuItem();
-		
-	//Crée de l'instance de ActionManager et Installation des raccourcis/actions
-	ActionManager::getInstance()->load(fileConfig);
 	
 	return true;
 }
@@ -72,6 +85,9 @@ int App::OnExit()
 	//Suppression des ressources.
 	Resource::kill();
 	
+	//Suppression des liste.
+	ListManager::kill();
+	
 	//Suppression du module de la traduction de l'application.
 	delete _locale;
 	
@@ -85,7 +101,8 @@ void App::creatMenuItem()
 		_menuIcon = new MenuIcon();
 		
 		Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnPreferences, this, _menuIcon->getIdMenuItemPreferences());
-		Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnEnable, this, _menuIcon->getIdMenuItemEnable());
+		Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnEnableShortcuts, this, _menuIcon->getIdMenuItemEnableShortcuts());
+		Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnEnableActions, this, _menuIcon->getIdMenuItemEnableActions());
 		Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnAbout, this, _menuIcon->getIdMenuItemAbout());
 		Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnExit, this, _menuIcon->getIdMenuItemExit());
 	}
@@ -96,7 +113,8 @@ void App::deleteMenuItem()
 	if(_menuIcon)
 	{
 		Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::OnPreferences, this, _menuIcon->getIdMenuItemPreferences());
-		Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::OnEnable, this, _menuIcon->getIdMenuItemEnable());
+		Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::OnEnableShortcuts, this, _menuIcon->getIdMenuItemEnableShortcuts());
+		Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::OnEnableActions, this, _menuIcon->getIdMenuItemEnableActions());
 		Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::OnAbout, this, _menuIcon->getIdMenuItemAbout());
 		Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::OnExit, this, _menuIcon->getIdMenuItemExit());
 		
@@ -118,7 +136,9 @@ void App::OnPreferences(wxCommandEvent&)
 		ActionManager* actionManager = ActionManager::getInstance();
 	
 		//Désactivation des raccourcis.
-		actionManager->enable(false);
+		actionManager->enableShortcuts(false);
+		//Désactivation des actions.
+		actionManager->enableActions(false);
 		
 		//Création du dialog.
 		dlg = new DialogPreferences();
@@ -137,8 +157,10 @@ void App::OnPreferences(wxCommandEvent&)
 				deleteMenuItem();
 		}
 		
-		//On réactive les raccourcis
-		actionManager->enable(true);
+		//On réactive les raccourcis en acore avec le menue.
+		actionManager->enableShortcuts(_enableShortcuts);
+		//On réactive les action en acore avec le menue.
+		actionManager->enableActions(_enableActions);
 		
 		//Supprime le dialog
 		delete dlg;
@@ -149,9 +171,16 @@ void App::OnPreferences(wxCommandEvent&)
 		dlg->Raise();
 }
 
-void App::OnEnable(wxCommandEvent& event)
+void App::OnEnableShortcuts(wxCommandEvent& event)
 {
-	ActionManager::getInstance()->enable(event.IsChecked());
+	_enableShortcuts = event.IsChecked();
+	ActionManager::getInstance()->enableShortcuts(_enableShortcuts);
+}
+
+void App::OnEnableActions(wxCommandEvent& event)
+{
+	_enableActions = event.IsChecked();
+	ActionManager::getInstance()->enableActions(_enableActions);
 }
 
 //! \todo Désactiver le menu
