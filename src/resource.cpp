@@ -371,7 +371,7 @@ bool Resource::getShowMenu()
 	return _showMenu;
 }
 
-// \todo a compléter pour réellement le prendre en compte coter os.
+//! \todo a compléter pour réellement le prendre en compte coter os.
 void Resource::setPowerOn(bool powerOn)
 {
 	_powerOn = powerOn;

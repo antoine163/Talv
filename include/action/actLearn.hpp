@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.2
+//! \version 0.4
 //! \date 15.05.2013
 //!
 //! ********************************************************************
@@ -70,7 +70,7 @@ class ActLearn : public wxTimer, public Action
 		//! \brief Constructeur.
 		//! \param listName le non de la liste à apprendre.
 		//! \param callTime temps d'appelle pour exécuter l'action.
-		//! En seconde et 0 pour ne jamais exécuter l'action au bout d'un temps.
+		//! En minute et 0 pour ne jamais exécuter l'action au bout d'un temps.
 		ActLearn(wxString const& listName, unsigned int callTime);
 		//! \brief Constructeur par recopie.
 		ActLearn(ActLearn const& other);
@@ -89,6 +89,9 @@ class ActLearn : public wxTimer, public Action
 		//! \brief Préférences de l'action au format string.
 		wxString getStringPreferences()const;
 		
+		//! \brief Obtenir le nom de la liste utiliser.
+		wxString getListNameUsed()const;
+		
 		//! \brief Permet à l'action de s'auto exécuter.
 		virtual void enable(bool enable = true);
 		
@@ -106,7 +109,7 @@ class ActLearn : public wxTimer, public Action
 	private:
 		//! \brief Nom de la liste de révision.
 		wxString _listName;
-		//! \brief Temps pour laquelle l'action est exécuter. En seconde.
+		//! \brief Temps pour laquelle l'action est exécuter. En minute.
 		unsigned int _callTime;
 };
 
