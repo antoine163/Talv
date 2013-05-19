@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.3
+//! \version 0.4
 //! \date 10.12.12
 //!
 //! ********************************************************************
@@ -18,8 +18,6 @@
 #include <wx/event.h>
 #include <wx/icon.h>
 #include <wx/artprov.h>
-
-#include "../icons/ft.xpm"
 
 // *********************************************************************
 // Class MenuIcon
@@ -50,7 +48,9 @@ MenuIcon::MenuIcon()
 	
 	//Task Icon
 	_taskBarIcon = new wxTaskBarIcon;
-	_taskBarIcon->SetIcon(wxIcon(ft_xpm), PROJECT_NAME);
+	wxIcon tmpIcon;
+	tmpIcon.LoadFile("../icons/16x16/flydocs.png", wxBITMAP_TYPE_PNG);
+	_taskBarIcon->SetIcon(tmpIcon, PROJECT_NAME);
 	
 	//bind l'événement
 	_taskBarIcon->Bind(wxEVT_TASKBAR_LEFT_DCLICK, &MenuIcon::OnShow, this);
