@@ -83,7 +83,7 @@ class ManagerBase
 		//! \brief Pour savoir si une clef existe.
 		//! \param key c'est la clef à chercher.
 		//! \return true si la clef existe.
-		bool exist(T1 const& key)
+		bool exist(T1 const& key)const
 		{
 			//Si la clé existe.
 			if(_data.count(key) > 0)

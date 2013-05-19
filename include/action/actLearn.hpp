@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.4
+//! \version 0.5
 //! \date 15.05.2013
 //!
 //! ********************************************************************
@@ -60,7 +60,7 @@ class PanelActLearn : public GuiPanelActLearn
 // *********************************************************************
 
 //! \brief Action pour apprendre une liste.
-class ActLearn : public wxTimer, public Action
+class ActLearn : protected wxTimer, public Action
 {
 	friend PanelActLearn;
 	

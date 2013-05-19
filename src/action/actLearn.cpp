@@ -45,6 +45,13 @@ PanelActLearn::PanelActLearn(wxWindow* parent, wxButton* buttonOK, ActLearn* act
 	//sélection du temps
 	_spinCtrlHours->SetValue(act->_callTime/60);
 	_spinCtrlMinutes->SetValue(act->_callTime%60);
+	
+	//Active le panel time
+	if(act->_callTime != 0)
+	{
+		_panelTime->Enable(true);
+		_checkBoxTime->SetValue(true);
+	}
 
 	//Lier l'événement du bouton OK du wxWindow parent.
 	_buttonOK->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &PanelActLearn::OnOKButtonClick, this, _buttonOK->GetId());
@@ -55,7 +62,6 @@ PanelActLearn::~PanelActLearn()
 	_buttonOK->Unbind(wxEVT_COMMAND_BUTTON_CLICKED, &PanelActLearn::OnOKButtonClick, this, _buttonOK->GetId());
 }
 
-//! \bug segfauld
 void PanelActLearn::OnOKButtonClick(wxCommandEvent& event)
 {
 	//Vérifie si une liste est sélectionnée.

@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 3.6
+//! \version 3.8
 //! \date 02.01.2013
 //!
 //! ********************************************************************
@@ -323,9 +323,9 @@ wxArrayString PanelListActions::OnPreferencesItem(wxString const& item)
 	ShortcutKey oldShortcutKey = ShortcutKey::stringToShortcutKey(item);
 	
 	//Récupération de l'action.
-	auto tmpAct = EditActionManager::getInstance()->getValue(oldShortcutKey);
+	Action* oldAct = EditActionManager::getInstance()->getValue(oldShortcutKey);
 	
-	DialogActionPreferences dlg(this, item, tmpAct);
+	DialogActionPreferences dlg(this, item, oldAct);
 	while(1)
 	{
 		//Montre le dialogue.
@@ -347,16 +347,19 @@ wxArrayString PanelListActions::OnPreferencesItem(wxString const& item)
 				}
 			}
 			
+			//On récupère la nouvelle action.
+			Action* newAct = Action::newAction(dlg.getAction());
+			
 			//Libère la mémoire de l'ancienne action.
 			EditActionManager::getInstance()->remove(oldShortcutKey);
 			
 			//Nouvelle action.
-			EditActionManager::getInstance()->add(newShortcutKey, Action::newAction(dlg.getAction()));
+			EditActionManager::getInstance()->add(newShortcutKey, newAct);
 			
 			//Mise à jour de l'item.
 			newItem.Add(ShortcutKey::shortcutKeyToString(newShortcutKey));
-			newItem.Add(tmpAct->getName());
-			newItem.Add(tmpAct->getStringPreferences());
+			newItem.Add(newAct->getName());
+			newItem.Add(newAct->getStringPreferences());
 		}
 		break;
 	}
@@ -388,13 +391,13 @@ wxArrayString PanelListActions::OnAddItem()
 			}
 			
 			//Nouvelle action
-			Action* tmpAct = Action::newAction(dlg.getAction());
-			EditActionManager::getInstance()->add(shortcutKey, tmpAct);
+			Action* newAct = Action::newAction(dlg.getAction());
+			EditActionManager::getInstance()->add(shortcutKey, newAct);
 			
 			//Un nouveau item
 			newItem.Add(ShortcutKey::shortcutKeyToString(shortcutKey));
-			newItem.Add(tmpAct->getName());
-			newItem.Add(tmpAct->getStringPreferences());
+			newItem.Add(newAct->getName());
+			newItem.Add(newAct->getStringPreferences());
 		}
 		break;
 	}

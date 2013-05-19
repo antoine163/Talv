@@ -33,10 +33,11 @@ GuiPanelActLearn::GuiPanelActLearn( wxWindow* parent, wxWindowID id, const wxPoi
 	bSizer3 = new wxBoxSizer( wxHORIZONTAL );
 	
 	_checkBoxTime = new wxCheckBox( this, wxID_ANY, _("Run this action evrey :"), wxDefaultPosition, wxDefaultSize, 0 );
-	_checkBoxTime->SetValue(true); 
 	bSizer3->Add( _checkBoxTime, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	_panelTime = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	_panelTime->Enable( false );
+	
 	wxBoxSizer* bSizer4;
 	bSizer4 = new wxBoxSizer( wxHORIZONTAL );
 	
