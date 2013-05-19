@@ -31,22 +31,25 @@ PanelActLearn::PanelActLearn(wxWindow* parent, wxButton* buttonOK, ActLearn* act
 	//Obtenir la liste des lites.
 	wxArrayString tmpLists = EditListManager::getInstance()->getNameLists();
 	
-	//Complète les chois
+	//Complète les chois.
 	for(auto it: tmpLists)
 		_choiceList->Append(it);
 		
-	//Sélectionne le chois
+	//Sélectionne le chois.
 	if(!act->_listName.IsEmpty())
 	{
 		int n = _choiceList->FindString(act->_listName);
 		_choiceList->SetSelection(n);
 	}
 	
-	//sélection du temps
+	//Sélection le nombre de texte.
+	_spinCtrlNbText->SetValue(act->_nbText);
+	
+	//Sélection du temps.
 	_spinCtrlHours->SetValue(act->_callTime/60);
 	_spinCtrlMinutes->SetValue(act->_callTime%60);
 	
-	//Active le panel time
+	//Active le panel time.
 	if(act->_callTime != 0)
 	{
 		_panelTime->Enable(true);
@@ -66,12 +69,15 @@ void PanelActLearn::OnOKButtonClick(wxCommandEvent& event)
 {
 	//Vérifie si une liste est sélectionnée.
 	int n = _choiceList->GetSelection();
-	
 	if(n == wxNOT_FOUND)
 	{
 		wxMessageBox(_("Please select a list."), _("Name list invalid"), wxOK|wxICON_EXCLAMATION|wxCENTRE, this);
 		return;
 	}
+	
+	//Récupération le nombre de texte.
+	_act->_nbText = _spinCtrlNbText->GetValue();
+	
 	//Récupération du nom de la liste choisi.
 	_act->_listName = _choiceList->GetString(n);
 	
@@ -95,18 +101,23 @@ void PanelActLearn::OnCheckBox(wxCommandEvent& event)
 // *********************************************************************
 
 ActLearn::ActLearn()
-: ActLearn(wxEmptyString, 0)
+: ActLearn(wxEmptyString, 1, 0)
 {
 }
 
-ActLearn::ActLearn(wxString const& listName, unsigned int callTime)
+ActLearn::ActLearn(wxString const& listName, unsigned int nbText, unsigned int callTime)
 : Action(_("Learn a list"), "ActLearn",	_("Learning the contents of a list.")),
 _listName(listName), _callTime(callTime)
 {
+	//La valeur minimums de _nbText est 1.
+	if(nbText == 0)
+		_nbText = 1;
+	else
+		_nbText = nbText;
 }
 
 ActLearn::ActLearn(ActLearn const& other)
-: ActLearn(other._listName, other._callTime)
+: ActLearn(other._listName, other._nbText, other._callTime)
 {
 }
 
@@ -118,7 +129,7 @@ void ActLearn::Notify()
 {
 	execute();
 	std::cout << this << std::endl;
-	Start(_callTime*1000, true);
+	Start(_callTime*60*1000, true);
 }
 
 void ActLearn::execute()
@@ -134,7 +145,7 @@ wxPanel* ActLearn::getPanelPreferences(wxWindow* parent, wxButton* buttonOK)
 void ActLearn::enable(bool enable)
 {
 	if(enable && _callTime != 0)
-		Start(_callTime*1000, true);
+		Start(_callTime*60*1000, true);
 	else
 		Stop();
 }
@@ -143,6 +154,13 @@ void ActLearn::actLoad(wxFileConfig & fileConfig)
 {
 	fileConfig.Read("listName", &_listName);
 	double tmp;
+	
+	fileConfig.Read("nbText", &tmp);
+	if(tmp == 0)//La valeur minimums de _nbText est 1.
+		_nbText = 1;
+	else
+		_nbText = tmp;
+	
 	fileConfig.Read("callTime", &tmp);
 	_callTime = tmp;
 }
@@ -150,6 +168,7 @@ void ActLearn::actLoad(wxFileConfig & fileConfig)
 void ActLearn::actSave(wxFileConfig & fileConfig)const
 {
 	fileConfig.Write("listName", _listName);
+	fileConfig.Write("nbText", (double)_nbText);
 	fileConfig.Write("callTime", (double)_callTime);
 }
 

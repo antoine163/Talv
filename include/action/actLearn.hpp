@@ -69,9 +69,11 @@ class ActLearn : protected wxTimer, public Action
 		ActLearn();
 		//! \brief Constructeur.
 		//! \param listName le non de la liste à apprendre.
+		//! \param nbText Le nombre de texte a prendre pour chaque exécution de cette action.
+		//! Valeur minimum 1. Si vous préciser 0 c'est comme si vous préciser 1.
 		//! \param callTime temps d'appelle pour exécuter l'action.
 		//! En minute et 0 pour ne jamais exécuter l'action au bout d'un temps.
-		ActLearn(wxString const& listName, unsigned int callTime);
+		ActLearn(wxString const& listName, unsigned int nbText, unsigned int callTime);
 		//! \brief Constructeur par recopie.
 		ActLearn(ActLearn const& other);
 						
@@ -109,6 +111,9 @@ class ActLearn : protected wxTimer, public Action
 	private:
 		//! \brief Nom de la liste de révision.
 		wxString _listName;
+		//! \brief Le nombre de texte a prendre pour chaque exécution de cette action.
+		//! \note La valeur minimum est 1.
+		unsigned int _nbText;
 		//! \brief Temps pour laquelle l'action est exécuter. En minute.
 		unsigned int _callTime;
 };
