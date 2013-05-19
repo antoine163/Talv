@@ -23,30 +23,27 @@ GuiPanelActTranslationToList::GuiPanelActTranslationToList( wxWindow* parent, wx
 	wxStaticText* staticTextLanguageSource;
 	staticTextLanguageSource = new wxStaticText( this, wxID_ANY, _("Language source :"), wxDefaultPosition, wxDefaultSize, 0 );
 	staticTextLanguageSource->Wrap( -1 );
-	bSizer3->Add( staticTextLanguageSource, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
+	bSizer3->Add( staticTextLanguageSource, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
+	
+	wxBoxSizer* bSizer4;
+	bSizer4 = new wxBoxSizer( wxHORIZONTAL );
+	
+	
+	bSizer4->Add( 32, 0, 0, wxEXPAND, 5 );
 	
 	wxArrayString _choiceLanguageSourceChoices;
 	_choiceLanguageSource = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, _choiceLanguageSourceChoices, 0 );
 	_choiceLanguageSource->SetSelection( 0 );
-	bSizer3->Add( _choiceLanguageSource, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 5 );
+	bSizer4->Add( _choiceLanguageSource, 1, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
+	
+	bSizer3->Add( bSizer4, 1, wxEXPAND, 5 );
 	
 	bSizer2->Add( bSizer3, 1, wxEXPAND, 5 );
-	
-	wxBoxSizer* bSizer4;
-	bSizer4 = new wxBoxSizer( wxVERTICAL );
-	
-	
-	bSizer4->Add( 0, 0, 1, wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	wxStaticText* staticTextTo;
 	staticTextTo = new wxStaticText( this, wxID_ANY, _("to"), wxDefaultPosition, wxDefaultSize, 0 );
 	staticTextTo->Wrap( -1 );
-	bSizer4->Add( staticTextTo, 0, wxALIGN_CENTER_VERTICAL|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
-	
-	
-	bSizer4->Add( 0, 0, 1, wxEXPAND, 5 );
-	
-	bSizer2->Add( bSizer4, 0, wxEXPAND, 5 );
+	bSizer2->Add( staticTextTo, 0, wxALIGN_CENTER_VERTICAL|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
 	wxBoxSizer* bSizer5;
 	bSizer5 = new wxBoxSizer( wxVERTICAL );
@@ -54,33 +51,41 @@ GuiPanelActTranslationToList::GuiPanelActTranslationToList( wxWindow* parent, wx
 	wxStaticText* staticTextlanguageOfTranslation;
 	staticTextlanguageOfTranslation = new wxStaticText( this, wxID_ANY, _("Language of translation :"), wxDefaultPosition, wxDefaultSize, 0 );
 	staticTextlanguageOfTranslation->Wrap( -1 );
-	bSizer5->Add( staticTextlanguageOfTranslation, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
+	bSizer5->Add( staticTextlanguageOfTranslation, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
+	
+	wxBoxSizer* bSizer6;
+	bSizer6 = new wxBoxSizer( wxHORIZONTAL );
+	
+	
+	bSizer6->Add( 32, 0, 0, wxEXPAND, 5 );
 	
 	wxArrayString _choiceLanguageOfTranslationChoices;
 	_choiceLanguageOfTranslation = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, _choiceLanguageOfTranslationChoices, 0 );
 	_choiceLanguageOfTranslation->SetSelection( 0 );
-	bSizer5->Add( _choiceLanguageOfTranslation, 0, wxEXPAND|wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
+	bSizer6->Add( _choiceLanguageOfTranslation, 1, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
+	
+	bSizer5->Add( bSizer6, 1, wxEXPAND, 5 );
 	
 	bSizer2->Add( bSizer5, 1, wxEXPAND, 5 );
 	
 	bSizer1->Add( bSizer2, 0, wxEXPAND, 5 );
 	
-	wxStaticLine* staticline1;
-	staticline1 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
-	bSizer1->Add( staticline1, 0, wxEXPAND | wxALL, 5 );
+	wxStaticLine* staticline;
+	staticline = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
+	bSizer1->Add( staticline, 0, wxEXPAND | wxALL, 5 );
 	
-	wxBoxSizer* bSizer6;
-	bSizer6 = new wxBoxSizer( wxHORIZONTAL );
+	wxBoxSizer* bSizer7;
+	bSizer7 = new wxBoxSizer( wxHORIZONTAL );
 	
 	wxStaticText* staticTextList;
 	staticTextList = new wxStaticText( this, wxID_ANY, _("Choose list for save the translations :"), wxDefaultPosition, wxDefaultSize, 0 );
 	staticTextList->Wrap( -1 );
-	bSizer6->Add( staticTextList, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT|wxTOP|wxBOTTOM|wxLEFT, 5 );
+	bSizer7->Add( staticTextList, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxLEFT, 5 );
 	
 	_comboBoxList = new wxComboBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
-	bSizer6->Add( _comboBoxList, 1, wxALL, 5 );
+	bSizer7->Add( _comboBoxList, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
-	bSizer1->Add( bSizer6, 0, wxEXPAND, 5 );
+	bSizer1->Add( bSizer7, 0, wxEXPAND, 5 );
 	
 	_checkBoxShowDialog = new wxCheckBox( this, wxID_ANY, _("Show a dialog for select the main translation."), wxDefaultPosition, wxDefaultSize, 0 );
 	_checkBoxShowDialog->SetValue(true); 
@@ -132,7 +137,7 @@ GuiDialogPickMainTranslation::GuiDialogPickMainTranslation( wxWindow* parent, wx
 	
 	wxStaticLine* staticline2;
 	staticline2 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
-	bSizer1->Add( staticline2, 0, wxEXPAND | wxALL, 5 );
+	bSizer1->Add( staticline2, 0, wxEXPAND|wxTOP|wxRIGHT|wxLEFT, 5 );
 	
 	wxBoxSizer* bSizer3;
 	bSizer3 = new wxBoxSizer( wxHORIZONTAL );
@@ -148,7 +153,7 @@ GuiDialogPickMainTranslation::GuiDialogPickMainTranslation( wxWindow* parent, wx
 	sdbSizerCancel = new wxButton( this, wxID_CANCEL );
 	sdbSizer->AddButton( sdbSizerCancel );
 	sdbSizer->Realize();
-	bSizer3->Add( sdbSizer, 1, wxEXPAND|wxBOTTOM, 5 );
+	bSizer3->Add( sdbSizer, 1, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5 );
 	
 	bSizer1->Add( bSizer3, 0, wxEXPAND, 5 );
 	

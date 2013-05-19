@@ -18,8 +18,8 @@
 #include <wx/settings.h>
 #include <wx/choice.h>
 #include <wx/sizer.h>
-#include <wx/checkbox.h>
 #include <wx/spinctrl.h>
+#include <wx/checkbox.h>
 #include <wx/panel.h>
 #include <wx/textctrl.h>
 #include <wx/statline.h>
@@ -38,6 +38,7 @@ class GuiPanelActLearn : public wxPanel
 	
 	protected:
 		wxChoice* _choiceList;
+		wxSpinCtrl* _spinCtrlNbText;
 		wxCheckBox* _checkBoxTime;
 		wxPanel* _panelTime;
 		wxSpinCtrl* _spinCtrlHours;

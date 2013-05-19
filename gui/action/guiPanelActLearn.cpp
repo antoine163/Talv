@@ -20,7 +20,7 @@ GuiPanelActLearn::GuiPanelActLearn( wxWindow* parent, wxWindowID id, const wxPoi
 	wxStaticText* staticTextPickList;
 	staticTextPickList = new wxStaticText( this, wxID_ANY, _("Pick a list you want to learn :"), wxDefaultPosition, wxDefaultSize, 0 );
 	staticTextPickList->Wrap( -1 );
-	bSizer2->Add( staticTextPickList, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer2->Add( staticTextPickList, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxRIGHT|wxLEFT, 5 );
 	
 	wxArrayString _choiceListChoices;
 	_choiceList = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, _choiceListChoices, 0 );
@@ -32,37 +32,53 @@ GuiPanelActLearn::GuiPanelActLearn( wxWindow* parent, wxWindowID id, const wxPoi
 	wxBoxSizer* bSizer3;
 	bSizer3 = new wxBoxSizer( wxHORIZONTAL );
 	
+	wxStaticText* staticTextNbText;
+	staticTextNbText = new wxStaticText( this, wxID_ANY, _("Number of texts at learning for every call this action :"), wxDefaultPosition, wxDefaultSize, 0 );
+	staticTextNbText->Wrap( -1 );
+	bSizer3->Add( staticTextNbText, 0, wxTOP|wxRIGHT|wxLEFT|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	_spinCtrlNbText = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 1, 100, 1 );
+	bSizer3->Add( _spinCtrlNbText, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	bSizer1->Add( bSizer3, 0, wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer4;
+	bSizer4 = new wxBoxSizer( wxVERTICAL );
+	
 	_checkBoxTime = new wxCheckBox( this, wxID_ANY, _("Run this action evrey :"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer3->Add( _checkBoxTime, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer4->Add( _checkBoxTime, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxRIGHT|wxLEFT, 5 );
 	
 	_panelTime = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	_panelTime->Enable( false );
 	
-	wxBoxSizer* bSizer4;
-	bSizer4 = new wxBoxSizer( wxHORIZONTAL );
+	wxBoxSizer* bSizer5;
+	bSizer5 = new wxBoxSizer( wxHORIZONTAL );
 	
-	_spinCtrlHours = new wxSpinCtrl( _panelTime, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 23, 0 );
-	bSizer4->Add( _spinCtrlHours, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	bSizer5->Add( 32, 0, 0, wxEXPAND, 5 );
 	
 	wxStaticText* staticTextHours;
-	staticTextHours = new wxStaticText( _panelTime, wxID_ANY, _("Hours"), wxDefaultPosition, wxDefaultSize, 0 );
+	staticTextHours = new wxStaticText( _panelTime, wxID_ANY, _("Hours :"), wxDefaultPosition, wxDefaultSize, 0 );
 	staticTextHours->Wrap( -1 );
-	bSizer4->Add( staticTextHours, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer5->Add( staticTextHours, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	_spinCtrlMinutes = new wxSpinCtrl( _panelTime, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 59, 30 );
-	bSizer4->Add( _spinCtrlMinutes, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	_spinCtrlHours = new wxSpinCtrl( _panelTime, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 23, 0 );
+	bSizer5->Add( _spinCtrlHours, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	wxStaticText* staticTextMinutes;
-	staticTextMinutes = new wxStaticText( _panelTime, wxID_ANY, _("Minutes"), wxDefaultPosition, wxDefaultSize, 0 );
+	staticTextMinutes = new wxStaticText( _panelTime, wxID_ANY, _("Minutes :"), wxDefaultPosition, wxDefaultSize, 0 );
 	staticTextMinutes->Wrap( -1 );
-	bSizer4->Add( staticTextMinutes, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer5->Add( staticTextMinutes, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	_panelTime->SetSizer( bSizer4 );
+	_spinCtrlMinutes = new wxSpinCtrl( _panelTime, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 59, 30 );
+	bSizer5->Add( _spinCtrlMinutes, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	_panelTime->SetSizer( bSizer5 );
 	_panelTime->Layout();
-	bSizer4->Fit( _panelTime );
-	bSizer3->Add( _panelTime, 0, wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer5->Fit( _panelTime );
+	bSizer4->Add( _panelTime, 0, wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
 	
-	bSizer1->Add( bSizer3, 0, wxEXPAND, 5 );
+	bSizer1->Add( bSizer4, 0, wxEXPAND, 5 );
 	
 	this->SetSizer( bSizer1 );
 	this->Layout();
