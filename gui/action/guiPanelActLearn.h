@@ -21,9 +21,9 @@
 #include <wx/spinctrl.h>
 #include <wx/checkbox.h>
 #include <wx/panel.h>
-#include <wx/textctrl.h>
-#include <wx/statline.h>
 #include <wx/button.h>
+#include <wx/textctrl.h>
+#include <wx/statbox.h>
 #include <wx/dialog.h>
 
 ///////////////////////////////////////////////////////////////////////////
@@ -56,24 +56,36 @@ class GuiPanelActLearn : public wxPanel
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-/// Class MyDialog1
+/// Class GuiDialogActLearn
 ///////////////////////////////////////////////////////////////////////////////
-class MyDialog1 : public wxDialog 
+class GuiDialogActLearn : public wxDialog 
 {
 	private:
 	
 	protected:
-		wxStaticText* m_staticText4;
-		wxTextCtrl* m_textCtrl1;
-		wxStaticLine* m_staticline1;
-		wxStaticLine* m_staticline2;
-		wxButton* m_button1;
-		wxButton* m_button2;
+		wxStaticText* _staticTextInfo;
+		wxStaticText* _staticTextPropose;
+		wxStaticText* _staticTextAnswer;
+		wxButton* _buttonTextPropose;
+		wxTextCtrl* _textCtrlAnswer;
+		wxChoice* _choiceKnowledge;
+		wxButton* _buttonDelete;
+		
+		wxButton* _buttonCancel;
+		wxButton* _buttonViewNext;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void OnTextAnswer( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnTextEnterAnswer( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnChoiceKnowledge( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnButtonClickDelete( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnButtonClickViewNext( wxCommandEvent& event ) { event.Skip(); }
+		
 	
 	public:
 		
-		MyDialog1( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
-		~MyDialog1();
+		GuiDialogActLearn( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Learn text"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP );
+		~GuiDialogActLearn();
 	
 };
 

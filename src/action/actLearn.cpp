@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.4
+//! \version 0.6
 //! \date 15.05.2013
 //!
 //! ********************************************************************
@@ -20,6 +20,27 @@
 
 //TEST
 #include <iostream>
+
+// *********************************************************************
+// Class DialogActLearn
+// *********************************************************************
+
+DialogActLearn::DialogActLearn(wxWindow* parent, wxString const& listName, unsigned int nbText)
+: GuiDialogActLearn(parent), _listName(listName)
+{
+	//La valeur minimums de _nbText est 1.
+	if(nbText == 0)
+		_nbText = 1;
+	else
+		_nbText = nbText;
+		
+	
+	_textCtrlAnswer->SetFocus();
+}
+
+DialogActLearn::~DialogActLearn()
+{
+}
 
 // *********************************************************************
 // Class PanelActLearn
@@ -128,13 +149,21 @@ ActLearn::~ActLearn()
 void ActLearn::Notify()
 {
 	execute();
-	std::cout << this << std::endl;
 	Start(_callTime*60*1000, true);
 }
 
 void ActLearn::execute()
 {
-	std::cout << "ActLearn::execute() " << _listName << std::endl;
+	//Pour ne pas lancer plusieurs dialogue en même temps.
+	static bool dlgShowModal = false;
+	
+	if(!dlgShowModal)
+	{
+		dlgShowModal = true;
+		DialogActLearn dlg(nullptr, _listName, _nbText);
+		dlg.ShowModal();
+		dlgShowModal = false;
+	}
 }
 
 wxPanel* ActLearn::getPanelPreferences(wxWindow* parent, wxButton* buttonOK)

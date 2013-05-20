@@ -95,9 +95,73 @@ GuiPanelActLearn::~GuiPanelActLearn()
 	
 }
 
-MyDialog1::MyDialog1( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
+GuiDialogActLearn::GuiDialogActLearn( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
 {
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	
+	wxBoxSizer* bSizer1;
+	bSizer1 = new wxBoxSizer( wxHORIZONTAL );
+	
+	wxBoxSizer* bSizer2;
+	bSizer2 = new wxBoxSizer( wxVERTICAL );
+	
+	_staticTextInfo = new wxStaticText( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
+	_staticTextInfo->Wrap( -1 );
+	bSizer2->Add( _staticTextInfo, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
+	
+	wxStaticBoxSizer* sbSizer1;
+	sbSizer1 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Text") ), wxHORIZONTAL );
+	
+	wxPanel* panelLg;
+	panelLg = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxBoxSizer* bSizer3;
+	bSizer3 = new wxBoxSizer( wxVERTICAL );
+	
+	
+	bSizer3->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	_staticTextPropose = new wxStaticText( panelLg, wxID_ANY, _("Englich :"), wxDefaultPosition, wxDefaultSize, 0 );
+	_staticTextPropose->Wrap( -1 );
+	bSizer3->Add( _staticTextPropose, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT|wxALL, 5 );
+	
+	
+	bSizer3->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	_staticTextAnswer = new wxStaticText( panelLg, wxID_ANY, _("French :"), wxDefaultPosition, wxDefaultSize, 0 );
+	_staticTextAnswer->Wrap( -1 );
+	bSizer3->Add( _staticTextAnswer, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT|wxALL, 5 );
+	
+	
+	bSizer3->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	panelLg->SetSizer( bSizer3 );
+	panelLg->Layout();
+	bSizer3->Fit( panelLg );
+	sbSizer1->Add( panelLg, 0, wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	wxBoxSizer* bSizer4;
+	bSizer4 = new wxBoxSizer( wxVERTICAL );
+	
+	
+	bSizer4->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	_buttonTextPropose = new wxButton( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT|wxBU_LEFT|wxNO_BORDER );
+	bSizer4->Add( _buttonTextPropose, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxEXPAND, 5 );
+	
+	
+	bSizer4->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	_textCtrlAnswer = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_LEFT|wxTE_PROCESS_ENTER );
+	bSizer4->Add( _textCtrlAnswer, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxEXPAND, 5 );
+	
+	
+	bSizer4->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	sbSizer1->Add( bSizer4, 1, wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
+	
+	bSizer2->Add( sbSizer1, 1, wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
+	
+	bSizer1->Add( bSizer2, 1, wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizer5;
 	bSizer5 = new wxBoxSizer( wxVERTICAL );
@@ -105,39 +169,59 @@ MyDialog1::MyDialog1( wxWindow* parent, wxWindowID id, const wxString& title, co
 	wxBoxSizer* bSizer6;
 	bSizer6 = new wxBoxSizer( wxHORIZONTAL );
 	
-	m_staticText4 = new wxStaticText( this, wxID_ANY, _("MyLabel"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText4->Wrap( -1 );
-	bSizer6->Add( m_staticText4, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	wxStaticText* staticTextKnowledge;
+	staticTextKnowledge = new wxStaticText( this, wxID_ANY, _("Knowledge :"), wxDefaultPosition, wxDefaultSize, 0 );
+	staticTextKnowledge->Wrap( -1 );
+	bSizer6->Add( staticTextKnowledge, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	m_textCtrl1 = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer6->Add( m_textCtrl1, 1, wxALL, 5 );
+	wxString _choiceKnowledgeChoices[] = { _("Unknown"), _("Little known"), _("Known"), _("Very known") };
+	int _choiceKnowledgeNChoices = sizeof( _choiceKnowledgeChoices ) / sizeof( wxString );
+	_choiceKnowledge = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, _choiceKnowledgeNChoices, _choiceKnowledgeChoices, 0 );
+	_choiceKnowledge->SetSelection( 0 );
+	bSizer6->Add( _choiceKnowledge, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	bSizer5->Add( bSizer6, 1, wxEXPAND, 5 );
+	bSizer5->Add( bSizer6, 0, wxEXPAND, 5 );
 	
-	m_staticline1 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
-	bSizer5->Add( m_staticline1, 0, wxEXPAND | wxALL, 5 );
+	_buttonDelete = new wxButton( this, wxID_DELETE, _("Delete of the list"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer5->Add( _buttonDelete, 0, wxALL|wxEXPAND, 5 );
 	
-	m_staticline2 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
-	bSizer5->Add( m_staticline2, 0, wxEXPAND | wxALL, 5 );
+	
+	bSizer5->Add( 0, 0, 1, wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizer7;
 	bSizer7 = new wxBoxSizer( wxHORIZONTAL );
 	
-	m_button1 = new wxButton( this, wxID_ANY, _("fermer"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer7->Add( m_button1, 0, wxALL, 5 );
+	_buttonCancel = new wxButton( this, wxID_CANCEL, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer7->Add( _buttonCancel, 1, wxALL|wxALIGN_BOTTOM, 5 );
 	
-	m_button2 = new wxButton( this, wxID_ANY, _("verifier"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer7->Add( m_button2, 0, wxALL, 5 );
+	_buttonViewNext = new wxButton( this, wxID_ANY, _("View"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer7->Add( _buttonViewNext, 1, wxALL|wxALIGN_BOTTOM, 5 );
 	
-	bSizer5->Add( bSizer7, 1, wxEXPAND, 5 );
+	bSizer5->Add( bSizer7, 0, wxEXPAND, 5 );
 	
-	this->SetSizer( bSizer5 );
+	bSizer1->Add( bSizer5, 1, wxEXPAND, 5 );
+	
+	this->SetSizer( bSizer1 );
 	this->Layout();
-	bSizer5->Fit( this );
+	bSizer1->Fit( this );
 	
 	this->Centre( wxBOTH );
+	
+	// Connect Events
+	_textCtrlAnswer->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( GuiDialogActLearn::OnTextAnswer ), NULL, this );
+	_textCtrlAnswer->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( GuiDialogActLearn::OnTextEnterAnswer ), NULL, this );
+	_choiceKnowledge->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( GuiDialogActLearn::OnChoiceKnowledge ), NULL, this );
+	_buttonDelete->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogActLearn::OnButtonClickDelete ), NULL, this );
+	_buttonViewNext->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogActLearn::OnButtonClickViewNext ), NULL, this );
 }
 
-MyDialog1::~MyDialog1()
+GuiDialogActLearn::~GuiDialogActLearn()
 {
+	// Disconnect Events
+	_textCtrlAnswer->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( GuiDialogActLearn::OnTextAnswer ), NULL, this );
+	_textCtrlAnswer->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( GuiDialogActLearn::OnTextEnterAnswer ), NULL, this );
+	_choiceKnowledge->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( GuiDialogActLearn::OnChoiceKnowledge ), NULL, this );
+	_buttonDelete->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogActLearn::OnButtonClickDelete ), NULL, this );
+	_buttonViewNext->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogActLearn::OnButtonClickViewNext ), NULL, this );
+	
 }
