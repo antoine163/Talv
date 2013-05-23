@@ -75,6 +75,7 @@ class GuiDialogActLearn : public wxDialog
 		wxButton* _buttonViewNext;
 		
 		// Virtual event handlers, overide them in your derived class
+		virtual void OnButtonClickPropose( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnTextAnswer( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnTextEnterAnswer( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnChoiceKnowledge( wxCommandEvent& event ) { event.Skip(); }

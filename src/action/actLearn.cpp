@@ -16,7 +16,9 @@
 #include "action/actLearn.hpp"
 #include "listManager.hpp"
 
-#include <wx/msgdlg.h>
+#include <wx/msgdlg.h> 
+#include <stdlib.h>
+#include <time.h>  
 
 //TEST
 #include <iostream>
@@ -34,12 +36,63 @@ DialogActLearn::DialogActLearn(wxWindow* parent, wxString const& listName, unsig
 	else
 		_nbText = nbText;
 		
+	_iNbText = 0;
+		
+	//On installe un texte dans le dialogue.
+	setupText();
 	
-	_textCtrlAnswer->SetFocus();
+	//Init pour le rendom
+	srand(time(NULL));
 }
 
 DialogActLearn::~DialogActLearn()
 {
+}
+
+void DialogActLearn::setupText()
+{
+	//Récupération de la liste.
+	List* list = ListManager::getInstance()->getValue(_listName);
+	
+	
+	//unsigned int nbKnowledge = rand()%list->getNumberKnowledge();
+	
+	std::cout << list->getNumberKnowledge() << std::endl;
+	std::cout << "KNOWLEDGE_UNKNOWN : " << list->getNumberTextByKnowledge(KNOWLEDGE_UNKNOWN) << std::endl;
+	std::cout << "KNOWLEDGE_LITTLE_KNOWN : " << list->getNumberTextByKnowledge(KNOWLEDGE_LITTLE_KNOWN) << std::endl;
+	std::cout << "KNOWLEDGE_KNOWN : " << list->getNumberTextByKnowledge(KNOWLEDGE_KNOWN) << std::endl;
+	std::cout << "KNOWLEDGE_VERY_KNOWN : " << list->getNumberTextByKnowledge(KNOWLEDGE_VERY_KNOWN) << std::endl;
+	
+	
+	
+	_textCtrlAnswer->SetFocus();
+
+	_iNbText++;
+}
+
+void DialogActLearn::OnButtonClickPropose(wxCommandEvent& event)
+{
+}
+
+void DialogActLearn::OnTextAnswer(wxCommandEvent& event)
+{
+}
+
+void DialogActLearn::OnTextEnterAnswer(wxCommandEvent& event)
+{
+}
+
+void DialogActLearn::OnChoiceKnowledge(wxCommandEvent& event)
+{
+}
+
+void DialogActLearn::OnButtonClickDelete(wxCommandEvent& event)
+{
+}
+
+void DialogActLearn::OnButtonClickViewNext(wxCommandEvent& event)
+{
+	Close();
 }
 
 // *********************************************************************

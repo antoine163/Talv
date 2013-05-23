@@ -103,7 +103,8 @@ class List
 		//Knowledge_e getKnowledge(wxString const& text);
 		//bool setKnowledge(wxString const& text, Knowledge_e knowledge);
 		
-		//int getNumberTextByKnowledge(Knowledge_e level);
+		unsigned int getNumberTextByKnowledge(Knowledge_e level);
+		unsigned int getNumberKnowledge();
 		
 		//! \brief Supprimer le fichier du système.
 		void removeFile();

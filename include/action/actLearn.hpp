@@ -38,12 +38,23 @@ class DialogActLearn : public GuiDialogActLearn
 		//! \brief Destructeur.
 		~DialogActLearn();
 		
+		void setupText();
+		
+		void OnButtonClickPropose(wxCommandEvent& event);
+		void OnTextAnswer(wxCommandEvent& event);
+		void OnTextEnterAnswer(wxCommandEvent& event);
+		void OnChoiceKnowledge(wxCommandEvent& event);
+		void OnButtonClickDelete(wxCommandEvent& event);
+		void OnButtonClickViewNext(wxCommandEvent& event);
+		
 	private:
 		//! \brief Nom de la liste de révision.
 		wxString _listName;
 		//! \brief Le nombre de texte a apprendre.
 		//! \note La valeur minimum est 1.
 		unsigned int _nbText;
+		
+		unsigned int _iNbText;
 };
 
 // *********************************************************************

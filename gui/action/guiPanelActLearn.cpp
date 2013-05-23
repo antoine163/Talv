@@ -120,14 +120,14 @@ GuiDialogActLearn::GuiDialogActLearn( wxWindow* parent, wxWindowID id, const wxS
 	
 	bSizer3->Add( 0, 0, 1, wxEXPAND, 5 );
 	
-	_staticTextPropose = new wxStaticText( panelLg, wxID_ANY, _("Englich :"), wxDefaultPosition, wxDefaultSize, 0 );
+	_staticTextPropose = new wxStaticText( panelLg, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	_staticTextPropose->Wrap( -1 );
 	bSizer3->Add( _staticTextPropose, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT|wxALL, 5 );
 	
 	
 	bSizer3->Add( 0, 0, 1, wxEXPAND, 5 );
 	
-	_staticTextAnswer = new wxStaticText( panelLg, wxID_ANY, _("French :"), wxDefaultPosition, wxDefaultSize, 0 );
+	_staticTextAnswer = new wxStaticText( panelLg, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	_staticTextAnswer->Wrap( -1 );
 	bSizer3->Add( _staticTextAnswer, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT|wxALL, 5 );
 	
@@ -208,6 +208,7 @@ GuiDialogActLearn::GuiDialogActLearn( wxWindow* parent, wxWindowID id, const wxS
 	this->Centre( wxBOTH );
 	
 	// Connect Events
+	_buttonTextPropose->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogActLearn::OnButtonClickPropose ), NULL, this );
 	_textCtrlAnswer->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( GuiDialogActLearn::OnTextAnswer ), NULL, this );
 	_textCtrlAnswer->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( GuiDialogActLearn::OnTextEnterAnswer ), NULL, this );
 	_choiceKnowledge->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( GuiDialogActLearn::OnChoiceKnowledge ), NULL, this );
@@ -218,6 +219,7 @@ GuiDialogActLearn::GuiDialogActLearn( wxWindow* parent, wxWindowID id, const wxS
 GuiDialogActLearn::~GuiDialogActLearn()
 {
 	// Disconnect Events
+	_buttonTextPropose->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogActLearn::OnButtonClickPropose ), NULL, this );
 	_textCtrlAnswer->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( GuiDialogActLearn::OnTextAnswer ), NULL, this );
 	_textCtrlAnswer->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( GuiDialogActLearn::OnTextEnterAnswer ), NULL, this );
 	_choiceKnowledge->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( GuiDialogActLearn::OnChoiceKnowledge ), NULL, this );

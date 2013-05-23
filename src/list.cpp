@@ -199,6 +199,40 @@ int List::save(	wxString text,
 	return 1;
 }
 
+unsigned int List::getNumberTextByKnowledge(Knowledge_e level)
+{
+	//Le fichier existe ?
+	if(wxFileExists(_fileName.GetFullPath()))
+	{	
+		//On ouvre le fichier. Se qui aura pour effet d'analyser si il y a besoin.
+		if(!openFile())
+			return 0;
+		//Fermeture du fichier
+		closeFile();
+	}
+	
+	//Si le niveau de connaissance existe on retourne le nombre ...
+	if(_knowledges.count(level) > 0)
+		return _knowledges[level];
+	
+	return 0;
+}
+
+unsigned int List::getNumberKnowledge()
+{
+	//Le fichier existe ?
+	if(wxFileExists(_fileName.GetFullPath()))
+	{	
+		//On ouvre le fichier. Se qui aura pour effet d'analyser si il y a besoin.
+		if(!openFile())
+			return 0;
+		//Fermeture du fichier
+		closeFile();
+	}
+	
+	return _knowledges.size();
+}
+
 void List::removeFile()
 {
 	//Récupération du non du fichier.
@@ -318,11 +352,16 @@ void List::parseKnowledge()
 	//Lire tout le fichier ligne par ligne.
 	_file.GetFirstLine();
 	long nb;
+	wxString level;
 	for(wxString line = _file.GetNextLine(); !_file.Eof(); line = _file.GetNextLine())
 	{
 		//Extraction de la connaissance.
-		line.BeforeFirst(',').ToLong(&nb);
-		_knowledges[(Knowledge_e)nb]++;
+		level = line.BeforeFirst(',');
+		if(!level.IsEmpty())
+		{
+			level.ToLong(&nb);
+			_knowledges[(Knowledge_e)nb]++;
+		}
 	}
 }
 
