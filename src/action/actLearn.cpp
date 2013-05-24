@@ -49,7 +49,7 @@ DialogActLearn::DialogActLearn(wxWindow* parent, wxString const& listName, unsig
 	_guilgto = Resource::getInstance()->abbreviationToLanguage(_lgto);
 		
 	//On installe un texte dans le dialogue.
-	setupText();
+	nextText();
 	
 	//Init pour le rendom
 	srand(time(NULL));
@@ -59,8 +59,19 @@ DialogActLearn::~DialogActLearn()
 {
 }
 
-void DialogActLearn::setupText()
+void DialogActLearn::nextText()
 {
+	//On quitte si il on ne doit plus installe de nouveau texte.
+	_iNbText++;
+	if(_iNbText > _nbText)
+	{
+		Close();
+		return;
+	}
+	
+	//Quelle que information a afficher.
+	_staticTextInfo->SetLabel(wxString::Format(_("Learn the list : %s\nText %d sur %d"), _listName, _iNbText, _nbText));
+	
 	//Récupération de la liste.
 	List* list = ListManager::getInstance()->getValue(_listName);
 	
@@ -95,7 +106,7 @@ void DialogActLearn::setupText()
 		//Affiche du texte proposer.
 		_buttonTextPropose->SetLabel(_text);
 		
-		//La raiponce
+		//La raiponce.
 		textAnswer = _mainTranslate;
 	}
 	else//On propose avec la lange de traduction de la liste.
@@ -109,19 +120,20 @@ void DialogActLearn::setupText()
 		//Affiche du texte proposer.
 		_buttonTextPropose->SetLabel(_mainTranslate);
 		
-		//La raiponce
+		//La raiponce.
 		textAnswer = _text;
 	}
 	
-	//Sélection de la connaissance
+	//Sélection de la connaissance.
 	wxString sknowledge = List::knowledgeToString(_knowledge);
 	int n = _choiceKnowledge->FindString(sknowledge);
 	_choiceKnowledge->SetSelection(n);
 	
-	
+	//Focus sur le textCtrl de la repose.
 	_textCtrlAnswer->SetFocus();
-
-	_iNbText++;
+	
+	//Mise a jour du dialogue.
+	GetSizer()->Fit(this);
 }
 
 void DialogActLearn::OnButtonClickPropose(wxCommandEvent& event)
@@ -143,6 +155,7 @@ void DialogActLearn::OnTextAnswer(wxCommandEvent& event)
 
 void DialogActLearn::OnTextEnterAnswer(wxCommandEvent& event)
 {
+	std::cout << "OnTextEnterAnswer" << std::endl;
 }
 
 void DialogActLearn::OnChoiceKnowledge(wxCommandEvent& event)
@@ -155,7 +168,7 @@ void DialogActLearn::OnButtonClickDelete(wxCommandEvent& event)
 
 void DialogActLearn::OnButtonClickViewNext(wxCommandEvent& event)
 {
-	Close();
+	nextText();
 }
 
 // *********************************************************************

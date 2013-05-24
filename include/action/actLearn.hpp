@@ -39,7 +39,7 @@ class DialogActLearn : public GuiDialogActLearn
 		//! \brief Destructeur.
 		~DialogActLearn();
 		
-		void setupText();
+		void nextText();
 		
 		void OnButtonClickPropose(wxCommandEvent& event);
 		void OnTextAnswer(wxCommandEvent& event);

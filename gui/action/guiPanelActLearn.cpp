@@ -161,7 +161,7 @@ GuiDialogActLearn::GuiDialogActLearn( wxWindow* parent, wxWindowID id, const wxS
 	
 	bSizer2->Add( sbSizer1, 1, wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
-	bSizer1->Add( bSizer2, 1, wxEXPAND, 5 );
+	bSizer1->Add( bSizer2, 1, wxEXPAND|wxTOP, 5 );
 	
 	wxBoxSizer* bSizer5;
 	bSizer5 = new wxBoxSizer( wxVERTICAL );
