@@ -96,10 +96,7 @@ void DialogActLearn::setupText()
 		_buttonTextPropose->SetLabel(_text);
 		
 		//La raiponce
-		textAnswer =  _mainTranslate;
-		
-		//La connaissance
-		
+		textAnswer = _mainTranslate;
 	}
 	else//On propose avec la lange de traduction de la liste.
 	{
@@ -113,8 +110,13 @@ void DialogActLearn::setupText()
 		_buttonTextPropose->SetLabel(_mainTranslate);
 		
 		//La raiponce
-		textAnswer =  _text;
+		textAnswer = _text;
 	}
+	
+	//Sélection de la connaissance
+	wxString sknowledge = List::knowledgeToString(_knowledge);
+	int n = _choiceKnowledge->FindString(sknowledge);
+	_choiceKnowledge->SetSelection(n);
 	
 	
 	_textCtrlAnswer->SetFocus();

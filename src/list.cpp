@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.12
+//! \version 0.13
 //! \date 02.05.2013
 //!
 //! ********************************************************************
@@ -365,7 +365,7 @@ Knowledge_e List::stringToKnowledge(wxString const& knowledge)
 	return KNOWLEDGE_ALL;
 }
 
-wxString List::stringToKnowledge(Knowledge_e knowledge)
+wxString List::knowledgeToString(Knowledge_e knowledge)
 {
 	if(knowledge == KNOWLEDGE_UNKNOWN)
 		return "unknown";
