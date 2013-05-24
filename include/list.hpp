@@ -139,7 +139,7 @@ class List
 		
 		//! \brief Obtenir la version string d'un \ref Knowledge_e.
 		//! \return wxEmptyString si la conversion na pas pu se faire.
-		static wxString stringToKnowledge(Knowledge_e knowledge);
+		static wxString knowledgeToString(Knowledge_e knowledge);
 		
 	private:
 		//! \brief Ouverture le fichier.
