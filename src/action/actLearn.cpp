@@ -16,6 +16,7 @@
 #include "action/actLearn.hpp"
 #include "listManager.hpp"
 
+#include <vector>
 #include <wx/msgdlg.h> 
 #include <stdlib.h>
 #include <time.h>  
@@ -37,6 +38,12 @@ DialogActLearn::DialogActLearn(wxWindow* parent, wxString const& listName, unsig
 		_nbText = nbText;
 		
 	_iNbText = 0;
+	
+	//Récupération de la liste.
+	List* list = ListManager::getInstance()->getValue(_listName);
+	
+	//Récupération des langes de la liste.
+	list->getlanguages(&_lgsrc, &_lgto);
 		
 	//On installe un texte dans le dialogue.
 	setupText();
@@ -55,13 +62,35 @@ void DialogActLearn::setupText()
 	List* list = ListManager::getInstance()->getValue(_listName);
 	
 	
+	////Choisir aléatoirement la coprésence
+	//unsigned int nbKnowledge = list->getNumberKnowledge();
+	//unsigned int nb = nbKnowledge;
+	//std::vector<unsigned int> variationRange;
+	
+	//for(unsigned int i = 1; i < nbKnowledge+1; i++)
+	//{
+		//for(unsigned int y = 0; y < nb; y++)
+			//variationRange.push_back(i);
+			
+		//nb--;
+	//}
+	
+	//Knowledge_e choiceKnowledge = (Knowledge_e)(rand()%variationRange.size());
+	
+	
+	std::cout << list->getNumberText() << std::endl;
+	
+	
 	//unsigned int nbKnowledge = rand()%list->getNumberKnowledge();
 	
-	std::cout << list->getNumberKnowledge() << std::endl;
-	std::cout << "KNOWLEDGE_UNKNOWN : " << list->getNumberTextByKnowledge(KNOWLEDGE_UNKNOWN) << std::endl;
-	std::cout << "KNOWLEDGE_LITTLE_KNOWN : " << list->getNumberTextByKnowledge(KNOWLEDGE_LITTLE_KNOWN) << std::endl;
-	std::cout << "KNOWLEDGE_KNOWN : " << list->getNumberTextByKnowledge(KNOWLEDGE_KNOWN) << std::endl;
-	std::cout << "KNOWLEDGE_VERY_KNOWN : " << list->getNumberTextByKnowledge(KNOWLEDGE_VERY_KNOWN) << std::endl;
+	//std::cout << list->getNumberKnowledge() << std::endl;
+	
+	
+	//std::cout << list->getNumberKnowledge() << std::endl;
+	//std::cout << "KNOWLEDGE_UNKNOWN : " << list->getNumberTextByKnowledge(KNOWLEDGE_UNKNOWN) << std::endl;
+	//std::cout << "KNOWLEDGE_LITTLE_KNOWN : " << list->getNumberTextByKnowledge(KNOWLEDGE_LITTLE_KNOWN) << std::endl;
+	//std::cout << "KNOWLEDGE_KNOWN : " << list->getNumberTextByKnowledge(KNOWLEDGE_KNOWN) << std::endl;
+	//std::cout << "KNOWLEDGE_VERY_KNOWN : " << list->getNumberTextByKnowledge(KNOWLEDGE_VERY_KNOWN) << std::endl;
 	
 	
 	

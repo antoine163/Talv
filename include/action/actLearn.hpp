@@ -55,6 +55,9 @@ class DialogActLearn : public GuiDialogActLearn
 		unsigned int _nbText;
 		
 		unsigned int _iNbText;
+		
+		wxString _lgsrc;
+		wxString _lgto;
 };
 
 // *********************************************************************

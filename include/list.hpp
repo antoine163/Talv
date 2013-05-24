@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.8
+//! \version 0.9
 //! \date 02.05.2013
 //!
 //! ********************************************************************
@@ -86,24 +86,25 @@ class List
 					wxString mainTranslate,
 					std::map<wxString, wxArrayString> const& translations);
 					
-		//bool getTranslates(	wxString const& text,
-							//wxString* mainTranslate);
 					
 		//bool getTranslates(	wxString const& text,
 							//wxString* mainTranslate,
 							//std::map<wxString, wxArrayString>* translations);
-					
-		//bool getTranslates(	int index,
-							//wxString* mainTranslate);
-					
-		//bool getTranslates(	int index,
-							//wxString* mainTranslate,
-							//std::map<wxString, wxArrayString>* translations);
+
+		bool getText(	int index,
+						wxString* mainTranslate,
+						std::map<wxString, wxArrayString>* translations);
 							
 		//Knowledge_e getKnowledge(wxString const& text);
 		//bool setKnowledge(wxString const& text, Knowledge_e knowledge);
 		
+		//! \brief Pour connaître le nombre de texte par connaissance.
 		unsigned int getNumberTextByKnowledge(Knowledge_e level);
+		
+		//! \brief Obtenir le nombre de text.
+		unsigned int getNumberText();
+		
+		//! \brief Pour connaître le nombre de connaissance se trouvent dans la liste.
 		unsigned int getNumberKnowledge();
 		
 		//! \brief Supprimer le fichier du système.

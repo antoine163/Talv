@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.8
+//! \version 0.9
 //! \date 02.05.2013
 //!
 //! ********************************************************************
@@ -195,21 +195,20 @@ int List::save(	wxString text,
 	
 	//Fermeture du fichier
 	closeFile();
+	
+	//On actualise les connaissance.
+	_knowledges[KNOWLEDGE_UNKNOWN]++;
 		
 	return 1;
 }
 
 unsigned int List::getNumberTextByKnowledge(Knowledge_e level)
 {
-	//Le fichier existe ?
-	if(wxFileExists(_fileName.GetFullPath()))
-	{	
-		//On ouvre le fichier. Se qui aura pour effet d'analyser si il y a besoin.
-		if(!openFile())
-			return 0;
-		//Fermeture du fichier
-		closeFile();
-	}
+	//On ouvre le fichier. Se qui aura pour effet d'analyser si il y a besoin.
+	if(!openFile())
+		return 0;
+	//Fermeture du fichier
+	closeFile();
 	
 	//Si le niveau de connaissance existe on retourne le nombre ...
 	if(_knowledges.count(level) > 0)
@@ -218,17 +217,30 @@ unsigned int List::getNumberTextByKnowledge(Knowledge_e level)
 	return 0;
 }
 
+unsigned int List::getNumberText()
+{
+	unsigned int nb = 0;
+	
+	//On ouvre le fichier. Se qui aura pour effet d'analyser si il y a besoin.
+	if(!openFile())
+		return 0;
+	//Fermeture du fichier
+	closeFile();
+	
+	//Additionne le nombre de texte par connaissance.
+	for(auto it: _knowledges)
+		nb += it.second;
+		
+	return nb;
+}
+
 unsigned int List::getNumberKnowledge()
 {
-	//Le fichier existe ?
-	if(wxFileExists(_fileName.GetFullPath()))
-	{	
-		//On ouvre le fichier. Se qui aura pour effet d'analyser si il y a besoin.
-		if(!openFile())
-			return 0;
-		//Fermeture du fichier
-		closeFile();
-	}
+	//On ouvre le fichier. Se qui aura pour effet d'analyser si il y a besoin.
+	if(!openFile())
+		return 0;
+	//Fermeture du fichier
+	closeFile();
 	
 	return _knowledges.size();
 }
