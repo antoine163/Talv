@@ -50,10 +50,12 @@ class DialogActLearn : public GuiDialogActLearn
 	private:
 		//! \brief Nom de la liste de révision.
 		wxString _listName;
-		//! \brief Le nombre de texte a apprendre.
+		
+		//! \brief Le nombre de texte à apprendre.
 		//! \note La valeur minimum est 1.
 		unsigned int _nbText;
 		
+		//! \brief Le numéro du texte actuellement afficher.
 		unsigned int _iNbText;
 		
 		wxString _lgsrc;

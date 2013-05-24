@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.9
+//! \version 0.11
 //! \date 02.05.2013
 //!
 //! ********************************************************************
@@ -200,6 +200,102 @@ int List::save(	wxString text,
 	_knowledges[KNOWLEDGE_UNKNOWN]++;
 		
 	return 1;
+}
+
+bool List::getText(	size_t index,
+					Knowledge_e* knowledge,
+					wxString* text,
+					wxString* mainTranslate,
+					std::map<wxString, wxArrayString>* translations)
+{
+	//On ouvre le fichier.
+	if(!openFile())
+		return false;
+		
+	long nb = -1;
+	unsigned int i = 0;
+	bool find = false;
+	bool firstLineText = true;
+	wxString level;
+	
+	//Lire tout le fichier ligne par ligne.
+	_file.GetFirstLine();
+	for(wxString line = _file.GetNextLine(); !_file.Eof(); line = _file.GetNextLine())
+	{
+		//Extraction de la connaissance.
+		level = line.BeforeFirst(',');
+		//Si il y à une connaissance.
+		if(!level.IsEmpty())
+		{
+			//Si l'index a été trouvée précédemment.
+			//Ceci veut dire que l'on a terminée.
+			if(find)
+				break;
+			
+			level.ToLong(&nb);
+			
+			if(knowledge == nullptr)
+				i++;
+			else if(*knowledge == KNOWLEDGE_ALL || (Knowledge_e)nb == *knowledge)
+				i++;
+			
+			//Si on à trouver l'index.
+			if(i == index)
+			{
+				if(knowledge != nullptr)
+					*knowledge = (Knowledge_e)nb;
+					
+				find = true;
+			}
+		}
+		
+		//Si l'index a été trouvée précédemment.
+		if(find)
+		{
+			size_t iColumn = 0;
+			wxString afterFirstComma = line.AfterFirst(',');
+			
+
+			//On boucle tend que l'on a par parcourue tout les colonne de la ligne.
+			while(!afterFirstComma.IsEmpty())
+			{				
+				iColumn++;
+				
+				switch(iColumn)
+				{
+					//Colonne texte
+					case 1:					
+						if(text != nullptr && firstLineText)
+							*text = afterFirstComma.BeforeFirst(',');
+					break;
+					
+					//Colonne traduction principale
+					case 2:
+						if(mainTranslate != nullptr && firstLineText)
+							*mainTranslate = afterFirstComma.BeforeFirst(',');
+					break;
+					
+					//Les autres traductions
+					default:
+						wxString beforeComma = afterFirstComma.BeforeFirst(',');
+						
+						if(translations != nullptr && !beforeComma.IsEmpty())
+							(*translations)[_firstLine[iColumn]].Add(beforeComma);
+					break;
+				}
+				
+				//Suppression d'une colonne.
+				afterFirstComma = afterFirstComma.AfterFirst(',');
+			}
+			
+			firstLineText = false;
+		}
+	}
+		
+	//Fermeture du fichier
+	closeFile();
+	
+	return find;
 }
 
 unsigned int List::getNumberTextByKnowledge(Knowledge_e level)

@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.9
+//! \version 0.11
 //! \date 02.05.2013
 //!
 //! ********************************************************************
@@ -26,6 +26,7 @@
 // *********************************************************************
 enum Knowledge_e
 {
+	KNOWLEDGE_ALL			= 0,
 	KNOWLEDGE_UNKNOWN		= 1,
 	KNOWLEDGE_LITTLE_KNOWN	= 2,
 	KNOWLEDGE_KNOWN			= 3,
@@ -90,8 +91,10 @@ class List
 		//bool getTranslates(	wxString const& text,
 							//wxString* mainTranslate,
 							//std::map<wxString, wxArrayString>* translations);
-
-		bool getText(	int index,
+		//Index commence à 1
+		bool getText(	size_t index,
+						Knowledge_e* knowledge,
+						wxString* text,
 						wxString* mainTranslate,
 						std::map<wxString, wxArrayString>* translations);
 							
@@ -101,7 +104,7 @@ class List
 		//! \brief Pour connaître le nombre de texte par connaissance.
 		unsigned int getNumberTextByKnowledge(Knowledge_e level);
 		
-		//! \brief Obtenir le nombre de text.
+		//! \brief Obtenir le nombre de texte.
 		unsigned int getNumberText();
 		
 		//! \brief Pour connaître le nombre de connaissance se trouvent dans la liste.

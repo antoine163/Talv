@@ -78,7 +78,36 @@ void DialogActLearn::setupText()
 	//Knowledge_e choiceKnowledge = (Knowledge_e)(rand()%variationRange.size());
 	
 	
-	std::cout << list->getNumberText() << std::endl;
+	//std::cout << list->getNumberText() << std::endl;
+	
+	
+	
+	
+	
+	
+	Knowledge_e knowledge = KNOWLEDGE_ALL;
+	wxString text;
+	wxString mainTranslate;
+	std::map<wxString, wxArrayString> translations;
+	
+	list->getText(1, &knowledge, &text, &mainTranslate, &translations);
+	
+	std::cout << "knowledge : " << (int)knowledge << std::endl;
+	std::cout << "text : " << text << std::endl;
+	std::cout << "mainTranslate : " << mainTranslate << std::endl;
+	std::cout << "translations : " << std::endl;
+	
+	for(auto it: translations)
+	{
+		std::cout << it.first << " : " << std::endl;
+		
+		for(auto it2: it.second)
+		{
+			std::cout << it2 << std::endl;
+		}
+	}
+	
+	
 	
 	
 	//unsigned int nbKnowledge = rand()%list->getNumberKnowledge();
