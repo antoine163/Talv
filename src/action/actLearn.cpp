@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.6
+//! \version 0.7
 //! \date 15.05.2013
 //!
 //! ********************************************************************
@@ -15,6 +15,7 @@
 
 #include "action/actLearn.hpp"
 #include "listManager.hpp"
+#include "resource.hpp"
 
 #include <vector>
 #include <wx/msgdlg.h> 
@@ -44,6 +45,8 @@ DialogActLearn::DialogActLearn(wxWindow* parent, wxString const& listName, unsig
 	
 	//Récupération des langes de la liste.
 	list->getlanguages(&_lgsrc, &_lgto);
+	_guilgsrc = Resource::getInstance()->abbreviationToLanguage(_lgsrc);
+	_guilgto = Resource::getInstance()->abbreviationToLanguage(_lgto);
 		
 	//On installe un texte dans le dialogue.
 	setupText();
@@ -61,66 +64,57 @@ void DialogActLearn::setupText()
 	//Récupération de la liste.
 	List* list = ListManager::getInstance()->getValue(_listName);
 	
+	//Chois de l'index parmi tout les textes.
+	int indexText = (rand()%list->getNumberText())+1;
 	
-	////Choisir aléatoirement la coprésence
-	//unsigned int nbKnowledge = list->getNumberKnowledge();
-	//unsigned int nb = nbKnowledge;
-	//std::vector<unsigned int> variationRange;
-	
-	//for(unsigned int i = 1; i < nbKnowledge+1; i++)
-	//{
-		//for(unsigned int y = 0; y < nb; y++)
-			//variationRange.push_back(i);
-			
-		//nb--;
-	//}
-	
-	//Knowledge_e choiceKnowledge = (Knowledge_e)(rand()%variationRange.size());
-	
-	
-	//std::cout << list->getNumberText() << std::endl;
-	
-	
-	
-	
-	
-	
-	Knowledge_e knowledge = KNOWLEDGE_ALL;
-	wxString text;
-	wxString mainTranslate;
-	std::map<wxString, wxArrayString> translations;
-	
-	list->getText(1, &knowledge, &text, &mainTranslate, &translations);
-	
-	std::cout << "knowledge : " << (int)knowledge << std::endl;
-	std::cout << "text : " << text << std::endl;
-	std::cout << "mainTranslate : " << mainTranslate << std::endl;
-	std::cout << "translations : " << std::endl;
-	
-	for(auto it: translations)
+	//Détermine de l'index et de la connaissance choisis.
+	_indexTextKnowledge = indexText;
+	for(size_t i = 1; i<KNOWLEDGE_NB; i++)
 	{
-		std::cout << it.first << " : " << std::endl;
+		_knowledge = (Knowledge_e)i;
+		size_t nbText = list->getNumberTextByKnowledge(_knowledge);
 		
-		for(auto it2: it.second)
-		{
-			std::cout << it2 << std::endl;
-		}
+		if(_indexTextKnowledge > nbText)
+			_indexTextKnowledge -= nbText;
+		else
+			break;
 	}
 	
+	//Récupération du texte
+	list->getText(_indexTextKnowledge, &_knowledge, &_text, &_mainTranslate, nullptr);
 	
-	
-	
-	//unsigned int nbKnowledge = rand()%list->getNumberKnowledge();
-	
-	//std::cout << list->getNumberKnowledge() << std::endl;
-	
-	
-	//std::cout << list->getNumberKnowledge() << std::endl;
-	//std::cout << "KNOWLEDGE_UNKNOWN : " << list->getNumberTextByKnowledge(KNOWLEDGE_UNKNOWN) << std::endl;
-	//std::cout << "KNOWLEDGE_LITTLE_KNOWN : " << list->getNumberTextByKnowledge(KNOWLEDGE_LITTLE_KNOWN) << std::endl;
-	//std::cout << "KNOWLEDGE_KNOWN : " << list->getNumberTextByKnowledge(KNOWLEDGE_KNOWN) << std::endl;
-	//std::cout << "KNOWLEDGE_VERY_KNOWN : " << list->getNumberTextByKnowledge(KNOWLEDGE_VERY_KNOWN) << std::endl;
-	
+	//choix de la lange de proposition.
+	if(rand()%2 == 1)//On propose avec la lange source de la liste.
+	{
+		choiceSrc = true;
+		
+		//Affiche des langes
+		_staticTextPropose->SetLabel(_guilgsrc + " :"); 
+		_staticTextAnswer->SetLabel(_guilgto + " :");
+		
+		//Affiche du texte proposer.
+		_buttonTextPropose->SetLabel(_text);
+		
+		//La raiponce
+		textAnswer =  _mainTranslate;
+		
+		//La connaissance
+		
+	}
+	else//On propose avec la lange de traduction de la liste.
+	{
+		choiceSrc = false;
+		
+		//Affiche des langes
+		_staticTextPropose->SetLabel(_guilgto + " :");
+		_staticTextAnswer->SetLabel(_guilgsrc + " :");
+		
+		//Affiche du texte proposer.
+		_buttonTextPropose->SetLabel(_mainTranslate);
+		
+		//La raiponce
+		textAnswer =  _text;
+	}
 	
 	
 	_textCtrlAnswer->SetFocus();
@@ -130,10 +124,19 @@ void DialogActLearn::setupText()
 
 void DialogActLearn::OnButtonClickPropose(wxCommandEvent& event)
 {
+	//On dit le texte proposer
+	if(choiceSrc)
+		Resource::getInstance()->Tts(_text, _lgsrc);
+	else
+		Resource::getInstance()->Tts(_mainTranslate, _lgto);
 }
 
 void DialogActLearn::OnTextAnswer(wxCommandEvent& event)
 {
+	if(textAnswer.StartsWith(_textCtrlAnswer->GetLineText(0)))
+		_textCtrlAnswer->SetForegroundColour(wxNullColour);
+	else
+		_textCtrlAnswer->SetForegroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_GRAYTEXT));
 }
 
 void DialogActLearn::OnTextEnterAnswer(wxCommandEvent& event)

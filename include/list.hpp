@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.11
+//! \version 0.12
 //! \date 02.05.2013
 //!
 //! ********************************************************************
@@ -24,6 +24,7 @@
 // *********************************************************************
 // Lnum ListKnowledge_e
 // *********************************************************************
+//! \brief Les différentes connaissances.
 enum Knowledge_e
 {
 	KNOWLEDGE_ALL			= 0,
@@ -32,6 +33,9 @@ enum Knowledge_e
 	KNOWLEDGE_KNOWN			= 3,
 	KNOWLEDGE_VERY_KNOWN	= 4
 };
+
+//! \brief Nombre de connaissance différente.
+#define KNOWLEDGE_NB 4
 
 // *********************************************************************
 // Class List
@@ -102,13 +106,13 @@ class List
 		//bool setKnowledge(wxString const& text, Knowledge_e knowledge);
 		
 		//! \brief Pour connaître le nombre de texte par connaissance.
-		unsigned int getNumberTextByKnowledge(Knowledge_e level);
+		size_t getNumberTextByKnowledge(Knowledge_e level);
 		
 		//! \brief Obtenir le nombre de texte.
-		unsigned int getNumberText();
+		size_t getNumberText();
 		
 		//! \brief Pour connaître le nombre de connaissance se trouvent dans la liste.
-		unsigned int getNumberKnowledge();
+		size_t getNumberKnowledge();
 		
 		//! \brief Supprimer le fichier du système.
 		void removeFile();

@@ -208,7 +208,7 @@ void DialogActionPreferences::updateTextCtrlChortcut(wxChar key)
 void DialogActionPreferences::OnLeftDown(wxMouseEvent&)
 {
 	_shortKeyIsValide = false;
-	_textCtrlChortcut->SetForegroundColour( wxSystemSettings::GetColour(wxSYS_COLOUR_GRAYTEXT));
+	_textCtrlChortcut->SetForegroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_GRAYTEXT));
 	_textCtrlChortcut->SetValue(_("Press your shortcut."));
 	_textCtrlChortcut->SetFocus();
 }

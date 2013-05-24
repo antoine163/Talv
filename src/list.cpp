@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.11
+//! \version 0.12
 //! \date 02.05.2013
 //!
 //! ********************************************************************
@@ -298,7 +298,7 @@ bool List::getText(	size_t index,
 	return find;
 }
 
-unsigned int List::getNumberTextByKnowledge(Knowledge_e level)
+size_t List::getNumberTextByKnowledge(Knowledge_e level)
 {
 	//On ouvre le fichier. Se qui aura pour effet d'analyser si il y a besoin.
 	if(!openFile())
@@ -313,9 +313,9 @@ unsigned int List::getNumberTextByKnowledge(Knowledge_e level)
 	return 0;
 }
 
-unsigned int List::getNumberText()
+size_t List::getNumberText()
 {
-	unsigned int nb = 0;
+	size_t nb = 0;
 	
 	//On ouvre le fichier. Se qui aura pour effet d'analyser si il y a besoin.
 	if(!openFile())
@@ -330,7 +330,7 @@ unsigned int List::getNumberText()
 	return nb;
 }
 
-unsigned int List::getNumberKnowledge()
+size_t List::getNumberKnowledge()
 {
 	//On ouvre le fichier. Se qui aura pour effet d'analyser si il y a besoin.
 	if(!openFile())

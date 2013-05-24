@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.6
+//! \version 0.7
 //! \date 15.05.2013
 //!
 //! ********************************************************************
@@ -18,6 +18,7 @@
 
 #include "action.hpp"
 #include "action/guiPanelActLearn.h"
+#include "list.hpp"
 
 #include <wx/event.h>
 #include <wx/timer.h>
@@ -60,6 +61,17 @@ class DialogActLearn : public GuiDialogActLearn
 		
 		wxString _lgsrc;
 		wxString _lgto;
+		wxString _guilgsrc;
+		wxString _guilgto;
+		
+		wxString textAnswer;
+		
+		bool choiceSrc;
+		
+		wxString _text;
+		wxString _mainTranslate;
+		int _indexTextKnowledge;
+		Knowledge_e _knowledge;
 };
 
 // *********************************************************************
