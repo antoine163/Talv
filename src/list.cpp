@@ -351,6 +351,34 @@ void List::removeFile()
 		wxRemoveFile(fileName);
 }
 
+Knowledge_e List::stringToKnowledge(wxString const& knowledge)
+{
+	if(knowledge == "unknown")
+		return KNOWLEDGE_UNKNOWN;
+	if(knowledge == "little known")
+		return KNOWLEDGE_LITTLE_KNOWN;
+	if(knowledge == "known")
+		return KNOWLEDGE_KNOWN;
+	if(knowledge == "very known")
+		return KNOWLEDGE_VERY_KNOWN;
+		
+	return KNOWLEDGE_ALL;
+}
+
+wxString List::stringToKnowledge(Knowledge_e knowledge)
+{
+	if(knowledge == KNOWLEDGE_UNKNOWN)
+		return "unknown";
+	if(knowledge == KNOWLEDGE_LITTLE_KNOWN)
+		return "little known";
+	if(knowledge == KNOWLEDGE_KNOWN)
+		return "known";
+	if(knowledge == KNOWLEDGE_VERY_KNOWN)
+		return "very known";
+		
+	return wxEmptyString;
+}
+
 bool List::openFile()
 {
 	//le non de fichier est valide ?

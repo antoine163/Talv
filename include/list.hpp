@@ -95,7 +95,23 @@ class List
 		//bool getTranslates(	wxString const& text,
 							//wxString* mainTranslate,
 							//std::map<wxString, wxArrayString>* translations);
+							
 		//Index commence à 1
+		//! \brief Obtenir le texte et tout ces informations associer.
+		//! \param index ces l'index du texte. Le premier index est 1.
+		//! \param knowledge recherche de l'index parmi le niveau de connaissance.
+		//! Passée \b nullptr ou un pointeur ayant comme valeur \ref KNOWLEDGE_ALL,
+		//! à le même comportement au niveau de la recherche de l'index.
+		//! Si un pointeur ayant comme valeur \ref KNOWLEDGE_ALL est passée
+		//! comme paramètre alors la valeur du pointeur sera remplacer par le
+		//! niveau de connaissance du texte recherchée.
+		//! \param text le texte trouvé.
+		//! \param mainTranslate la traduction principale du texte trouvé.
+		//! \param translations les traduction du texte trouvé.
+		//! \return true si l'index a été trouver, sinon false.
+		//!
+		//! Pour les paramètres demandant un pointeur, il est possible de
+		//! passer \b nullptre si l'information ne vous intéresse pas.
 		bool getText(	size_t index,
 						Knowledge_e* knowledge,
 						wxString* text,
@@ -116,6 +132,14 @@ class List
 		
 		//! \brief Supprimer le fichier du système.
 		void removeFile();
+		
+		//! \brief Obtenir le \ref Knowledge_e en fonction de sa version string.
+		//! \return \ref KNOWLEDGE_ALL si la conversion na pas pu se faire.
+		static Knowledge_e stringToKnowledge(wxString const& knowledge);
+		
+		//! \brief Obtenir la version string d'un \ref Knowledge_e.
+		//! \return wxEmptyString si la conversion na pas pu se faire.
+		static wxString stringToKnowledge(Knowledge_e knowledge);
 		
 	private:
 		//! \brief Ouverture le fichier.

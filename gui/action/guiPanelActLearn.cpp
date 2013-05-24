@@ -174,7 +174,7 @@ GuiDialogActLearn::GuiDialogActLearn( wxWindow* parent, wxWindowID id, const wxS
 	staticTextKnowledge->Wrap( -1 );
 	bSizer6->Add( staticTextKnowledge, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	wxString _choiceKnowledgeChoices[] = { _("Unknown"), _("Little known"), _("Known"), _("Very known") };
+	wxString _choiceKnowledgeChoices[] = { _("unknown"), _("little known"), _("known"), _("very known") };
 	int _choiceKnowledgeNChoices = sizeof( _choiceKnowledgeChoices ) / sizeof( wxString );
 	_choiceKnowledge = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, _choiceKnowledgeNChoices, _choiceKnowledgeChoices, 0 );
 	_choiceKnowledge->SetSelection( 0 );

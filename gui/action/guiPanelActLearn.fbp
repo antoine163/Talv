@@ -1278,7 +1278,7 @@
                                     <property name="proportion">1</property>
                                     <object class="wxChoice" expanded="0">
                                         <property name="bg"></property>
-                                        <property name="choices">&quot;Unknown&quot; &quot;Little known&quot; &quot;Known&quot; &quot;Very known&quot;</property>
+                                        <property name="choices">&quot;unknown&quot; &quot;little known&quot; &quot;known&quot; &quot;very known&quot;</property>
                                         <property name="context_help"></property>
                                         <property name="context_menu">1</property>
                                         <property name="enabled">1</property>
