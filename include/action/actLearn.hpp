@@ -51,10 +51,11 @@ class DialogActLearn : public GuiDialogActLearn
 		//! \brief Destructeur.
 		~DialogActLearn();
 		
+		int ShowModal();
 		
 	protected:
 	
-		void nextText();
+		bool nextText();
 		void checkNextAnswer();
 		
 		void OnButtonClickPropose(wxCommandEvent& event);

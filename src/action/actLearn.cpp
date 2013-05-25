@@ -47,16 +47,6 @@ DialogActLearn::DialogActLearn(wxWindow* parent, wxString const& listName, unsig
 	list->getlanguages(&_lgsrc, &_lgto);
 	_guilgsrc = Resource::getInstance()->abbreviationToLanguage(_lgsrc);
 	_guilgto = Resource::getInstance()->abbreviationToLanguage(_lgto);
-		
-	//On installe un texte dans le dialogue.
-	nextText();
-	
-	//Mise a jour du dialogue.
-	GetSizer()->Fit(this);
-	
-	//Verrouille la taille.
-	wxSize size = this->GetSize();
-	this->SetSizeHints(size, size);
 
 	
 	//Init pour le rendom
@@ -67,15 +57,28 @@ DialogActLearn::~DialogActLearn()
 {
 }
 
-void DialogActLearn::nextText()
+int DialogActLearn::ShowModal()
+{
+	//On installe un texte dans le dialogue.
+	if(!nextText())
+		return wxID_CANCEL;
+	
+	//Mise a jour du dialogue.
+	GetSizer()->Fit(this);
+	
+	//Verrouille la taille.
+	wxSize size = this->GetSize();
+	this->SetSizeHints(size, size);
+	
+	return GuiDialogActLearn::ShowModal();
+}
+
+bool DialogActLearn::nextText()
 {
 	//On quitte si il on ne doit plus installe de nouveau texte.
 	_iNbText++;
 	if(_iNbText > _nbText)
-	{
-		Close();
-		return;
-	}
+		return false;
 	
 	//Active le bouton delete
 	_buttonDelete->Enable();
@@ -91,8 +94,15 @@ void DialogActLearn::nextText()
 	//Récupération de la liste.
 	List* list = ListManager::getInstance()->getValue(_listName);
 	
+	//Le nombre de texte présent dan la liste.
+	size_t nbText = list->getNumberText();
+	
+	//Si il ni pas de texte dans la liste.
+	if(nbText == 0)
+		return false;
+	
 	//Chois de l'index parmi tout les textes.
-	int indexText = (rand()%list->getNumberText())+1;
+	int indexText = (rand()%nbText)+1;
 	
 	//Détermine de l'index et de la connaissance choisis.
 	_indexTextKnowledge = indexText;
@@ -151,6 +161,8 @@ void DialogActLearn::nextText()
 	
 	//Focus sur le textCtrl de la repose.
 	_textCtrlAnswer->SetFocus();
+	
+	return true;
 }
 
 void DialogActLearn::checkNextAnswer()
@@ -158,7 +170,9 @@ void DialogActLearn::checkNextAnswer()
 	if(	_statusAnswer == STATUS_ANSWER_NO ||
 		_statusAnswer == STATUS_ANSWER_CORRECT)
 	{
-		nextText();
+		if(!nextText())
+			Close();
+		
 		return;
 	}
 	else if(_statusAnswer == STATUS_ANSWER_BAD)
