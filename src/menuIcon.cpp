@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.4
+//! \version 0.5
 //! \date 10.12.12
 //!
 //! ********************************************************************
@@ -24,6 +24,7 @@
 // *********************************************************************
 
 MenuIcon::MenuIcon()
+: _enable(true)
 {
 	//Menu
 	_menuTaskBarIcon = new wxMenu();
@@ -64,6 +65,11 @@ MenuIcon::~MenuIcon()
 	delete _menuTaskBarIcon;
 }
 
+void MenuIcon::enable(bool val)
+{
+	_enable = val;
+}
+
 int MenuIcon::getIdMenuItemPreferences()
 {
 	return _menuItemPreferences->GetId();
@@ -91,5 +97,6 @@ int MenuIcon::getIdMenuItemExit()
 
 void MenuIcon::OnShow(wxTaskBarIconEvent&)
 {
-	_taskBarIcon->PopupMenu(_menuTaskBarIcon);
+	if(_enable)
+		_taskBarIcon->PopupMenu(_menuTaskBarIcon);
 }

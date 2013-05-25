@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.4
+//! \version 0.5
 //! \date 10.12.12
 //!
 //! ********************************************************************
@@ -30,6 +30,8 @@ class MenuIcon
 		MenuIcon();
 		~MenuIcon();
 		
+		void enable(bool val=true);
+		
 		int getIdMenuItemPreferences();
 		int getIdMenuItemEnableShortcuts();
 		int getIdMenuItemEnableActions();
@@ -38,6 +40,8 @@ class MenuIcon
 
 	private:
 		void OnShow(wxTaskBarIconEvent&);
+		
+		bool _enable;
 	
 		wxTaskBarIcon* _taskBarIcon;
 		wxMenu* _menuTaskBarIcon;

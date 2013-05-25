@@ -278,11 +278,10 @@ ActTranslationToList::ActTranslationToList()
 {
 }
 
-//! \todo a implémenter avec ListManager
 ActTranslationToList::ActTranslationToList(	wxString const& lgsrc,
-										wxString const& lgto,
-										wxString const& listName,
-										bool showDialog)
+											wxString const& lgto,
+											wxString const& listName,
+											bool showDialog)
 : Action(_("Translation to list"), "ActTranslationToList",
 _("Translation a text with google and save in a list.")),
 _lgsrc(lgsrc), _lgto(lgto), _listName(listName), _showDialog(showDialog)

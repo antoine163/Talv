@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.11
+//! \version 1.12
 //! \date 12.12.12
 //!
 //! ********************************************************************
@@ -28,7 +28,6 @@
 //! \brief Poins d'entrée de l'application.
 //! Initialise l'application et libère les ressources à la fin de vie de celle ci.
 //! \bug Trop de possesseur utiliser au bout d'un certain moment.
-//! \todo Déplacer le getInstande de ressource et le créée que on en a besoin (dans les préférence).
 class App : public wxApp
 {
 	public:			

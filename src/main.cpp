@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.11
+//! \version 1.12
 //! \date 12.12.12
 //!
 //! ********************************************************************
@@ -127,48 +127,39 @@ void App::deleteMenuItem()
 //! \todo Désactiver le menu
 void App::OnPreferences(wxCommandEvent&)
 {
-	static DialogPreferences *dlg = nullptr;
+	_menuIcon->enable(false);
+
+	//Récupération de l'instance de ActionManager;
+	ActionManager* actionManager = ActionManager::getInstance();
 	
-	//On lance le dialog si il n'est pas déjà lancer.
-	if(dlg == nullptr)
-	{
-		//Récupération de l'instance de ActionManager;
-		ActionManager* actionManager = ActionManager::getInstance();
+	//Désactivation des raccourcis.
+	actionManager->enableShortcuts(false);
+	//Désactivation des actions.
+	actionManager->enableActions(false);
 	
-		//Désactivation des raccourcis.
-		actionManager->enableShortcuts(false);
-		//Désactivation des actions.
-		actionManager->enableActions(false);
+	//Création du dialog.
+	DialogPreferences dlg;
+	
+	//Affichage du dialog.
+	if(dlg.ShowModal() == wxID_OK)
+	{	
+		//On vérifie si on doit quitter l'application ou pas.
+		if(dlg.shutdownIsToggle())
+			ExitMainLoop();
+			
+		//Vérification si on doit afficher ou pas l'icône dans la zone de notification.
+		if(Resource::getInstance()->getShowMenu())
+			creatMenuItem();
+		else
+			deleteMenuItem();
+	}
+	
+	//On réactive les raccourcis en acore avec le menue.
+	actionManager->enableShortcuts(_enableShortcuts);
+	//On réactive les action en acore avec le menue.
+	actionManager->enableActions(_enableActions);
 		
-		//Création du dialog.
-		dlg = new DialogPreferences();
-		
-		//Affichage du dialog.
-		if(dlg->ShowModal() == wxID_OK)
-		{	
-			//On vérifie si on doit quitter l'application ou pas.
-			if(dlg->shutdownIsToggle())
-				ExitMainLoop();
-				
-			//Vérification si on doit afficher ou pas l'icône dans la zone de notification.
-			if(Resource::getInstance()->getShowMenu())
-				creatMenuItem();
-			else
-				deleteMenuItem();
-		}
-		
-		//On réactive les raccourcis en acore avec le menue.
-		actionManager->enableShortcuts(_enableShortcuts);
-		//On réactive les action en acore avec le menue.
-		actionManager->enableActions(_enableActions);
-		
-		//Supprime le dialog
-		delete dlg;
-		dlg = nullptr;
-	}	
-	//Sinon on l'affiche au premier plan.
-	else
-		dlg->Raise();
+	_menuIcon->enable(true);
 }
 
 void App::OnEnableShortcuts(wxCommandEvent& event)
@@ -185,34 +176,34 @@ void App::OnEnableActions(wxCommandEvent& event)
 
 //! \todo Désactiver le menu
 void App::OnAbout(wxCommandEvent&)
-{
-		wxAboutDialogInfo info;
+{	
+	wxAboutDialogInfo info;
 
-		info.SetName(PROJECT_NAME);
-		info.SetVersion(PROJECT_VERSION);
-		
-		wxString msg;
-		msg << _("This software is help for Internationalization.") << "\n\n";
-		msg << _("Build on") << " ";
-		#if defined(__UNIX__)
-		msg << "Unix";
-		#elif defined(__WXMSW__)
-		msg << "Windows";
-		#endif
-		#ifdef __i386
-		msg << " " << _("in") << " " << " i386\n";
-		#elif __amd64
-		msg << " " << _("in") << " " << " x86_64\n";
-		#endif
-		msg << _("Date") <<  " : " << __DATE__;
-		
-		info.SetDescription(msg);
-		info.SetCopyright("(C) 2012-1013");
-		info.SetWebSite("http://antoine163.github.com/flydocs/");
-		info.AddDeveloper("Maleyrie Antoine <antoine.maleyrie@gmail.com>");
-		info.AddDocWriter("Maleyrie Antoine <antoine.maleyrie@gmail.com>");
-		
-		wxAboutBox(info);
+	info.SetName(PROJECT_NAME);
+	info.SetVersion(PROJECT_VERSION);
+	
+	wxString msg;
+	msg << _("This software is help for Internationalization.") << "\n\n";
+	msg << _("Build on") << " ";
+	#if defined(__UNIX__)
+	msg << "Unix";
+	#elif defined(__WXMSW__)
+	msg << "Windows";
+	#endif
+	#ifdef __i386
+	msg << " " << _("in") << " " << " i386\n";
+	#elif __amd64
+	msg << " " << _("in") << " " << " x86_64\n";
+	#endif
+	msg << _("Date") <<  " : " << __DATE__;
+	
+	info.SetDescription(msg);
+	info.SetCopyright("(C) 2012-1013");
+	info.SetWebSite("http://antoine163.github.com/flydocs/");
+	info.AddDeveloper("Maleyrie Antoine <antoine.maleyrie@gmail.com>");
+	info.AddDocWriter("Maleyrie Antoine <antoine.maleyrie@gmail.com>");
+	
+	wxAboutBox(info);
 }
 
 void App::OnExit(wxCommandEvent&)
