@@ -97,7 +97,7 @@ GuiPanelActLearn::~GuiPanelActLearn()
 
 GuiDialogActLearn::GuiDialogActLearn( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
 {
-	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	this->SetSizeHints( wxSize( -1,-1 ), wxSize( -1,-1 ) );
 	
 	wxBoxSizer* bSizer1;
 	bSizer1 = new wxBoxSizer( wxHORIZONTAL );
@@ -194,8 +194,8 @@ GuiDialogActLearn::GuiDialogActLearn( wxWindow* parent, wxWindowID id, const wxS
 	_buttonCancel = new wxButton( this, wxID_CANCEL, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer7->Add( _buttonCancel, 1, wxALL|wxALIGN_BOTTOM, 5 );
 	
-	_buttonViewNext = new wxButton( this, wxID_ANY, _("View"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer7->Add( _buttonViewNext, 1, wxALL|wxALIGN_BOTTOM, 5 );
+	_buttonCheck = new wxButton( this, wxID_ANY, _("Check !"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer7->Add( _buttonCheck, 1, wxALL|wxALIGN_BOTTOM, 5 );
 	
 	bSizer5->Add( bSizer7, 0, wxEXPAND, 5 );
 	
@@ -213,7 +213,7 @@ GuiDialogActLearn::GuiDialogActLearn( wxWindow* parent, wxWindowID id, const wxS
 	_textCtrlAnswer->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( GuiDialogActLearn::OnTextEnterAnswer ), NULL, this );
 	_choiceKnowledge->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( GuiDialogActLearn::OnChoiceKnowledge ), NULL, this );
 	_buttonDelete->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogActLearn::OnButtonClickDelete ), NULL, this );
-	_buttonViewNext->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogActLearn::OnButtonClickViewNext ), NULL, this );
+	_buttonCheck->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogActLearn::OnButtonClickCheck ), NULL, this );
 }
 
 GuiDialogActLearn::~GuiDialogActLearn()
@@ -224,6 +224,6 @@ GuiDialogActLearn::~GuiDialogActLearn()
 	_textCtrlAnswer->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( GuiDialogActLearn::OnTextEnterAnswer ), NULL, this );
 	_choiceKnowledge->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( GuiDialogActLearn::OnChoiceKnowledge ), NULL, this );
 	_buttonDelete->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogActLearn::OnButtonClickDelete ), NULL, this );
-	_buttonViewNext->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogActLearn::OnButtonClickViewNext ), NULL, this );
+	_buttonCheck->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiDialogActLearn::OnButtonClickCheck ), NULL, this );
 	
 }

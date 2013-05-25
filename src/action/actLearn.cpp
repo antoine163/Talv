@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.7
+//! \version 0.8
 //! \date 15.05.2013
 //!
 //! ********************************************************************
@@ -51,6 +51,14 @@ DialogActLearn::DialogActLearn(wxWindow* parent, wxString const& listName, unsig
 	//On installe un texte dans le dialogue.
 	nextText();
 	
+	//Mise a jour du dialogue.
+	GetSizer()->Fit(this);
+	
+	//Verrouille la taille.
+	wxSize size = this->GetSize();
+	this->SetSizeHints(size, size);
+
+	
 	//Init pour le rendom
 	srand(time(NULL));
 }
@@ -69,8 +77,16 @@ void DialogActLearn::nextText()
 		return;
 	}
 	
-	//Quelle que information a afficher.
+	//Active le bouton delete
+	_buttonDelete->Enable();
+	
+	//Nettoyage de la réponse
+	_textCtrlAnswer->Clear();
+	_textCtrlAnswer->SetForegroundColour(wxNullColour);
+	
+	//Quelle que information à afficher.
 	_staticTextInfo->SetLabel(wxString::Format(_("Learn the list : %s\nText %d sur %d"), _listName, _iNbText, _nbText));
+	_staticTextInfo->SetForegroundColour(wxNullColour);
 	
 	//Récupération de la liste.
 	List* list = ListManager::getInstance()->getValue(_listName);
@@ -97,7 +113,7 @@ void DialogActLearn::nextText()
 	//choix de la lange de proposition.
 	if(rand()%2 == 1)//On propose avec la lange source de la liste.
 	{
-		choiceSrc = true;
+		_choiceSrc = true;
 		
 		//Affiche des langes
 		_staticTextPropose->SetLabel(_guilgsrc + " :"); 
@@ -107,11 +123,11 @@ void DialogActLearn::nextText()
 		_buttonTextPropose->SetLabel(_text);
 		
 		//La raiponce.
-		textAnswer = _mainTranslate;
+		_textAnswer = _mainTranslate;
 	}
 	else//On propose avec la lange de traduction de la liste.
 	{
-		choiceSrc = false;
+		_choiceSrc = false;
 		
 		//Affiche des langes
 		_staticTextPropose->SetLabel(_guilgto + " :");
@@ -121,7 +137,7 @@ void DialogActLearn::nextText()
 		_buttonTextPropose->SetLabel(_mainTranslate);
 		
 		//La raiponce.
-		textAnswer = _text;
+		_textAnswer = _text;
 	}
 	
 	//Sélection de la connaissance.
@@ -129,17 +145,69 @@ void DialogActLearn::nextText()
 	int n = _choiceKnowledge->FindString(sknowledge);
 	_choiceKnowledge->SetSelection(n);
 	
+	//Le texte n'a pas encore été vérifier.
+	_statusAnswer = STATUS_ANSWER_NO_CHECK;
+	_buttonCheck->SetLabel(_("Check !"));
+	
 	//Focus sur le textCtrl de la repose.
 	_textCtrlAnswer->SetFocus();
+}
+
+void DialogActLearn::checkNextAnswer()
+{
+	if(	_statusAnswer == STATUS_ANSWER_NO ||
+		_statusAnswer == STATUS_ANSWER_CORRECT)
+	{
+		nextText();
+		return;
+	}
+	else if(_statusAnswer == STATUS_ANSWER_BAD)
+	{
+		//Nettoyage de la réponse
+		_textCtrlAnswer->Clear();
+		_textCtrlAnswer->SetForegroundColour(wxNullColour);
+		
+		//Quelle que information à afficher.
+		_staticTextInfo->SetLabel(wxString::Format(_("Learn the list : %s\nText %d sur %d"), _listName, _iNbText, _nbText));
+		_staticTextInfo->SetForegroundColour(wxNullColour);
+		
+		_statusAnswer = STATUS_ANSWER_NO_CHECK;
+		return;
+	}
 	
-	//Mise a jour du dialogue.
-	GetSizer()->Fit(this);
+	if(_textCtrlAnswer->GetLineText(0) == wxEmptyString)
+	{
+		_staticTextInfo->SetLabel(_("No answer"));
+		_staticTextInfo->SetForegroundColour(wxColour(0, 0, 127));
+		
+		_buttonCheck->SetLabel(_("Next"));
+		_statusAnswer = STATUS_ANSWER_NO;
+	}
+	else if(_textCtrlAnswer->GetLineText(0) == _textAnswer)
+	{
+		_staticTextInfo->SetLabel(_("Your answer is correct."));
+		_staticTextInfo->SetForegroundColour(wxColour(0, 127, 0));
+		
+		_buttonCheck->SetLabel(_("Next"));
+		_statusAnswer = STATUS_ANSWER_CORRECT;
+	}
+	else
+	{
+		_staticTextInfo->SetLabel(_("Your answer is bad."));
+		_staticTextInfo->SetForegroundColour(wxColour(127, 0, 0));
+		
+		_statusAnswer = STATUS_ANSWER_BAD;
+	}
+	
+	//Dans tous cas on affiche la raiponce.
+	_textCtrlAnswer->ChangeValue(_textAnswer);
+	_textCtrlAnswer->SetForegroundColour(wxNullColour);
 }
 
 void DialogActLearn::OnButtonClickPropose(wxCommandEvent& event)
 {
 	//On dit le texte proposer
-	if(choiceSrc)
+	if(_choiceSrc)
 		Resource::getInstance()->Tts(_text, _lgsrc);
 	else
 		Resource::getInstance()->Tts(_mainTranslate, _lgto);
@@ -147,7 +215,12 @@ void DialogActLearn::OnButtonClickPropose(wxCommandEvent& event)
 
 void DialogActLearn::OnTextAnswer(wxCommandEvent& event)
 {
-	if(textAnswer.StartsWith(_textCtrlAnswer->GetLineText(0)))
+	//Quelle que information à afficher.
+	_staticTextInfo->SetLabel(wxString::Format(_("Learn the list : %s\nText %d sur %d"), _listName, _iNbText, _nbText));
+	_staticTextInfo->SetForegroundColour(wxNullColour);
+	
+	
+	if(_textAnswer.StartsWith(_textCtrlAnswer->GetLineText(0)))
 		_textCtrlAnswer->SetForegroundColour(wxNullColour);
 	else
 		_textCtrlAnswer->SetForegroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_GRAYTEXT));
@@ -155,20 +228,28 @@ void DialogActLearn::OnTextAnswer(wxCommandEvent& event)
 
 void DialogActLearn::OnTextEnterAnswer(wxCommandEvent& event)
 {
-	std::cout << "OnTextEnterAnswer" << std::endl;
+	checkNextAnswer();
 }
 
 void DialogActLearn::OnChoiceKnowledge(wxCommandEvent& event)
-{
+{	 
+	//Récupération de la connaissance.
+	int n = _choiceKnowledge->GetSelection();
+	wxString sknowledge = _choiceKnowledge->GetString(n);
+	_knowledge = List::stringToKnowledge(sknowledge);
+	
+	//ListManager::getInstance()->getValue(_listName)->setKnowledge(_text, _knowledge);
 }
 
 void DialogActLearn::OnButtonClickDelete(wxCommandEvent& event)
 {
+	//ListManager::getInstance()->getValue(_listName)->removeText(_text);
+	_buttonDelete->Enable(false);
 }
 
-void DialogActLearn::OnButtonClickViewNext(wxCommandEvent& event)
+void DialogActLearn::OnButtonClickCheck(wxCommandEvent& event)
 {
-	nextText();
+	checkNextAnswer();
 }
 
 // *********************************************************************

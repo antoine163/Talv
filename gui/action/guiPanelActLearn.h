@@ -72,7 +72,7 @@ class GuiDialogActLearn : public wxDialog
 		wxButton* _buttonDelete;
 		
 		wxButton* _buttonCancel;
-		wxButton* _buttonViewNext;
+		wxButton* _buttonCheck;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnButtonClickPropose( wxCommandEvent& event ) { event.Skip(); }
@@ -80,7 +80,7 @@ class GuiDialogActLearn : public wxDialog
 		virtual void OnTextEnterAnswer( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnChoiceKnowledge( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnButtonClickDelete( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnButtonClickViewNext( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnButtonClickCheck( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:

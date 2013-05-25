@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.7
+//! \version 0.8
 //! \date 15.05.2013
 //!
 //! ********************************************************************
@@ -24,6 +24,18 @@
 #include <wx/timer.h>
 
 // *********************************************************************
+// Lnum StatusAnswer_e
+// *********************************************************************
+//! \brief Les différentes connaissances.
+enum StatusAnswer_e
+{
+	STATUS_ANSWER_NO_CHECK	= 0,
+	STATUS_ANSWER_NO		= 1,
+	STATUS_ANSWER_CORRECT	= 2,
+	STATUS_ANSWER_BAD		= 3
+};
+
+// *********************************************************************
 // Class DialogActLearn
 // *********************************************************************
 
@@ -39,14 +51,18 @@ class DialogActLearn : public GuiDialogActLearn
 		//! \brief Destructeur.
 		~DialogActLearn();
 		
+		
+	protected:
+	
 		void nextText();
+		void checkNextAnswer();
 		
 		void OnButtonClickPropose(wxCommandEvent& event);
 		void OnTextAnswer(wxCommandEvent& event);
 		void OnTextEnterAnswer(wxCommandEvent& event);
 		void OnChoiceKnowledge(wxCommandEvent& event);
 		void OnButtonClickDelete(wxCommandEvent& event);
-		void OnButtonClickViewNext(wxCommandEvent& event);
+		void OnButtonClickCheck(wxCommandEvent& event);
 		
 	private:
 		//! \brief Nom de la liste de révision.
@@ -64,9 +80,10 @@ class DialogActLearn : public GuiDialogActLearn
 		wxString _guilgsrc;
 		wxString _guilgto;
 		
-		wxString textAnswer;
+		wxString _textAnswer;
 		
-		bool choiceSrc;
+		bool _choiceSrc;
+		StatusAnswer_e _statusAnswer;
 		
 		wxString _text;
 		wxString _mainTranslate;
