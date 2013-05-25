@@ -356,6 +356,45 @@ bool List::getText(	size_t index,
 
 bool List::setKnowledge(wxString const& text, Knowledge_e knowledge)
 {
+	if(!openFile())
+		return false;
+		
+	//Récupère le numéro de la première ligne ou se trouve le texte.
+	size_t textLine = getTextLine(text);
+			
+	//Le texte n'est pas existent ?
+	if(textLine == 0)
+	{
+		//Fermeture du fichier
+		closeFile();
+		
+		return false;
+	}
+
+	//Récupéré la première ligne du texte.
+	wxString line = _file.GetLine(textLine);
+	
+	//Création de la nouvelle ligne avec la connaissance.
+	wxString newLing;
+	newLing << (unsigned int)knowledge << ',';
+	newLing << line.AfterFirst(',');
+	
+	//Remplace la ligne par la nouvelle.
+	_file.RemoveLine(textLine);
+	_file.InsertLine(newLing, textLine);
+	
+	//Écriture des données dans le fichier.
+	if(!_file.Write())
+	{
+		//Fermeture du fichier.
+		closeFile();
+		
+		return false;
+	}
+	
+	//Fermeture du fichier.
+	closeFile();
+	
 	return true;
 }
 
