@@ -238,12 +238,12 @@ void DialogActLearn::OnChoiceKnowledge(wxCommandEvent& event)
 	wxString sknowledge = _choiceKnowledge->GetString(n);
 	_knowledge = List::stringToKnowledge(sknowledge);
 	
-	//ListManager::getInstance()->getValue(_listName)->setKnowledge(_text, _knowledge);
+	ListManager::getInstance()->getValue(_listName)->setKnowledge(_text, _knowledge);
 }
 
 void DialogActLearn::OnButtonClickDelete(wxCommandEvent& event)
 {
-	//ListManager::getInstance()->getValue(_listName)->removeText(_text);
+	ListManager::getInstance()->getValue(_listName)->removeText(_text);
 	_buttonDelete->Enable(false);
 }
 

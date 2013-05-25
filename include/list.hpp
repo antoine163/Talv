@@ -90,13 +90,12 @@ class List
 		int save(	wxString text,
 					wxString mainTranslate,
 					std::map<wxString, wxArrayString> const& translations);
-					
-					
-		//bool getTranslates(	wxString const& text,
-							//wxString* mainTranslate,
-							//std::map<wxString, wxArrayString>* translations);
+		
+		//! \brief Supprime un texte de la liste.
+		//! \param text le texte a supprimer.
+		//! \return true si le texte a pu être supprimer.
+		bool removeText(wxString const& text);
 							
-		//Index commence à 1
 		//! \brief Obtenir le texte et tout ces informations associer.
 		//! \param index ces l'index du texte. Le premier index est 1.
 		//! \param knowledge recherche de l'index parmi le niveau de connaissance.
@@ -117,9 +116,12 @@ class List
 						wxString* text,
 						wxString* mainTranslate,
 						std::map<wxString, wxArrayString>* translations);
-							
-		//Knowledge_e getKnowledge(wxString const& text);
-		//bool setKnowledge(wxString const& text, Knowledge_e knowledge);
+						
+		//! \brief Modifie la connaissance d'un texte.
+		//! \param text à modifier.
+		//! \param knowledge la nouvelle connaissance a appliquer au texte.
+		//! \return true si la connaissance a pu être modifier.
+		bool setKnowledge(wxString const& text, Knowledge_e knowledge);
 		
 		//! \brief Pour connaître le nombre de texte par connaissance.
 		size_t getNumberTextByKnowledge(Knowledge_e level);

@@ -202,6 +202,62 @@ int List::save(	wxString text,
 	return 1;
 }
 
+bool List::removeText(wxString const& text)
+{
+	if(!openFile())
+		return false;
+		
+	//Récupère le numéro de la première ligne ou se trouve le texte.
+	size_t textLine = getTextLine(text);
+			
+	//Le texte n'est pas existent ?
+	if(textLine == 0)
+	{
+		//Fermeture du fichier
+		closeFile();
+		
+		return false;
+	}
+	
+	//Obtenir le nombre de ligne.
+	size_t nbLine = _file.GetLineCount();
+
+	//Suppression de tout les lignes constituent le texte.
+	wxString line;
+	while(1)
+	{
+		//Supprime la ligne.
+		_file.RemoveLine(textLine);
+		nbLine--;
+		
+		//On quitte la boucle si il n'y a plus de ligne.
+		if(nbLine <= textLine)
+			break;
+		
+		//Obtenir le texte de la ligne.
+		line = _file.GetLine(textLine);
+		
+		//On quitte la boucle si on est arriver au texte suivent.
+		if(!line.BeforeFirst(',').IsEmpty())
+			break;
+	}
+	
+	
+	//Écriture des données dans le fichier.
+	if(!_file.Write())
+	{
+		//Fermeture du fichier.
+		closeFile();
+		
+		return false;
+	}
+	
+	//Fermeture du fichier.
+	closeFile();
+	
+	return true;
+}
+
 bool List::getText(	size_t index,
 					Knowledge_e* knowledge,
 					wxString* text,
@@ -296,6 +352,11 @@ bool List::getText(	size_t index,
 	closeFile();
 	
 	return find;
+}
+
+bool List::setKnowledge(wxString const& text, Knowledge_e knowledge)
+{
+	return true;
 }
 
 size_t List::getNumberTextByKnowledge(Knowledge_e level)
