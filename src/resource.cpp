@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.17
+//! \version 0.18
 //! \date 30.03.2013
 //!
 //! ********************************************************************
@@ -345,6 +345,7 @@ void Resource::downloadFromUrl(wxMemoryBuffer* buffer, wxString const& sUrl)
 
 void Resource::Tts(wxString const& text, wxString const& lg)
 {		
+	#if defined(__UNIX__)
 	//Construction de la pipeline
 	wxString stringPipeline;
 	stringPipeline << "playbin uri=\"http://translate.google.com/translate_tts?ie=UTF-8&tl="+lg+"&q="+text+"\" volume=" << _ttsVolume;
@@ -359,6 +360,8 @@ void Resource::Tts(wxString const& text, wxString const& lg)
 	
 	//Début la lecture.
 	gst_element_set_state(_pipeline, GST_STATE_PLAYING);
+	#elif defined(__WXMSW__)
+	#endif
 }
 
 void Resource::setShowMenu(bool showMenu)

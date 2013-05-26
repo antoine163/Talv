@@ -1,45 +1,35 @@
-################################################################################
+########################################################################
 #
 #	Makfile for Windows.
 #
 # - author 	:	Antoine Maleyrie : antoine.maleyrie@gmail.com
-# - version	:	0.1
+# - version	:	0.2
 # - date 	:	10.03.2013
 #
-################################################################################
+########################################################################
 
 ########################################################################
-# Non de l'exécutable
+# Non de l'exÃ©cutable.
 ########################################################################
 EXEC_NAME=$(PROJECT_NAME).exe
 
 
 ########################################################################
-# Flags de compilation pour les libs
+# Flags de compilation pour les libs.
 ########################################################################
 # Flags pour wxWidgets
 CXX_FLAGS+=-mthreads
-CXX_FLAGS+=-IC:\wxWidgets-2.9.4\include\
-CXX_FLAGS+=-IC:\wxWidgets-2.9.4\lib\gcc_dll\mswu\
-CXX_FLAGS+=-D__GNUWIN32__ -D__WXMSW__ -DWXUSINGDLL -DwxUSE_UNICODE\
+CXX_FLAGS+=-IC:\wxWidgets-2.9.4\include
+CXX_FLAGS+=-IC:\wxWidgets-2.9.4\lib\gcc_dll\mswu
+CXX_FLAGS+=-D__GNUWIN32__ -D__WXMSW__ -DWXUSINGDLL -DwxUSE_UNICODE
 
 
 ########################################################################
-# Flags de linkage pour les libs
+# Flags de linkage pour les libs.
 ########################################################################
 # Flags pour wxWidgets
-LD_FLAGS+=mthreads -LC:\wxWidgets-2.9.4\lib\gcc_dll\
+LD_FLAGS+=-mthreads -LC:\wxWidgets-2.9.4\lib\gcc_dll
 LD_FLAGS+=-lwxbase29u -lwxmsw29u_core -lwxmsw29u_adv -lwxbase29u_net
-LD_FLAGS+=-lwxmsw29u_propgrid
-
-
-########################################################################
-# Define à ajouter.
-########################################################################
-# Non du projet
-DEFINE=PROJECT_NAME=\"$(PROJECT_NAME)\"
-# Numéro de version
-DEFINE+=PROJECT_VERSION=\"$(PROJECT_VERSION)\"
 
 
 ########################################################################
@@ -53,23 +43,50 @@ OBJ_DIR = obj
 ########################################################################
 SRC=../src/main.cpp	
 SRC+=../src/menuIcon.cpp
+SRC+=../src/shortcut.cpp
+SRC+=../src/actionManager.cpp
+SRC+=../src/action.cpp
+SRC+=../src/listManager.cpp
+SRC+=../src/list.cpp
+SRC+=../src/resource.cpp
+#Notification
+SRC+=../src/notification.cpp
+ifeq ($(EMULATE_NOTIFICATION), yes)
+SRC+=../gui/guiDialogNotification.cpp
+endif
+#Action
+SRC+=../src/action/actLearn.cpp
+SRC+=../gui/action/guiPanelActLearn.cpp
+SRC+=../src/action/actTranslation.cpp
+SRC+=../gui/action/guiPanelActTranslation.cpp
+SRC+=../src/action/actSay.cpp
+SRC+=../gui/action/guiPanelActSay.cpp
+SRC+=../src/action/actTranslationToList.cpp
+SRC+=../gui/action/guiPanelActTranslationToList.cpp
+#GUI
+SRC+=../gui/guiDialogPreferences.cpp
+SRC+=../src/dialogPreferences.cpp
+SRC+=../gui/guiDialogActionPreferences.cpp
+SRC+=../src/dialogActionPreferences.cpp
+SRC+=../gui/guiDialogListAdd.cpp
+SRC+=../src/dialogListAdd.cpp
 
 
 ########################################################################
-# Création de la liste des objets.
+# CrÃ©ation de la liste des objets.
 ########################################################################
 OBJS=$(patsubst ../%.cpp,$(OBJ_DIR)/%.o, $(SRC))
 
 
 ########################################################################
 # Dossier a inclure.
-########################################################################
 DIR = ../include
+DIR += ../gui
 INCLUDE_DIRS = $(patsubst %,-I%, $(DIR))
 
 
 ########################################################################
-# Par défaut la compilation release est active.
+# Par dÃ©faut la compilation release est active.
 ########################################################################
 all:release
 
@@ -113,7 +130,7 @@ resource.o:resource.rc
 
 
 ########################################################################
-# Exécute le programme
+# ExÃ©cute le programme.
 ########################################################################
 .PHONY: run
 run:
@@ -121,11 +138,11 @@ run:
 	@$(EXEC_NAME)
 
 ########################################################################
-# Nettoyage du projet
+# Nettoyage du projet.
 ########################################################################
 .PHONY: clean
 clean:
-	@-if exist $(OBJDIR) rd $(OBJDIR) /s /q
+	@-if exist $(OBJ_DIR) rd $(OBJ_DIR) /s /q
 	@-if exist $(EXEC_NAME) del $(EXEC_NAME)
 	@-if exist resource.o del resource.o
 	@echo "The project is clean."

@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie.
-//! \version 1.2
+//! \version 1.4
 //! \date 13.12.12
 //!
 //! ********************************************************************
@@ -161,7 +161,7 @@ wxDECLARE_EVENT(EVT_SHORTCUT, ShortcutEvent);
 //! \brief C'est le thread qui installe/désinstalle les raccourcis au-prés
 //! de l'os et qui lève un événement de type \ref ShortcutEvent lorsque
 //! qu'un raccourci est détecter presser sur le clavier.
-class ShortcutThread : public wxThread
+class ShortcutThread : protected wxThread
 {
 	public:
 		//! \brief Constructeur.

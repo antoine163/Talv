@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.10
+//! \version 1.12
 //! \date 20.03.2013
 //!
 //! ********************************************************************
@@ -62,8 +62,7 @@ bool ActionManager::remove(ShortcutKey const& shortcut)
 void ActionManager::removeAll()
 {
 	//Désinstalle les raccourcis.
-	for(auto &it: _data)
-		_shortcut.remove(it.first);
+		_shortcut.removeAll();
 		
 	//Suppression des actions.
 	ManagerBase<ShortcutKey, Action>::removeAll();
@@ -82,7 +81,11 @@ void ActionManager::load(wxFileConfig& fileConfig)
 	
 	//On récupère le premier raccourci
 	if(!fileConfig.GetFirstGroup(stringShortcut, lIndex))
+	{
+		//On positionne le path a la racine.
+		fileConfig.SetPath("/");
 		return;
+	}
 		
 	do
 	{
@@ -135,7 +138,6 @@ void ActionManager::enableActions(bool val)
 	
 	for(auto &it: _data)
 		it.second->enable(_enableAction);
-		
 }
 
 void ActionManager::OnShortcut(ShortcutEvent& event)

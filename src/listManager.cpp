@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.12
+//! \version 0.13
 //! \date 02.05.2013
 //!
 //! ********************************************************************
@@ -114,7 +114,11 @@ void ListManager::load(wxFileConfig& fileConfig)
 	
 	//On récupère la première list.
 	if(!fileConfig.GetFirstGroup(tmpNameList, lIndex))
+	{
+		//On positionne le path a la racine.
+		fileConfig.SetPath("/");
 		return;
+	}
 		
 	do
 	{

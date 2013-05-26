@@ -1,3 +1,3 @@
-icon_flaydoc ICON "../icons/ft.ico"
+icon_flaydoc ICON "ft.ico"
 
 #include "wx/msw/wx.rc"

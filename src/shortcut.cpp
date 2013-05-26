@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie.
-//! \version 1.2
+//! \version 1.4
 //! \date 13.12.12
 //!
 //! ********************************************************************
@@ -251,11 +251,15 @@ ShortcutThread::ShortcutThread(wxEvtHandler *owner, std::map<ShortcutKey, int> &
 	_interCommunication = XCreateSimpleWindow(_display, _root, 0, 0, 1, 1, 0, 0, 0);
 	XSelectInput(_display, _interCommunication, StructureNotifyMask);
     #endif
+    
+    //Run le thread
+    Create();
+	Run();
 }
 
 ShortcutThread::~ShortcutThread()
 {
-	if(IsAlive())
+	if(IsRunning())
 		halt();
 		
     #if defined(__UNIX__)
@@ -285,6 +289,7 @@ void ShortcutThread::registerShortcut(ShortcutKey const& shortcutKey)
 	XSendEvent(_display, _interCommunication, 0, 0, (XEvent*)&sendEvent);
 	XFlush(_display);
 	#elif defined(__WXMSW__)
+	while(!PostThreadMessage(GetId(), WM_APP, 0, 0));
 	#endif
 	
 	//On attend la fin d'utilisation des données.
@@ -313,7 +318,11 @@ void ShortcutThread::unregisterShortcut(ShortcutKey const& shortcutKey)
 	XSendEvent(_display, _interCommunication, 0, 0, (XEvent*)&sendEvent);
 	XFlush(_display);
 	#elif defined(__WXMSW__)
+	while(!PostThreadMessage(GetId(), WM_APP, 0, 0));
 	#endif
+	
+	//On attend la fin d'utilisation des données.
+	while(_mutexCommunicationThread);
 }
 
 void ShortcutThread::unregisterAllShortcut()
@@ -347,15 +356,17 @@ void ShortcutThread::halt()
 	XSendEvent(_display, _interCommunication, 0, 0, (XEvent*)&sendEvent);
 	XFlush(_display);
 	#elif defined(__WXMSW__)
+	PostThreadMessage(GetId(), WM_APP, 0, 0);
 	#endif
 	
 	//Attend la fin du thread.
-	while(IsAlive());
+	while(IsRunning());
 }
 
 wxThread::ExitCode ShortcutThread::Entry()
 {
 	bool run = true;
+
 	#if defined(__UNIX__)
 	while(run)
 	{
@@ -408,10 +419,11 @@ wxThread::ExitCode ShortcutThread::Entry()
 			_mutexCommunicationThread = false;
 		}
 	}
-	#elif defined(__WXMSW__)
-	//Si un événement est présent.
-	while(GetMessage(&_msgEvent, nullptr, 0, 0) != 0)
+	#elif defined(__WXMSW__)		
+	while(run)
 	{
+		//Si un événement est présent.
+		GetMessage(&_msgEvent, nullptr, 0, 0);
 		//On le récupère.
 		if(_msgEvent.message == WM_HOTKEY)
 		{
@@ -428,11 +440,43 @@ wxThread::ExitCode ShortcutThread::Entry()
 				}
 			}
 		}
+		else if(_msgEvent.message == WM_APP)
+		{
+			char charKey[2] = {'\0', '\0'};
+			wxString charKeyCapital;
+			switch(_communicationThread)
+			{
+				//Enregistre le raccourci.
+				case CommunicationThread::REGISTER:
+					charKey[0]=_shortcutKeyCommunicationThread->getCharKey();
+					
+					//Capitalise le charKey
+					charKeyCapital = charKey;
+					charKeyCapital.MakeCapitalized();
+			
+					RegisterHotKey(nullptr, _bind[*_shortcutKeyCommunicationThread], (UINT)_shortcutKeyCommunicationThread->getModifiers(), *charKeyCapital.fn_str());
+				break;
+				
+				//Désenregistrer le raccourci.
+				case CommunicationThread::UNREGISTER:
+					UnregisterHotKey(nullptr, _bind[*_shortcutKeyCommunicationThread]);
+				break;
+				
+				//Quit le thread.
+				case CommunicationThread::QUIT:
+					run = false;
+				break;
+				
+				case CommunicationThread::NONE:
+				default:
+				break;
+			}
+			
+			//Fin d'utilisation des données de communication.
+			_shortcutKeyCommunicationThread = nullptr;
+			_mutexCommunicationThread = false;
+		}
 	}
-
-	//Supprimer des raccourcis.
-	for(auto &it: _bind)	
-		UnregisterHotKey(nullptr, _bind[it.first]));
 	#endif
 
 	return (wxThread::ExitCode)0;
@@ -446,8 +490,6 @@ Shortcut::Shortcut(wxEvtHandler *owner)
 : _thread(nullptr), _owner(owner), _enable(true)
 {
 	_thread = new ShortcutThread(_owner, _bind);
-	_thread->Create();
-	_thread->Run();
 }
 
 Shortcut::~Shortcut()
@@ -487,7 +529,7 @@ void Shortcut::remove(ShortcutKey const& shortcutKey)
     if(_enable)
 		_thread->unregisterShortcut(shortcutKey);
 		
-    //Supprime le lien
+    //Supprime le lien.
     _bind.erase(shortcutKey);
 }
 
@@ -520,8 +562,6 @@ void Shortcut::enable(bool val)
 	{	
 		//On relance le thread.
 		_thread = new ShortcutThread(_owner, _bind);
-		_thread->Create();
-		_thread->Run();
 		
 		//Active les raccourcis au prés du thread.
 		for(auto &it: _bind)			
