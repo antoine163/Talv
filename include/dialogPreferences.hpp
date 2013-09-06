@@ -42,7 +42,7 @@ class PanelList : public GuiPanelList
 		
 	protected:
 		//! \brief Ajout un item a la liste.
-		//! \param item a ajouter. Si il est vide il ne sera pas jouter.
+		//! \param item a ajouter. Si il est vide il ne sera pas ajouter.
 		//! Chaque wxString correspond à une colonne.
 		//! \param select true pour sélectionner l'item ajouter.
 		void addItem(wxArrayString const& item, bool select = true);

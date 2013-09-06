@@ -37,7 +37,7 @@ PanelList::PanelList(wxWindow* parent, wxString name)
 : GuiPanelList(parent), _name(name)
 {
 	#if wxCHECK_VERSION(2, 9, 5)
-		_listCtrlAction->EnableAlternateRowColours();
+		_listCtrl->EnableAlternateRowColours();
 	#endif
 	
 	//Construction du menu
@@ -369,7 +369,7 @@ wxArrayString PanelListActions::OnPreferencesItem(wxString const& item)
 
 wxArrayString PanelListActions::OnAddItem()
 {
-	//wxArrayString de retours.
+	//wxArrayString de retour.
 	wxArrayString newItem;
 	
 	DialogActionPreferences dlg(this);
