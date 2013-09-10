@@ -161,12 +161,6 @@ void App::OnEnableShortcuts(wxCommandEvent& event)
 	ActionManager::getInstance()->enableShortcuts(_enableShortcuts);
 }
 
-//void App::OnEnableActions(wxCommandEvent& event)
-//{
-	//_enableActions = event.IsChecked();
-	//ActionManager::getInstance()->enableActions(_enableActions);
-//}
-
 //! \todo Désactiver le menu
 void App::OnAbout(wxCommandEvent&)
 {	
