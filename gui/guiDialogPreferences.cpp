@@ -102,21 +102,6 @@ GuiDialogPreferences::GuiDialogPreferences( wxWindow* parent, wxWindowID id, con
 	
 	bSizer2->Add( bSizer4, 0, wxEXPAND, 5 );
 	
-	_staticTextVolumeTts = new wxStaticText( _panelSetting, wxID_ANY, _("Volume for text to speech (Say a text) :"), wxDefaultPosition, wxDefaultSize, 0 );
-	_staticTextVolumeTts->Wrap( -1 );
-	bSizer2->Add( _staticTextVolumeTts, 0, wxALL, 5 );
-	
-	wxBoxSizer* bSizer5;
-	bSizer5 = new wxBoxSizer( wxHORIZONTAL );
-	
-	
-	bSizer5->Add( 0, 0, 1, wxEXPAND, 5 );
-	
-	_sliderTts = new wxSlider( _panelSetting, wxID_ANY, 100, 0, 400, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL|wxSL_LABELS );
-	bSizer5->Add( _sliderTts, 20, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
-	bSizer2->Add( bSizer5, 0, wxEXPAND, 5 );
-	
 	
 	bSizer2->Add( 0, 0, 1, 0, 5 );
 	

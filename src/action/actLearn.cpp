@@ -220,11 +220,6 @@ void DialogActLearn::checkNextAnswer()
 
 void DialogActLearn::OnButtonClickPropose(wxCommandEvent& event)
 {
-	//On dit le texte proposer
-	if(_choiceSrc)
-		Resource::getInstance()->Tts(_text, _lgsrc);
-	else
-		Resource::getInstance()->Tts(_mainTranslate, _lgto);
 }
 
 void DialogActLearn::OnTextAnswer(wxCommandEvent& event)

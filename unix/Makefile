@@ -19,8 +19,6 @@ EXEC_NAME=$(PROJECT_NAME)
 ########################################################################
 # Flags pour wxWidgets
 CXX_FLAGS+=`wx-config-2.9 --cxxflags`
-# Flags pour gstreamer
-CXX_FLAGS+=`pkg-config --cflags gstreamer-1.0`
 # Flags libnotify (si utiliser)
 ifeq ($(EMULATE_NOTIFICATION), no)
 CXX_FLAGS+=`pkg-config --cflags libnotify`
@@ -32,8 +30,6 @@ endif
 ########################################################################
 # Flags pour wxWidgets
 LD_FLAGS+=`wx-config-2.9 --libs base,core,adv,net`
-# Flags pour gstreamer
-LD_FLAGS+=`pkg-config --libs gstreamer-1.0`
 # Flags pour la xlib
 LD_FLAGS+=-lX11
 # Flags pour libnotify (si utiliser)
@@ -69,8 +65,6 @@ SRC+=../src/action/actLearn.cpp
 SRC+=../gui/action/guiPanelActLearn.cpp
 SRC+=../src/action/actTranslation.cpp
 SRC+=../gui/action/guiPanelActTranslation.cpp
-SRC+=../src/action/actSay.cpp
-SRC+=../gui/action/guiPanelActSay.cpp
 SRC+=../src/action/actTranslationToList.cpp
 SRC+=../gui/action/guiPanelActTranslationToList.cpp
 #GUI

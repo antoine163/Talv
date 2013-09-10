@@ -31,9 +31,6 @@
 Resource::Resource()
 {
 	#if defined(__UNIX__)
-		//Initialisation de GStreamer.
-		gst_init(nullptr, nullptr);
-		_pipeline = nullptr;
 	#elif defined(__WXMSW__)
 	#endif
 	
@@ -117,19 +114,12 @@ Resource::Resource()
 	//Liste des actions
 	_actions[_("Translation")] = "ActTranslation";
 	_actions[_("Translation to list")] = "ActTranslationToList";
-	_actions[_("Say a text")] = "ActSay";
 	_actions[_("Learn a list")] = "ActLearn";
 }
 
 Resource::~Resource()
 {
 	#if defined(__UNIX__)
-		//Libération des ressources de GStreamer.
-		if (_pipeline != NULL)
-		{
-			gst_object_unref(_pipeline);
-		}
-		gst_deinit();
 	#elif defined(__WXMSW__)
 	#endif
 }
@@ -343,27 +333,6 @@ void Resource::downloadFromUrl(wxMemoryBuffer* buffer, wxString const& sUrl)
 	}
 }
 
-void Resource::Tts(wxString const& text, wxString const& lg)
-{		
-	#if defined(__UNIX__)
-	//Construction de la pipeline
-	wxString stringPipeline;
-	stringPipeline << "playbin uri=\"http://translate.google.com/translate_tts?ie=UTF-8&tl="+lg+"&q="+text+"\" volume=" << _ttsVolume;
-	_pipeline = gst_parse_launch(stringPipeline.fn_str(), nullptr);
-	
-	//pipeline n'est pas ok ?
-	if(_pipeline == nullptr)
-	{
-		wxLogError(_("Could not build pipeling for GStreamer."));
-		return;
-	}
-	
-	//Début la lecture.
-	gst_element_set_state(_pipeline, GST_STATE_PLAYING);
-	#elif defined(__WXMSW__)
-	#endif
-}
-
 void Resource::setShowMenu(bool showMenu)
 {
 	_showMenu = showMenu;
@@ -385,26 +354,14 @@ bool Resource::getPowerOn()
 	return _powerOn;
 }
 
-void Resource::setTtsVolume(double volume)
-{
-	_ttsVolume = volume;
-}
-
-double Resource::getTtsVolume()
-{
-	return _ttsVolume;
-}
-
 void Resource::load(wxFileConfig& fileConfig)
 {
 	fileConfig.Read("show_menu", &_showMenu);
 	fileConfig.Read("power_on", &_powerOn);
-	fileConfig.Read("tts_volume", &_ttsVolume);
 }
 
 void Resource::save(wxFileConfig& fileConfig)const
 {
 	fileConfig.Write("show_menu", _showMenu);
 	fileConfig.Write("power_on", _powerOn);
-	fileConfig.Write("tts_volume", _ttsVolume);
 }

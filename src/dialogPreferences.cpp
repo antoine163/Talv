@@ -544,13 +544,11 @@ DialogPreferences::DialogPreferences()
 {	
     //Magnifier 
     _staticTextGeneral->SetLabelMarkup("<b>"+_("General :")+"</b>");
-    _staticTextVolumeTts->SetLabelMarkup("<b>"+_("Volume for text to speech (Say a text) :")+"</b>");
 	_staticTextShutdown->SetLabelMarkup("<b>"+_("Shutdown this application :")+"</b>");
 	
 	//Initialise les valeurs
 	_checkBoxShowMenu->SetValue(Resource::getInstance()->getShowMenu());
 	_checkBoxPowerOn->SetValue(Resource::getInstance()->getPowerOn());
-	_sliderTts->SetValue(Resource::getInstance()->getTtsVolume()*100);
 	
 	//init EditActionManager
 	EditActionManager::getInstance()->init();
@@ -590,7 +588,6 @@ void DialogPreferences::applyAndSave()
 	//Affectation des valeurs dans les ressources.
 	Resource::getInstance()->setShowMenu(_checkBoxShowMenu->GetValue());
 	Resource::getInstance()->setPowerOn(_checkBoxPowerOn->GetValue());
-	Resource::getInstance()->setTtsVolume(_sliderTts->GetValue()/100.);
 	
 	//On sauvegarde les ressources.
 	Resource::getInstance()->save(fileConfig);

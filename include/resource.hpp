@@ -25,7 +25,6 @@
 #include <map>
 
 #if defined(__UNIX__)
-#include <gst/gst.h>
 #elif defined(__WXMSW__)
 #endif
 
@@ -74,11 +73,6 @@ class Resource : public Singleton<Resource>
 											
 		void downloadFromUrl(wxMemoryBuffer* buffer, wxString const& sUrl);
 		
-		void Tts(wxString const& text, wxString const& lg);
-		
-		void setTtsVolume(double volume);
-		double getTtsVolume();
-		
 		void setShowMenu(bool showMenu);
 		bool getShowMenu();
 		
@@ -103,7 +97,6 @@ class Resource : public Singleton<Resource>
 		double _ttsVolume;
 		
 		#if defined(__UNIX__)
-			GstElement* _pipeline;
 		#elif defined(__WXMSW__)
 		#endif
 };

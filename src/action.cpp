@@ -17,7 +17,6 @@
 
 #include "action/actTranslation.hpp"
 #include "action/actTranslationToList.hpp"
-#include "action/actSay.hpp"
 #include "action/actLearn.hpp"
 
 // *********************************************************************
@@ -52,9 +51,6 @@ Action* Action::newAction(wxString const& actTypeName)
 	if(actTypeName == "ActTranslationToList")
 		return new ActTranslationToList();
 
-	if(actTypeName == "ActSay")
-		return new ActSay();
-
 	if(actTypeName == "ActLearn")
 		return new ActLearn();
 	
@@ -68,9 +64,6 @@ Action* Action::newAction(Action const* act)
 
 	if(act->_actTypeName == "ActTranslationToList")
 		return new ActTranslationToList(static_cast<ActTranslationToList const&>(*act));
-
-	if(act->_actTypeName == "ActSay")
-		return new ActSay(static_cast<ActSay const&>(*act));
 
 	if(act->_actTypeName == "ActLearn")
 		return new ActLearn(static_cast<ActLearn const&>(*act));
