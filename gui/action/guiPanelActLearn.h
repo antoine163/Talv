@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Jan 10 2013)
+// C++ code generated with wxFormBuilder (version Aug 24 2013)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -19,7 +19,6 @@
 #include <wx/choice.h>
 #include <wx/sizer.h>
 #include <wx/spinctrl.h>
-#include <wx/checkbox.h>
 #include <wx/panel.h>
 #include <wx/button.h>
 #include <wx/textctrl.h>
@@ -39,14 +38,6 @@ class GuiPanelActLearn : public wxPanel
 	protected:
 		wxChoice* _choiceList;
 		wxSpinCtrl* _spinCtrlNbText;
-		wxCheckBox* _checkBoxTime;
-		wxPanel* _panelTime;
-		wxSpinCtrl* _spinCtrlHours;
-		wxSpinCtrl* _spinCtrlMinutes;
-		
-		// Virtual event handlers, overide them in your derived class
-		virtual void OnCheckBox( wxCommandEvent& event ) { event.Skip(); }
-		
 	
 	public:
 		

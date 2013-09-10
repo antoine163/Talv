@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Jan 10 2013)
+// C++ code generated with wxFormBuilder (version Aug 24 2013)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -42,57 +42,13 @@ GuiPanelActLearn::GuiPanelActLearn( wxWindow* parent, wxWindowID id, const wxPoi
 	
 	bSizer1->Add( bSizer3, 0, wxEXPAND, 5 );
 	
-	wxBoxSizer* bSizer4;
-	bSizer4 = new wxBoxSizer( wxVERTICAL );
-	
-	_checkBoxTime = new wxCheckBox( this, wxID_ANY, _("Run this action evrey :"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer4->Add( _checkBoxTime, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxRIGHT|wxLEFT, 5 );
-	
-	_panelTime = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	_panelTime->Enable( false );
-	
-	wxBoxSizer* bSizer5;
-	bSizer5 = new wxBoxSizer( wxHORIZONTAL );
-	
-	
-	bSizer5->Add( 32, 0, 0, wxEXPAND, 5 );
-	
-	wxStaticText* staticTextHours;
-	staticTextHours = new wxStaticText( _panelTime, wxID_ANY, _("Hours :"), wxDefaultPosition, wxDefaultSize, 0 );
-	staticTextHours->Wrap( -1 );
-	bSizer5->Add( staticTextHours, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
-	_spinCtrlHours = new wxSpinCtrl( _panelTime, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 23, 0 );
-	bSizer5->Add( _spinCtrlHours, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
-	wxStaticText* staticTextMinutes;
-	staticTextMinutes = new wxStaticText( _panelTime, wxID_ANY, _("Minutes :"), wxDefaultPosition, wxDefaultSize, 0 );
-	staticTextMinutes->Wrap( -1 );
-	bSizer5->Add( staticTextMinutes, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
-	_spinCtrlMinutes = new wxSpinCtrl( _panelTime, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 59, 30 );
-	bSizer5->Add( _spinCtrlMinutes, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
-	_panelTime->SetSizer( bSizer5 );
-	_panelTime->Layout();
-	bSizer5->Fit( _panelTime );
-	bSizer4->Add( _panelTime, 0, wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
-	
-	bSizer1->Add( bSizer4, 0, wxEXPAND, 5 );
-	
 	this->SetSizer( bSizer1 );
 	this->Layout();
 	bSizer1->Fit( this );
-	
-	// Connect Events
-	_checkBoxTime->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( GuiPanelActLearn::OnCheckBox ), NULL, this );
 }
 
 GuiPanelActLearn::~GuiPanelActLearn()
 {
-	// Disconnect Events
-	_checkBoxTime->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( GuiPanelActLearn::OnCheckBox ), NULL, this );
-	
 }
 
 GuiDialogActLearn::GuiDialogActLearn( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )

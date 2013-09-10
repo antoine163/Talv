@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.15
+//! \version 0.16
 //! \date 04.01.2013
 //!
 //! ********************************************************************
@@ -89,8 +89,4 @@ wxString const& Action::getName()const
 wxString const& Action::getActTypeName()const
 {
 	return _actTypeName;
-}
-
-void Action::enable(bool)
-{
 }

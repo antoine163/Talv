@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.12
+//! \version 1.13
 //! \date 20.03.2013
 //!
 //! ********************************************************************
@@ -22,7 +22,7 @@
 // Class ActionManager
 // *********************************************************************
 
-ActionManager::ActionManager() : _shortcut(this), _enableAction(true)
+ActionManager::ActionManager() : _shortcut(this)
 {
 }
 
@@ -40,9 +40,6 @@ bool ActionManager::add(ShortcutKey const &shortcut, Action* act)
 	//Et on l'ajouter à la liste des raccourcis.
 	int id = _shortcut.creat(shortcut);
 	Bind(EVT_SHORTCUT, &ActionManager::OnShortcut, this, id);
-	
-	//Enfin on active l'action.
-	act->enable(_enableAction);
 	
 	return true;
 }
@@ -130,14 +127,6 @@ void ActionManager::save(wxFileConfig& fileConfig)const
 void ActionManager::enableShortcuts(bool val)
 {
 	_shortcut.enable(val);
-}
-
-void ActionManager::enableActions(bool val)
-{
-	_enableAction = val;
-	
-	for(auto &it: _data)
-		it.second->enable(_enableAction);
 }
 
 void ActionManager::OnShortcut(ShortcutEvent& event)

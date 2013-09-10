@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.5
+//! \version 0.6
 //! \date 10.12.12
 //!
 //! ********************************************************************
@@ -34,7 +34,6 @@ class MenuIcon
 		
 		int getIdMenuItemPreferences();
 		int getIdMenuItemEnableShortcuts();
-		int getIdMenuItemEnableActions();
 		int getIdMenuItemAbout();
 		int getIdMenuItemExit();
 
@@ -47,7 +46,6 @@ class MenuIcon
 		wxMenu* _menuTaskBarIcon;
 		wxMenuItem* _menuItemPreferences;
 		wxMenuItem* _menuItemEnableShortcuts;
-		wxMenuItem* _menuItemEnableActions;
 		wxMenuItem* _menuItemAbout;
 		wxMenuItem* _menuItemExit;
 };

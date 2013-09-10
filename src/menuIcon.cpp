@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.5
+//! \version 0.6
 //! \date 10.12.12
 //!
 //! ********************************************************************
@@ -37,10 +37,6 @@ MenuIcon::MenuIcon()
 	_menuTaskBarIcon->Append(_menuItemEnableShortcuts);
 	_menuItemEnableShortcuts->Check(true);
 	
-	_menuItemEnableActions = new wxMenuItem(_menuTaskBarIcon, wxID_ANY, _("Enable Actions"), _("Activate Actions"), wxITEM_CHECK);
-	_menuTaskBarIcon->Append(_menuItemEnableActions);
-	_menuItemEnableActions->Check(true);
-	
 	_menuItemAbout = new wxMenuItem(_menuTaskBarIcon, wxID_ABOUT, _("About"), _("About")+" "+PROJECT_NAME, wxITEM_NORMAL);
 	_menuTaskBarIcon->Append(_menuItemAbout);
 	
@@ -50,16 +46,16 @@ MenuIcon::MenuIcon()
 	//Task Icon
 	_taskBarIcon = new wxTaskBarIcon;
 	wxIcon tmpIcon;
-	tmpIcon.LoadFile("../icons/16x16/flydocs.png", wxBITMAP_TYPE_PNG);
+	tmpIcon.LoadFile("../icons/16x16/" PROJECT_NAME ".png", wxBITMAP_TYPE_PNG);
 	_taskBarIcon->SetIcon(tmpIcon, PROJECT_NAME);
 	
 	//bind l'événement
-	_taskBarIcon->Bind(wxEVT_TASKBAR_LEFT_DCLICK, &MenuIcon::OnShow, this);
+	_taskBarIcon->Bind(wxEVT_TASKBAR_CLICK, &MenuIcon::OnShow, this);
 }
 
 MenuIcon::~MenuIcon()
 {
-	_taskBarIcon->Unbind(wxEVT_TASKBAR_LEFT_DCLICK, &MenuIcon::OnShow, this);
+	_taskBarIcon->Unbind(wxEVT_TASKBAR_CLICK, &MenuIcon::OnShow, this);
 	
 	delete _taskBarIcon;
 	delete _menuTaskBarIcon;
@@ -78,11 +74,6 @@ int MenuIcon::getIdMenuItemPreferences()
 int MenuIcon::getIdMenuItemEnableShortcuts()
 {
 	return _menuItemEnableShortcuts->GetId();
-}
-
-int MenuIcon::getIdMenuItemEnableActions()
-{
-	return _menuItemEnableActions->GetId();
 }
 
 int MenuIcon::getIdMenuItemAbout()

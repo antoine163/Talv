@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.8
+//! \version 0.9
 //! \date 15.05.2013
 //!
 //! ********************************************************************
@@ -111,10 +111,8 @@ class PanelActLearn : public GuiPanelActLearn
 		~PanelActLearn();
 		
 		//! \brief Méthode appeler si appuis sur bouton "ok" du parent.
-		//! Elle valide les modifications et les installe dans l'action
+		//! Elle valide les modifications et les installes dans l'action
 		void OnOKButtonClick(wxCommandEvent& event);
-		
-		void OnCheckBox(wxCommandEvent& event);
 	
 	private:
 		//! \brief ActLearn à modifier.
@@ -130,7 +128,7 @@ class PanelActLearn : public GuiPanelActLearn
 // *********************************************************************
 
 //! \brief Action pour apprendre une liste.
-class ActLearn : protected wxTimer, public Action
+class ActLearn : public Action
 {
 	friend PanelActLearn;
 	
@@ -141,9 +139,7 @@ class ActLearn : protected wxTimer, public Action
 		//! \param listName le non de la liste à apprendre.
 		//! \param nbText Le nombre de texte a apprendre pour chaque exécution de cette action.
 		//! Valeur minimum 1. Si vous préciser 0 c'est comme si vous préciser 1.
-		//! \param callTime temps d'appelle pour exécuter l'action.
-		//! En minute et 0 pour ne jamais exécuter l'action au bout d'un temps.
-		ActLearn(wxString const& listName, unsigned int nbText, unsigned int callTime);
+		ActLearn(wxString const& listName, unsigned int nbText);
 		//! \brief Constructeur par recopie.
 		ActLearn(ActLearn const& other);
 						
@@ -164,9 +160,6 @@ class ActLearn : protected wxTimer, public Action
 		//! \brief Obtenir le nom de la liste utiliser.
 		wxString getListNameUsed()const;
 		
-		//! \brief Permet à l'action de s'auto exécuter.
-		virtual void enable(bool enable = true);
-		
 	protected:		
 		//! \brief Permet de charger les préférences de l'action à partir du wxFileConfig.
 		//! \param fileConfig fichier à partir du quelle l'action doit être charger.
@@ -176,16 +169,12 @@ class ActLearn : protected wxTimer, public Action
 		//! \param fileConfig fichier où l'action doit être sauvegarder.
 		void actSave(wxFileConfig & fileConfig)const;
 		
-		void Notify();
-		
 	private:
 		//! \brief Nom de la liste de révision.
 		wxString _listName;
 		//! \brief Le nombre de texte a apprendre pour chaque exécution de cette action.
 		//! \note La valeur minimum est 1.
 		unsigned int _nbText;
-		//! \brief Temps pour laquelle l'action est exécuter. En minute.
-		unsigned int _callTime;
 };
 
 #endif //ACTION_LEARN_H

@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.12
+//! \version 1.13
 //! \date 12.12.12
 //!
 //! ********************************************************************
@@ -40,7 +40,6 @@ bool App::OnInit()
 	SetExitOnFrameDelete(false);
 	_menuIcon = nullptr;
 	_enableShortcuts = true;
-	_enableActions = true;
 	
 	//Changement du Préfixe seulement sous unix
 	#if defined(__UNIX__)
@@ -102,7 +101,6 @@ void App::creatMenuItem()
 		
 		Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnPreferences, this, _menuIcon->getIdMenuItemPreferences());
 		Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnEnableShortcuts, this, _menuIcon->getIdMenuItemEnableShortcuts());
-		Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnEnableActions, this, _menuIcon->getIdMenuItemEnableActions());
 		Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnAbout, this, _menuIcon->getIdMenuItemAbout());
 		Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnExit, this, _menuIcon->getIdMenuItemExit());
 	}
@@ -114,7 +112,6 @@ void App::deleteMenuItem()
 	{
 		Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::OnPreferences, this, _menuIcon->getIdMenuItemPreferences());
 		Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::OnEnableShortcuts, this, _menuIcon->getIdMenuItemEnableShortcuts());
-		Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::OnEnableActions, this, _menuIcon->getIdMenuItemEnableActions());
 		Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::OnAbout, this, _menuIcon->getIdMenuItemAbout());
 		Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::OnExit, this, _menuIcon->getIdMenuItemExit());
 		
@@ -134,8 +131,6 @@ void App::OnPreferences(wxCommandEvent&)
 	
 	//Désactivation des raccourcis.
 	actionManager->enableShortcuts(false);
-	//Désactivation des actions.
-	actionManager->enableActions(false);
 	
 	//Création du dialog.
 	DialogPreferences dlg;
@@ -154,10 +149,8 @@ void App::OnPreferences(wxCommandEvent&)
 			deleteMenuItem();
 	}
 	
-	//On réactive les raccourcis en acore avec le menue.
+	//On réactive les raccourcis.
 	actionManager->enableShortcuts(_enableShortcuts);
-	//On réactive les action en acore avec le menue.
-	actionManager->enableActions(_enableActions);
 		
 	_menuIcon->enable(true);
 }
@@ -168,11 +161,11 @@ void App::OnEnableShortcuts(wxCommandEvent& event)
 	ActionManager::getInstance()->enableShortcuts(_enableShortcuts);
 }
 
-void App::OnEnableActions(wxCommandEvent& event)
-{
-	_enableActions = event.IsChecked();
-	ActionManager::getInstance()->enableActions(_enableActions);
-}
+//void App::OnEnableActions(wxCommandEvent& event)
+//{
+	//_enableActions = event.IsChecked();
+	//ActionManager::getInstance()->enableActions(_enableActions);
+//}
 
 //! \todo Désactiver le menu
 void App::OnAbout(wxCommandEvent&)
