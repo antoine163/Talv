@@ -75,7 +75,7 @@ int DialogActLearn::ShowModal()
 
 bool DialogActLearn::nextText()
 {
-	//On quitte si il on ne doit plus installe de nouveau texte.
+	//On quitte si on ne doit plus installe de nouveau texte.
 	_iNbText++;
 	if(_iNbText > _nbText)
 		return false;

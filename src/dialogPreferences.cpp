@@ -37,7 +37,7 @@ PanelList::PanelList(wxWindow* parent, wxString name)
 : GuiPanelList(parent), _name(name)
 {
 	#if wxCHECK_VERSION(2, 9, 5)
-		_listCtrl->EnableAlternateRowColours();
+		//_listCtrl->EnableAlternateRowColours();
 	#endif
 	
 	//Construction du menu
