@@ -48,7 +48,7 @@ OBJ_DIR = obj
 # Liste des fichiers source C++.
 ########################################################################
 SRC=../src/main.cpp	
-SRC+=../src/menuIcon.cpp
+SRC+=../src/taskIcon.cpp
 SRC+=../src/shortcut.cpp
 SRC+=../src/actionManager.cpp
 SRC+=../src/action.cpp

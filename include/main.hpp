@@ -19,7 +19,7 @@
 #include <wx/app.h>
 #include <wx/intl.h>
 
-#include "menuIcon.hpp"
+#include "taskIcon.hpp"
 
 // *********************************************************************
 // Class App
@@ -37,31 +37,15 @@ class App : public wxApp
 		//! \brief Quitte l'application, libère les ressources.
 		int OnExit();
 		
-		//! \brief Créés un menue dans la zone de notification.
-		void creatMenuItem();
-		//! \brief Supprime le menue dans la zone de notification.
-		void deleteMenuItem();
-		
-		//! \brief Méthode appeler lorsque l'item Preference dans le menu à été cliquer.
-		//! Cette méthode lance le dialogue des préférences.
-		void OnPreferences(wxCommandEvent&);
-		//! \brief Méthode appeler lorsque l'item EnableShortcuts dans le menu à été cliquer.
-		//! Cette méthode désactive ou active tout les raccourcis qui on été enregistre auprès de \ref _actionManager.
-		void OnEnableShortcuts(wxCommandEvent& event);
-		//! \brief Méthode appeler lorsque l'item About dans le menu à été cliquer.
-		//! Cette méthode lance le dialogue About.
-		void OnAbout(wxCommandEvent&);
 		//! \brief Méthode appeler lorsque l'item Exit dans le menu à été cliquer.
 		//! Cette méthode fais en sort de quitter l'application.
 		void OnExit(wxCommandEvent&);
 	
 	private:
 		//! \brief Menu dans la zone de notification.
-		MenuIcon* _menuIcon;
+		TaskIcon* _taskIcon;
 		//! \brief Pour la traduction de l'application.
 		wxLocale* _locale;
-		
-		bool _enableShortcuts;
 };
 
 DECLARE_APP(App);

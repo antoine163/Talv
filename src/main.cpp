@@ -19,7 +19,6 @@
 #include "listManager.hpp"
 #include "dialogPreferences.hpp"
 
-#include <wx/aboutdlg.h>
 #include <wx/fileconf.h>
 #include <wx/stdpaths.h>
 #include <unistd.h>
@@ -38,8 +37,7 @@ bool App::OnInit()
 	//Init général
 	wxInitAllImageHandlers();
 	SetExitOnFrameDelete(false);
-	_menuIcon = nullptr;
-	_enableShortcuts = true;
+	_taskIcon = nullptr;
 	
 	//Changement du Préfixe seulement sous unix
 	#if defined(__UNIX__)
@@ -66,17 +64,21 @@ bool App::OnInit()
 	
 	//Création du menu ou pas.
 	if(Resource::getInstance()->getShowMenu())
-		creatMenuItem();
-	else
-		deleteMenuItem();
-	
+		_taskIcon = new TaskIcon();
+		
+	//Bind pour attraper l'évènement pour quitter qui peut venir de n'importe endroit dan le code.
+	Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnExit, this, wxID_EXIT);
+		
 	return true;
 }
 
 int App::OnExit()
 {	
+	//Unbind l'évènement pour quitter.
+	Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::OnExit, this, wxID_EXIT);
+	
 	//Suppression du menu.
-	deleteMenuItem();
+	delete _taskIcon;
 	
 	//Suppression du mangeur d'action.
 	ActionManager::kill();
@@ -91,106 +93,6 @@ int App::OnExit()
 	delete _locale;
 	
 	return 0;
-}
-
-void App::creatMenuItem()
-{
-	if(!_menuIcon)
-	{
-		_menuIcon = new MenuIcon();
-		
-		Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnPreferences, this, _menuIcon->getIdMenuItemPreferences());
-		Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnEnableShortcuts, this, _menuIcon->getIdMenuItemEnableShortcuts());
-		Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnAbout, this, _menuIcon->getIdMenuItemAbout());
-		Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnExit, this, _menuIcon->getIdMenuItemExit());
-	}
-}
-
-void App::deleteMenuItem()
-{
-	if(_menuIcon)
-	{
-		Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::OnPreferences, this, _menuIcon->getIdMenuItemPreferences());
-		Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::OnEnableShortcuts, this, _menuIcon->getIdMenuItemEnableShortcuts());
-		Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::OnAbout, this, _menuIcon->getIdMenuItemAbout());
-		Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::OnExit, this, _menuIcon->getIdMenuItemExit());
-		
-		delete _menuIcon;
-		_menuIcon = nullptr;
-	}
-}
-
-//! \bug Segmentation fault quand appelle de deleteMenuItem
-//! \todo Désactiver le menu
-void App::OnPreferences(wxCommandEvent&)
-{
-	_menuIcon->enable(false);
-
-	//Récupération de l'instance de ActionManager;
-	ActionManager* actionManager = ActionManager::getInstance();
-	
-	//Désactivation des raccourcis.
-	actionManager->enableShortcuts(false);
-	
-	//Création du dialog.
-	DialogPreferences dlg;
-	
-	//Affichage du dialog.
-	if(dlg.ShowModal() == wxID_OK)
-	{	
-		//On vérifie si on doit quitter l'application ou pas.
-		if(dlg.shutdownIsToggle())
-			ExitMainLoop();
-			
-		//Vérification si on doit afficher ou pas l'icône dans la zone de notification.
-		if(Resource::getInstance()->getShowMenu())
-			creatMenuItem();
-		else
-			deleteMenuItem();
-	}
-	
-	//On réactive les raccourcis.
-	actionManager->enableShortcuts(_enableShortcuts);
-		
-	_menuIcon->enable(true);
-}
-
-void App::OnEnableShortcuts(wxCommandEvent& event)
-{
-	_enableShortcuts = event.IsChecked();
-	ActionManager::getInstance()->enableShortcuts(_enableShortcuts);
-}
-
-//! \todo Désactiver le menu
-void App::OnAbout(wxCommandEvent&)
-{	
-	wxAboutDialogInfo info;
-
-	info.SetName(PROJECT_NAME);
-	info.SetVersion(PROJECT_VERSION);
-	
-	wxString msg;
-	msg << _("This software is help for Internationalization.") << "\n\n";
-	msg << _("Build on") << " ";
-	#if defined(__UNIX__)
-	msg << "Unix";
-	#elif defined(__WXMSW__)
-	msg << "Windows";
-	#endif
-	#ifdef __i386
-	msg << " " << _("in") << " " << " i386\n";
-	#elif __amd64
-	msg << " " << _("in") << " " << " x86_64\n";
-	#endif
-	msg << _("Date") <<  " : " << __DATE__;
-	
-	info.SetDescription(msg);
-	info.SetCopyright("(C) 2012-1013");
-	info.SetWebSite("http://antoine163.github.com/flydocs/");
-	info.AddDeveloper("Maleyrie Antoine <antoine.maleyrie@gmail.com>");
-	info.AddDocWriter("Maleyrie Antoine <antoine.maleyrie@gmail.com>");
-	
-	wxAboutBox(info);
 }
 
 void App::OnExit(wxCommandEvent&)
