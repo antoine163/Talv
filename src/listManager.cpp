@@ -204,7 +204,7 @@ void EditListManager::init()
 			wxCopyFile(	listManager->getPath()+'/'+it.first,
 						getPath()+'/'+it.first);
 		}
-							
+			
 		//Récupération des langues
 		it.second->getlanguages(&tmplgsrc, &tmplgto);
 		

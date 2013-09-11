@@ -52,10 +52,10 @@ class Action
 		virtual wxString getStringPreferences()const=0;
 		
 		//! \brief Obtenir le panel pour l'édition de l'action.
-		//! Pour les classes filles le but est d'éditer directement les paramètre (attribut) de l'action via le panel.
+		//! Pour les classes filles, le but est d'éditer directement les paramètre (attribut) de l'action via le panel.
 		//! \note Cette méthode crées un panel et retourne le pointeur sur se panel il faudra prévoir de libérai la mémoire.
 		//! \param parent le wxWindow parent.
-		//! \param buttonOK bouton "OK" du dialogue parent.
+		//! \param buttonOK bouton "OK" du dialogue parent, pour récupérer l'évènement de celui-ci.
 		virtual wxPanel* getPanelPreferences(wxWindow* parent, wxButton* buttonOK)=0;
 		
 		//! \brief Obtenir la description de l'action.
@@ -63,23 +63,21 @@ class Action
 		wxString const& getDescription()const;
 		
 		//! \brief Obtenir le nom de la liste utiliser.
-		//! \return wxEmptyString si l(action n'utilise pas de liste.
+		//! \return wxEmptyString si l'action n'utilise pas de liste.
 		virtual wxString getListNameUsed()const;
 		
 		//! \brief Obtenir le non de l'action.
-		//! Peut être utiliser avec les GUI.
 		//! \return Le non de l'action.
 		wxString const& getName()const;
 	
 		//! \brief Obtenir le non de la class de l'action.
-		//! La différence avec \ref getName() est que cette méthode n'est pas influencer par la traduction de l'application.
 		//! \return Le non de l'action.
 		wxString const& getActTypeName()const;
 		
-		//! \brief Crée une nouvelle action à partir de son nom (invariant).
-		//! \param actTypeName le non de l'action (invarient)
+		//! \brief Crée une nouvelle action à partir de son nom de class.
+		//! \param actTypeName le non de la class de l'action.
 		//! \return nullptr si l'action n'a pas pu être créé.
-		//! \see getActName()
+		//! \see getActTypeName()
 		static Action* newAction(wxString const& actTypeName);
 		
 		//! \brief Crée une nouvelle action à partir d'une autre action (création d'une copie).
@@ -100,7 +98,7 @@ class Action
 		//! \brief Le non de l'action.
 		wxString _name;
 		
-		//! \brief Le non de l'action (invariant).
+		//! \brief Le non de la class de l'action.
 		wxString _actTypeName;
 		
 		//! \brief Le non de l'action.

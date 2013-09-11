@@ -78,6 +78,7 @@ class ListManager : public ListManagerBase, public Singleton<ListManager>
 		void save(wxFileConfig& fileConfig)const;
 		
 		//! \brief Path de travaille du manager.
+		//! C'est un dossier utilisateur.
 		wxString getPath();
 
 	private:
@@ -103,6 +104,7 @@ class EditListManager : public ListManagerBase, public Singleton<EditListManager
 		void apply();
 
 		//! \brief Path de travaille du manager.
+		//! C'est un dossier temporaire.
 		wxString getPath();
 		
 	private:
