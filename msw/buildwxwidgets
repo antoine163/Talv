@@ -1,0 +1,2 @@
+mingw32-make -f makefile.gcc SHARED=1 UNICODE=1 BUILD=release VENDOR=win32 clean
+mingw32-make -f makefile.gcc SHARED=1 UNICODE=1 BUILD=release VENDOR=win32
