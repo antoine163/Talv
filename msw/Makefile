@@ -19,8 +19,8 @@ EXEC_NAME=$(PROJECT_NAME).exe
 ########################################################################
 # Flags pour wxWidgets
 CXX_FLAGS+=-mthreads
-CXX_FLAGS+=-IC:\wxWidgets-2.9.4\include
-CXX_FLAGS+=-IC:\wxWidgets-2.9.4\lib\gcc_dll\mswu
+CXX_FLAGS+=-IC:\wxWidgets-2.9.5\include
+CXX_FLAGS+=-IC:\wxWidgets-2.9.5\lib\gcc_dll\mswu
 CXX_FLAGS+=-D__GNUWIN32__ -D__WXMSW__ -DWXUSINGDLL -DwxUSE_UNICODE
 
 
@@ -28,8 +28,9 @@ CXX_FLAGS+=-D__GNUWIN32__ -D__WXMSW__ -DWXUSINGDLL -DwxUSE_UNICODE
 # Flags de linkage pour les libs.
 ########################################################################
 # Flags pour wxWidgets
-LD_FLAGS+=-mthreads -LC:\wxWidgets-2.9.4\lib\gcc_dll
-LD_FLAGS+=-lwxbase29u -lwxmsw29u_core -lwxmsw29u_adv -lwxbase29u_net
+LD_FLAGS+=-mthreads -LC:\wxWidgets-2.9.5\lib\gcc_dll
+LD_FLAGS+=-lwxbase295u_gcc_win32 -lwxmsw295u_core_gcc_win32
+LD_FLAGS+=-lwxmsw295u_adv_gcc_win32 -lwxbase295u_net_gcc_win32
 
 
 ########################################################################
@@ -42,7 +43,7 @@ OBJ_DIR = obj
 # Liste des fichiers source C++.
 ########################################################################
 SRC=../src/main.cpp	
-SRC+=../src/menuIcon.cpp
+SRC+=../src/taskIcon.cpp
 SRC+=../src/shortcut.cpp
 SRC+=../src/actionManager.cpp
 SRC+=../src/action.cpp
@@ -59,8 +60,6 @@ SRC+=../src/action/actLearn.cpp
 SRC+=../gui/action/guiPanelActLearn.cpp
 SRC+=../src/action/actTranslation.cpp
 SRC+=../gui/action/guiPanelActTranslation.cpp
-SRC+=../src/action/actSay.cpp
-SRC+=../gui/action/guiPanelActSay.cpp
 SRC+=../src/action/actTranslationToList.cpp
 SRC+=../gui/action/guiPanelActTranslationToList.cpp
 #GUI
@@ -126,7 +125,7 @@ $(OBJ_DIR)/%.o: ../%.cpp
 # Compilation des ressources.
 ########################################################################
 resource.o:resource.rc
-	windres -IC:\wxWidgets-2.9.4\include -o $@ -i $<
+	windres -IC:\wxWidgets-2.9.5\include -o $@ -i $<
 
 
 ########################################################################
