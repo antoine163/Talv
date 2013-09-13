@@ -601,7 +601,7 @@ void DialogPreferences::applyAndSave()
 	ActionManager::getInstance()->save(fileConfig);
 }
 
-void DialogPreferences::OnNotebookPageChanging(wxNotebookEvent& event)
+void DialogPreferences::OnNotebookPageChanged(wxNotebookEvent& event)
 {
 	//Récupération du nom de la page.
 	wxString notebookPage = _notebook->GetPageText(event.GetSelection());

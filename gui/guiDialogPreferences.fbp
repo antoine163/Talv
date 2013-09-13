@@ -342,7 +342,7 @@
                 </object>
             </object>
         </object>
-        <object class="Dialog" expanded="0">
+        <object class="Dialog" expanded="1">
             <property name="bg"></property>
             <property name="center">wxBOTH</property>
             <property name="context_help"></property>
@@ -400,7 +400,7 @@
             <event name="OnSetFocus"></event>
             <event name="OnSize"></event>
             <event name="OnUpdateUI"></event>
-            <object class="wxBoxSizer" expanded="0">
+            <object class="wxBoxSizer" expanded="1">
                 <property name="minimum_size"></property>
                 <property name="name">bSizer1</property>
                 <property name="orient">wxVERTICAL</property>
@@ -451,8 +451,8 @@
                         <event name="OnMotion"></event>
                         <event name="OnMouseEvents"></event>
                         <event name="OnMouseWheel"></event>
-                        <event name="OnNotebookPageChanged"></event>
-                        <event name="OnNotebookPageChanging">OnNotebookPageChanging</event>
+                        <event name="OnNotebookPageChanged">OnNotebookPageChanged</event>
+                        <event name="OnNotebookPageChanging"></event>
                         <event name="OnPaint"></event>
                         <event name="OnRightDClick"></event>
                         <event name="OnRightDown"></event>

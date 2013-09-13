@@ -27,8 +27,6 @@
 
 //! \brief Poins d'entrée de l'application.
 //! Initialise l'application et libère les ressources à la fin de vie de celle ci.
-//! \bug Trop de possesseur utiliser au bout d'un certain moment. 
-//! A priori cela viderai du tts ou les ressources ne son pas libérai après utilisation ...
 class App : public wxApp
 {
 	public:			

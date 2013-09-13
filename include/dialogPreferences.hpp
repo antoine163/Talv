@@ -30,7 +30,7 @@
 // *********************************************************************
 
 //! \brief Panel de base pour les listes.
-class PanelList : public GuiPanelList 
+class PanelList : public GuiPanelList
 {
 	public:
 		//! \brief Constructeur.
@@ -178,7 +178,7 @@ class DialogPreferences : public GuiDialogPreferences
 		void applyAndSave();
 		
 		//! \brief quand l'utilisateur change de page.
-		void OnNotebookPageChanging(wxNotebookEvent& event);
+		void OnNotebookPageChanged(wxNotebookEvent& event);
 		//! \brief Applique les modifications et quitte le dialog.
 		void OnButtonClickOK(wxCommandEvent& event);
 		//! \brief Applique les modifications.
