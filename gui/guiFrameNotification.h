@@ -1,12 +1,12 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Jan 10 2013)
+// C++ code generated with wxFormBuilder (version Aug 24 2013)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
 ///////////////////////////////////////////////////////////////////////////
 
-#ifndef __guiDialogNotification__
-#define __guiDialogNotification__
+#ifndef __guiFrameNotification__
+#define __guiFrameNotification__
 
 #include <wx/intl.h>
 
@@ -17,15 +17,15 @@
 #include <wx/colour.h>
 #include <wx/settings.h>
 #include <wx/sizer.h>
-#include <wx/dialog.h>
+#include <wx/frame.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
 
 ///////////////////////////////////////////////////////////////////////////////
-/// Class GuiDialogNotification
+/// Class GuiFrameNotification
 ///////////////////////////////////////////////////////////////////////////////
-class GuiDialogNotification : public wxDialog 
+class GuiFrameNotification : public wxFrame 
 {
 	private:
 	
@@ -34,15 +34,14 @@ class GuiDialogNotification : public wxDialog
 		wxStaticText* _staticTextMessage;
 		
 		// Virtual event handlers, overide them in your derived class
-		virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
 		virtual void OnLeftDown( wxMouseEvent& event ) { event.Skip(); }
 		
 	
 	public:
 		
-		GuiDialogNotification( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDIALOG_NO_PARENT|wxMINIMIZE_BOX|wxSTAY_ON_TOP|wxNO_BORDER );
-		~GuiDialogNotification();
+		GuiFrameNotification( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxFRAME_NO_TASKBAR|wxSTAY_ON_TOP|wxNO_BORDER );
+		~GuiFrameNotification();
 	
 };
 
-#endif //__guiDialogNotification__
+#endif //__guiFrameNotification__

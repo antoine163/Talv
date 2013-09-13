@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.3
+//! \version 0.4
 //! \date 12.04.2013
 //!
 //! ********************************************************************
@@ -39,10 +39,9 @@
 
 #if defined(USE_EMULATE_NOTIFICATION) || defined(__DOXYGEN__)
 
-DialogNotification::DialogNotification(	wxString const& title,
+FrameNotification::FrameNotification(	wxString const& title,
 										wxString const& message)
-: GuiDialogNotification(nullptr, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxFRAME_NO_TASKBAR|wxDIALOG_NO_PARENT|wxSTAY_ON_TOP|wxNO_BORDER),
-_timeout(this) 
+: GuiFrameNotification(nullptr), _timeout(this) 
 {
 	//Affiche le titre et le message.
 	_staticTextTitle->SetLabelMarkup("<b>"+title+"</b>");
@@ -56,48 +55,48 @@ _timeout(this)
 	this->SetSizeHints(GetSize(), GetSize());
 	
 	//Bind du timer pour le timeout
-	Bind(wxEVT_TIMER, &DialogNotification::OnTimeout, this);
+	Bind(wxEVT_TIMER, &FrameNotification::OnTimeout, this);
 }
 
-DialogNotification::~DialogNotification()
+FrameNotification::~FrameNotification()
 {
 	//Unbind du timer pour le timeout
-	Unbind(wxEVT_TIMER, &DialogNotification::OnTimeout, this);
+	Unbind(wxEVT_TIMER, &FrameNotification::OnTimeout, this);
 }
 
-void DialogNotification::show(int timeout)
+void FrameNotification::show(int timeout)
 {
 	ShowWithoutActivating();
 	_timeout.Start(timeout*1000, wxTIMER_ONE_SHOT);
 }
 
-void DialogNotification::OnClose(wxCloseEvent&)
+void FrameNotification::OnClose(wxCloseEvent&)
 {
 	//Qui la notification
 	exit();
 }
 
-void DialogNotification::OnLeftDown(wxMouseEvent&)
+void FrameNotification::OnLeftDown(wxMouseEvent&)
 {
 	//Qui la notification
 	exit();
 }
 
-void DialogNotification::OnTimeout(wxTimerEvent&)
+void FrameNotification::OnTimeout(wxTimerEvent&)
 {
 	//Qui la notification
 	exit();
 }
 
-void DialogNotification::exit()
+void FrameNotification::exit()
 {
 	//Envoi de l'événement.
-	wxCommandEvent event(EVT_EXIT_DIALG_NOTIFICATION, GetId());
+	wxCommandEvent event(EVT_EXIT_FRAME_NOTIFICATION, GetId());
     event.SetEventObject(this);
     ProcessWindowEvent(event);
 }
 
-wxDEFINE_EVENT(EVT_EXIT_DIALG_NOTIFICATION, wxCommandEvent);
+wxDEFINE_EVENT(EVT_EXIT_FRAME_NOTIFICATION, wxCommandEvent);
 
 #endif
 
@@ -126,8 +125,8 @@ Notification::~Notification()
 			notify_uninit();
 		#endif
 	#else
-		//On détruis les dialogues
-		for(auto it : _dialogs)
+		//On détruis les fenêtres de notification
+		for(auto it : _framesNotify)
 		{
 			it->Destroy();
 			delete it;
@@ -160,41 +159,41 @@ void Notification::notify(	wxString const& title,
 			notify.Show(timeout);
 		#endif
 	#else
-		DialogNotification *dialog = new DialogNotification(title, message);
+		FrameNotification *frameNotify = new FrameNotification(title, message);
 		
-		if(_dialogs.size() != 0)
+		if(_framesNotify.size() != 0)
 		{			
 			int positionY = 0;
 			int sizeY = 0;
-			DialogNotification *lastDialog = _dialogs.back();
+			FrameNotification *lastFrameNotify = _framesNotify.back();
 		
-			lastDialog->GetPosition(nullptr, &positionY);
-			lastDialog->GetSize(nullptr, &sizeY);
+			lastFrameNotify->GetPosition(nullptr, &positionY);
+			lastFrameNotify->GetSize(nullptr, &sizeY);
 			
-			dialog->SetPosition(wxPoint(0, positionY+sizeY));
+			frameNotify->SetPosition(wxPoint(0, positionY+sizeY));
 		}
 		else
 		{
-			dialog->SetPosition(wxPoint(0, 0));
+			frameNotify->SetPosition(wxPoint(0, 0));
 		}
 
-		_dialogs.push_back(dialog);
-		dialog->Bind(EVT_EXIT_DIALG_NOTIFICATION, &Notification::OnExitDialogNotification, this);
-		dialog->show(timeout);
+		_framesNotify.push_back(frameNotify);
+		frameNotify->Bind(EVT_EXIT_FRAME_NOTIFICATION, &Notification::OnExitFrameNotification, this);
+		frameNotify->show(timeout);
 		
-		if(_dialogs.size() != 0)
+		if(_framesNotify.size() != 0)
 		{
 			int positionY = 0;
 			int sizeY = 0;
 			int displayY = 0;
 			
 			wxDisplaySize(nullptr, &displayY);
-			dialog->GetPosition(nullptr, &positionY);
-			dialog->GetSize(nullptr, &sizeY);
+			frameNotify->GetPosition(nullptr, &positionY);
+			frameNotify->GetSize(nullptr, &sizeY);
 			
 			if(positionY+sizeY > displayY)
 			{
-				_dialogs[0]->exit();
+				_framesNotify[0]->exit();
 			}
 		}
 	#endif
@@ -202,44 +201,44 @@ void Notification::notify(	wxString const& title,
 
 #ifdef USE_EMULATE_NOTIFICATION
 
-void Notification::OnExitDialogNotification(wxCommandEvent& event)
+void Notification::OnExitFrameNotification(wxCommandEvent& event)
 {
-	//Obtenir le dialogue qui provoquer l'événement.
-	DialogNotification* dialog = static_cast<DialogNotification*>(event.GetEventObject());
+	//Obtenir la (frame) notification qui a provoquer l'événement.
+	FrameNotification* frameNotify = static_cast<FrameNotification*>(event.GetEventObject());
 	
-	//Unbind le dialogue
-	dialog->Unbind(EVT_EXIT_DIALG_NOTIFICATION, &Notification::OnExitDialogNotification, this);
+	//Unbind la notification
+	frameNotify->Unbind(EVT_EXIT_FRAME_NOTIFICATION, &Notification::OnExitFrameNotification, this);
 
-	int iDialog = -1;
+	int iFrameNotify = -1;
 	int sizeY = 0;
 	
-	//On sauvegarde le décalage que l'on doit affecter au dialogue qui doive être décaler.
-	dialog->GetSize(nullptr, &sizeY);
+	//On sauvegarde le décalage que l'on doit affecter au notification qui doive être décaler.
+	frameNotify->GetSize(nullptr, &sizeY);
 	
-	//Parcoure tout les dialogues actifs
-	for(unsigned int i = 0; i<_dialogs.size(); i++)
+	//Parcoure tout les notification actifs
+	for(unsigned int i = 0; i<_framesNotify.size(); i++)
 	{
-		//Si le dialogue a été trouver
-		if(iDialog != -1)
+		//Si un notification a été trouver
+		if(iFrameNotify != -1)
 		{
-			//On décale les dialogue qui doive changer de position
-			wxPoint pos = _dialogs[i]->GetPosition();
+			//On décale les notifications qui doive changer de position
+			wxPoint pos = _framesNotify[i]->GetPosition();
 			pos.y -= sizeY;
-			_dialogs[i]->SetPosition(pos);
+			_framesNotify[i]->SetPosition(pos);
 		}
-		//c'est le dialogue que l'on cherche ?
-		else if(_dialogs[i] == dialog)
+		//c'est la notification que l'on cherche ?
+		else if(_framesNotify[i] == frameNotify)
 		{
 			//On retiens sont index dans le vector
-			iDialog = i;
+			iFrameNotify = i;
 		}
 	}
 	
-	//On détruis le dialogue
-	_dialogs[iDialog]->Destroy();
-	delete _dialogs[iDialog];
+	//On détruis la (frame) notification
+	_framesNotify[iFrameNotify]->Destroy();
+	delete _framesNotify[iFrameNotify];
 	//Et on l'enlève du vector
-	_dialogs.erase(_dialogs.begin()+iDialog);
+	_framesNotify.erase(_framesNotify.begin()+iFrameNotify);
 }
 
 #endif

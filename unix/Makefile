@@ -58,7 +58,7 @@ SRC+=../src/resource.cpp
 #Notification
 SRC+=../src/notification.cpp
 ifeq ($(EMULATE_NOTIFICATION), yes)
-SRC+=../gui/guiDialogNotification.cpp
+SRC+=../gui/guiFrameNotification.cpp
 endif
 #Action
 SRC+=../src/action/actLearn.cpp

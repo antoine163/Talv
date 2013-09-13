@@ -174,7 +174,7 @@ class DialogPreferences : public GuiDialogPreferences
 		bool shutdownIsToggle()const;
 		
 	private:
-		//! \brief applique les modification et les sauvegarde dans le fichier de configuration.
+		//! \brief applique les modifications et les sauvegardes dans le fichier de configuration.
 		void applyAndSave();
 		
 		//! \brief quand l'utilisateur change de page.

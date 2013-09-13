@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.3
+//! \version 0.4
 //! \date 12.04.2013
 //!
 //! ********************************************************************
@@ -20,7 +20,7 @@
 #include <wx/string.h>
 
 #ifdef USE_EMULATE_NOTIFICATION
-	#include "guiDialogNotification.h"
+	#include "guiFrameNotification.h"
 	#include <wx/frame.h>
 	#include <wx/event.h>
 	#include <wx/timer.h>
@@ -35,13 +35,12 @@
 #if defined(USE_EMULATE_NOTIFICATION) || defined(__DOXYGEN__)
 
 //! \brief .
-class DialogNotification : public GuiDialogNotification
+class FrameNotification : public GuiFrameNotification
 {	
-
 	public:
-		DialogNotification(	wxString const& title,
+		FrameNotification(	wxString const& title,
 							wxString const& message);
-		~DialogNotification();
+		~FrameNotification();
 		
 		void show(int timeout);
 		void exit();
@@ -56,7 +55,7 @@ class DialogNotification : public GuiDialogNotification
 
 };
 
-wxDECLARE_EVENT(EVT_EXIT_DIALG_NOTIFICATION, wxCommandEvent);
+wxDECLARE_EVENT(EVT_EXIT_FRAME_NOTIFICATION, wxCommandEvent);
 
 #endif
 
@@ -74,7 +73,7 @@ class Notification : public Singleton<Notification>
 					wxString const& message=wxEmptyString);
 		
 	#ifdef USE_EMULATE_NOTIFICATION
-		void OnExitDialogNotification(wxCommandEvent& event);
+		void OnExitFrameNotification(wxCommandEvent& event);
 	#endif
 	
 	private:
@@ -82,7 +81,7 @@ class Notification : public Singleton<Notification>
 		~Notification();
 		
 	#ifdef USE_EMULATE_NOTIFICATION
-		std::vector<DialogNotification*> _dialogs;
+		std::vector<FrameNotification*> _framesNotify;
 	#endif
 };
 
