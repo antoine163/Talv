@@ -88,7 +88,7 @@ _lgsrc(lgsrc), _lgto(lgto)
 ActTranslation::~ActTranslation()
 {
 }
-
+#include <wx/msgdlg.h> 
 void ActTranslation::execute()
 {
 	//On récupère le contenue de la presse papier.
