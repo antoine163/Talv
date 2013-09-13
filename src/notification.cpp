@@ -135,6 +135,7 @@ Notification::~Notification()
 	#endif
 }
 
+//! \todo les wxString::FromUTF8(message) son provisoir
 void Notification::notify(	wxString const& title,
 							wxString const& message)
 {
@@ -155,12 +156,12 @@ void Notification::notify(	wxString const& title,
 			}
 		#else
 			//Préparation de la notification.
-			wxNotificationMessage notify(title, message);
+			wxNotificationMessage notify(title, wxString::FromUTF8(message));
 			//Affichage de la notification
 			notify.Show(timeout);
 		#endif
 	#else
-		DialogNotification *dialog = new DialogNotification(title, message);
+		DialogNotification *dialog = new DialogNotification(title, wxString::FromUTF8(message));
 		
 		if(_dialogs.size() != 0)
 		{			

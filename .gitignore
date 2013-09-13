@@ -6,3 +6,4 @@ unix/obj/
 unix/flydocs
 msw/obj/
 msw/flydocs.exe
+msw/resource.o
