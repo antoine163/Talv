@@ -10,25 +10,25 @@
 
 
 ########################################################################
-# Paramètre généraux.
+# ParamÃ¨tre gÃ©nÃ©raux.
 ########################################################################
 #Non du projet
 PROJECT_NAME=flydocs
-#Numéro de version
+#NumÃ©ro de version
 PROJECT_VERSION=1.0
 
 
 ########################################################################
-# Détection de l'os (Pas de détection pour le moment, mais un simple
-# passage d'augment permer de compiler pour les différence os supporter.
+# DÃ©tection de l'os (Pas de dÃ©tection pour le moment, mais un simple
+# passage d'augment permer de compiler pour les diffÃ©rence os supporter.
 # ex pour windows: make release OS_NAME=msw).
 ########################################################################
 OS_NAME=unix
 
 
 ########################################################################
-# Émuler les notifications. Par défaut sous msw elles sont émulé.
-# Par défaut sous unix elle ne sons pas émuler et libnotify sera utiliser
+# Ã‰muler les notifications. Par dÃ©faut sous msw elles sont Ã©mulÃ©.
+# Par dÃ©faut sous unix elle ne sons pas Ã©muler et libnotify sera utiliser
 ########################################################################
 ifeq ($(OS_NAME), unix)
 EMULATE_NOTIFICATION=no
@@ -43,7 +43,7 @@ endif
 ########################################################################
 #Compilateur
 CXX=g++
-#Option de compilation généraux
+#Option de compilation gÃ©nÃ©raux
 CXX_FLAGS=-W -Wall -Wextra -std=gnu++11
 CXX_FLAGS+=-Wno-unused-local-typedefs
 #Flage en plus pour la compilation en release.
@@ -52,14 +52,14 @@ CXX_FLAGS_RELESE=-s -O2
 CXX_FLAGS_DEBUG=-g
 
 ########################################################################
-# Define à ajouter.
+# Define Ã  ajouter.
 ########################################################################
 # Non du projet
 DEFINE=PROJECT_NAME=\"$(PROJECT_NAME)\"
-# Numéro de version
+# NumÃ©ro de version
 DEFINE+=PROJECT_VERSION=\"$(PROJECT_VERSION)\"
 
-#Émuler les notifications.
+#Ã‰muler les notifications.
 ifeq ($(EMULATE_NOTIFICATION), yes)
 DEFINE+=USE_EMULATE_NOTIFICATION
 endif
@@ -74,7 +74,7 @@ export
 
 
 ########################################################################
-# Par défaut la compilation release est active.
+# Par dÃ©faut la compilation release est active.
 ########################################################################
 all:release
 
@@ -94,7 +94,7 @@ debug:
 	
 	
 ########################################################################
-# Exécute le programme
+# ExÃ©cute le programme
 ########################################################################
 .PHONY: run
 run:
@@ -102,7 +102,7 @@ run:
 	
 	
 ########################################################################
-# Exécute le programme avec gdb.
+# ExÃ©cute le programme avec gdb.
 ########################################################################
 .PHONY: rungdb
 rungdb:	
@@ -114,7 +114,7 @@ endif
 	
 	
 ########################################################################
-# Génération de la doc.
+# GÃ©nÃ©ration de la doc.
 ########################################################################
 .PHONY: doc
 doc:
@@ -125,7 +125,7 @@ else
 endif
 	
 ########################################################################
-# Supprime la doc générée.
+# Supprime la doc gÃ©nÃ©rÃ©e.
 ########################################################################
 .PHONY: cleandoc
 cleandoc:
