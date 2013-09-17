@@ -95,10 +95,15 @@ void ActionManager::load(wxFileConfig& fileConfig)
 		
 		//Création d'une action a parte de son nom.
 		Action* tmpAct = Action::newAction(actTypeName);
-		//Chargement des préférence de l'action à partir du fichier de configuration.
-		tmpAct->load(fileConfig);
-		//Ajout de l'action.
-		add(ShortcutKey::stringToShortcutKey(stringShortcut), tmpAct);
+		
+		//Si la création de l'action a réussie, alor on l'ajoute.
+		if(tmpAct)
+		{
+			//Chargement des préférence de l'action à partir du fichier de configuration.
+			tmpAct->load(fileConfig);
+			//Ajout de l'action.
+			add(ShortcutKey::stringToShortcutKey(stringShortcut), tmpAct);
+		}
 		
 		//On positionne le path
 		fileConfig.SetPath("../");
