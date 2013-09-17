@@ -19,7 +19,11 @@
 #include <wx/sstream.h>
 #include <wx/intl.h> 
 #include <wx/url.h>
-#include <wx/log.h> 
+#include <wx/log.h>
+
+#if defined(__WXMSW__)
+#include <windows.h>
+#endif
 
 //TEST
 #include <iostream>
@@ -166,21 +170,82 @@ wxString Resource::actionsToType(wxString const& actionName)const
 	return _actions.at(actionName);
 }
 
-//! \todo a implémenter pour win
-wxString Resource::getClipboard()
+wxString Resource::getClipboard() 
 {
 	wxString text;
+
+	#if defined(__WXMSW__)
+	//buffer ...
+	INPUT input[32];
+	int iinput = 0;
+
+	//Relacher tout les tocuhes.
+	for(int i = 0; i != 0xff; i++)
+	{
+		if(GetAsyncKeyState(i))
+		{
+			input[iinput].type = INPUT_KEYBOARD;
+			input[iinput].ki.wVk = i;
+			input[iinput].ki.wScan = 0;
+			input[iinput].ki.dwFlags = KEYEVENTF_KEYUP;//released
+			input[iinput].ki.time = 0;
+			input[iinput].ki.dwExtraInfo = 0;
+			iinput++;
+		}
+	}
 	
-	//Lire le text ce trouvent dans la presse papier
+	//Presser ctrl
+	input[iinput].type = INPUT_KEYBOARD;
+	input[iinput].ki.wVk = VK_CONTROL;
+	input[iinput].ki.wScan = MapVirtualKey( VK_CONTROL, MAPVK_VK_TO_VSC );
+	input[iinput].ki.dwFlags = 0;//pressed
+	input[iinput].ki.time = 0;
+	input[iinput].ki.dwExtraInfo = 0;
+	iinput++;
+	
+	//Presser 'c'
+	input[iinput].type = INPUT_KEYBOARD;
+	input[iinput].ki.wVk =  0x43;//C key
+	input[iinput].ki.wScan = 0;
+	input[iinput].ki.dwFlags = 0;//pressed
+	input[iinput].ki.time = 0;
+	input[iinput].ki.dwExtraInfo = 0;
+	iinput++;
+	
+	//Relacher 'c'
+	input[iinput].type = INPUT_KEYBOARD;
+	input[iinput].ki.wVk =  0x43;//C key
+	input[iinput].ki.wScan = 0;
+	input[iinput].ki.dwFlags = KEYEVENTF_KEYUP;//released
+	input[iinput].ki.time = 0;
+	input[iinput].ki.dwExtraInfo = 0;
+	iinput++;
+	
+	//Relacher ctrl
+	input[iinput].type = INPUT_KEYBOARD;
+	input[iinput].ki.wVk = VK_CONTROL;
+	input[iinput].ki.wScan = 0;
+	input[iinput].ki.dwFlags = KEYEVENTF_KEYUP;//released
+	input[iinput].ki.time = 0;
+	input[iinput].ki.dwExtraInfo = 0;
+	iinput++;
+	
+	//Simule l'appuie sur ctrl+c
+	SendInput(iinput, input, sizeof(INPUT));
+	Sleep(40);
+	#endif
+	
+	//Lire le text de la presse papier
 	if (wxTheClipboard->Open())
 	{
 		#if defined(__UNIX__)
+		//Lire le text qui ce trouvent dans la presse papier primére.
 		wxTheClipboard->UsePrimarySelection(true);
 		#endif
-		if(wxTheClipboard->IsSupported(wxDF_TEXT))
+		if (wxTheClipboard->IsSupported(wxDF_TEXT))
 		{
 			wxTextDataObject data;
-			wxTheClipboard->GetData(data);
+			wxTheClipboard->GetData( data );
 			text = data.GetText();
 		}
 		wxTheClipboard->Close();
