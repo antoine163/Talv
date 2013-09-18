@@ -27,12 +27,24 @@
 	#include <vector>
 #endif
 
+#if defined(USE_EMULATE_NOTIFICATION) || defined(__DOXYGEN__)
+
+// *********************************************************************
+// Enum PositionScreen_e
+// *********************************************************************
+
+//! \brief Position écran
+enum PositionScreen_e
+{
+	POSITION_SCREEN_TOP_LEFT		=0,		//!< Position en haut à gauche de l'écran.
+	POSITION_SCREEN_TOP_RIGHT		=1,		//!< Position en haut à droit de l'écran.
+	POSITION_SCREEN_BOTTOM_LEFT		=2,		//!< Position en bas à gauche de l'écran.
+	POSITION_SCREEN_BOTTOM_RIGHT	=3		//!< Position en bas à droit de l'écran.
+};
 
 // *********************************************************************
 // Class DialogNotification
 // *********************************************************************
-
-#if defined(USE_EMULATE_NOTIFICATION) || defined(__DOXYGEN__)
 
 //! \brief Fenêtre de notification.
 class FrameNotification : public GuiFrameNotification
@@ -96,6 +108,10 @@ class Notification : public Singleton<Notification>
 		//! Soi par un clique de l'utilisateur sur celle ci ou par la fin du timer.
 		//! \param event est l'évènement que produit la notification.
 		void OnExitFrameNotification(wxCommandEvent& event);
+		
+		//! \brief Fermeture des notifications.
+		//! \param frameNotify est la notification a quitter
+		void ExitFrameNotification(FrameNotification* frameNotify);
 	#endif
 	
 	private:
@@ -105,6 +121,11 @@ class Notification : public Singleton<Notification>
 	#ifdef USE_EMULATE_NOTIFICATION
 		//! \brief Toutes les notifications active.
 		std::vector<FrameNotification*> _framesNotify;
+		
+		PositionScreen_e _positionScreenForNotify;
+		wxPoint _offsetPositionOriginForNotify;
+		int _offsetPositionYFinalForNotify;
+		wxSize _displaySize;
 	#endif
 };
 

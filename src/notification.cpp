@@ -114,6 +114,13 @@ Notification::Notification()
 				wxLogError(_("Libnotify could not be initialized."));
 			}
 		#endif
+	#else
+	_positionScreenForNotify = POSITION_SCREEN_TOP_RIGHT;
+	_displaySize = wxGetDisplaySize();
+	_offsetPositionYFinalForNotify = 0;
+	
+	_offsetPositionOriginForNotify.x = 0;
+	_offsetPositionOriginForNotify.y = 0;
 	#endif
 }
 
@@ -159,43 +166,157 @@ void Notification::notify(	wxString const& title,
 			notify.Show(timeout);
 		#endif
 	#else
-
-		FrameNotification *frameNotify = new FrameNotification(title, message);
+		//Création de la fenêtre de notification.
+		FrameNotification *newFrameNotify = new FrameNotification(title, message);
 		
+		//Récupère la tille de la nouvelle fenêtre.
+		wxSize newNotifySize = newFrameNotify->GetSize();
+		
+		//Variable pour la nouvelle position.
+		wxPoint newNotifyPosition;
+		
+		//Position et tille de la dernière fenêtre.
+		//Si il y en a pas, tous est a 0.
+		wxPoint lastNotifyPosition;
+		wxSize lastNotifySize;
+		
+		//Si il y a déjà d'autre notification présent.
 		if(_framesNotify.size() != 0)
-		{			
-			int positionY = 0;
-			int sizeY = 0;
+		{						
+			//Récupération de la dernière notification.
 			FrameNotification *lastFrameNotify = _framesNotify.back();
 		
-			lastFrameNotify->GetPosition(nullptr, &positionY);
-			lastFrameNotify->GetSize(nullptr, &sizeY);
+			//Récupère la position et la tille de la dernière fenêtre.
+			lastNotifyPosition = lastFrameNotify->GetPosition();
+			lastNotifySize = lastFrameNotify->GetSize();
 			
-			frameNotify->SetPosition(wxPoint(0, positionY+sizeY));
+			//Calcul de la position de la notification.
+			switch(_positionScreenForNotify)
+			{
+				case POSITION_SCREEN_TOP_LEFT:
+				newNotifyPosition.x = 	_offsetPositionOriginForNotify.x;
+				newNotifyPosition.y = 	lastNotifyPosition.y+
+										lastNotifySize.y;
+				break;
+				
+				case POSITION_SCREEN_TOP_RIGHT:
+				newNotifyPosition.x = 	_displaySize.x-2-
+										_offsetPositionOriginForNotify.x-
+										newNotifySize.x;
+				newNotifyPosition.y = 	lastNotifyPosition.y+
+										lastNotifySize.y;
+				break;
+				
+				case POSITION_SCREEN_BOTTOM_LEFT:
+				newNotifyPosition.x = 	_offsetPositionOriginForNotify.x;
+				newNotifyPosition.y = 	lastNotifyPosition.y-
+										newNotifySize.y;
+				break;
+				
+				case POSITION_SCREEN_BOTTOM_RIGHT:
+				newNotifyPosition.x = 	_displaySize.x-2-
+										_offsetPositionOriginForNotify.x-
+										newNotifySize.x;
+				newNotifyPosition.y = 	lastNotifyPosition.y-
+										newNotifySize.y;
+				break;
+			}
+			
+			//Affecte la positionne calculé à la nouvelle notification.
+			newFrameNotify->SetPosition(newNotifyPosition);
 		}
+		//Pas de notification présente.
 		else
 		{
-			frameNotify->SetPosition(wxPoint(0, 0));
+			//Calcul de la position de la notification.
+			switch(_positionScreenForNotify)
+			{
+				case POSITION_SCREEN_TOP_LEFT:
+				newNotifyPosition.x = 	_offsetPositionOriginForNotify.x;
+				newNotifyPosition.y = 	_offsetPositionOriginForNotify.y;
+				break;
+				
+				case POSITION_SCREEN_TOP_RIGHT:
+				newNotifyPosition.x = 	_displaySize.x-2-
+										_offsetPositionOriginForNotify.x-
+										newNotifySize.x;
+				newNotifyPosition.y = 	_offsetPositionOriginForNotify.y;
+				break;
+				
+				case POSITION_SCREEN_BOTTOM_LEFT:
+				newNotifyPosition.x = 	_offsetPositionOriginForNotify.x;
+				newNotifyPosition.y = 	_displaySize.y-2-
+										_offsetPositionOriginForNotify.y-
+										newNotifySize.y;
+				break;
+				
+				case POSITION_SCREEN_BOTTOM_RIGHT:
+				newNotifyPosition.x = 	_displaySize.x-2-
+										_offsetPositionOriginForNotify.x-
+										newNotifySize.x;
+				newNotifyPosition.y = 	_displaySize.y-2-
+										_offsetPositionOriginForNotify.y-
+										newNotifySize.y;
+				break;
+			}
+			
+			//Affecte la positionne calculé à la nouvelle notification.
+			newFrameNotify->SetPosition(newNotifyPosition); 
 		}
 
-		_framesNotify.push_back(frameNotify);
-		frameNotify->Bind(EVT_EXIT_FRAME_NOTIFICATION, &Notification::OnExitFrameNotification, this);
-		frameNotify->show(timeout);
+		//Ajout de la notification à la pile.
+		_framesNotify.push_back(newFrameNotify);
+		//Lier l'évènement de fermeture de la notification
+		newFrameNotify->Bind(EVT_EXIT_FRAME_NOTIFICATION, &Notification::OnExitFrameNotification, this);
+		//Enfin, affiche la notification.
+		newFrameNotify->show(timeout);
 		
-		if(_framesNotify.size() != 0)
+		//Si cette nouvelle notification est la seule on quitte la méthode.
+		if(_framesNotify.size() <= 1)
+			return;
+		
+		//Vérifie si la notification dépasse de l'écran.
+		switch(_positionScreenForNotify)
 		{
-			int positionY = 0;
-			int sizeY = 0;
-			int displayY = 0;
-			
-			wxDisplaySize(nullptr, &displayY);
-			frameNotify->GetPosition(nullptr, &positionY);
-			frameNotify->GetSize(nullptr, &sizeY);
-			
-			if(positionY+sizeY > displayY)
+			case POSITION_SCREEN_TOP_LEFT:
+			case POSITION_SCREEN_TOP_RIGHT:
 			{
-				_framesNotify[0]->exit();
-			}
+				//Calcul de la postions finale de la nouvelle notification.										
+				int posYFinal = newNotifyPosition.y+newNotifySize.y;
+				//Calcul de la position limite.
+				int posYLimit = _displaySize.y-_offsetPositionYFinalForNotify;
+								
+				//On supprime des notifications pour que la nouvelle rentre dans l'écran.
+				while(	posYFinal > posYLimit &&
+						_framesNotify[0] != newFrameNotify)
+				{
+					//Suppression de la plus vielle notification.
+					ExitFrameNotification(_framesNotify[0]);
+					
+					wxSize size = _framesNotify[0]->GetSize();
+					posYFinal -= size.y;
+				}
+			}break;
+			
+			case POSITION_SCREEN_BOTTOM_LEFT:
+			case POSITION_SCREEN_BOTTOM_RIGHT:
+			{
+				//Calcul de la postions finale de la nouvelle notification.										
+				int posYFinal = newNotifyPosition.y;
+				//Calcul de la position limite.
+				int posYLimit = _offsetPositionYFinalForNotify;
+								
+				//On supprime des notifications pour que la nouvelle rentre dans l'écran.
+				while(	posYFinal < posYLimit &&
+						_framesNotify[0] != newFrameNotify)
+				{
+					//Suppression de la plus vielle notification.
+					ExitFrameNotification(_framesNotify[0]);
+					
+					wxSize size = _framesNotify[0]->GetSize();
+					posYFinal += size.y;
+				}
+			}break;
 		}
 	#endif
 }
@@ -207,24 +328,44 @@ void Notification::OnExitFrameNotification(wxCommandEvent& event)
 	//Obtenir la (frame) notification qui a provoquer l'événement.
 	FrameNotification* frameNotify = static_cast<FrameNotification*>(event.GetEventObject());
 	
-	//Unbind la notification
+	//Ferme la notification.
+	ExitFrameNotification(frameNotify);
+}
+
+void Notification::ExitFrameNotification(FrameNotification* frameNotify)
+{
+	//Délier l'évènement de la notification.
 	frameNotify->Unbind(EVT_EXIT_FRAME_NOTIFICATION, &Notification::OnExitFrameNotification, this);
 
 	int iFrameNotify = -1;
-	int sizeY = 0;
 	
-	//On sauvegarde le décalage que l'on doit affecter au notification qui doive être décaler.
-	frameNotify->GetSize(nullptr, &sizeY);
+	//Récupération de la tiller de la notification.
+	wxSize frameNotifySize = frameNotify->GetSize();
 	
 	//Parcoure tout les notification actifs
 	for(unsigned int i = 0; i<_framesNotify.size(); i++)
 	{
-		//Si un notification a été trouver
+		//Si la notification a été trouver.
 		if(iFrameNotify != -1)
 		{
-			//On décale les notifications qui doive changer de position
+			//On décale les notifications qui se trouve après.
 			wxPoint pos = _framesNotify[i]->GetPosition();
-			pos.y -= sizeY;
+			
+			//Calcul de la nouvelle position.
+			switch(_positionScreenForNotify)
+			{
+				case POSITION_SCREEN_TOP_LEFT:
+				case POSITION_SCREEN_TOP_RIGHT:
+				pos.y -= frameNotifySize.y;
+				break;
+				
+				case POSITION_SCREEN_BOTTOM_LEFT:
+				case POSITION_SCREEN_BOTTOM_RIGHT:
+				pos.y += frameNotifySize.y;
+				break;
+			}
+			
+			//Applique la nouvelle position.
 			_framesNotify[i]->SetPosition(pos);
 		}
 		//c'est la notification que l'on cherche ?
@@ -235,7 +376,7 @@ void Notification::OnExitFrameNotification(wxCommandEvent& event)
 		}
 	}
 	
-	//On détruis la (frame) notification
+	//On détruis la notification
 	_framesNotify[iFrameNotify]->Destroy();
 	delete _framesNotify[iFrameNotify];
 	//Et on l'enlève du vector
