@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.5
+//! \version 0.6
 //! \date 12.04.2013
 //!
 //! ********************************************************************
@@ -123,8 +123,13 @@ class Notification : public Singleton<Notification>
 		std::vector<FrameNotification*> _framesNotify;
 		
 		PositionScreen_e _positionScreenForNotify;
-		wxPoint _offsetPositionOriginForNotify;
-		int _offsetPositionYFinalForNotify;
+		
+		//Definie un cadre pour les notification
+		wxPoint _topLeft;
+		wxPoint _bottomRight;
+		wxPoint _offsetTopLeft;
+		wxPoint _offsetBottomRight;
+		
 		wxSize _displaySize;
 	#endif
 };

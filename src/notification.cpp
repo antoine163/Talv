@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.5
+//! \version 0.6
 //! \date 12.04.2013
 //!
 //! ********************************************************************
@@ -28,6 +28,9 @@
 	#endif
 #else
 	#include <wx/gdicmn.h>
+	#if defined(__WXMSW__)
+	#include <windows.h>
+	#endif
 #endif
 
 //TEST
@@ -115,12 +118,42 @@ Notification::Notification()
 			}
 		#endif
 	#else
+	
+	//Paramétre par défaut.
 	_positionScreenForNotify = POSITION_SCREEN_TOP_RIGHT;
 	_displaySize = wxGetDisplaySize();
-	_offsetPositionYFinalForNotify = 0;
 	
-	_offsetPositionOriginForNotify.x = 0;
-	_offsetPositionOriginForNotify.y = 0;
+	//Par defaut, le cadre est de la dimension de l'écrant
+	_topLeft.x = 0;
+	_topLeft.y = 0;
+	_bottomRight.x = _displaySize.x;
+	_bottomRight.y = _displaySize.y;
+	
+		//Sous window on retirle les dimension de la bar des taches au cadre.
+		#if defined(__WXMSW__)
+		//Obtenire la fenêtre de la bar des taches.
+		HWND taskBar = FindWindow(TEXT("Shell_traywnd"), nullptr);
+		//Obtenire les positions de la bar des taches.
+		RECT rectTaskBar;
+		GetWindowRect(taskBar, &rectTaskBar);
+
+		//Bar en haut ?
+		if(rectTaskBar.bottom != _displaySize.y)
+			_topLeft.y = rectTaskBar.bottom;
+		//Bar en bat ?
+		else if(rectTaskBar.top != 0)
+			_bottomRight.y = rectTaskBar.top;
+		//Bar à droit ?
+		else if(rectTaskBar.left != 0)
+			_bottomRight.x = rectTaskBar.left;
+		//Bar à gauche ?
+		else if(rectTaskBar.right != _displaySize.x)
+			_topLeft.x = rectTaskBar.right;
+		#endif
+
+	//Calcule du cadre avec les offsets.
+	_topLeft += _offsetTopLeft;
+	_bottomRight -= _offsetBottomRight;
 	#endif
 }
 
@@ -194,28 +227,26 @@ void Notification::notify(	wxString const& title,
 			switch(_positionScreenForNotify)
 			{
 				case POSITION_SCREEN_TOP_LEFT:
-				newNotifyPosition.x = 	_offsetPositionOriginForNotify.x;
+				newNotifyPosition.x = 	_topLeft.x;
 				newNotifyPosition.y = 	lastNotifyPosition.y+
 										lastNotifySize.y;
 				break;
 				
 				case POSITION_SCREEN_TOP_RIGHT:
-				newNotifyPosition.x = 	_displaySize.x-2-
-										_offsetPositionOriginForNotify.x-
+				newNotifyPosition.x = 	_bottomRight.x-
 										newNotifySize.x;
 				newNotifyPosition.y = 	lastNotifyPosition.y+
 										lastNotifySize.y;
 				break;
 				
 				case POSITION_SCREEN_BOTTOM_LEFT:
-				newNotifyPosition.x = 	_offsetPositionOriginForNotify.x;
+				newNotifyPosition.x = 	_topLeft.x;
 				newNotifyPosition.y = 	lastNotifyPosition.y-
 										newNotifySize.y;
 				break;
 				
 				case POSITION_SCREEN_BOTTOM_RIGHT:
-				newNotifyPosition.x = 	_displaySize.x-2-
-										_offsetPositionOriginForNotify.x-
+				newNotifyPosition.x = 	_bottomRight.x-
 										newNotifySize.x;
 				newNotifyPosition.y = 	lastNotifyPosition.y-
 										newNotifySize.y;
@@ -232,30 +263,26 @@ void Notification::notify(	wxString const& title,
 			switch(_positionScreenForNotify)
 			{
 				case POSITION_SCREEN_TOP_LEFT:
-				newNotifyPosition.x = 	_offsetPositionOriginForNotify.x;
-				newNotifyPosition.y = 	_offsetPositionOriginForNotify.y;
+				newNotifyPosition.x = 	_topLeft.x;
+				newNotifyPosition.y = 	_topLeft.y;
 				break;
 				
 				case POSITION_SCREEN_TOP_RIGHT:
-				newNotifyPosition.x = 	_displaySize.x-2-
-										_offsetPositionOriginForNotify.x-
+				newNotifyPosition.x = 	_bottomRight.x-
 										newNotifySize.x;
-				newNotifyPosition.y = 	_offsetPositionOriginForNotify.y;
+				newNotifyPosition.y = 	_topLeft.y;
 				break;
 				
 				case POSITION_SCREEN_BOTTOM_LEFT:
-				newNotifyPosition.x = 	_offsetPositionOriginForNotify.x;
-				newNotifyPosition.y = 	_displaySize.y-2-
-										_offsetPositionOriginForNotify.y-
+				newNotifyPosition.x = 	_topLeft.x;
+				newNotifyPosition.y = 	_bottomRight.y-
 										newNotifySize.y;
 				break;
 				
 				case POSITION_SCREEN_BOTTOM_RIGHT:
-				newNotifyPosition.x = 	_displaySize.x-2-
-										_offsetPositionOriginForNotify.x-
+				newNotifyPosition.x = 	_bottomRight.x-
 										newNotifySize.x;
-				newNotifyPosition.y = 	_displaySize.y-2-
-										_offsetPositionOriginForNotify.y-
+				newNotifyPosition.y = 	_bottomRight.y-
 										newNotifySize.y;
 				break;
 			}
@@ -283,11 +310,9 @@ void Notification::notify(	wxString const& title,
 			{
 				//Calcul de la postions finale de la nouvelle notification.										
 				int posYFinal = newNotifyPosition.y+newNotifySize.y;
-				//Calcul de la position limite.
-				int posYLimit = _displaySize.y-_offsetPositionYFinalForNotify;
 								
 				//On supprime des notifications pour que la nouvelle rentre dans l'écran.
-				while(	posYFinal > posYLimit &&
+				while(	posYFinal > _bottomRight.y &&
 						_framesNotify[0] != newFrameNotify)
 				{
 					//Suppression de la plus vielle notification.
@@ -303,11 +328,9 @@ void Notification::notify(	wxString const& title,
 			{
 				//Calcul de la postions finale de la nouvelle notification.										
 				int posYFinal = newNotifyPosition.y;
-				//Calcul de la position limite.
-				int posYLimit = _offsetPositionYFinalForNotify;
 								
 				//On supprime des notifications pour que la nouvelle rentre dans l'écran.
-				while(	posYFinal < posYLimit &&
+				while(	posYFinal < _topLeft.y &&
 						_framesNotify[0] != newFrameNotify)
 				{
 					//Suppression de la plus vielle notification.
