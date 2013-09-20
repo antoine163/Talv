@@ -55,6 +55,9 @@ SRC+=../src/action.cpp
 SRC+=../src/listManager.cpp
 SRC+=../src/list.cpp
 SRC+=../src/resource.cpp
+#wxJSON
+SRC+=../src/wxJSON/jsonval.cpp
+SRC+=../src/wxJSON/jsonreader.cpp
 #Notification
 SRC+=../src/notification.cpp
 ifeq ($(EMULATE_NOTIFICATION), yes)
@@ -86,6 +89,7 @@ OBJS=$(patsubst ../%.cpp,$(OBJ_DIR)/%.o, $(SRC))
 # Dossier a inclure.
 ########################################################################
 DIR = ../include
+DIR += ../include/wxJSON
 DIR += ../gui
 INCLUDE_DIRS = $(patsubst %,-I%, $(DIR))
 
