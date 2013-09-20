@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.18
+//! \version 0.19
 //! \date 30.03.2013
 //!
 //! ********************************************************************
@@ -250,6 +250,16 @@ wxString Resource::getClipboard()
 		}
 		wxTheClipboard->Close();
 	}
+	
+	//On enlève les éventuelle retour à la ligne en début et fin du texte.
+	text.StartsWith('\n', &text);
+	text.EndsWith('\n', &text);
+	//On enlève les éventuelle espace en début et fin du texte.
+	text.StartsWith(' ', &text);
+	text.EndsWith(' ', &text);
+	//On enlève les éventuelle (2eme fois) retour à la ligne en début et fin du texte.
+	text.StartsWith('\n', &text);
+	text.EndsWith('\n', &text);
 	
 	return text;
 }
