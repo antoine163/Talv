@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.6
+//! \version 0.7
 //! \date 12.04.2013
 //!
 //! ********************************************************************
@@ -17,7 +17,9 @@
 #define NOTIFICATION_H
 
 #include "singleton.hpp"
+#include <wx/fileconf.h>
 #include <wx/string.h>
+#include <wx/fileconf.h>
 
 #ifdef USE_EMULATE_NOTIFICATION
 	#include "guiFrameNotification.h"
@@ -100,6 +102,11 @@ class Notification : public Singleton<Notification>
 		//! \param message est le message de la notification.
 		void notify(wxString const& title,
 					wxString const& message=wxEmptyString);
+					
+		//! \brief Charger la configuration des notification.
+		void load(wxFileConfig& fileConfig);
+		//! \brief Charger la configuration des notification.
+		void save(wxFileConfig& fileConfig)const;
 		
 	#ifdef USE_EMULATE_NOTIFICATION
 		//! \brief Fermeture des notifications.
@@ -112,6 +119,9 @@ class Notification : public Singleton<Notification>
 		//! \brief Fermeture des notifications.
 		//! \param frameNotify est la notification a quitter
 		void ExitFrameNotification(FrameNotification* frameNotify);
+		
+	protected:
+		void updateCadre();
 	#endif
 	
 	private:

@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.13
+//! \version 1.15
 //! \date 12.12.12
 //!
 //! ********************************************************************

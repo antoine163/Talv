@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 3.8
+//! \version 3.9
 //! \date 02.01.2013
 //!
 //! ********************************************************************
@@ -20,6 +20,7 @@
 #include "resource.hpp"
 #include "actionManager.hpp"
 #include "listManager.hpp"
+#include "notification.hpp"
 
 #include <wx/stdpaths.h>
 #include <wx/fileconf.h>
@@ -591,6 +592,10 @@ void DialogPreferences::applyAndSave()
 	
 	//On sauvegarde les ressources.
 	Resource::getInstance()->save(fileConfig);
+	
+	//Affectation des paramètres des notifications.
+	//On sauvegarde les paramètres des notifications.
+	Notification::getInstance()->save(fileConfig);
 	
 	//On sauvegarde EN PREMIER les listes
 	EditListManager::getInstance()->apply();

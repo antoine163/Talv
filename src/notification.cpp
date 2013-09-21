@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.6
+//! \version 0.7
 //! \date 12.04.2013
 //!
 //! ********************************************************************
@@ -123,37 +123,7 @@ Notification::Notification()
 	_positionScreenForNotify = POSITION_SCREEN_TOP_RIGHT;
 	_displaySize = wxGetDisplaySize();
 	
-	//Par defaut, le cadre est de la dimension de l'écrant
-	_topLeft.x = 0;
-	_topLeft.y = 0;
-	_bottomRight.x = _displaySize.x;
-	_bottomRight.y = _displaySize.y;
-	
-		//Sous window on retirle les dimension de la bar des taches au cadre.
-		#if defined(__WXMSW__)
-		//Obtenire la fenêtre de la bar des taches.
-		HWND taskBar = FindWindow(TEXT("Shell_traywnd"), nullptr);
-		//Obtenire les positions de la bar des taches.
-		RECT rectTaskBar;
-		GetWindowRect(taskBar, &rectTaskBar);
-
-		//Bar en haut ?
-		if(rectTaskBar.bottom != _displaySize.y)
-			_topLeft.y = rectTaskBar.bottom;
-		//Bar en bat ?
-		else if(rectTaskBar.top != 0)
-			_bottomRight.y = rectTaskBar.top;
-		//Bar à droit ?
-		else if(rectTaskBar.left != 0)
-			_bottomRight.x = rectTaskBar.left;
-		//Bar à gauche ?
-		else if(rectTaskBar.right != _displaySize.x)
-			_topLeft.x = rectTaskBar.right;
-		#endif
-
-	//Calcule du cadre avec les offsets.
-	_topLeft += _offsetTopLeft;
-	_bottomRight -= _offsetBottomRight;
+	updateCadre();
 	#endif
 }
 
@@ -344,6 +314,41 @@ void Notification::notify(	wxString const& title,
 	#endif
 }
 
+void Notification::load(wxFileConfig& fileConfig)
+{
+	//On positionne le path.
+	fileConfig.SetPath("/Notification");
+	
+	#ifdef USE_EMULATE_NOTIFICATION
+	fileConfig.Read("positionScreenForNotify", (int*)&_positionScreenForNotify);
+	
+	fileConfig.Read("offsetTopLeftX", &_offsetTopLeft.x);
+	fileConfig.Read("offsetTopLeftY", &_offsetTopLeft.y);
+	fileConfig.Read("offsetBottomRightX", &_offsetBottomRight.x);
+	fileConfig.Read("offsetBottomRightY", &_offsetBottomRight.y);
+	
+	updateCadre();
+	#endif
+	
+	//On positionne le path a la racine.
+	fileConfig.SetPath("/");
+}
+	
+void Notification::save(wxFileConfig& fileConfig)const
+{
+	//On positionne le path.
+	fileConfig.SetPath("/Notification");
+	
+	#ifdef USE_EMULATE_NOTIFICATION
+	fileConfig.Write("positionScreenForNotify", (int)_positionScreenForNotify);
+	
+	fileConfig.Write("offsetTopLeftX", _offsetTopLeft.x);
+	fileConfig.Write("offsetTopLeftY", _offsetTopLeft.y);
+	fileConfig.Write("offsetBottomRightX", _offsetBottomRight.x);
+	fileConfig.Write("offsetBottomRightY", _offsetBottomRight.y);
+	#endif
+}
+
 #ifdef USE_EMULATE_NOTIFICATION
 
 void Notification::OnExitFrameNotification(wxCommandEvent& event)
@@ -404,6 +409,41 @@ void Notification::ExitFrameNotification(FrameNotification* frameNotify)
 	delete _framesNotify[iFrameNotify];
 	//Et on l'enlève du vector
 	_framesNotify.erase(_framesNotify.begin()+iFrameNotify);
+}
+
+void Notification::updateCadre()
+{
+	//Par defaut, le cadre est de la dimension de l'écrant
+	_topLeft.x = 0;
+	_topLeft.y = 0;
+	_bottomRight.x = _displaySize.x;
+	_bottomRight.y = _displaySize.y;
+	
+		//Sous window on retirle les dimension de la bar des taches au cadre.
+		#if defined(__WXMSW__)
+		//Obtenire la fenêtre de la bar des taches.
+		HWND taskBar = FindWindow(TEXT("Shell_traywnd"), nullptr);
+		//Obtenire les positions de la bar des taches.
+		RECT rectTaskBar;
+		GetWindowRect(taskBar, &rectTaskBar);
+
+		//Bar en haut ?
+		if(rectTaskBar.bottom != _displaySize.y)
+			_topLeft.y = rectTaskBar.bottom;
+		//Bar en bat ?
+		else if(rectTaskBar.top != 0)
+			_bottomRight.y = rectTaskBar.top;
+		//Bar à droit ?
+		else if(rectTaskBar.left != 0)
+			_bottomRight.x = rectTaskBar.left;
+		//Bar à gauche ?
+		else if(rectTaskBar.right != _displaySize.x)
+			_topLeft.x = rectTaskBar.right;
+		#endif
+
+	//Calcule du cadre avec les offsets.
+	_topLeft += _offsetTopLeft;
+	_bottomRight -= _offsetBottomRight;
 }
 
 #endif

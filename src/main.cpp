@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.13
+//! \version 1.15
 //! \date 12.12.12
 //!
 //! ********************************************************************
@@ -15,6 +15,7 @@
 
 #include "main.hpp"
 #include "resource.hpp"
+#include "notification.hpp"
 #include "actionManager.hpp"
 #include "listManager.hpp"
 #include "dialogPreferences.hpp"
@@ -56,6 +57,9 @@ bool App::OnInit()
 	//Chargement des ressource se trouvent dans le fichier de config.
 	Resource::getInstance()->load(fileConfig);
 	
+	//Chargement de la configuration des notifications.
+	Notification::getInstance()->load(fileConfig);
+	
 	//Chargement des listes se trouvent dans le fichier de config.
 	ListManager::getInstance()->load(fileConfig);
 		
@@ -85,6 +89,9 @@ int App::OnExit()
 	
 	//Suppression des ressources.
 	Resource::kill();
+	
+	//Suppression des notifications.
+	Notification::kill();
 	
 	//Suppression des liste.
 	ListManager::kill();
