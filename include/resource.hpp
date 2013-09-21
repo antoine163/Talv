@@ -71,7 +71,7 @@ class Resource : public Singleton<Resource>
 						wxString const& lgsrc,
 						wxString const& lgto);
 											
-		void downloadFromUrl(wxMemoryBuffer* buffer, wxString const& sUrl);
+		bool downloadFromUrl(wxMemoryBuffer* buffer, wxString const& sUrl);
 		
 		void setShowMenu(bool showMenu);
 		bool getShowMenu();

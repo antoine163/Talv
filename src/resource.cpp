@@ -281,8 +281,9 @@ wxString Resource::getTranslations(
 	{	
 		//Télécharger la raiponce de google
 		wxMemoryBuffer buffer;
-		Resource::getInstance()->downloadFromUrl(&buffer, "http://translate.google.com/translate_a/t?ie=UTF-8&oe=UTF-8&client=x&text="+text+"&hl="+lgto+"&sl="+lgsrc+"&tl="+lgto);
-		//l'ajouter au jsonText
+		if(!Resource::getInstance()->downloadFromUrl(&buffer,"http://translate.google.com/translate_a/t?ie=UTF-8&oe=UTF-8&client=x&text="+text+"&hl="+lgto+"&sl="+lgsrc+"&tl="+lgto))
+			return wxEmptyString;
+		//ajouter au jsonText
 		jsonText.Append(wxString::FromUTF8((const char *)buffer.GetData(), buffer.GetDataLen()));
 	}
 	else
@@ -421,7 +422,7 @@ wxString Resource::getTranslations(
 }
 
 //! \todo ajouter une timeout  
-void Resource::downloadFromUrl(wxMemoryBuffer* buffer, wxString const& sUrl)
+bool Resource::downloadFromUrl(wxMemoryBuffer* buffer, wxString const& sUrl)
 {
 	wxURL url(sUrl);
 	
@@ -431,6 +432,9 @@ void Resource::downloadFromUrl(wxMemoryBuffer* buffer, wxString const& sUrl)
 		//Récupération des données.
 		wxInputStream *urlStream = url.GetInputStream();
 		
+		if(!urlStream)
+			return false;
+
 		//Erreur ?
 		if(urlStream->IsOk())
 		{			
@@ -446,6 +450,8 @@ void Resource::downloadFromUrl(wxMemoryBuffer* buffer, wxString const& sUrl)
 		}
 		delete urlStream;
 	}
+	
+	return true;
 }
 
 void Resource::setShowMenu(bool showMenu)
