@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.19
+//! \version 0.20
 //! \date 30.03.2013
 //!
 //! ********************************************************************
@@ -327,7 +327,6 @@ wxString Resource::getTranslations(
 	return trans;
 }
 
-//! \todo ajouter une timeout  
 bool Resource::downloadFromUrl(wxMemoryBuffer* buffer, wxString const& sUrl)
 {
 	wxURL url(sUrl);
