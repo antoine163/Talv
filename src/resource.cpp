@@ -235,7 +235,7 @@ wxString Resource::getClipboard()
 	
 	//Simule l'appuie sur ctrl+c
 	SendInput(iinput, input, sizeof(INPUT));
-	Sleep(40);
+	Sleep(50);
 	#endif
 	
 	//Lire le text de la presse papier
@@ -275,7 +275,7 @@ wxString Resource::getTranslations(
 {	
 	//Représentent la traduction au forma json
 	wxString jsonText;
-	
+		
 	//Si il y a un texte à traduire.
 	if(!text.IsEmpty())
 	{	
@@ -288,7 +288,7 @@ wxString Resource::getTranslations(
 	}
 	else
 		return wxEmptyString;
-	
+			
 	//Variable qui va contenir la traduction.
 	wxString trans;
 
@@ -297,11 +297,7 @@ wxString Resource::getTranslations(
 	wxJSONReader reader;
 	
 	//Lecture du JSON
-	if(reader.Parse(jsonText, &root))
-	{
-		wxLogError(_("The reading the JSON document was failed."));
-		return wxEmptyString;
-	}	
+	reader.Parse(jsonText, &root);
 	
 	//Récupère la phrase.
 	wxJSONValue& sentences = root["sentences"];
