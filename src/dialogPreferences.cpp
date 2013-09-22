@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 3.9
+//! \version 3.10
 //! \date 02.01.2013
 //!
 //! ********************************************************************
@@ -547,6 +547,30 @@ DialogPreferences::DialogPreferences()
     _staticTextGeneral->SetLabelMarkup("<b>"+_("General :")+"</b>");
 	_staticTextShutdown->SetLabelMarkup("<b>"+_("Shutdown this application :")+"</b>");
 	
+	//! \todo provisoire
+	#ifdef USE_EMULATE_NOTIFICATION
+	_staticTextNotification->Show();
+	_choiceNotification->Show();
+	
+	int n = 0;
+	switch(Notification::getInstance()->getPositionNotification())
+	{
+		case POSITION_SCREEN_TOP_LEFT:
+		n = _choiceNotification->FindString(_("Top left"));
+		break;
+		case POSITION_SCREEN_TOP_RIGHT:
+		n = _choiceNotification->FindString(_("Top right"));
+		break;
+		case POSITION_SCREEN_BOTTOM_LEFT:
+		n = _choiceNotification->FindString(_("Bottom left"));
+		break;
+		case POSITION_SCREEN_BOTTOM_RIGHT:
+		n = _choiceNotification->FindString(_("Bottom right"));
+		break;
+	}
+	_choiceNotification->SetSelection(n);
+	#endif
+
 	//Initialise les valeurs
 	_checkBoxShowMenu->SetValue(Resource::getInstance()->getShowMenu());
 	_checkBoxPowerOn->SetValue(Resource::getInstance()->getPowerOn());
@@ -594,6 +618,29 @@ void DialogPreferences::applyAndSave()
 	Resource::getInstance()->save(fileConfig);
 	
 	//Affectation des paramètres des notifications.
+	//! \todo provisoire
+	#ifdef USE_EMULATE_NOTIFICATION	
+	int n = _choiceNotification->GetSelection();
+	wxString nString = _choiceNotification->GetString(n);
+	
+	if(nString == _("Top left"))
+	{
+		Notification::getInstance()->setPositionNotification(POSITION_SCREEN_TOP_LEFT);
+	}
+	else if(nString == _("Top right"))
+	{
+		Notification::getInstance()->setPositionNotification(POSITION_SCREEN_TOP_RIGHT);
+	}
+	else if(nString == _("Bottom left"))
+	{
+		Notification::getInstance()->setPositionNotification(POSITION_SCREEN_BOTTOM_LEFT);
+	}
+	else if(nString == _("Bottom right"))
+	{
+		Notification::getInstance()->setPositionNotification(POSITION_SCREEN_BOTTOM_RIGHT);
+	}
+	#endif
+	
 	//On sauvegarde les paramètres des notifications.
 	Notification::getInstance()->save(fileConfig);
 	

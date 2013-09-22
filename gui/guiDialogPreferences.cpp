@@ -77,6 +77,8 @@ GuiDialogPreferences::GuiDialogPreferences( wxWindow* parent, wxWindowID id, con
 	
 	_staticTextGeneral = new wxStaticText( _panelSetting, wxID_ANY, _("General :"), wxDefaultPosition, wxDefaultSize, 0 );
 	_staticTextGeneral->Wrap( -1 );
+	_staticTextGeneral->Enable( false );
+	
 	bSizer2->Add( _staticTextGeneral, 0, wxALL, 5 );
 	
 	wxBoxSizer* bSizer3;
@@ -87,6 +89,8 @@ GuiDialogPreferences::GuiDialogPreferences( wxWindow* parent, wxWindowID id, con
 	
 	_checkBoxShowMenu = new wxCheckBox( _panelSetting, wxID_ANY, _("Show a icon in notification bar."), wxDefaultPosition, wxDefaultSize, 0 );
 	_checkBoxShowMenu->SetValue(true); 
+	_checkBoxShowMenu->Enable( false );
+	
 	bSizer3->Add( _checkBoxShowMenu, 20, wxRIGHT|wxLEFT, 5 );
 	
 	bSizer2->Add( bSizer3, 0, wxEXPAND, 5 );
@@ -98,16 +102,40 @@ GuiDialogPreferences::GuiDialogPreferences( wxWindow* parent, wxWindowID id, con
 	bSizer4->Add( 0, 0, 1, wxEXPAND, 5 );
 	
 	_checkBoxPowerOn = new wxCheckBox( _panelSetting, wxID_ANY, _("Launch after power on."), wxDefaultPosition, wxDefaultSize, 0 );
+	_checkBoxPowerOn->Enable( false );
+	
 	bSizer4->Add( _checkBoxPowerOn, 20, wxRIGHT|wxLEFT, 5 );
 	
 	bSizer2->Add( bSizer4, 0, wxEXPAND, 5 );
 	
+	_staticTextNotification = new wxStaticText( _panelSetting, wxID_ANY, _("Notification :"), wxDefaultPosition, wxDefaultSize, 0 );
+	_staticTextNotification->Wrap( -1 );
+	_staticTextNotification->Hide();
+	
+	bSizer2->Add( _staticTextNotification, 0, wxALL, 5 );
+	
+	wxBoxSizer* bSizer12;
+	bSizer12 = new wxBoxSizer( wxHORIZONTAL );
+	
+	wxString _choiceNotificationChoices[] = { _("Top left"), _("Top right"), _("Bottom left"), _("Bottom right") };
+	int _choiceNotificationNChoices = sizeof( _choiceNotificationChoices ) / sizeof( wxString );
+	_choiceNotification = new wxChoice( _panelSetting, wxID_ANY, wxDefaultPosition, wxDefaultSize, _choiceNotificationNChoices, _choiceNotificationChoices, 0 );
+	_choiceNotification->SetSelection( 0 );
+	_choiceNotification->Hide();
+	
+	bSizer12->Add( _choiceNotification, 1, wxALL, 5 );
+	
+	
+	bSizer12->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	bSizer2->Add( bSizer12, 1, wxEXPAND, 5 );
+	
 	
 	bSizer2->Add( 0, 0, 1, 0, 5 );
 	
-	wxStaticLine* m_staticline1;
-	m_staticline1 = new wxStaticLine( _panelSetting, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
-	bSizer2->Add( m_staticline1, 0, wxEXPAND | wxALL, 5 );
+	wxStaticLine* staticline1;
+	staticline1 = new wxStaticLine( _panelSetting, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
+	bSizer2->Add( staticline1, 0, wxEXPAND | wxALL, 5 );
 	
 	wxBoxSizer* bSizer6;
 	bSizer6 = new wxBoxSizer( wxHORIZONTAL );

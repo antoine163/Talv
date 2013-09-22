@@ -21,6 +21,7 @@
 #include <wx/panel.h>
 #include <wx/stattext.h>
 #include <wx/checkbox.h>
+#include <wx/choice.h>
 #include <wx/statline.h>
 #include <wx/tglbtn.h>
 #include <wx/bitmap.h>
@@ -76,6 +77,9 @@ class GuiDialogPreferences : public wxDialog
 		wxCheckBox* _checkBoxShowMenu;
 		
 		wxCheckBox* _checkBoxPowerOn;
+		wxStaticText* _staticTextNotification;
+		wxChoice* _choiceNotification;
+		
 		wxStaticText* _staticTextShutdown;
 		wxToggleButton* _toggleBtnTurnOff;
 		wxStdDialogButtonSizer* _sdbSizer;

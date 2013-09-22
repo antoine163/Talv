@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.7
+//! \version 0.8
 //! \date 12.04.2013
 //!
 //! ********************************************************************
@@ -120,6 +120,14 @@ class Notification : public Singleton<Notification>
 		//! \param frameNotify est la notification a quitter
 		void ExitFrameNotification(FrameNotification* frameNotify);
 		
+		//! \brief Modifie la postions d'apparition des notifications.
+		//! \param pos la position des notification.
+		void setPositionNotification(PositionScreen_e pos);
+		
+		//! \brief Obtenir la postions d'apparition des notifications.
+		//! \return la position des notification.
+		PositionScreen_e getPositionNotification();
+		
 	protected:
 		void updateCadre();
 	#endif
@@ -132,7 +140,7 @@ class Notification : public Singleton<Notification>
 		//! \brief Toutes les notifications active.
 		std::vector<FrameNotification*> _framesNotify;
 		
-		PositionScreen_e _positionScreenForNotify;
+		PositionScreen_e _positionNotification;
 		
 		//Definie un cadre pour les notification
 		wxPoint _topLeft;

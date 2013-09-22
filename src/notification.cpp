@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.7
+//! \version 0.8
 //! \date 12.04.2013
 //!
 //! ********************************************************************
@@ -120,7 +120,7 @@ Notification::Notification()
 	#else
 	
 	//Paramétre par défaut.
-	_positionScreenForNotify = POSITION_SCREEN_TOP_RIGHT;
+	_positionNotification = POSITION_SCREEN_TOP_RIGHT;
 	_displaySize = wxGetDisplaySize();
 	
 	updateCadre();
@@ -194,7 +194,7 @@ void Notification::notify(	wxString const& title,
 			lastNotifySize = lastFrameNotify->GetSize();
 			
 			//Calcul de la position de la notification.
-			switch(_positionScreenForNotify)
+			switch(_positionNotification)
 			{
 				case POSITION_SCREEN_TOP_LEFT:
 				newNotifyPosition.x = 	_topLeft.x;
@@ -230,7 +230,7 @@ void Notification::notify(	wxString const& title,
 		else
 		{
 			//Calcul de la position de la notification.
-			switch(_positionScreenForNotify)
+			switch(_positionNotification)
 			{
 				case POSITION_SCREEN_TOP_LEFT:
 				newNotifyPosition.x = 	_topLeft.x;
@@ -273,7 +273,7 @@ void Notification::notify(	wxString const& title,
 			return;
 		
 		//Vérifie si la notification dépasse de l'écran.
-		switch(_positionScreenForNotify)
+		switch(_positionNotification)
 		{
 			case POSITION_SCREEN_TOP_LEFT:
 			case POSITION_SCREEN_TOP_RIGHT:
@@ -320,7 +320,7 @@ void Notification::load(wxFileConfig& fileConfig)
 	fileConfig.SetPath("/Notification");
 	
 	#ifdef USE_EMULATE_NOTIFICATION
-	fileConfig.Read("positionScreenForNotify", (int*)&_positionScreenForNotify);
+	fileConfig.Read("positionScreenForNotify", (int*)&_positionNotification);
 	
 	fileConfig.Read("offsetTopLeftX", &_offsetTopLeft.x);
 	fileConfig.Read("offsetTopLeftY", &_offsetTopLeft.y);
@@ -340,7 +340,7 @@ void Notification::save(wxFileConfig& fileConfig)const
 	fileConfig.SetPath("/Notification");
 	
 	#ifdef USE_EMULATE_NOTIFICATION
-	fileConfig.Write("positionScreenForNotify", (int)_positionScreenForNotify);
+	fileConfig.Write("positionScreenForNotify", (int)_positionNotification);
 	
 	fileConfig.Write("offsetTopLeftX", _offsetTopLeft.x);
 	fileConfig.Write("offsetTopLeftY", _offsetTopLeft.y);
@@ -380,7 +380,7 @@ void Notification::ExitFrameNotification(FrameNotification* frameNotify)
 			wxPoint pos = _framesNotify[i]->GetPosition();
 			
 			//Calcul de la nouvelle position.
-			switch(_positionScreenForNotify)
+			switch(_positionNotification)
 			{
 				case POSITION_SCREEN_TOP_LEFT:
 				case POSITION_SCREEN_TOP_RIGHT:
@@ -409,6 +409,16 @@ void Notification::ExitFrameNotification(FrameNotification* frameNotify)
 	delete _framesNotify[iFrameNotify];
 	//Et on l'enlève du vector
 	_framesNotify.erase(_framesNotify.begin()+iFrameNotify);
+}
+
+void Notification::setPositionNotification(PositionScreen_e pos)
+{
+	_positionNotification = pos;
+}
+
+PositionScreen_e Notification::getPositionNotification()
+{
+	return _positionNotification;
 }
 
 void Notification::updateCadre()
