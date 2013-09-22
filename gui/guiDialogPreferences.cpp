@@ -110,8 +110,6 @@ GuiDialogPreferences::GuiDialogPreferences( wxWindow* parent, wxWindowID id, con
 	
 	_staticTextNotification = new wxStaticText( _panelSetting, wxID_ANY, _("Notification :"), wxDefaultPosition, wxDefaultSize, 0 );
 	_staticTextNotification->Wrap( -1 );
-	_staticTextNotification->Hide();
-	
 	bSizer2->Add( _staticTextNotification, 0, wxALL, 5 );
 	
 	wxBoxSizer* bSizer12;
@@ -121,8 +119,6 @@ GuiDialogPreferences::GuiDialogPreferences( wxWindow* parent, wxWindowID id, con
 	int _choiceNotificationNChoices = sizeof( _choiceNotificationChoices ) / sizeof( wxString );
 	_choiceNotification = new wxChoice( _panelSetting, wxID_ANY, wxDefaultPosition, wxDefaultSize, _choiceNotificationNChoices, _choiceNotificationChoices, 0 );
 	_choiceNotification->SetSelection( 0 );
-	_choiceNotification->Hide();
-	
 	bSizer12->Add( _choiceNotification, 1, wxALL, 5 );
 	
 	

@@ -548,10 +548,7 @@ DialogPreferences::DialogPreferences()
 	_staticTextShutdown->SetLabelMarkup("<b>"+_("Shutdown this application :")+"</b>");
 	
 	//! \todo provisoire
-	#ifdef USE_EMULATE_NOTIFICATION
-	_staticTextNotification->Show();
-	_choiceNotification->Show();
-	
+	#ifdef USE_EMULATE_NOTIFICATION	
 	int n = 0;
 	switch(Notification::getInstance()->getPositionNotification())
 	{
@@ -569,6 +566,9 @@ DialogPreferences::DialogPreferences()
 		break;
 	}
 	_choiceNotification->SetSelection(n);
+	#else
+	_staticTextNotification->Show(false);
+	_choiceNotification->Show(false);
 	#endif
 
 	//Initialise les valeurs
