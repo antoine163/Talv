@@ -93,7 +93,8 @@ wxArrayString ListManagerBase::getNameListsByLanguages(	wxString const& lgsrc,
 // Class ListManager
 // *********************************************************************
 
-ListManager::ListManager()
+ListManager::ListManager() :
+EditableByPanel(_("lits"))
 {
 }
 
@@ -164,6 +165,21 @@ void ListManager::save(wxFileConfig& fileConfig)const
 wxString ListManager::getPath()
 {
 	return wxStandardPaths::Get().GetUserDataDir()+"/lists";
+}
+
+wxPanel* ListManager::openEditPanel(wxWindow *parent)
+{
+	return nullptr;
+}
+
+bool ListManager::check()const
+{
+	return true;
+}
+
+bool ListManager::apply()
+{
+	return true;
 }
 
 // *********************************************************************

@@ -16,6 +16,7 @@
 #ifndef LIST_MANAGER_H
 #define LIST_MANAGER_H
 
+#include "editableByPanel.hpp"
 #include "singleton.hpp"
 #include "managerBase.hpp"
 #include "list.hpp"
@@ -66,7 +67,9 @@ class ListManagerBase : public ManagerBase<wxString, List>
 // *********************************************************************
 
 //! \brief Gestion des listes
-class ListManager : public ListManagerBase, public Singleton<ListManager>
+class ListManager : public ListManagerBase,
+					public Singleton<ListManager>,
+					public EditableByPanel
 {
 	friend class Singleton<ListManager>;
 	
@@ -80,6 +83,13 @@ class ListManager : public ListManagerBase, public Singleton<ListManager>
 		//! \brief Path de travaille du manager.
 		//! C'est un dossier utilisateur.
 		wxString getPath();
+		
+		//! \brief Implémentassions de \ref EditableByPanel.
+		wxPanel* openEditPanel(wxWindow *parent);
+		//! \brief Implémentassions de \ref EditableByPanel.
+		bool check()const;
+		//! \brief Implémentassions de \ref EditableByPanel.
+		bool apply();
 
 	private:
 		//! \brief Constructeur.

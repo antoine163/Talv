@@ -49,6 +49,7 @@ OBJ_DIR = obj
 ########################################################################
 SRC=../src/main.cpp	
 SRC+=../src/taskIcon.cpp
+SRC+=../src/editableByPanel.cpp
 SRC+=../src/shortcut.cpp
 SRC+=../src/actionManager.cpp
 SRC+=../src/action.cpp

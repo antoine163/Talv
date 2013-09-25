@@ -22,7 +22,8 @@
 // Class ActionManager
 // *********************************************************************
 
-ActionManager::ActionManager() : _shortcut(this)
+ActionManager::ActionManager() :
+EditableByPanel(_("Actions")), _shortcut(this)
 {
 }
 
@@ -132,6 +133,21 @@ void ActionManager::save(wxFileConfig& fileConfig)const
 void ActionManager::enableShortcuts(bool val)
 {
 	_shortcut.enable(val);
+}
+
+wxPanel* ActionManager::openEditPanel(wxWindow *parent)
+{
+	return nullptr;
+}
+
+bool ActionManager::check()const
+{
+	return true;
+}
+
+bool ActionManager::apply()
+{
+	return true;
 }
 
 void ActionManager::OnShortcut(ShortcutEvent& event)

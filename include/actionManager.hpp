@@ -16,6 +16,7 @@
 #ifndef ACTION_MANAGER_H
 #define ACTION_MANAGER_H
 
+#include "editableByPanel.hpp"
 #include "action.hpp"
 #include "singleton.hpp"
 #include "managerBase.hpp"
@@ -30,7 +31,10 @@
 // *********************************************************************
 
 //! \brief Interface utilisateur pour les gestions des actions avec leur raccourcis associer.
-class ActionManager : public wxEvtHandler, public ManagerBase<ShortcutKey, Action>, public Singleton<ActionManager>
+class ActionManager : 	public wxEvtHandler,
+						public ManagerBase<ShortcutKey, Action>,
+						public Singleton<ActionManager>,
+						public EditableByPanel
 {	
 	friend class Singleton<ActionManager>;
 	
@@ -59,6 +63,13 @@ class ActionManager : public wxEvtHandler, public ManagerBase<ShortcutKey, Actio
 		
 		//! \brief Active ou désactive les raccourcis. 
 		void enableShortcuts(bool val=true);
+		
+		//! \brief Implémentassions de \ref EditableByPanel.
+		wxPanel* openEditPanel(wxWindow *parent);
+		//! \brief Implémentassions de \ref EditableByPanel.
+		bool check()const;
+		//! \brief Implémentassions de \ref EditableByPanel.
+		bool apply();
 		
 	private:
 		//! \brief Constructeur.

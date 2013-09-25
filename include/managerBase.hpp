@@ -22,6 +22,7 @@
 // Class ManagerBase
 // *********************************************************************
 
+//! \todo renommer en ManagerMap
 //! \brief Classe de base pour la création de Manager
 template <typename T1, typename T2>
 class ManagerBase
