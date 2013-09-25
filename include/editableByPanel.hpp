@@ -16,6 +16,8 @@
 #ifndef EDITABLE_BY_PANEL_H
 #define EDITABLE_BY_PANEL_H
 
+#include <vector>
+#include "singleton.hpp"
 #include <wx/panel.h>
 
 // *********************************************************************
@@ -64,6 +66,40 @@ class EditableByPanel
 		wxString _name;
 		
 	private:
+};
+
+// *********************************************************************
+// Class EditableByPanelManager
+// *********************************************************************
+
+//! \brief Classe permettant de stoker tout les instances de la classe \ref EditableByPanel.
+class EditableByPanelManager : public Singleton<EditableByPanelManager>
+{	
+	friend class Singleton<EditableByPanelManager>;
+	friend class EditableByPanel;
+	
+	public:
+		//! \brief obtenire tout les instances de la classe \ref EditableByPanel.
+		std::vector<EditableByPanel*> const& getEditableByPanel();
+		
+	private:
+		//! \brief Constructeur.
+		EditableByPanelManager();
+		//! \brief Destructeur.
+		~EditableByPanelManager();
+		
+		//! \brief Ajouter une instance.
+		//!
+		//! Seul la classe \ref EditableByPanel a accès a cette méthode.
+		void add(EditableByPanel* val);
+		
+		//! \brief Supprime une instance.
+		//!
+		//! Seul la classe \ref EditableByPanel a accès a cette méthode.
+		void remove(EditableByPanel* val);
+		
+		//! \brief Tous les instance de la classe EditableByPanel.
+		std::vector<EditableByPanel*> _iAll;
 };
 
 #endif //EDITABLE_BY_PANEL_H

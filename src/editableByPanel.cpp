@@ -25,11 +25,16 @@
 EditableByPanel::EditableByPanel(wxString const& name)
 : _name(name)
 {
+	EditableByPanelManager::getInstance()->add(this);
+	
 	_panel = nullptr;
 }
 
 EditableByPanel::~EditableByPanel()
-{
+{	
+	EditableByPanelManager::getInstance()->remove(this);
+	
+	//Détruis le panel si il existe
 	if(_panel)
 		delete _panel;
 }
@@ -45,4 +50,38 @@ void EditableByPanel::closeEditPanel()
 const wxString& EditableByPanel::getName()const
 {
 	return _name;
+}
+
+// *********************************************************************
+// Class EditableByPanelManager
+// *********************************************************************
+
+EditableByPanelManager::EditableByPanelManager()
+{
+}
+	
+EditableByPanelManager::~EditableByPanelManager()
+{
+}
+
+std::vector<EditableByPanel*> const& EditableByPanelManager::getEditableByPanel()
+{
+	return _iAll;
+}
+
+void EditableByPanelManager::add(EditableByPanel* val)
+{
+	_iAll.push_back(val);
+}
+
+void EditableByPanelManager::remove(EditableByPanel* val)
+{
+	for(size_t i = 0; i < _iAll.size(); i++)
+	{
+		if(_iAll[i] == val)
+		{
+			_iAll.erase(_iAll.begin()+i);
+			break;
+		}
+	}
 }
