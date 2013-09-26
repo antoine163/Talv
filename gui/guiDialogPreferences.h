@@ -10,57 +10,18 @@
 
 #include <wx/intl.h>
 
-#include <wx/listctrl.h>
 #include <wx/gdicmn.h>
+#include <wx/notebook.h>
 #include <wx/font.h>
 #include <wx/colour.h>
 #include <wx/settings.h>
 #include <wx/string.h>
-#include <wx/button.h>
 #include <wx/sizer.h>
-#include <wx/panel.h>
-#include <wx/stattext.h>
-#include <wx/checkbox.h>
-#include <wx/choice.h>
-#include <wx/statline.h>
-#include <wx/tglbtn.h>
-#include <wx/bitmap.h>
-#include <wx/image.h>
-#include <wx/icon.h>
-#include <wx/notebook.h>
+#include <wx/button.h>
 #include <wx/dialog.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
-
-///////////////////////////////////////////////////////////////////////////////
-/// Class GuiPanelList
-///////////////////////////////////////////////////////////////////////////////
-class GuiPanelList : public wxPanel 
-{
-	private:
-	
-	protected:
-		wxListCtrl* _listCtrl;
-		wxButton* _buttonDelete;
-		wxButton* _buttonPreferences;
-		wxButton* _buttonAdd;
-		
-		// Virtual event handlers, overide them in your derived class
-		virtual void OnListItemDeselected( wxListEvent& event ) { event.Skip(); }
-		virtual void OnListItemRightClick( wxListEvent& event ) { event.Skip(); }
-		virtual void OnListItemSelected( wxListEvent& event ) { event.Skip(); }
-		virtual void OnButtonClickDelete( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnButtonClickPreferences( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnButtonClickAdd( wxCommandEvent& event ) { event.Skip(); }
-		
-	
-	public:
-		
-		GuiPanelList( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL );
-		~GuiPanelList();
-	
-};
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class GuiDialogPreferences
@@ -71,17 +32,6 @@ class GuiDialogPreferences : public wxDialog
 	
 	protected:
 		wxNotebook* _notebook;
-		wxPanel* _panelSetting;
-		wxStaticText* _staticTextGeneral;
-		
-		wxCheckBox* _checkBoxShowMenu;
-		
-		wxCheckBox* _checkBoxPowerOn;
-		wxStaticText* _staticTextNotification;
-		wxChoice* _choiceNotification;
-		
-		wxStaticText* _staticTextShutdown;
-		wxToggleButton* _toggleBtnTurnOff;
 		wxStdDialogButtonSizer* _sdbSizer;
 		wxButton* _sdbSizerOK;
 		wxButton* _sdbSizerApply;

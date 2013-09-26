@@ -14,8 +14,8 @@
 *	Copyright © 2013 - Antoine Maleyrie.
 */
 
-#ifndef DIALOG_SHORTCUT_PREFERENCES_H
-#define DIALOG_SHORTCUT_PREFERENCES_H
+#ifndef DIALOG_ACTION_PREFERENCES_H
+#define DIALOG_ACTION_PREFERENCES_H
 
 #include "guiDialogActionPreferences.h"
 
@@ -97,4 +97,4 @@ class DialogActionPreferences : public GuiDialogActionPreferences
 		bool _shortKeyIsValide;
 };
 
-#endif //DIALOG_SHORTCUT_PREFERENCES_H
+#endif //DIALOG_ACTION_PREFERENCES_H

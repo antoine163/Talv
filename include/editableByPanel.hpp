@@ -37,14 +37,13 @@ class EditableByPanel
 		//! \brief Destructeur.
 		virtual ~EditableByPanel();
 		
-		//! \brief Cette méthode devra crées et retourner le panel.
+		//! \brief Cette méthode devra crées et retourner un nouveau panel.
 		//!
+		//! \note Il faudra penser a libérai la mémoire. Il est possible que
+		//! wxWidgets sen charge ...
 		//! \param parent du panel.
-		//! \return nullptr devra être retourner si le panel a déjà été créé. 
-		virtual wxPanel* openEditPanel(wxWindow *parent)=0;
-		
-		//! \brief Permet de fermer le panel.
-		void closeEditPanel();
+		//! \return Le panel fraîchement créé. 
+		virtual wxPanel* newEditPanel(wxWindow *parent)=0;
 		
 		//! \brief Cette méthode devra vérifier la cohérence des modifications
 		//! apporter par le panel.
@@ -62,7 +61,6 @@ class EditableByPanel
 		const wxString& getName()const;
 	
 	protected:
-		wxPanel* _panel;
 		wxString _name;
 		
 	private:

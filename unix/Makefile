@@ -72,6 +72,8 @@ SRC+=../gui/action/guiPanelActTranslation.cpp
 SRC+=../src/action/actTranslationToList.cpp
 SRC+=../gui/action/guiPanelActTranslationToList.cpp
 #GUI
+SRC+=../gui/guiPanelList.cpp
+SRC+=../src/panelList.cpp
 SRC+=../gui/guiDialogPreferences.cpp
 SRC+=../src/dialogPreferences.cpp
 SRC+=../gui/guiDialogActionPreferences.cpp

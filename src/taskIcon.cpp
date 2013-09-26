@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.6
+//! \version 0.7
 //! \date 10.12.12
 //!
 //! ********************************************************************
@@ -126,14 +126,7 @@ void TaskIcon::OnPreferences(wxCommandEvent&)
 	
 	//Affichage du dialog.
 	if(dlg.ShowModal() == wxID_OK)
-	{	
-		//On vérifie si on doit quitter l'application ou pas.
-		if(dlg.shutdownIsToggle())
-		{
-			wxCommandEvent *event = new wxCommandEvent(wxEVT_COMMAND_MENU_SELECTED, wxID_EXIT);
-			QueueEvent(event);
-		}
-			
+	{		
 		//Vérification si on doit afficher ou pas l'icône dans la zone de notification.
 		if(!Resource::getInstance()->getShowMenu())
 			Destroy();

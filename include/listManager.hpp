@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.13
+//! \version 0.14
 //! \date 02.05.2013
 //!
 //! ********************************************************************
@@ -20,10 +20,40 @@
 #include "singleton.hpp"
 #include "managerBase.hpp"
 #include "list.hpp"
+#include "panelList.hpp"
 
 #include <wx/fileconf.h>
-#include <wx/arrstr.h>
-#include <vector>
+
+// *********************************************************************
+// Class PanelListLists
+// *********************************************************************
+
+//! \brief Panel la liste de listes.
+class PanelListLists : public PanelList 
+{
+	public:
+		//! \brief Constructeur.
+		//! \param parent fenêtre parent.
+		PanelListLists(wxWindow* parent);
+		//! \brief Destructeur.
+		virtual ~PanelListLists();
+		
+		//! \brief Mise à jour de l'affichage de la liste avec \ref EditListManager
+		void update();
+		
+	private:		
+		//! \brief Suppression de la liste.
+		bool OnDeleteItem(wxString const& item);
+		//! \brief Préférence de la liste.
+		wxArrayString OnPreferencesItem(wxString const& item);
+		//! \brief Ajouter d'une liste.
+		wxArrayString OnAddItem();
+		
+		//! \brief Les liste nouvellement ajouter.
+		wxArrayString _newLists;
+		//! \brief Les liste nouvellement supprimer.
+		wxArrayString _deleteLists;
+};
 
 // *********************************************************************
 // Class ListManagerBase
@@ -85,7 +115,7 @@ class ListManager : public ListManagerBase,
 		wxString getPath();
 		
 		//! \brief Implémentassions de \ref EditableByPanel.
-		wxPanel* openEditPanel(wxWindow *parent);
+		wxPanel* newEditPanel(wxWindow *parent);
 		//! \brief Implémentassions de \ref EditableByPanel.
 		bool check()const;
 		//! \brief Implémentassions de \ref EditableByPanel.

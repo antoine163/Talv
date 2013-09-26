@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.13
+//! \version 1.14
 //! \date 20.03.2013
 //!
 //! ********************************************************************
@@ -21,10 +21,37 @@
 #include "singleton.hpp"
 #include "managerBase.hpp"
 #include "shortcut.hpp"
+#include "panelList.hpp"
 
 #include <wx/event.h>
 #include <wx/fileconf.h>
 #include <vector>
+
+// *********************************************************************
+// Class PanelListActions
+// *********************************************************************
+
+//! \brief Panel la liste de actions.
+class PanelListActions : public PanelList 
+{
+	public:
+		//! \brief Constructeur.
+		//! \param parent fenêtre parent.
+		PanelListActions(wxWindow* parent);
+		//! \brief Destructeur.
+		virtual ~PanelListActions();
+		
+		//! \brief Mise à jour de l'affichage de la liste avec \ref EditActionManager
+		void update();
+		
+	private:	
+		//! \brief Suppression de l'action.
+		bool OnDeleteItem(wxString const& item);
+		//! \brief Préférence de l'action.
+		wxArrayString OnPreferencesItem(wxString const& item);
+		//! \brief Ajouter d'une action.
+		wxArrayString OnAddItem();
+};
 
 // *********************************************************************
 // Class ActionManager
@@ -65,7 +92,7 @@ class ActionManager : 	public wxEvtHandler,
 		void enableShortcuts(bool val=true);
 		
 		//! \brief Implémentassions de \ref EditableByPanel.
-		wxPanel* openEditPanel(wxWindow *parent);
+		wxPanel* newEditPanel(wxWindow *parent);
 		//! \brief Implémentassions de \ref EditableByPanel.
 		bool check()const;
 		//! \brief Implémentassions de \ref EditableByPanel.

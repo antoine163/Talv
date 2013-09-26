@@ -26,25 +26,11 @@ EditableByPanel::EditableByPanel(wxString const& name)
 : _name(name)
 {
 	EditableByPanelManager::getInstance()->add(this);
-	
-	_panel = nullptr;
 }
 
 EditableByPanel::~EditableByPanel()
 {	
 	EditableByPanelManager::getInstance()->remove(this);
-	
-	//Détruis le panel si il existe
-	if(_panel)
-		delete _panel;
-}
-
-void EditableByPanel::closeEditPanel()
-{
-	if(_panel)
-		delete _panel;
-		
-	_panel = nullptr;
 }
 
 const wxString& EditableByPanel::getName()const
