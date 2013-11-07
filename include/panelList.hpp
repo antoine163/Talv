@@ -31,7 +31,7 @@ class PanelList : public GuiPanelList
 	public:
 		//! \brief Constructeur.
 		//! \param parent fenêtre parent.
-		//! \param name non de la liste
+		//! \param name non de la liste (tous en minuscule).
 		PanelList(wxWindow* parent, wxString name);
 		//! \brief Destructeur.
 		virtual ~PanelList();

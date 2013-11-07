@@ -42,7 +42,7 @@ class PanelListActions : public PanelList
 		virtual ~PanelListActions();
 		
 		//! \brief Mise à jour de l'affichage de la liste avec \ref EditActionManager
-		void update();
+		void Update();
 		
 	private:	
 		//! \brief Suppression de l'action.

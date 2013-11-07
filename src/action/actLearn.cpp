@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.9
+//! \version 0.11
 //! \date 15.05.2013
 //!
 //! ********************************************************************
@@ -345,6 +345,11 @@ ActLearn::~ActLearn()
 
 void ActLearn::execute()
 {
+	//On récupère la liste.
+	List* tmpList = ListManager::getInstance()->getListCheckDialog(_listName, getName());
+	if(tmpList == nullptr)
+		return;
+	
 	//Pour ne pas lancer plusieurs dialogue en même temps.
 	static bool dlgShowModal = false;
 	

@@ -314,16 +314,11 @@ void ActTranslationToList::execute()
 		Notification::getInstance()->notify(_("Save clipboard translation"), _("Sorry, nothing at save."));
 		return;
 	}
-	
+
 	//On récupère la liste.
-	List* tmpList = ListManager::getInstance()->getValue(_listName);
-	
-	//On vérifie la validités de la liste.
+	List* tmpList = ListManager::getInstance()->getListCheckDialog(_listName, getName());
 	if(tmpList == nullptr)
-	{
-		wxMessageBox(_("Sorry, the list is nonexistent.\nPlease correct this problem in delete this action."), _("List invalid."), wxOK|wxICON_EXCLAMATION|wxCENTRE);
 		return;
-	}
 	
 	//Vérification des lange de la liste.
 	wxString tmplgsrc;

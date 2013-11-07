@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.2
+//! \version 0.3
 //! \date 10.05.2013
 //!
 //! ********************************************************************
@@ -98,9 +98,13 @@ class ManagerBase
 			return _data;
 		}
 		
-		//! \brief Obtenir la lites des clef et valeurs.
+		//! \brief Obtenir la valeurs d'une clef.
+		//! \return nullptr si la clef n'existe pas.
 		T2* getValue(T1 const& key)
 		{
+			if(!exist(key))
+				return nullptr;
+			
 			return _data[key];
 		}
 		

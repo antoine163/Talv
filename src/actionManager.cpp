@@ -36,8 +36,9 @@ PanelListActions::~PanelListActions()
 {
 }
 
-void PanelListActions::update()
+void PanelListActions::Update()
 {
+	std::cout << "test" << std::endl;
 	////Vide la liste
 	//clear();
 	
@@ -306,7 +307,7 @@ void ActionManager::enableShortcuts(bool val)
 
 wxPanel* ActionManager::newEditPanel(wxWindow *parent)
 {
-	return nullptr;
+	return new PanelListActions(parent);
 }
 
 bool ActionManager::check()const

@@ -60,17 +60,17 @@ bool App::OnInit()
 	//Chargement de la configuration des notifications.
 	Notification::getInstance()->load(fileConfig);
 	
-	//Chargement des listes se trouvent dans le fichier de config.
-	ListManager::getInstance()->load(fileConfig);
-		
 	//Crée de l'instance de ActionManager et Installation des raccourcis/actions
 	ActionManager::getInstance()->load(fileConfig);
+	
+	//Chargement des listes se trouvent dans le fichier de config.
+	ListManager::getInstance()->load(fileConfig);
 	
 	//Création du menu ou pas.
 	if(Resource::getInstance()->getShowMenu())
 		_taskIcon = new TaskIcon();
 		
-	//Bind pour attraper l'évènement pour quitter qui peut venir de n'importe endroit dan le code.
+	//Bind pour attraper l'évènement pour quitter qui peut venir de n'importe où dans le code.
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnExit, this, wxID_EXIT);
 		
 	return true;

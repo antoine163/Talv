@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.14
+//! \version 0.16
 //! \date 02.05.2013
 //!
 //! ********************************************************************
@@ -109,6 +109,20 @@ class ListManager : public ListManagerBase,
 		
 		//! \brief Sauvegarde des listes dans le fichier de config.
 		void save(wxFileConfig& fileConfig)const;
+		
+		//! \brief Pour obtenir une liste. Avec affichage d'un dialogue
+		//! si la liste n'excite pas. (A appeler dans les Actions).
+		//!
+		//! Dans le cas où la liste n'exciterais pas, un dialogue
+		//! apparentera en demandent à l'utilisateur de bien vouloir
+		//! surprime l'action qui demande la liste.
+		//!
+		//! \param listName le nom de la liste.
+		//! \param actionName le non de l'action dans le cas où la liste 
+		//! n'existe pas.
+		//! \return nullptr si la liste n'existe pas.
+		List* getListCheckDialog(	wxString const& listName,
+									wxString const& actionName);
 		
 		//! \brief Path de travaille du manager.
 		//! C'est un dossier utilisateur.

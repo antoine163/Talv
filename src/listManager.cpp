@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.14
+//! \version 0.16
 //! \date 02.05.2013
 //!
 //! ********************************************************************
@@ -225,7 +225,7 @@ wxArrayString ListManagerBase::getNameListsByLanguages(	wxString const& lgsrc,
 // *********************************************************************
 
 ListManager::ListManager() :
-EditableByPanel(_("lits"))
+EditableByPanel(_("Lits"))
 {
 }
 
@@ -293,6 +293,19 @@ void ListManager::save(wxFileConfig& fileConfig)const
 	}
 }
 
+List* ListManager::getListCheckDialog(	wxString const& listName,
+										wxString const& actionName)
+{
+	//On vérifie la validités de la liste (Liste existante ou pas).
+	List* tmpList = getValue(listName);
+	if(tmpList == nullptr)
+	{
+		wxMessageBox(wxString::Format(_("Sorry, the list '%s' is nonexistent.\nPlease correct this problem in delete this action (%s)."), listName, actionName), _("List invalid."), wxOK|wxICON_EXCLAMATION|wxCENTRE);
+	}
+	
+	return tmpList;
+}
+
 wxString ListManager::getPath()
 {
 	return wxStandardPaths::Get().GetUserDataDir()+"/lists";
@@ -300,7 +313,7 @@ wxString ListManager::getPath()
 
 wxPanel* ListManager::newEditPanel(wxWindow *parent)
 {
-	return nullptr;
+	return new PanelListLists(parent);
 }
 
 bool ListManager::check()const

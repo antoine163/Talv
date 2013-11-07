@@ -27,19 +27,18 @@ DialogPreferences::DialogPreferences()
 : GuiDialogPreferences(nullptr)
 {	
 	for(auto it : EditableByPanelManager::getInstance()->getEditableByPanel())
-	{
-		std::cout << it << std::endl;
-		
-		////Ajout du panel Action
-		//_PanelListActions = new PanelListActions(_notebook);
-		//_notebook->AddPage(_PanelListActions, _("Actions"), false);
+	{		
+		//Ajout des panels
+		wxPanel* panel = it->newEditPanel(_notebook);
+		if(panel)
+			_notebook->AddPage(panel, it->getName());
 	}
 }
 
 DialogPreferences::~DialogPreferences()
 {
 }
-
+ 
 void DialogPreferences::applyAndSave()
 {
 	////On ouvre le fichier de config.
