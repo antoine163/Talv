@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.14
+//! \version 1.15
 //! \date 20.03.2013
 //!
 //! ********************************************************************
@@ -42,7 +42,7 @@ class PanelListActions : public PanelList
 		virtual ~PanelListActions();
 		
 		//! \brief Mise à jour de l'affichage de la liste avec \ref EditActionManager
-		void Update();
+		virtual void Update();
 		
 	private:	
 		//! \brief Suppression de l'action.

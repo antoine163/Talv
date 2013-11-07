@@ -92,14 +92,10 @@ void DialogPreferences::applyAndSave()
 
 void DialogPreferences::OnNotebookPageChanged(wxNotebookEvent& event)
 {
-	////Récupération du nom de la page.
-	//wxString notebookPage = _notebook->GetPageText(event.GetSelection());
+	//Mise a jour de la page sélectionner
+	_notebook->GetCurrentPage()->Update();
 	
-	////Mise a jour de la page sélectionner
-	//if(notebookPage == _("Actions"))
-		//_PanelListActions->update();
-	//else if(notebookPage == _("Lists"))
-		//_PanelListLists->update();
+	event.Skip();
 }
 
 void DialogPreferences::OnButtonClickOK(wxCommandEvent& event)

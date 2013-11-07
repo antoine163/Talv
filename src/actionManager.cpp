@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.14
+//! \version 1.15
 //! \date 20.03.2013
 //!
 //! ********************************************************************
@@ -38,7 +38,7 @@ PanelListActions::~PanelListActions()
 
 void PanelListActions::Update()
 {
-	std::cout << "test" << std::endl;
+	std::cout << "PanelListActions::Update" << std::endl;
 	////Vide la liste
 	//clear();
 	

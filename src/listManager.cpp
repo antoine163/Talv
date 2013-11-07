@@ -39,8 +39,9 @@ PanelListLists::~PanelListLists()
 {
 }
 
-void PanelListLists::update()
+void PanelListLists::Update()
 {
+	std::cout << "PanelListLists::Update" << std::endl;
 	////Vide la liste.
 	//clear();
 	

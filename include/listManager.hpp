@@ -39,7 +39,7 @@ class PanelListLists : public PanelList
 		virtual ~PanelListLists();
 		
 		//! \brief Mise à jour de l'affichage de la liste avec \ref EditListManager
-		void update();
+		virtual void Update();
 		
 	private:		
 		//! \brief Suppression de la liste.
