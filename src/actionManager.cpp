@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.15
+//! \version 1.16
 //! \date 20.03.2013
 //!
 //! ********************************************************************
@@ -14,176 +14,170 @@
 */
 
 #include "actionManager.hpp"
-
+#include <dialogActionPreferences.hpp>
 #include <wx/msgdlg.h>
 
 //TEST
 #include <iostream>
 
 // *********************************************************************
-// Class PanelListActions
+// Class PanelEditActions
 // *********************************************************************
 
-PanelListActions::PanelListActions(wxWindow* parent)
-: PanelList(parent, _("action"))
-{
+PanelEditActions::PanelEditActions(wxWindow* parent, ActionManager* manager)
+: PanelList(parent, _("action")), _actionManager(manager)
+{	
 	_listCtrl->AppendColumn(_("Shortcut"), wxLIST_FORMAT_LEFT, 100);
 	_listCtrl->AppendColumn(_("Action"), wxLIST_FORMAT_LEFT, 120);
 	_listCtrl->AppendColumn(_("Preferences"), wxLIST_FORMAT_LEFT, 255);
 }
 
-PanelListActions::~PanelListActions()
+PanelEditActions::~PanelEditActions()
 {
+	//_actionManager->edit(false);
 }
 
-void PanelListActions::Update()
+void PanelEditActions::Update()
 {
-	std::cout << "PanelListActions::Update" << std::endl;
-	////Vide la liste
-	//clear();
+	//Vide la liste
+	clear();
 	
-	////Rempli la liste.
-	//auto actions = EditActionManager::getInstance()->getData();
-	//for(auto it: actions)
-	//{
-		////Récupération du raccourci
-		//wxString shortcut = ShortcutKey::shortcutKeyToString(it.first);
+	//Rempli la liste.
+	for(auto it: _actionManager->getData())
+	{
+		//Récupération du raccourci
+		wxString shortcut = ShortcutKey::shortcutKeyToString(it.first);
 		
-		////Préparation d'un wxArrayString pour l'ajout d'un item
-		//wxArrayString tmpItem;
-		//tmpItem.Add(shortcut);
-		//tmpItem.Add(it.second->getName());
-		//tmpItem.Add(it.second->getStringPreferences());
+		//Préparation d'un wxArrayString pour l'ajout d'un item
+		wxArrayString tmpItem;
+		tmpItem.Add(shortcut);
+		tmpItem.Add(it.second->getName());
+		tmpItem.Add(it.second->getStringPreferences());
 		
-		////Ajout de l'item dans la liste
-		//addItem(tmpItem, false);
-	//}
+		//Ajout de l'item dans la liste
+		addItem(tmpItem, false);
+	}
 }
 
-bool PanelListActions::OnDeleteItem(wxString const& item)
-{
-	////Récupération de EditActionManager
-	//EditActionManager* editActionManager = EditActionManager::getInstance();
+//! \todo finir d'implémenter avec les listes.
+bool PanelEditActions::OnDeleteItem(wxString const& item)
+{	
+	//Récupération l'action à supprimer.
+	Action* action = _actionManager->getValue(ShortcutKey::stringToShortcutKey(item));
 	
-	////Récupération l'action à supprimer.
-	//Action* action = editActionManager->getValue(ShortcutKey::stringToShortcutKey(item));
+	//Récupération du nom de la liste utiliser par cette action.
+	wxString listUsed = action->getListNameUsed();
 	
-	////Récupération du nom de la liste utiliser par cette action.
-	//wxString listUsed = action->getListNameUsed();
+	//Suppression de l'action.
+	_actionManager->remove(ShortcutKey::stringToShortcutKey(item));
 	
-	////Suppression de l'action.
-	//editActionManager->remove(ShortcutKey::stringToShortcutKey(item));
-	
-	////Si une liste est utiliser par cette liste.
-	//if(!listUsed.IsEmpty())
-	//{
-		////Récupération des raccourcis/actions utilisent la même liste que l'action à supprimer.
-		//std::vector<ShortcutKey> shortcuts = editActionManager->getShortcutUsedList(listUsed);
-		
-		////Si il n'y a pas d'autre raccourcis.
-		//if(shortcuts.size() == 0)
-		//{
-			////Poser la question si on dois les supprimés la liste.
-			//wxMessageDialog dlg(this, wxString::Format(_("The list %s isn't used. You want delete the list?"), listUsed), _("Delete list"), wxYES_NO|wxICON_QUESTION|wxCENTRE);
-			//if(dlg.ShowModal() == wxID_YES)
-			//{
-				////Suppression de la liste.
-				//EditListManager::getInstance()->getValue(listUsed)->removeFile();
-				//EditListManager::getInstance()->remove(listUsed);
-			//}
-		//}
-	//}
+	//Si une liste est utiliser par cette Action ?
+	if(!listUsed.IsEmpty())
+	{		
+		//Aucune actions utilise cette liste ?
+		if(!_actionManager->actionUseList(listUsed))
+		{
+			//Poser la question si on dois supprimés la liste.
+			wxMessageDialog dlg(this, wxString::Format(_("The list %s isn't used. You want delete the list?"), listUsed), _("Delete list"), wxYES_NO|wxICON_QUESTION|wxCENTRE);
+			if(dlg.ShowModal() == wxID_YES)
+			{
+				//Suppression de la liste.
+				//ListManager::getInstance()->getValue(listUsed)->removeFile();
+				//ListManager::getInstance()->remove(listUsed);
+			}
+		}
+	}
 	
 	return true;
 }
 
-wxArrayString PanelListActions::OnPreferencesItem(wxString const& item)
+wxArrayString PanelEditActions::OnPreferencesItem(wxString const& item)
 {
 	//wxArrayString de retours.
 	wxArrayString newItem;
 	
-	////Récupération du vieux raccourci.
-	//ShortcutKey oldShortcutKey = ShortcutKey::stringToShortcutKey(item);
+	//Récupération du vieux raccourci.
+	ShortcutKey oldShortcutKey = ShortcutKey::stringToShortcutKey(item);
 	
-	////Récupération de l'action.
-	//Action* oldAct = EditActionManager::getInstance()->getValue(oldShortcutKey);
+	//Récupération de l'action.
+	Action* oldAct = _actionManager->getValue(oldShortcutKey);
 	
-	//DialogActionPreferences dlg(this, item, oldAct);
-	//while(1)
-	//{
-		////Montre le dialogue.
-		//if(dlg.ShowModal() == wxID_OK)
-		//{
-			////Récupère le nouveau raccourci sélectionner.
-			//ShortcutKey newShortcutKey = ShortcutKey::stringToShortcutKey(dlg.getShortcut());
+	DialogActionPreferences dlg(this, item, oldAct);
+	while(1)
+	{
+		//Montre le dialogue.
+		if(dlg.ShowModal() == wxID_OK)
+		{
+			//Récupère le nouveau raccourci sélectionner.
+			ShortcutKey newShortcutKey = ShortcutKey::stringToShortcutKey(dlg.getShortcut());
 			
-			////Si le raccourci a été modifier.
-			//if(oldShortcutKey != newShortcutKey)
-			//{				
-				////Vérifie si le raccourci n'est pas déjà existent.
-				//if(EditActionManager::getInstance()->exist(newShortcutKey))
-				//{
-					//wxMessageDialog dlg(this, _("The shortcut already exist!"), _("Shortcut exist"), wxOK|wxICON_EXCLAMATION|wxCENTRE);
-					//dlg.ShowModal();
+			//Si le raccourci a été modifier.
+			if(oldShortcutKey != newShortcutKey)
+			{				
+				//Vérifie si le raccourci n'est pas déjà existent.
+				if(_actionManager->exist(newShortcutKey))
+				{
+					wxMessageDialog dlg(this, _("The shortcut already exist!"), _("Shortcut exist"), wxOK|wxICON_EXCLAMATION|wxCENTRE);
+					dlg.ShowModal();
 					
-					//continue;
-				//}
-			//}
+					continue;
+				}
+			}
 			
-			////On récupère la nouvelle action.
-			//Action* newAct = Action::newAction(dlg.getAction());
+			//On récupère la nouvelle action.
+			Action* newAct = Action::newAction(dlg.getAction());
 			
-			////Libère la mémoire de l'ancienne action.
-			//EditActionManager::getInstance()->remove(oldShortcutKey);
+			//Libère la mémoire de l'ancienne action.
+			_actionManager->remove(oldShortcutKey);
 			
-			////Nouvelle action.
-			//EditActionManager::getInstance()->add(newShortcutKey, newAct);
+			//Nouvelle action.
+			_actionManager->add(newShortcutKey, newAct);
 			
-			////Mise à jour de l'item.
-			//newItem.Add(ShortcutKey::shortcutKeyToString(newShortcutKey));
-			//newItem.Add(newAct->getName());
-			//newItem.Add(newAct->getStringPreferences());
-		//}
-		//break;
-	//}
+			//Mise à jour de l'item.
+			newItem.Add(ShortcutKey::shortcutKeyToString(newShortcutKey));
+			newItem.Add(newAct->getName());
+			newItem.Add(newAct->getStringPreferences());
+		}
+		break;
+	}
 	
 	return newItem;
 }
 
-wxArrayString PanelListActions::OnAddItem()
+wxArrayString PanelEditActions::OnAddItem()
 {
-	//wxArrayString de retour.
+	//wxArrayString de return.
 	wxArrayString newItem;
 	
-	//DialogActionPreferences dlg(this);
-	//while(1)
-	//{
-		////Montre le dialogue
-		//if(dlg.ShowModal() == wxID_OK)
-		//{
-			////Récupère le nouveau raccourci sélectionner.
-			//ShortcutKey shortcutKey = ShortcutKey::stringToShortcutKey(dlg.getShortcut());
+	DialogActionPreferences dlg(this);
+	while(1)
+	{
+		//Montre le dialogue
+		if(dlg.ShowModal() == wxID_OK)
+		{
+			//Récupère le nouveau raccourci sélectionner.
+			ShortcutKey shortcutKey = ShortcutKey::stringToShortcutKey(dlg.getShortcut());
 			
-			////Vérifie si le raccourci n'est pas déjà existent.
-			//if(EditActionManager::getInstance()->exist(shortcutKey))
-			//{
-				//wxMessageDialog dlg(this, _("The shortcut already exist!"), _("Shortcut exist"), wxOK|wxICON_EXCLAMATION|wxCENTRE);
-				//dlg.ShowModal();
+			//Vérifie si le raccourci n'est pas déjà existent.
+			if(_actionManager->exist(shortcutKey))
+			{
+				wxMessageDialog dlg(this, _("The shortcut already exist!"), _("Shortcut exist"), wxOK|wxICON_EXCLAMATION|wxCENTRE);
+				dlg.ShowModal();
 				
-				//continue;
-			//}
+				continue;
+			}
 			
-			////Nouvelle action
-			//Action* newAct = Action::newAction(dlg.getAction());
-			//EditActionManager::getInstance()->add(shortcutKey, newAct);
+			//Nouvelle action
+			Action* newAct = Action::newAction(dlg.getAction());
+			_actionManager->add(shortcutKey, newAct);
 			
-			////Un nouveau item
-			//newItem.Add(ShortcutKey::shortcutKeyToString(shortcutKey));
-			//newItem.Add(newAct->getName());
-			//newItem.Add(newAct->getStringPreferences());
-		//}
-		//break;
-	//}
+			//Un nouveau item
+			newItem.Add(ShortcutKey::shortcutKeyToString(shortcutKey));
+			newItem.Add(newAct->getName());
+			newItem.Add(newAct->getStringPreferences());
+		}
+		break;
+	}
 	
 	return newItem;
 }
@@ -192,8 +186,8 @@ wxArrayString PanelListActions::OnAddItem()
 // Class ActionManager
 // *********************************************************************
 
-ActionManager::ActionManager() :
-EditableByPanel(_("Actions")), _shortcut(this)
+ActionManager::ActionManager()
+: EditableByPanel(_("Actions")), _shortcut(this)
 {
 }
 
@@ -230,7 +224,7 @@ bool ActionManager::remove(ShortcutKey const& shortcut)
 void ActionManager::removeAll()
 {
 	//Désinstalle les raccourcis.
-		_shortcut.removeAll();
+	_shortcut.removeAll();
 		
 	//Suppression des actions.
 	ManagerBase<ShortcutKey, Action>::removeAll();
@@ -305,9 +299,20 @@ void ActionManager::enableShortcuts(bool val)
 	_shortcut.enable(val);
 }
 
+bool ActionManager::actionUseList(wxString const& listName)
+{
+	for(auto it: _data)
+	{
+		if(it.second->getListNameUsed() == listName)
+			return true;
+	}
+	
+	return false;
+}
+
 wxPanel* ActionManager::newEditPanel(wxWindow *parent)
 {
-	return new PanelListActions(parent);
+	return new PanelEditActions(parent, this);
 }
 
 bool ActionManager::check()const
@@ -329,45 +334,45 @@ void ActionManager::OnShortcut(ShortcutEvent& event)
 // Class EditActionManager
 // *********************************************************************
 
-EditActionManager::EditActionManager()
-{
-}
+//EditActionManager::EditActionManager()
+//{
+//}
 
-EditActionManager::~EditActionManager()
-{
-}
+//EditActionManager::~EditActionManager()
+//{
+//}
 
-void EditActionManager::init()
-{
-	auto act = ActionManager::getInstance()->getData();
+//void EditActionManager::init()
+//{
+	//auto act = ActionManager::getInstance()->getData();
 	
-	//Copie de tout les actions.
-	for(auto it : act)
-		add(it.first, Action::newAction(it.second));
-}
+	////Copie de tout les actions.
+	//for(auto it : act)
+		//add(it.first, Action::newAction(it.second));
+//}
 	
-void EditActionManager::apply()
-{
-	ActionManager* actionManager = ActionManager::getInstance();
+//void EditActionManager::apply()
+//{
+	//ActionManager* actionManager = ActionManager::getInstance();
 	
-	//On supprime tout
-	actionManager->removeAll();
+	////On supprime tout
+	//actionManager->removeAll();
 	
-	//Et on remplie en copient tout les actions.
-	for(auto it : _data)
-		actionManager->add(it.first, Action::newAction(it.second));
-}
+	////Et on remplie en copient tout les actions.
+	//for(auto it : _data)
+		//actionManager->add(it.first, Action::newAction(it.second));
+//}
 
-std::vector<ShortcutKey> EditActionManager::getShortcutUsedList(wxString const& listName)
-{
-	std::vector<ShortcutKey> shortcuts;
+//std::vector<ShortcutKey> EditActionManager::getShortcutUsedList(wxString const& listName)
+//{
+	//std::vector<ShortcutKey> shortcuts;
 	
-	//Parcoure de tout les raccourcis/actions
-	for(auto it: _data)
-	{
-		if(it.second->getListNameUsed() == listName)
-			shortcuts.push_back(it.first);
-	}
+	////Parcoure de tout les raccourcis/actions
+	//for(auto it: _data)
+	//{
+		//if(it.second->getListNameUsed() == listName)
+			//shortcuts.push_back(it.first);
+	//}
 	
-	return shortcuts;
-}
+	//return shortcuts;
+//}
