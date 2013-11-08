@@ -96,25 +96,28 @@ class ManagerBase
 		//! soit appliquer au mode normale.
 		//! 
 		//! \param val true pour activer le mode édit et false pour le désactiver.
-		void edit(bool val)
+		virtual void edit(bool val)
 		{
-			////on fait rien si le mode ne change pas.
-			//if(isEdit() == val)
-				//return;
+			//On fait rien si le mode ne change pas.
+			if(isEdit() == val)
+				return;
 				
-			////On passe en mode édit ?
-			//if(val)
-			//{
-				//_data = _dataEdit;
-				////Copie des données
-				//for(auto it: _dataNormal)
-					//add(it.first, copyNewDatas(it.second));
-			//}
-			////On passe en mode normale ?
-			//else
-			//{
-				//_data = _dataNormal;
-			//}
+			//On passe en mode édit ?
+			if(val)
+			{
+				_data = &_dataEdit;
+				//Copie des données.
+				for(auto it: _dataNormal)
+					add(it.first, copyNewDatas(it.second));
+			}
+			//On passe en mode normale ?
+			else
+			{
+				//Suppression des données du mode édite.
+				removeAll();
+					
+				_data = &_dataNormal;
+			}
 		}
 				
 		//! \brief Applique les modification apporter par le mode édite au
@@ -122,15 +125,30 @@ class ManagerBase
 		//! \note Cette méthode n'a pas d'influence en mode normale et
 		//! devra être utiliser seulement en mode édite.
 		//! \see isEdit()
-		void apply()
+		virtual void apply()
 		{
+			//On fait rien si on n'est pas en mode édit.
+			if(!isEdit())
+				return;
+			
+			//Temporaire, c'est pour l'utilisation de removeAll et add.
+			_data = &_dataNormal;
+			
+			//Suppression des données du mode normal.
+			removeAll();
+			
+			//Copie des données dans le mode normal.
+			for(auto it: _dataEdit)
+				add(it.first, copyNewDatas(it.second));
+				
+			_data = &_dataEdit;
 		}
 				
 		//! \brief Pour savoir si le manager est en mode édit.
 		//! \return true si il est en mode édit.
 		bool isEdit()
 		{
-			if(_data == _dataEdit)
+			if(_data == &_dataEdit)
 				return true;
 				
 			return false;
@@ -169,7 +187,7 @@ class ManagerBase
 		//! \brief Méthode pouvant copier une données.
 		//! \param inc donnée a copier.
 		//! \return une nouvelle instance de la donner fraîchement copier.
-		//virtual T2* copyNewDatas(T2 const* inc)=0;
+		virtual T2* copyNewDatas(T2 const* inc)=0;
 	
 	private:
 		//! \brief données en cour d'utilisation.

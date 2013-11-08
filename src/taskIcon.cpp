@@ -115,12 +115,6 @@ void TaskIcon::OnAbout(wxCommandEvent&)
 
 void TaskIcon::OnPreferences(wxCommandEvent&)
 {
-	//Récupération de l'instance de ActionManager;
-	ActionManager* actionManager = ActionManager::getInstance();
-	
-	//Désactivation des raccourcis.
-	actionManager->enableShortcuts(false);
-	
 	//Création du dialog.
 	DialogPreferences dlg;
 	
@@ -131,9 +125,6 @@ void TaskIcon::OnPreferences(wxCommandEvent&)
 		if(!Resource::getInstance()->getShowMenu())
 			Destroy();
 	}
-	
-	//On réactive les raccourcis.
-	actionManager->enableShortcuts(_enableShortcuts);
 }
 
 void TaskIcon::OnEnableShortcuts(wxCommandEvent& event)

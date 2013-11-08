@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.17
+//! \version 2.0
 //! \date 20.03.2013
 //!
 //! ********************************************************************
@@ -27,6 +27,10 @@
 PanelEditActions::PanelEditActions(wxWindow* parent, ActionManager* manager)
 : PanelList(parent, _("action")), _actionManager(manager)
 {	
+	//Pansage en mode édite de ActionManager
+	_actionManager->edit(true);
+	_actionManager->enableShortcuts(false);
+	
 	_listCtrl->AppendColumn(_("Shortcut"), wxLIST_FORMAT_LEFT, 100);
 	_listCtrl->AppendColumn(_("Action"), wxLIST_FORMAT_LEFT, 120);
 	_listCtrl->AppendColumn(_("Preferences"), wxLIST_FORMAT_LEFT, 255);
@@ -34,7 +38,9 @@ PanelEditActions::PanelEditActions(wxWindow* parent, ActionManager* manager)
 
 PanelEditActions::~PanelEditActions()
 {
-	//_actionManager->edit(false);
+	//Pansage en mode normal de ActionManager
+	_actionManager->edit(false);
+	_actionManager->enableShortcuts(true);
 }
 
 void PanelEditActions::Update()
@@ -202,9 +208,12 @@ bool ActionManager::add(ShortcutKey const &shortcut, Action* act)
 	if(!ManagerBase<ShortcutKey, Action>::add(shortcut, act))
 		return false;
 	
-	//Et on l'ajouter à la liste des raccourcis.
-	int id = _shortcut.creat(shortcut);
-	Bind(EVT_SHORTCUT, &ActionManager::OnShortcut, this, id);
+	//Et on l'ajouter à la liste des raccourcis si on n'est pas en mode édite.
+	if(!isEdit())
+	{
+		int id = _shortcut.creat(shortcut);
+		Bind(EVT_SHORTCUT, &ActionManager::OnShortcut, this, id);
+	}
 	
 	return true;
 }
@@ -213,8 +222,10 @@ bool ActionManager::remove(ShortcutKey const& shortcut)
 {
 	if(ManagerBase<ShortcutKey, Action>::remove(shortcut))
 	{
-		//Suppression du accourcie.
-		_shortcut.remove(shortcut);
+		//Suppression du accourcie si on n'est pas en mode édite.
+		if(!isEdit())
+			_shortcut.remove(shortcut);
+			
 		return true;
 	}
 	
@@ -223,8 +234,9 @@ bool ActionManager::remove(ShortcutKey const& shortcut)
 
 void ActionManager::removeAll()
 {
-	//Désinstalle les raccourcis.
-	_shortcut.removeAll();
+	//Désinstalle les raccourcis si on n'est pas en mode édite.
+	if(!isEdit())
+		_shortcut.removeAll();
 		
 	//Suppression des actions.
 	ManagerBase<ShortcutKey, Action>::removeAll();
@@ -310,6 +322,21 @@ bool ActionManager::actionUseList(wxString const& listName)
 	return false;
 }
 
+void ActionManager::apply()
+{
+	ManagerBase<ShortcutKey, Action>::apply();
+
+	//Suppression de tout les raccourcis.
+	_shortcut.removeAll();
+
+	//Active les raccourcis auprès de l'os.
+	for(auto it : getData())
+	{
+		int id = _shortcut.creat(it.first);
+		Bind(EVT_SHORTCUT, &ActionManager::OnShortcut, this, id);
+	}
+}
+
 wxPanel* ActionManager::newEditPanel(wxWindow *parent)
 {
 	return new PanelEditActions(parent, this);
@@ -323,6 +350,11 @@ bool ActionManager::panelCheck()const
 bool ActionManager::panelApply()
 {
 	return true;
+}
+
+Action* ActionManager::copyNewDatas(Action const* inc)
+{
+	return Action::newAction(inc);
 }
 
 void ActionManager::OnShortcut(ShortcutEvent& event)

@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.17
+//! \version 2.0
 //! \date 20.03.2013
 //!
 //! ********************************************************************
@@ -62,7 +62,8 @@ class PanelEditActions : public PanelList
 // Class ActionManager
 // *********************************************************************
 
-//! \brief Interface utilisateur pour les gestions des actions avec leur raccourcis associer.
+//! \brief Interface utilisateur pour les gestions des actions avec leur 
+//! raccourcis associer.
 class ActionManager : 	public wxEvtHandler,
 						public ManagerBase<ShortcutKey, Action>,
 						public Singleton<ActionManager>,
@@ -99,6 +100,9 @@ class ActionManager : 	public wxEvtHandler,
 		//! \brief Permet de savoir si une liste est utiliser par une ou des actions.
 		bool actionUseList(wxString const& listName);
 		
+		//! \brief Re implémentassions de \ref ManagerBase.
+		virtual void apply();
+		
 		//! \brief Implémentassions de \ref EditableByPanel.
 		virtual wxPanel* newEditPanel(wxWindow *parent);
 		//! \brief Implémentassions de \ref EditableByPanel.
@@ -113,38 +117,14 @@ class ActionManager : 	public wxEvtHandler,
 		//! \brief destructeur.
 		virtual ~ActionManager();
 		
+		//! \brief Implémentassions de \ref ManagerBase.
+		virtual Action* copyNewDatas(Action const* inc);
+		
 		//! \brief Méthode appeler lorsque un événement de raccourci clavier survient.
 		void OnShortcut(ShortcutEvent& event);
 		
 		//! \brief Gestion des raccourcis.
 		Shortcut _shortcut;
 };
-
-// *********************************************************************
-// Class EditActionManager
-// *********************************************************************
-
-////! \brief Gestions des actions avec leur raccourcis associer de façon temporaire aven de modifier ActionManager.
-//class EditActionManager : public ManagerBase<ShortcutKey, Action>, public Singleton<EditActionManager>
-//{	
-	//friend class Singleton<EditActionManager>;
-	
-	//public:
-		////! \brief Initialisation à partir de ActionManager
-		//void init();
-		
-		////! \brief Applique à ActionManager
-		//void apply();
-		
-		////! \brief Obtenir la liste des raccourcis utiliser une liste.
-		//std::vector<ShortcutKey> getShortcutUsedList(wxString const& listName);
-		
-	//private:
-		////! \brief Constructeur.
-		//EditActionManager();
-		
-		////! \brief destructeur.
-		//virtual ~EditActionManager();
-//};
 
 #endif //ACTION_MANAGER_H
