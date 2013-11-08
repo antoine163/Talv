@@ -109,6 +109,8 @@ class ActionManager : 	public wxEvtHandler,
 		virtual bool panelCheck()const;
 		//! \brief Implémentassions de \ref EditableByPanel.
 		virtual bool panelApply();
+		//! \brief Implémentassions de \ref EditableByPanel.
+		virtual bool panelSave(wxFileConfig &fileConfig)const=0;
 		
 	private:
 		//! \brief Constructeur.

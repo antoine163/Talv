@@ -352,6 +352,11 @@ bool ActionManager::panelApply()
 	return true;
 }
 
+bool ActionManager::panelSave(wxFileConfig &fileConfig)const
+{
+	return true;
+}
+
 Action* ActionManager::copyNewDatas(Action const* inc)
 {
 	return Action::newAction(inc);

@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.2
+//! \version 0.3
 //! \date 25.09.2013
 //!
 //! ********************************************************************
@@ -19,6 +19,7 @@
 #include <vector>
 #include "singleton.hpp"
 #include <wx/panel.h>
+#include <wx/fileconf.h>
 
 // *********************************************************************
 // Class EditableByPanel
@@ -55,6 +56,13 @@ class EditableByPanel
 		//! \return Si false est retourner alors les modifications du panel
 		//! ne son pas valide et elle ne seront pas appliquer.
 		virtual bool panelApply()=0;
+		
+		//! \brief Cette méthode devra sauvegarder les modifications
+		//! apporter par le panel.
+		//! \param fileConfig fichier où sauvegarder.
+		//! \return Si false est retourner alors les modifications du panel
+		//! ne son pas valide et elle ne seront pas sauvegarder.
+		virtual bool panelSave(wxFileConfig &fileConfig)const=0;
 		
 		
 		//! \brief Retourne le non de l'onglet (dans les préférences).
