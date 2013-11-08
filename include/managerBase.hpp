@@ -165,7 +165,7 @@ class ManagerBase
 	
 		//virtual void copyNewDatas()=0;
 	
-	private;
+	private:
 		//! \brief données en cour d'utilisation.
 		std::map<T1, T2*>* _data;	
 		//! \brief Lites des données en mode normale.
