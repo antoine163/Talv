@@ -349,11 +349,13 @@ bool ActionManager::panelCheck()const
 
 bool ActionManager::panelApply()
 {
+	apply();
 	return true;
 }
 
 bool ActionManager::panelSave(wxFileConfig &fileConfig)const
 {
+	save(fileConfig);
 	return true;
 }
 

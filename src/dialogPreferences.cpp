@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 3.11
+//! \version 3.12
 //! \date 02.01.2013
 //!
 //! ********************************************************************
@@ -15,6 +15,8 @@
 
 #include "dialogPreferences.hpp"
 #include "editableByPanel.hpp"
+
+#include <wx/stdpaths.h>
 
 //TEST
 #include <iostream>
@@ -41,53 +43,17 @@ DialogPreferences::~DialogPreferences()
  
 void DialogPreferences::applyAndSave()
 {
-	////On ouvre le fichier de config.
-	//wxFileConfig fileConfig(	PROJECT_NAME,
-								//wxEmptyString,
-								//wxStandardPaths::Get().GetUserDataDir()+'/'+PROJECT_NAME);
-	//fileConfig.DeleteAll();
+	//On ouvre le fichier de config.
+	wxFileConfig fileConfig(	PROJECT_NAME,
+								wxEmptyString,
+								wxStandardPaths::Get().GetUserDataDir()+'/'+PROJECT_NAME);
+	fileConfig.DeleteAll();
 	
-	////Affectation des valeurs dans les ressources.
-	//Resource::getInstance()->setShowMenu(_checkBoxShowMenu->GetValue());
-	//Resource::getInstance()->setPowerOn(_checkBoxPowerOn->GetValue());
-	
-	////On sauvegarde les ressources.
-	//Resource::getInstance()->save(fileConfig);
-	
-	////Affectation des paramètres des notifications.
-	////! \todo provisoire
-	//#ifdef USE_EMULATE_NOTIFICATION	
-	//int n = _choiceNotification->GetSelection();
-	//wxString nString = _choiceNotification->GetString(n);
-	
-	//if(nString == _("Top left"))
-	//{
-		//Notification::getInstance()->setPositionNotification(POSITION_SCREEN_TOP_LEFT);
-	//}
-	//else if(nString == _("Top right"))
-	//{
-		//Notification::getInstance()->setPositionNotification(POSITION_SCREEN_TOP_RIGHT);
-	//}
-	//else if(nString == _("Bottom left"))
-	//{
-		//Notification::getInstance()->setPositionNotification(POSITION_SCREEN_BOTTOM_LEFT);
-	//}
-	//else if(nString == _("Bottom right"))
-	//{
-		//Notification::getInstance()->setPositionNotification(POSITION_SCREEN_BOTTOM_RIGHT);
-	//}
-	//#endif
-	
-	////On sauvegarde les paramètres des notifications.
-	//Notification::getInstance()->save(fileConfig);
-	
-	////On sauvegarde EN PREMIER les listes
-	//EditListManager::getInstance()->apply();
-	//ListManager::getInstance()->save(fileConfig);
-	
-	////On sauvegarde EN DEUXIÈME les actions
-	//EditActionManager::getInstance()->apply();
-	//ActionManager::getInstance()->save(fileConfig);
+	for(auto it : EditableByPanelManager::getInstance()->getEditableByPanel())
+	{		
+		it->panelApply();
+		it->panelSave(fileConfig);
+	}
 }
 
 void DialogPreferences::OnNotebookPageChanged(wxNotebookEvent& event)

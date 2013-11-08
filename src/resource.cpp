@@ -120,8 +120,8 @@ Resource::Resource()
 	
 	//Liste des actions
 	_actions[_("Translation")] = "ActTranslation";
-	_actions[_("Translation to list")] = "ActTranslationToList";
-	_actions[_("Learn a list")] = "ActLearn";
+	//_actions[_("Translation to list")] = "ActTranslationToList";
+	//_actions[_("Learn a list")] = "ActLearn";
 }
 
 Resource::~Resource()
