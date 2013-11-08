@@ -48,11 +48,11 @@ Action* Action::newAction(wxString const& actTypeName)
 	if(actTypeName == "ActTranslation")
 		return new ActTranslation();
 
-	if(actTypeName == "ActTranslationToList")
-		return new ActTranslationToList();
+	//if(actTypeName == "ActTranslationToList")
+		//return new ActTranslationToList();
 
-	if(actTypeName == "ActLearn")
-		return new ActLearn();
+	//if(actTypeName == "ActLearn")
+		//return new ActLearn();
 	
 	return nullptr;
 }
@@ -62,11 +62,11 @@ Action* Action::newAction(Action const* act)
 	if(act->_actTypeName == "ActTranslation")
 		return new ActTranslation(static_cast<ActTranslation const&>(*act));
 
-	if(act->_actTypeName == "ActTranslationToList")
-		return new ActTranslationToList(static_cast<ActTranslationToList const&>(*act));
+	//if(act->_actTypeName == "ActTranslationToList")
+		//return new ActTranslationToList(static_cast<ActTranslationToList const&>(*act));
 
-	if(act->_actTypeName == "ActLearn")
-		return new ActLearn(static_cast<ActLearn const&>(*act));
+	//if(act->_actTypeName == "ActLearn")
+		//return new ActLearn(static_cast<ActLearn const&>(*act));
 	
 	return nullptr;
 }

@@ -53,8 +53,8 @@ SRC+=../src/editableByPanel.cpp
 SRC+=../src/shortcut.cpp
 SRC+=../src/actionManager.cpp
 SRC+=../src/action.cpp
-SRC+=../src/listManager.cpp
-SRC+=../src/list.cpp
+#SRC+=../src/listManager.cpp
+#SRC+=../src/list.cpp
 SRC+=../src/resource.cpp
 #wxJSON
 SRC+=../src/wxJSON/jsonval.cpp
@@ -65,12 +65,12 @@ ifeq ($(EMULATE_NOTIFICATION), yes)
 SRC+=../gui/guiFrameNotification.cpp
 endif
 #Action
-SRC+=../src/action/actLearn.cpp
-SRC+=../gui/action/guiPanelActLearn.cpp
+#SRC+=../src/action/actLearn.cpp
+#SRC+=../gui/action/guiPanelActLearn.cpp
 SRC+=../src/action/actTranslation.cpp
 SRC+=../gui/action/guiPanelActTranslation.cpp
-SRC+=../src/action/actTranslationToList.cpp
-SRC+=../gui/action/guiPanelActTranslationToList.cpp
+#SRC+=../src/action/actTranslationToList.cpp
+#SRC+=../gui/action/guiPanelActTranslationToList.cpp
 #GUI
 SRC+=../gui/guiPanelList.cpp
 SRC+=../src/panelList.cpp

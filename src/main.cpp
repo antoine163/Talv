@@ -17,7 +17,7 @@
 #include "resource.hpp"
 #include "notification.hpp"
 #include "actionManager.hpp"
-#include "listManager.hpp"
+//#include "listManager.hpp"
 #include "dialogPreferences.hpp"
 
 #include <wx/fileconf.h>
@@ -64,7 +64,7 @@ bool App::OnInit()
 	ActionManager::getInstance()->load(fileConfig);
 
 	//Chargement des listes se trouvent dans le fichier de config.
-	ListManager::getInstance()->load(fileConfig);
+	//ListManager::getInstance()->load(fileConfig);
 
 	//Création du menu ou pas.
 	if(Resource::getInstance()->getShowMenu())
@@ -94,7 +94,7 @@ int App::OnExit()
 	Notification::kill();
 	
 	//Suppression des liste.
-	ListManager::kill();
+	//ListManager::kill();
 	
 	//Suppression du module de la traduction de l'application.
 	delete _locale;

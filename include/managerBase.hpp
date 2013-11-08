@@ -29,7 +29,7 @@ class ManagerBase
 {
 	public:			
 		//! \brief Constructeur.
-		ManagerBase() : _data(&_dataRun)
+		ManagerBase() : _data(&_dataNormal)
 		{}
 		
 		//! \brief destructeur.
@@ -98,19 +98,22 @@ class ManagerBase
 		//! \param val true pour activer le mode édit et false pour le désactiver.
 		void edit(bool val)
 		{
-			//on fait rien si le mode ne change pas.
-			if(isEdit() == val)
-				return;
+			////on fait rien si le mode ne change pas.
+			//if(isEdit() == val)
+				//return;
 				
 			////On passe en mode édit ?
-			//if()
+			//if(val)
 			//{
-				//copyNewDatas();
+				//_data = _dataEdit;
+				////Copie des données
+				//for(auto it: _dataNormal)
+					//add(it.first, copyNewDatas(it.second));
 			//}
 			////On passe en mode normale ?
-			//else if()
+			//else
 			//{
-				//copyNewDatas();
+				//_data = _dataNormal;
 			//}
 		}
 				
@@ -163,13 +166,16 @@ class ManagerBase
 		
 	protected:
 	
-		//virtual void copyNewDatas()=0;
+		//! \brief Méthode pouvant copier une données.
+		//! \param inc donnée a copier.
+		//! \return une nouvelle instance de la donner fraîchement copier.
+		//virtual T2* copyNewDatas(T2 const* inc)=0;
 	
 	private:
 		//! \brief données en cour d'utilisation.
 		std::map<T1, T2*>* _data;	
 		//! \brief Lites des données en mode normale.
-		std::map<T1, T2*> _dataRun;	
+		std::map<T1, T2*> _dataNormal;
 		//! \brief Lites des données en mode édite.
 		std::map<T1, T2*> _dataEdit;	
 };
