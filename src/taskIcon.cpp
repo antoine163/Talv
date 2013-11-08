@@ -106,7 +106,7 @@ void TaskIcon::OnAbout(wxCommandEvent&)
 	
 	info.SetDescription(msg);
 	info.SetCopyright("(C) 2012-1013");
-	info.SetWebSite("http://antoine163.github.com/flydocs/");
+	info.SetWebSite("http://antoine163.github.com/Talv/");
 	info.AddDeveloper("Maleyrie Antoine <antoine.maleyrie@gmail.com>");
 	info.AddDocWriter("Maleyrie Antoine <antoine.maleyrie@gmail.com>");
 	
