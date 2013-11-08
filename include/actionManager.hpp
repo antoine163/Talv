@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.16
+//! \version 1.17
 //! \date 20.03.2013
 //!
 //! ********************************************************************
@@ -100,11 +100,11 @@ class ActionManager : 	public wxEvtHandler,
 		bool actionUseList(wxString const& listName);
 		
 		//! \brief Implémentassions de \ref EditableByPanel.
-		wxPanel* newEditPanel(wxWindow *parent);
+		virtual wxPanel* newEditPanel(wxWindow *parent);
 		//! \brief Implémentassions de \ref EditableByPanel.
-		bool check()const;
+		virtual bool panelCheck()const;
 		//! \brief Implémentassions de \ref EditableByPanel.
-		bool apply();
+		virtual bool panelApply();
 		
 	private:
 		//! \brief Constructeur.

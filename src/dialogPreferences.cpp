@@ -94,7 +94,6 @@ void DialogPreferences::OnNotebookPageChanged(wxNotebookEvent& event)
 {
 	//Mise a jour de la page sélectionner
 	_notebook->GetCurrentPage()->Update();
-	
 	event.Skip();
 }
 

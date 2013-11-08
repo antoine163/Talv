@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.16
+//! \version 0.17
 //! \date 02.05.2013
 //!
 //! ********************************************************************
@@ -188,7 +188,7 @@ wxArrayString ListManagerBase::getNameLists()const
 	wxArrayString tmpArrayString;
 	
 	//Parcoure des lites.
-	for(auto it: _data)
+	for(auto it: getData())
 	{
 		//Ajout de la liste au wxArrayString.
 		tmpArrayString.Add(it.first);
@@ -205,7 +205,7 @@ wxArrayString ListManagerBase::getNameListsByLanguages(	wxString const& lgsrc,
 	wxString tmplgto;
 	
 	//Parcoure des lites.
-	for(auto it: _data)
+	for(auto it: getData())
 	{
 		//Récupère les langages de la liste.
 		it.second->getlanguages(&tmplgsrc, &tmplgto);
@@ -280,7 +280,7 @@ void ListManager::load(wxFileConfig& fileConfig)
 void ListManager::save(wxFileConfig& fileConfig)const
 {
 	//Parcoure tout les lites.
-	for(auto it: _data)
+	for(auto it: getData())
 	{
 		//Crée un groupe pour cette liste.
 		fileConfig.SetPath("/ListManager/"+it.first);
@@ -317,12 +317,12 @@ wxPanel* ListManager::newEditPanel(wxWindow *parent)
 	return new PanelListLists(parent);
 }
 
-bool ListManager::check()const
+bool ListManager::panelCheck()const
 {
 	return true;
 }
 
-bool ListManager::apply()
+bool ListManager::panelApply()
 {
 	return true;
 }
@@ -391,7 +391,7 @@ void EditListManager::apply()
 	//Copie de tout les listes.
 	wxString tmplgsrc;
 	wxString tmplgto;
-	for(auto it : _data)
+	for(auto it : getData())
 	{
 		//Si le fichier de la liste existe.
 		if(wxFileExists(getPath()+'/'+it.first))

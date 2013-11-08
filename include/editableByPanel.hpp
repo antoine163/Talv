@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.1
+//! \version 0.2
 //! \date 25.09.2013
 //!
 //! ********************************************************************
@@ -48,13 +48,13 @@ class EditableByPanel
 		//! \brief Cette méthode devra vérifier la cohérence des modifications
 		//! apporter par le panel.
 		//! \return true si pas de problème.
-		virtual bool check()const=0;
+		virtual bool panelCheck()const=0;
 		
 		//! \brief Cette méthode devra appliquer les modifications
 		//! apporter par le panel.
 		//! \return Si false est retourner alors les modifications du panel
 		//! ne son pas valide et elle ne seront pas appliquer.
-		virtual bool apply()=0;
+		virtual bool panelApply()=0;
 		
 		
 		//! \brief Retourne le non de l'onglet (dans les préférences).

@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.16
+//! \version 0.17
 //! \date 02.05.2013
 //!
 //! ********************************************************************
@@ -129,11 +129,11 @@ class ListManager : public ListManagerBase,
 		wxString getPath();
 		
 		//! \brief Implémentassions de \ref EditableByPanel.
-		wxPanel* newEditPanel(wxWindow *parent);
+		virtual wxPanel* newEditPanel(wxWindow *parent);
 		//! \brief Implémentassions de \ref EditableByPanel.
-		bool check()const;
+		virtual bool panelCheck()const;
 		//! \brief Implémentassions de \ref EditableByPanel.
-		bool apply();
+		virtual bool panelApply();
 
 	private:
 		//! \brief Constructeur.

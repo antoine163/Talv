@@ -62,10 +62,10 @@ bool App::OnInit()
 	
 	//Crée de l'instance de ActionManager et Installation des raccourcis/actions
 	ActionManager::getInstance()->load(fileConfig);
-	
+
 	//Chargement des listes se trouvent dans le fichier de config.
 	ListManager::getInstance()->load(fileConfig);
-	
+
 	//Création du menu ou pas.
 	if(Resource::getInstance()->getShowMenu())
 		_taskIcon = new TaskIcon();

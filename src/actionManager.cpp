@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.16
+//! \version 1.17
 //! \date 20.03.2013
 //!
 //! ********************************************************************
@@ -282,7 +282,7 @@ void ActionManager::load(wxFileConfig& fileConfig)
 
 void ActionManager::save(wxFileConfig& fileConfig)const
 {
-	for(auto &it: _data)
+	for(auto &it: getData())
 	{
 		//Obtenir la version string du raccourci.
 		wxString stringShortcut = ShortcutKey::shortcutKeyToString(it.first);
@@ -301,7 +301,7 @@ void ActionManager::enableShortcuts(bool val)
 
 bool ActionManager::actionUseList(wxString const& listName)
 {
-	for(auto it: _data)
+	for(auto it: getData())
 	{
 		if(it.second->getListNameUsed() == listName)
 			return true;
@@ -315,19 +315,19 @@ wxPanel* ActionManager::newEditPanel(wxWindow *parent)
 	return new PanelEditActions(parent, this);
 }
 
-bool ActionManager::check()const
+bool ActionManager::panelCheck()const
 {
 	return true;
 }
 
-bool ActionManager::apply()
+bool ActionManager::panelApply()
 {
 	return true;
 }
 
 void ActionManager::OnShortcut(ShortcutEvent& event)
 {
-	_data[event.getShortcutKey()]->execute();
+	getData().at(event.getShortcutKey())->execute();
 }
 
 // *********************************************************************

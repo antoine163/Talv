@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.3
+//! \version 0.4
 //! \date 10.05.2013
 //!
 //! ********************************************************************
@@ -21,7 +21,7 @@
 // *********************************************************************
 // Class ManagerBase
 // *********************************************************************
-
+#include <iostream>
 //! \todo renommer en ManagerMap
 //! \brief Classe de base pour la création de Manager
 template <typename T1, typename T2>
@@ -29,13 +29,14 @@ class ManagerBase
 {
 	public:			
 		//! \brief Constructeur.
-		ManagerBase(){};
+		ManagerBase() : _data(&_dataRun)
+		{}
 		
 		//! \brief destructeur.
 		virtual ~ManagerBase()
 		{
 			removeAll();
-		};
+		}
 		
 		//! \brief Ajout d'un élément.
 		//! \param key c'est la clef à ajouter.
@@ -48,7 +49,7 @@ class ManagerBase
 				return false;
 				
 			//Sinon on l'ajoute.
-			_data[key] = val;
+			(*_data)[key] = val;
 			
 			return true;
 		}
@@ -62,8 +63,8 @@ class ManagerBase
 			if(exist(key))
 			{
 				//On le supprime
-				delete _data[key];
-				_data.erase(key);
+				delete (*_data)[key];
+				(*_data).erase(key);
 				return true;
 			}
 			
@@ -74,10 +75,62 @@ class ManagerBase
 		virtual void removeAll()
 		{
 			//Suppression de tout les données.	
-			for(auto &it: _data)
+			for(auto &it: *_data)
 				delete it.second;
 
-			_data.clear();
+			(*_data).clear();
+		}
+		
+		//! \brief Passage en mode édit.
+		//!
+		//! Deux cas peuvent être distinguer :
+		//! - Le passage en mode édit va copier les datas actuelle de la
+		//! classe pour les conserver sen leur apporter de modification.
+		//! De se fait la classe peut être utiliser/modifier normalement 
+		//! avec les méthode usuelle ( \ref add() , \ref remove()
+		//! ,\ref removeAll() , \ref exist() ,\ref getData() ,\ref getValue()).
+		//! - Le passage en mode normal va supprimer les données du mode édite
+		//! et va revenir avec les données du mode normale précédâmes sauvegarder.
+		//! Il faudra appeler la méthode \ref apply() aven de passer
+		//! en mode normale pour que les données modifier dans le mode édite
+		//! soit appliquer au mode normale.
+		//! 
+		//! \param val true pour activer le mode édit et false pour le désactiver.
+		void edit(bool val)
+		{
+			//on fait rien si le mode ne change pas.
+			if(isEdit() == val)
+				return;
+				
+			////On passe en mode édit ?
+			//if()
+			//{
+				//copyNewDatas();
+			//}
+			////On passe en mode normale ?
+			//else if()
+			//{
+				//copyNewDatas();
+			//}
+		}
+				
+		//! \brief Applique les modification apporter par le mode édite au
+		//! data du mode normale.
+		//! \note Cette méthode n'a pas d'influence en mode normale et
+		//! devra être utiliser seulement en mode édite.
+		//! \see isEdit()
+		void apply()
+		{
+		}
+				
+		//! \brief Pour savoir si le manager est en mode édit.
+		//! \return true si il est en mode édit.
+		bool isEdit()
+		{
+			if(_data == _dataEdit)
+				return true;
+				
+			return false;
 		}
 		
 		//! \brief Pour savoir si une clef existe.
@@ -86,16 +139,16 @@ class ManagerBase
 		bool exist(T1 const& key)const
 		{
 			//Si la clé existe.
-			if(_data.count(key) > 0)
+			if((*_data).count(key) > 0)
 				return true;
 			
 			return false;
 		}
 		
-		//! \brief Obtenir la lites des clef et valeurs.
+		//! \brief Obtenir la lites des clefs et valeurs.
 		std::map<T1, T2*> const& getData()const
 		{
-			return _data;
+			return *_data;
 		}
 		
 		//! \brief Obtenir la valeurs d'une clef.
@@ -105,12 +158,20 @@ class ManagerBase
 			if(!exist(key))
 				return nullptr;
 			
-			return _data[key];
+			return (*_data)[key];
 		}
 		
 	protected:
-		//! \brief Lites des données.
-		std::map<T1, T2*> _data;	
+	
+		//virtual void copyNewDatas()=0;
+	
+	private;
+		//! \brief données en cour d'utilisation.
+		std::map<T1, T2*>* _data;	
+		//! \brief Lites des données en mode normale.
+		std::map<T1, T2*> _dataRun;	
+		//! \brief Lites des données en mode édite.
+		std::map<T1, T2*> _dataEdit;	
 };
 
 #endif //MANAGER_BASE_H
