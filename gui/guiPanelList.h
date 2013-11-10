@@ -10,7 +10,7 @@
 
 #include <wx/intl.h>
 
-#include <wx/listctrl.h>
+#include <wx/dataview.h>
 #include <wx/gdicmn.h>
 #include <wx/font.h>
 #include <wx/colour.h>
@@ -31,15 +31,12 @@ class GuiPanelList : public wxPanel
 	private:
 	
 	protected:
-		wxListCtrl* _listCtrl;
+		wxDataViewListCtrl* _listCtrl;
 		wxButton* _buttonDelete;
 		wxButton* _buttonPreferences;
 		wxButton* _buttonAdd;
 		
 		// Virtual event handlers, overide them in your derived class
-		virtual void OnListItemDeselected( wxListEvent& event ) { event.Skip(); }
-		virtual void OnListItemRightClick( wxListEvent& event ) { event.Skip(); }
-		virtual void OnListItemSelected( wxListEvent& event ) { event.Skip(); }
 		virtual void OnButtonClickDelete( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnButtonClickPreferences( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnButtonClickAdd( wxCommandEvent& event ) { event.Skip(); }

@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.1
+//! \version 1.0
 //! \date 26.09.2013
 //!
 //! ********************************************************************
@@ -23,11 +23,7 @@
 
 PanelList::PanelList(wxWindow* parent, wxString name)
 : GuiPanelList(parent), _name(name)
-{
-	#if wxCHECK_VERSION(2, 9, 5)
-		//_listCtrl->EnableAlternateRowColours();
-	#endif
-	
+{	
 	//Construction du menu
 	_menu = new wxMenu();
 		
@@ -44,6 +40,9 @@ PanelList::PanelList(wxWindow* parent, wxString name)
 	_menu->Bind(wxEVT_COMMAND_MENU_SELECTED, &PanelList::OnButtonClickAdd, this, wxID_ADD);
 	_menu->Bind(wxEVT_COMMAND_MENU_SELECTED, &PanelList::OnButtonClickPreferences, this, wxID_PREFERENCES);
 	_menu->Bind(wxEVT_COMMAND_MENU_SELECTED, &PanelList::OnButtonClickDelete, this, wxID_DELETE);
+	
+	_listCtrl->Bind(wxEVT_DATAVIEW_SELECTION_CHANGED, &PanelList::OnListSelectionChanged, this);
+	_listCtrl->Bind(wxEVT_DATAVIEW_ITEM_CONTEXT_MENU, &PanelList::OnListItemContextMenu, this);
 }
 
 PanelList::~PanelList()
@@ -52,7 +51,10 @@ PanelList::~PanelList()
 	_menu->Unbind(wxEVT_COMMAND_MENU_SELECTED, &PanelList::OnButtonClickAdd, this, wxID_ADD);
 	_menu->Unbind(wxEVT_COMMAND_MENU_SELECTED, &PanelList::OnButtonClickPreferences, this, wxID_PREFERENCES);
 	_menu->Unbind(wxEVT_COMMAND_MENU_SELECTED, &PanelList::OnButtonClickDelete, this, wxID_DELETE);
-
+	
+	_listCtrl->Unbind(wxEVT_DATAVIEW_SELECTION_CHANGED, &PanelList::OnListSelectionChanged, this);
+	_listCtrl->Unbind(wxEVT_DATAVIEW_ITEM_CONTEXT_MENU, &PanelList::OnListItemContextMenu, this);
+	
 	delete _menu;
 }
 
@@ -62,31 +64,37 @@ void PanelList::addItem(wxArrayString const& item, bool select)
 	if(item.GetCount() == 0)
 		return;
 		
-	//Ajout l'item au débute.
-	_listCtrl->InsertItem(0, item[0]);
-	for(size_t i = 1; i < item.GetCount(); i++)
-	{
-		_listCtrl->SetItem(0, i, item[i]);
-	}
+	//Ajout l'item.
+	wxVector<wxVariant> data;
+	for(size_t i = 0; i < item.GetCount(); i++)
+		data.push_back(wxVariant(item[i]));
+		
+	_listCtrl->AppendItem(data);
 	
-	//Rend visible l'item.
-	_listCtrl->EnsureVisible(0);
+	//Désélectionne tout les items
+	_listCtrl->UnselectAll();
 	
 	//On sélectionne l'items au besoins.
 	if(select)
-		_listCtrl->SetItemState(0, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+	{	
+		//Recherche de l'item fraîchement sélectionner.
+		for(int i = 0; i < _listCtrl->GetItemCount(); i++)
+		{
+			//On la trouver ?
+			if(_listCtrl->GetTextValue(i, 0) == item[0])
+			{
+				//On le sélectionne
+				_listCtrl->SelectRow(i);
+				_listCtrl->EnsureVisible(_listCtrl->RowToItem(i));
+				break;
+			}
+		}
+	}
 }
 
 void PanelList::clear()
 {
 	_listCtrl->DeleteAllItems();
-	_listItemSelected.clear();
-	
-	//On désactive les boutons
-	_buttonDelete->Enable(false);
-	_menuItemListDelete->Enable(false);
-	_buttonPreferences->Enable(false);
-	_menuItemListPreferences->Enable(false);
 }
 
 void PanelList::OnButtonClickDelete(wxCommandEvent&)
@@ -94,7 +102,7 @@ void PanelList::OnButtonClickDelete(wxCommandEvent&)
 	wxMessageDialog *dlg = nullptr;
 	
 	//Création du dialog.
-	if(_listItemSelected.size() > 1)
+	if(_listCtrl->GetSelectedItemsCount() > 1)
 		dlg = new wxMessageDialog(this, wxString::Format(_("Do you want really delete this %ss ?"), _name), wxString::Format(_("Delete %ss"), _name), wxYES_NO|wxICON_QUESTION|wxCENTRE);
 	else
 		dlg = new wxMessageDialog(this, wxString::Format(_("Do you want really delete this %s ?"), _name), wxString::Format(_("Delete %s"), _name), wxYES_NO|wxICON_QUESTION|wxCENTRE);
@@ -103,24 +111,21 @@ void PanelList::OnButtonClickDelete(wxCommandEvent&)
     if(dlg->ShowModal() == wxID_YES)
 	{
 		//Supprimer tous les items sélectionnés
-		while(!_listItemSelected.empty())
-		{	
-			//L'item a supprimer.
-			wxString tmpItem = _listItemSelected.back().GetText();
+		wxDataViewItemArray data;
+		_listCtrl->GetSelections(data);
+		
+		int itemRow = -1;
+		for(auto it : data)
+		{
+			//On récupère la ligne de l'item.
+			itemRow = _listCtrl->ItemToRow(it);
 			
-			//On cherche l'id de l'item.
-			long idItem = _listCtrl->FindItem(-1, tmpItem);
-			
+			//On récupère le texte de la premier colonne de l'item.
+			wxString item = _listCtrl->GetTextValue(itemRow, 0);
+	
 			//On le supprime de la liste.
-			_listCtrl->DeleteItem(idItem);
-			_listItemSelected.pop_back();
-			OnDeleteItem(tmpItem);
-			
-			//On désactive les boutons
-			_buttonDelete->Enable(false);
-			_menuItemListDelete->Enable(false);
-			_buttonPreferences->Enable(false);
-			_menuItemListPreferences->Enable(false);
+			_listCtrl->DeleteItem(itemRow);
+			OnDeleteItem(item);
 		}
 	}
 	
@@ -129,14 +134,19 @@ void PanelList::OnButtonClickDelete(wxCommandEvent&)
 
 void PanelList::OnButtonClickPreferences(wxCommandEvent&)
 {	
+	//On récupère le texte de la premier colonne de l'item sélectionner.
+	wxDataViewItem data = _listCtrl->GetSelection();
+	int itemRow = _listCtrl->ItemToRow(data);
+	wxString item = _listCtrl->GetTextValue(itemRow, 0);
+	
 	//Préférence de l'item.
-	wxArrayString tmpItem = OnPreferencesItem(_listItemSelected[0].GetText());
+	wxArrayString tmpItem = OnPreferencesItem(item);
 	
 	//Mise à jour de l'item dans la liste.
-	long idItem = _listItemSelected[0].GetId();
 	for(size_t i = 0; i < tmpItem.GetCount(); i++)
 	{
-		_listCtrl->SetItem(idItem, i, tmpItem[i]);
+		//_listCtrl->SetItem(idItem, i, tmpItem[i]);
+		_listCtrl->SetTextValue(tmpItem[i], itemRow, i);
 	}
 }
 
@@ -145,83 +155,59 @@ void PanelList::OnButtonClickAdd(wxCommandEvent&)
 	//Ajout d'un nouveau item.
 	wxArrayString newItem = OnAddItem();
 	
-	//tmpItem n'est pas vide ?
+	//newItem n'est pas vide ?
 	if(newItem.GetCount() > 0)
 	{
 		//Désélectionne tout les items
-		long tmpItem = -1;
-		for(;;)
-		{
-			tmpItem = _listCtrl->GetNextItem(tmpItem, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
-			if(tmpItem == -1)
-				break;
-				
-			_listCtrl->SetItemState(tmpItem, 0, wxLIST_STATE_SELECTED);
-		}
+		_listCtrl->UnselectAll();
 	
 		//Ajout de l'item
 		addItem(newItem);
 	}
 }
 
-void PanelList::OnListItemRightClick(wxListEvent& event)
+void PanelList::OnListSelectionChanged(wxDataViewEvent&)
 {
-	//Propagation de l'événement.
-	event.Skip();
-	
+	switch(_listCtrl->GetSelectedItemsCount())
+	{
+		//Rien n'est sélectionner.
+		case 0:
+			//On désactive les boutons delete.
+			_buttonDelete->Enable(false);
+			_menuItemListDelete->Enable(false);
+			
+			//On désactive les boutons Preferences.
+			_buttonPreferences->Enable(false);
+			_menuItemListPreferences->Enable(false);
+		break;
+		
+		//Un seul item est sélectionner.
+		case 1:
+			//On active les boutons delete.
+			_buttonDelete->Enable();
+			_menuItemListDelete->Enable();
+			
+			//On active les boutons Preferences.
+			_buttonPreferences->Enable();
+			_menuItemListPreferences->Enable();
+		break;
+		
+		//Plusieurs items son sélectionner.
+		default:
+			//On active les boutons delete.
+			_buttonDelete->Enable();
+			_menuItemListDelete->Enable();
+			
+			//On désactive les boutons Preferences.
+			_buttonPreferences->Enable(false);
+			_menuItemListPreferences->Enable(false);
+		break;
+	}
+}
+
+void PanelList::OnListItemContextMenu(wxDataViewEvent&)
+{	
 	//Affichage du menu
 	_listCtrl->PopupMenu(_menu);
 }
 		
-void PanelList::OnListItemDeselected(wxListEvent& event)
-{
-	//Recherche et suppression de l'item désélectionner.
-	for(size_t i = 0; i<_listItemSelected.size(); i++)
-	{
-		if(_listItemSelected[i] == event.GetItem())
-		{
-			_listItemSelected.erase(_listItemSelected.begin()+i);
-			break;
-		}
-	}
-	
-	//Si rien n'est sélectionner on désactive les boutons delete.
-	if(_listItemSelected.size() <= 0)
-	{
-		_buttonDelete->Enable(false);
-		_menuItemListDelete->Enable(false);
-	}
-		
-	//On désactive le bouton Préférence soft si il y a un seul item de sélectionner.
-	if(_listItemSelected.size() != 1)
-	{
-		_buttonPreferences->Enable(false);
-		_menuItemListPreferences->Enable(false);
-	}
-	else
-	{
-		_buttonPreferences->Enable();
-		_menuItemListPreferences->Enable();
-	}
-}
-
-void PanelList::OnListItemSelected(wxListEvent& event)
-{
-	_listItemSelected.push_back(event.GetItem());
-	
-	//Activation du bouton delete
-	_buttonDelete->Enable();
-	_menuItemListDelete->Enable();
-	
-	//On active le bouton préférence seulement si il y a qu'un item de sélectionner.
-	if(_listItemSelected.size() == 1)
-	{
-		_buttonPreferences->Enable();
-		_menuItemListPreferences->Enable();
-	}
-	else
-	{
-		_buttonPreferences->Enable(false);
-		_menuItemListPreferences->Enable(false);
-	}
-}

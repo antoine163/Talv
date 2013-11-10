@@ -31,9 +31,9 @@ PanelEditActions::PanelEditActions(wxWindow* parent, ActionManager* manager)
 	_actionManager->edit(true);
 	_actionManager->enableShortcuts(false);
 	
-	_listCtrl->AppendColumn(_("Shortcut"), wxLIST_FORMAT_LEFT, 100);
-	_listCtrl->AppendColumn(_("Action"), wxLIST_FORMAT_LEFT, 120);
-	_listCtrl->AppendColumn(_("Preferences"), wxLIST_FORMAT_LEFT, 255);
+	_listCtrl->AppendTextColumn(_("Shortcut"), wxDATAVIEW_CELL_INERT, 100, wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE|wxDATAVIEW_COL_SORTABLE);
+	_listCtrl->AppendTextColumn(_("Action"), wxDATAVIEW_CELL_INERT, 120, wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE|wxDATAVIEW_COL_SORTABLE);
+	_listCtrl->AppendTextColumn(_("Preferences"), wxDATAVIEW_CELL_INERT, -1, wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE);
 }
 
 PanelEditActions::~PanelEditActions()

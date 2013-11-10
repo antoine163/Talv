@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.1
+//! \version 1.0
 //! \date 26.09.2013
 //!
 //! ********************************************************************
@@ -64,11 +64,8 @@ class PanelList : public GuiPanelList
 		//! Chaque wxString correspond à une colonne.
 		virtual wxArrayString OnAddItem()=0;
 		
-		//! \brief Supprimer tout les items de la liste. État par défaut.
+		//! \brief Supprimer tout les items de la liste.
 		void clear();
-		
-		//! \brief Liste des Item qui sont sélectionner.
-		std::vector<wxListItem> _listItemSelected;
 		
 	private:
 		//! \brief Supprimer un item.
@@ -78,12 +75,10 @@ class PanelList : public GuiPanelList
 		//! \brief Ajouter un item
 		void OnButtonClickAdd(wxCommandEvent&);
 		
-		void OnListItemRightClick(wxListEvent& event);
+		//! \brief l'osque que la sélection change dans la liste.
+		void OnListSelectionChanged(wxDataViewEvent&);
 		
-		//! \brief Un item a été désélectionner.
-		void OnListItemDeselected(wxListEvent& event);
-		//! \brief Un item a été sélectionner.
-		void OnListItemSelected(wxListEvent& event);
+		void OnListItemContextMenu(wxDataViewEvent&);
 		
 		//! \brief Nom de la liste
 		wxString _name;
