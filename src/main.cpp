@@ -16,8 +16,8 @@
 #include "main.hpp"
 #include "resource.hpp"
 #include "notification.hpp"
-#include "actionManager.hpp"
-//#include "listManager.hpp"
+#include "managerAction.hpp"
+//#include "managerList.hpp"
 #include "dialogPreferences.hpp"
 
 #include <wx/fileconf.h>
@@ -61,10 +61,10 @@ bool App::OnInit()
 	Notification::getInstance()->load(fileConfig);
 	
 	//Crée de l'instance de ActionManager et Installation des raccourcis/actions
-	ActionManager::getInstance()->load(fileConfig);
+	ManagerAction::getInstance()->load(fileConfig);
 
 	//Chargement des listes se trouvent dans le fichier de config.
-	//ListManager::getInstance()->load(fileConfig);
+	//ManagerList::getInstance()->load(fileConfig);
 
 	//Création du menu ou pas.
 	if(Resource::getInstance()->getShowMenu())
@@ -85,7 +85,7 @@ int App::OnExit()
 	delete _taskIcon;
 	
 	//Suppression du mangeur d'action.
-	ActionManager::kill();
+	ManagerAction::kill();
 	
 	//Suppression des ressources.
 	Resource::kill();
@@ -94,7 +94,7 @@ int App::OnExit()
 	Notification::kill();
 	
 	//Suppression des liste.
-	//ListManager::kill();
+	//ManagerList::kill();
 	
 	//Suppression du module de la traduction de l'application.
 	delete _locale;

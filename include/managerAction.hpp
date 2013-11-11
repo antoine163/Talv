@@ -13,15 +13,15 @@
 *	Copyright © 2013 - Antoine Maleyrie.
 */
 
-#ifndef ACTION_MANAGER_H
-#define ACTION_MANAGER_H
+#ifndef MANAGER_ACTION_H
+#define MANAGER_ACTION_H
 
 #include "editableByPanel.hpp"
 #include "action.hpp"
 #include "singleton.hpp"
-#include "managerBase.hpp"
+#include "managerMap.hpp"
 #include "shortcut.hpp"
-#include "panelList.hpp"
+#include "panelDataList.hpp"
 
 #include <wx/event.h>
 #include <wx/fileconf.h>
@@ -31,19 +31,19 @@
 // Class PanelEditActions
 // *********************************************************************
 
-class ActionManager;
+class ManagerAction;
 
 //! \brief Panel d'édition des actions.
-class PanelEditActions : public PanelList 
+class PanelEditActions : public PanelDataList 
 {
 	public:
 		//! \brief Constructeur.
 		//! \param parent fenêtre parent.
-		PanelEditActions(wxWindow* parent, ActionManager* manager);
+		PanelEditActions(wxWindow* parent, ManagerAction* manager);
 		//! \brief Destructeur.
 		virtual ~PanelEditActions();
 		
-		//! \brief Mise à jour de l'affichage de la liste avec \ref EditActionManager
+		//! \brief Mise à jour de l'affichage de la liste avec \ref ManagerAction
 		virtual void Update();
 		
 	private:	
@@ -55,25 +55,25 @@ class PanelEditActions : public PanelList
 		wxArrayString OnAddItem();
 		
 		//! \brief le manager à éditer.
-		ActionManager* _actionManager;
+		ManagerAction* _managerAction;
 };
 
 // *********************************************************************
-// Class ActionManager
+// Class ManagerAction
 // *********************************************************************
 
 //! \brief Interface utilisateur pour les gestions des actions avec leur 
 //! raccourcis associer.
-class ActionManager : 	public wxEvtHandler,
-						public ManagerBase<ShortcutKey, Action>,
-						public Singleton<ActionManager>,
+class ManagerAction : 	public wxEvtHandler,
+						public ManagerMap<ShortcutKey, Action>,
+						public Singleton<ManagerAction>,
 						public EditableByPanel
 {	
-	friend class Singleton<ActionManager>;
+	friend class Singleton<ManagerAction>;
 	
 	public:			
 		//! \brief Ajout d'une action.
-		//! Le paramètre \b act devra étre allouer dynamiquement au préalable, \ref ActionManagerBase se charge de libérer la mémoire après utilisation.
+		//! Le paramètre \b act devra étre allouer dynamiquement au préalable, \ref ManagerAction se charge de libérer la mémoire après utilisation.
 		//! \param shortcut c'est le raccourci à ajouter.
 		//! \param act c'est l'action à ajouter est qui sera lier au raccourci \b shortcut.
 		//! \return true si réussite, false si le raccourcie de l'action et déjà connue.
@@ -114,10 +114,10 @@ class ActionManager : 	public wxEvtHandler,
 		
 	private:
 		//! \brief Constructeur.
-		ActionManager();
+		ManagerAction();
 		
 		//! \brief destructeur.
-		virtual ~ActionManager();
+		virtual ~ManagerAction();
 		
 		//! \brief Implémentassions de \ref ManagerBase.
 		virtual Action* copyNewDatas(Action const* inc);
@@ -129,4 +129,4 @@ class ActionManager : 	public wxEvtHandler,
 		Shortcut _shortcut;
 };
 
-#endif //ACTION_MANAGER_H
+#endif //MANAGER_ACTION_H

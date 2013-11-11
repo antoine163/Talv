@@ -40,23 +40,35 @@ bool List::init(	wxFileName const& fileName,
 {
 	_fileName = fileName;
 	_lgsrc = lgsrc;
-	_lgto = lgto;
-	
+	_lgto = lgto;	
 	_init = false;
 	
-	//Le fichier existe ?
-	if(wxFileExists(_fileName.GetFullPath()))
-	{	
-		//On ouvre le fichier. Se qui aura pour effet d'analyser
-		//le fichier et de vérifier sa validités.
-		if(!openFile())
-			return false;
-		//Fermeture du fichier
+	//Problème si les langes ne son pas renseigner et que le fichier existe.
+	if(!wxFileExists(_fileName.GetFullPath()) &&
+		(lgsrc.IsEmpty() || lgsrc.IsEmpty()))
+	{
+		clear();
+		_init = false;
+	}
+	else
+	{			
+		//Création du fichier ou parse.
+		_init = openFile();
 		closeFile();
 	}
 	
-	_init = true;
-	return true;
+	return _init;
+}
+
+bool List::clear()
+{
+	_firstLine->Clear();
+	_knowledges->clear();
+	_fileName->Clear();
+	_lastModificationFile->ResetTime();
+	_lgsrc->Clear();
+	_lgto->Clear();
+	_init = false;
 }
 
 void List::getlanguages(wxString* lgsrc, wxString* lgto)
@@ -490,7 +502,7 @@ bool List::openFile()
 	{
 		//On le crée.
 		if(!_file.Create(_fileName.GetFullPath()))
-			return -1;
+			return false;
 		//On ajout la première ligne.
 		_file.AddLine("knowledge,"+_lgsrc+','+_lgto);
 
@@ -500,29 +512,26 @@ bool List::openFile()
 		
 		if(!_file.Write())
 		{
-			//Fermeture du fichier
+			//Si erreur fermeture du fichier.
 			closeFile();
 			return false;
 		}
 	}
+	//Le fichier existe.
 	else
 	{		
 		//On ouvre le fichier.
 		if(!_file.Open(_fileName.GetFullPath()))
 			return false;
 		
-		//Si l'init na pas encore été fait.
-		if(!_init)
+		// On parse le fichier si c'est la premier foi que'on l'ouvre ou si il y 
+		// a besoin de le re parse. (éventuellement si le fichier a été
+		// accéder par un autre programme par exemple)
+		if(!_init || _lastModificationFile < _fileName.GetModificationTime())
 		{
-			if(!parseFile())
+			if(!parseFirstLine())
 				return false;
-		}
-		
-		//Le fichier à t'il été accéder (par une autre instance de la liste ou par un autre programme) depuis le dernier accès ?
-		else if(_lastModificationFile < _fileName.GetModificationTime())
-		{
-			if(!parseFile())
-				return false;
+			parseKnowledge();
 		}
 	}
 	
@@ -533,32 +542,12 @@ void List::closeFile()
 {
 	_file.Close();
 	
-	//Mise a jour de la date de modification.
+	//Mise à jour de la date de modification.
 	if(_fileName.IsOk())
 		_lastModificationFile = _fileName.GetModificationTime();
 }
 
-bool List::parseFile()
-{
-	//1nalyse la première ligne.
-	parseFirstLine();
-	
-	//Vérifie la validité des langues.
-	if((_lgsrc != _firstLine[1]) || (_lgto != _firstLine[2]))
-	{
-		//Fermeture du fichier.
-		closeFile();
-		
-		return false;
-	}
-	
-	//Et on analyse les connaissance.
-	parseKnowledge();
-	
-	return true;
-}
-
-void List::parseFirstLine()
+bool List::parseFirstLine()
 {
 	//On supprime l'analyse précédant.
 	_firstLine.Clear();
@@ -578,6 +567,23 @@ void List::parseFirstLine()
 	}
 	if(!beforeComma.IsEmpty())
 		_firstLine.Add(beforeComma);
+		
+	//Si la premier ligne ne contient pas 3 colonnes il y a un problème.
+	if(_firstLine.GetCount() >= 3)
+		return false;
+		
+	//Au besoin on extrais les langes utilisés.
+	if(_lgsrc.IsEmpty() && _lgto.IsEmpty())
+	{
+		_lgsrc = _firstLine[1];
+		_lgto = _firstLine[2];
+	}
+	
+	//Vérifie la cohérence entre les langes parser et celle de la class.
+	if(_firstLine[1] != _lgsrc || _firstLine[2] != _lgto)
+		return false;
+	
+	return true;
 }
 
 void List::parseKnowledge()

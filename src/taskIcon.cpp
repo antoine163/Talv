@@ -16,7 +16,7 @@
 #include "taskIcon.hpp"
 
 #include "resource.hpp"
-#include "actionManager.hpp"
+#include "managerAction.hpp"
 #include "dialogPreferences.hpp"
 
 #include <wx/event.h>
@@ -130,5 +130,5 @@ void TaskIcon::OnPreferences(wxCommandEvent&)
 void TaskIcon::OnEnableShortcuts(wxCommandEvent& event)
 {
 	_enableShortcuts = event.IsChecked();
-	ActionManager::getInstance()->enableShortcuts(_enableShortcuts);
+	ManagerAction::getInstance()->enableShortcuts(_enableShortcuts);
 }

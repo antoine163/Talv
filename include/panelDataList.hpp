@@ -16,25 +16,25 @@
 #ifndef PANEL_LIST_H
 #define PANEL_LIST_H
 
-#include "guiPanelList.h"
+#include "guiPanelDataList.h"
 #include <wx/menu.h>
 
 #include <vector>
 
 // *********************************************************************
-// Class PanelList
+// Class PanelDataList
 // *********************************************************************
 
 //! \brief Panel de base pour les listes.
-class PanelList : public GuiPanelList
+class PanelDataList : public GuiPanelDataList
 {
 	public:
 		//! \brief Constructeur.
 		//! \param parent fenêtre parent.
 		//! \param name non de la liste (tous en minuscule).
-		PanelList(wxWindow* parent, wxString name);
+		PanelDataList(wxWindow* parent, wxString name);
 		//! \brief Destructeur.
-		virtual ~PanelList();
+		virtual ~PanelDataList();
 		
 	protected:
 		//! \brief Ajout un item a la liste.

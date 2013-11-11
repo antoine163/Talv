@@ -13,32 +13,33 @@
 *	Copyright © 2013 - Antoine Maleyrie.
 */
 
-#ifndef MANAGER_BASE_H
-#define MANAGER_BASE_H
+#ifndef MANAGER_MAP_H
+#define MANAGER_MAP_H
 
 #include <map>
 
 // *********************************************************************
-// Class ManagerBase
+// Class ManagerMap
 // *********************************************************************
-#include <iostream>
-//! \todo renommer en ManagerMap
-//! \brief Classe de base pour la création de Manager
+
+//! \brief Classe de base pour la création de Manager à base de std::map.
 template <typename T1, typename T2>
-class ManagerBase
+class ManagerMap
 {
 	public:			
 		//! \brief Constructeur.
-		ManagerBase() : _data(&_dataNormal)
+		ManagerMap() : _data(&_dataNormal)
 		{}
 		
 		//! \brief destructeur.
-		virtual ~ManagerBase()
+		virtual ~ManagerMap()
 		{
 			removeAll();
 		}
 		
 		//! \brief Ajout d'un élément.
+		//! 
+		//! \ref ManagerMap se charge de libérer la mémoire.
 		//! \param key c'est la clef à ajouter.
 		//! \param val c'est la valeur à ajouter.
 		//! \return true si réussite, false si la clef est déjà connue.
@@ -198,4 +199,4 @@ class ManagerBase
 		std::map<T1, T2*> _dataEdit;	
 };
 
-#endif //MANAGER_BASE_H
+#endif //MANAGER_MAP_H

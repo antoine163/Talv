@@ -13,16 +13,16 @@
 *	Copyright © 2013 - Antoine Maleyrie.
 */
 
-#include "panelList.hpp"
+#include "panelDataList.hpp"
 
 #include <wx/msgdlg.h>
 
 // *********************************************************************
-// Class PanelList
+// Class PanelDataList
 // *********************************************************************
 
-PanelList::PanelList(wxWindow* parent, wxString name)
-: GuiPanelList(parent), _name(name)
+PanelDataList::PanelDataList(wxWindow* parent, wxString name)
+: GuiPanelDataList(parent), _name(name)
 {	
 	//Construction du menu
 	_menu = new wxMenu();
@@ -37,28 +37,28 @@ PanelList::PanelList(wxWindow* parent, wxString name)
 	_menuItemListPreferences->Enable(false);
 	_menuItemListDelete->Enable(false);
 	
-	_menu->Bind(wxEVT_COMMAND_MENU_SELECTED, &PanelList::OnButtonClickAdd, this, wxID_ADD);
-	_menu->Bind(wxEVT_COMMAND_MENU_SELECTED, &PanelList::OnButtonClickPreferences, this, wxID_PREFERENCES);
-	_menu->Bind(wxEVT_COMMAND_MENU_SELECTED, &PanelList::OnButtonClickDelete, this, wxID_DELETE);
+	_menu->Bind(wxEVT_COMMAND_MENU_SELECTED, &PanelDataList::OnButtonClickAdd, this, wxID_ADD);
+	_menu->Bind(wxEVT_COMMAND_MENU_SELECTED, &PanelDataList::OnButtonClickPreferences, this, wxID_PREFERENCES);
+	_menu->Bind(wxEVT_COMMAND_MENU_SELECTED, &PanelDataList::OnButtonClickDelete, this, wxID_DELETE);
 	
-	_listCtrl->Bind(wxEVT_DATAVIEW_SELECTION_CHANGED, &PanelList::OnListSelectionChanged, this);
-	_listCtrl->Bind(wxEVT_DATAVIEW_ITEM_CONTEXT_MENU, &PanelList::OnListItemContextMenu, this);
+	_listCtrl->Bind(wxEVT_DATAVIEW_SELECTION_CHANGED, &PanelDataList::OnListSelectionChanged, this);
+	_listCtrl->Bind(wxEVT_DATAVIEW_ITEM_CONTEXT_MENU, &PanelDataList::OnListItemContextMenu, this);
 }
 
-PanelList::~PanelList()
+PanelDataList::~PanelDataList()
 {
 	//Destruction du menu
-	_menu->Unbind(wxEVT_COMMAND_MENU_SELECTED, &PanelList::OnButtonClickAdd, this, wxID_ADD);
-	_menu->Unbind(wxEVT_COMMAND_MENU_SELECTED, &PanelList::OnButtonClickPreferences, this, wxID_PREFERENCES);
-	_menu->Unbind(wxEVT_COMMAND_MENU_SELECTED, &PanelList::OnButtonClickDelete, this, wxID_DELETE);
+	_menu->Unbind(wxEVT_COMMAND_MENU_SELECTED, &PanelDataList::OnButtonClickAdd, this, wxID_ADD);
+	_menu->Unbind(wxEVT_COMMAND_MENU_SELECTED, &PanelDataList::OnButtonClickPreferences, this, wxID_PREFERENCES);
+	_menu->Unbind(wxEVT_COMMAND_MENU_SELECTED, &PanelDataList::OnButtonClickDelete, this, wxID_DELETE);
 	
-	_listCtrl->Unbind(wxEVT_DATAVIEW_SELECTION_CHANGED, &PanelList::OnListSelectionChanged, this);
-	_listCtrl->Unbind(wxEVT_DATAVIEW_ITEM_CONTEXT_MENU, &PanelList::OnListItemContextMenu, this);
+	_listCtrl->Unbind(wxEVT_DATAVIEW_SELECTION_CHANGED, &PanelDataList::OnListSelectionChanged, this);
+	_listCtrl->Unbind(wxEVT_DATAVIEW_ITEM_CONTEXT_MENU, &PanelDataList::OnListItemContextMenu, this);
 	
 	delete _menu;
 }
 
-void PanelList::addItem(wxArrayString const& item, bool select)
+void PanelDataList::addItem(wxArrayString const& item, bool select)
 {
 	//Vérifie si l'item est vide.
 	if(item.GetCount() == 0)
@@ -92,12 +92,12 @@ void PanelList::addItem(wxArrayString const& item, bool select)
 	}
 }
 
-void PanelList::clear()
+void PanelDataList::clear()
 {
 	_listCtrl->DeleteAllItems();
 }
 
-void PanelList::OnButtonClickDelete(wxCommandEvent&)
+void PanelDataList::OnButtonClickDelete(wxCommandEvent&)
 {
 	wxMessageDialog *dlg = nullptr;
 	
@@ -132,7 +132,7 @@ void PanelList::OnButtonClickDelete(wxCommandEvent&)
     dlg->Destroy();
 }
 
-void PanelList::OnButtonClickPreferences(wxCommandEvent&)
+void PanelDataList::OnButtonClickPreferences(wxCommandEvent&)
 {	
 	//On récupère le texte de la premier colonne de l'item sélectionner.
 	wxDataViewItem data = _listCtrl->GetSelection();
@@ -150,7 +150,7 @@ void PanelList::OnButtonClickPreferences(wxCommandEvent&)
 	}
 }
 
-void PanelList::OnButtonClickAdd(wxCommandEvent&)
+void PanelDataList::OnButtonClickAdd(wxCommandEvent&)
 {
 	//Ajout d'un nouveau item.
 	wxArrayString newItem = OnAddItem();
@@ -166,7 +166,7 @@ void PanelList::OnButtonClickAdd(wxCommandEvent&)
 	}
 }
 
-void PanelList::OnListSelectionChanged(wxDataViewEvent&)
+void PanelDataList::OnListSelectionChanged(wxDataViewEvent&)
 {
 	switch(_listCtrl->GetSelectedItemsCount())
 	{
@@ -205,7 +205,7 @@ void PanelList::OnListSelectionChanged(wxDataViewEvent&)
 	}
 }
 
-void PanelList::OnListItemContextMenu(wxDataViewEvent&)
+void PanelDataList::OnListItemContextMenu(wxDataViewEvent&)
 {	
 	//Affichage du menu
 	_listCtrl->PopupMenu(_menu);

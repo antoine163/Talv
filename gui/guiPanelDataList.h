@@ -5,8 +5,8 @@
 // PLEASE DO "NOT" EDIT THIS FILE!
 ///////////////////////////////////////////////////////////////////////////
 
-#ifndef __guiPanelList__
-#define __guiPanelList__
+#ifndef __guiPanelDataList__
+#define __guiPanelDataList__
 
 #include <wx/intl.h>
 
@@ -24,9 +24,9 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
-/// Class GuiPanelList
+/// Class GuiPanelDataList
 ///////////////////////////////////////////////////////////////////////////////
-class GuiPanelList : public wxPanel 
+class GuiPanelDataList : public wxPanel 
 {
 	private:
 	
@@ -44,9 +44,9 @@ class GuiPanelList : public wxPanel
 	
 	public:
 		
-		GuiPanelList( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL );
-		~GuiPanelList();
+		GuiPanelDataList( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL );
+		~GuiPanelDataList();
 	
 };
 
-#endif //__guiPanelList__
+#endif //__guiPanelDataList__

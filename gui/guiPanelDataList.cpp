@@ -5,11 +5,11 @@
 // PLEASE DO "NOT" EDIT THIS FILE!
 ///////////////////////////////////////////////////////////////////////////
 
-#include "guiPanelList.h"
+#include "guiPanelDataList.h"
 
 ///////////////////////////////////////////////////////////////////////////
 
-GuiPanelList::GuiPanelList( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
+GuiPanelDataList::GuiPanelDataList( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
 {
 	wxBoxSizer* bSizer1;
 	bSizer1 = new wxBoxSizer( wxVERTICAL );
@@ -43,16 +43,16 @@ GuiPanelList::GuiPanelList( wxWindow* parent, wxWindowID id, const wxPoint& pos,
 	bSizer1->Fit( this );
 	
 	// Connect Events
-	_buttonDelete->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiPanelList::OnButtonClickDelete ), NULL, this );
-	_buttonPreferences->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiPanelList::OnButtonClickPreferences ), NULL, this );
-	_buttonAdd->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiPanelList::OnButtonClickAdd ), NULL, this );
+	_buttonDelete->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiPanelDataList::OnButtonClickDelete ), NULL, this );
+	_buttonPreferences->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiPanelDataList::OnButtonClickPreferences ), NULL, this );
+	_buttonAdd->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiPanelDataList::OnButtonClickAdd ), NULL, this );
 }
 
-GuiPanelList::~GuiPanelList()
+GuiPanelDataList::~GuiPanelDataList()
 {
 	// Disconnect Events
-	_buttonDelete->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiPanelList::OnButtonClickDelete ), NULL, this );
-	_buttonPreferences->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiPanelList::OnButtonClickPreferences ), NULL, this );
-	_buttonAdd->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiPanelList::OnButtonClickAdd ), NULL, this );
+	_buttonDelete->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiPanelDataList::OnButtonClickDelete ), NULL, this );
+	_buttonPreferences->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiPanelDataList::OnButtonClickPreferences ), NULL, this );
+	_buttonAdd->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GuiPanelDataList::OnButtonClickAdd ), NULL, this );
 	
 }

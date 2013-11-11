@@ -42,8 +42,6 @@ enum Knowledge_e
 // *********************************************************************
 
 //! \brief Pour manipuler une liste avec sont fichier associer.
-//!
-//! Seul ListManager peut crée et supprimer des instances de la class \ref List.
 class List
 {
 	public:		
@@ -54,6 +52,19 @@ class List
 		virtual ~List();
 		
 		//! \brief Initialise la liste.
+		//!
+		//! Cette méthode vas initialiser cette classe.
+		//! Si le fichier \p fileName n'est pas existent alors
+		//! le fichier sera crée et les langages utiliser dans cette liste sera
+		//! écrit dans le fichier.  Autrement si le fichier \p fileName
+		//! est déjà existent, les langages de la liste seront comparé. Ainsi
+		//! si les langage ne sont pas identique cette méthode retournera \b false
+		//! et la classe ne sera pas initialiser.
+		//!
+		//! Dans le cas ou le fichier est déjà existant il est possible
+		//! de renseigner \p wxEmptyString pour les langages. Si toutefois le fichier n'excite
+		//! pas \b false sera retourner et la classe ne sera pas initialiser.
+		//!
 		//! \param fileName le fichier de la liste.
 		//! \param lgsrc le langage source de la liste.
 		//! \param lgto le langage de traduction de la liste.
@@ -61,8 +72,16 @@ class List
 		bool init(	wxFileName const& fileName,
 					wxString const& lgsrc,
 					wxString const& lgto);
+			
+		//! \brief Nettoyage de la class (désinit).
+		//!		
+		//! \note le fichier associer n'est pas supprimer.
+		bool clear();
 		
 		//! \brief Récupérée les deux langues de la liste.
+		//!
+		//! Si les valeur renvoyer son vide il est probable que la classe
+		//! est besoin d'être initialiser.
 		void getlanguages(wxString* lgsrc, wxString* lgto);
 		
 		//! \brief Pour savoirs si un texte existe dans la liste.
@@ -146,34 +165,27 @@ class List
 	private:
 		//! \brief Ouverture le fichier.
 		//!
-		//! Ouvre le fichier, vérifie la validité des langues et met à jours Knowledge au besoin.
+		//! Parse de nouveau le fichier si il y a besoin.
+		//!\return false si il y un problème.
 		bool openFile();
 		
 		//! \brief Fermeture du fichier.
 		//!
-		//! Mai aussi a jour \ref _lastModificationFile.
+		//! \note Met aussi à jour \ref _lastModificationFile.
 		void closeFile();
-	
-		//! \brief Analyse le fichier. Appelle de \ref parseFirstLine et de parseKnowledge.
-		//! 
-		//! Cette méthode remplie l'attribut \ref _firstLine.
-		//! \note Le fichier à besoin d'être ouvert au préalable.
-		//! \note Le fichier doit être au moins constituer de la première ligne.
-		//! \return true si ok. Si les langage du fichier et de la liste ne son pas les même ceci peut provoquer false.
-		bool parseFile();
 		
 		//! \brief Analyse la première ligne du fichier.
 		//! 
-		//! Cette méthode remplie l'attribut \ref _firstLine.
+		//! Cette méthode remplie l'attribut \ref _firstLine. Et vérifie
+		//! la cohérence des langages. 
 		//! \note Le fichier à besoin d'être ouvert au préalable.
-		//! \note Le fichier doit être au moins constituer de la première ligne.
-		void parseFirstLine();
+		//! \return face si problème.
+		bool parseFirstLine();
 	
 		//! \brief Analyse du fichier pour remplier les connaissance.
 		//!
 		//! Cette méthode remplie l'attribut \ref _knowledges.
 		//! \note Le fichier à besoin d'être ouvert au préalable.
-		//! \note Le fichier doit être au moins constituer de la première ligne.
 		//! \see Knowledge_e
 		void parseKnowledge();
 		
@@ -203,7 +215,7 @@ class List
 		//! \brief Lange de traduction de liste.
 		wxString _lgto;
 		
-		//! \brief pour savoirs si l'objet a été initialiser.
+		//! \brief pour savoirs si la classe List est initialiser.
 		bool _init;
 };
 
