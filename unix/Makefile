@@ -53,8 +53,8 @@ SRC+=../src/editableByPanel.cpp
 SRC+=../src/shortcut.cpp
 SRC+=../src/managerAction.cpp
 SRC+=../src/action.cpp
-#SRC+=../src/managerList.cpp
-#SRC+=../src/list.cpp
+SRC+=../src/managerList.cpp
+SRC+=../src/list.cpp
 SRC+=../src/resource.cpp
 #wxJSON
 SRC+=../src/wxJSON/jsonval.cpp
