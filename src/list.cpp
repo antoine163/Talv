@@ -38,6 +38,54 @@ wxString List::getLanguage()const
 	return _lg;
 }
 
+bool List::setLanguage(wxString const& lg)
+{
+	if(!isEmpty())
+		return false;
+		
+	//Il y a un nom de fichier.
+	if(_fileName.HasName())	
+	{
+		wxFile file(_fileName.GetFullPath(), wxFile::write)
+	
+		//Écriture de la lange.
+		file.Write(lg);
+			
+		file.Close();
+	}
+		
+	_lg = lg;
+	
+	return true;
+}
+
+bool List::isEmpty()
+{
+	//Il y a un nom de fichier.
+	if(_fileName.HasName())	
+	{
+		wxFile file(_fileName.GetFullPath())
+	
+		//Si il y a un '\n' cela veux dire que la liste n'est pas vide.
+		char tmpc;
+		ssize_t n;
+		do
+		{
+			n = file.Read(&tmpc, 1);
+			
+			if(tmpc == '\n')
+				return false
+			
+		}while(n != wxInvalidOffset);
+			
+		file.Close();
+	}
+	else
+		return _texts.IsEmpty();
+	
+	return true;
+}
+
 void List::clear()
 {
 	//Il y a un nom de fichier.
@@ -230,7 +278,7 @@ bool List::save(	wxFileName const& file,
 					wxArrayString const& texts,
 					wxString const& language)
 {
-	wxFile file(_fileName.GetFullPath(), wxFile::write_append)
+	wxFile file(_fileName.GetFullPath(), wxFile::write)
 	
 	//Écriture de la lange.
 	file.Write(language);

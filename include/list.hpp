@@ -41,8 +41,18 @@ class List
 		//! \brief destructeur.
 		virtual ~List();
 					
-		//! \brief Obtenir le l'engage de la liste.
+		//! \brief Obtenir le langage de la liste.
 		wxString getLanguage()const;
+		//! \brief Modifier langage de la liste.
+		//! \attention Cette méthode et utilisable seulement si la liste
+		//! est vide (\ref isEmpty()), a la création ou Après un
+		//! \ref clean() par exemple. Vous pouvez vérifier en appellent
+		//! \ref getLanguage().
+		//! \return true si la lange à pu être changer.
+		bool setLanguage(wxString const& lg);
+		
+		//! \brief Pour savoir si la liste est vide ou pas.
+		bool isEmpty();
 		
 		//! \brief Suppression de tous les textes.
 		//! 
