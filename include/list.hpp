@@ -16,21 +16,107 @@
 #ifndef LIST_H
 #define LIST_H
 
+#include <wx/string.h>
+#include <wx/filename.h>
+
 // *********************************************************************
 // Class List
 // *********************************************************************
 
-//! \brief Pour manipuler une liste avec sont fichier associer.
+//! \brief Manipulation de textes dans une liste.
+//!
+//! Temps que vous ne spécifier pas de fichier ( avec \ref setFileName() )
+//! tout les textes sont stoker dans la mémoire ram. Au contraire, si 
+//! vous spécifier un n'on de fichier avec \ref setFileName(), dans ce
+//! cas tout les textes sont stoker dans le fichier spécifier. \n
+//! Vous pouvez appeler la méthode \ref setFileName() avec comme argument
+//! wxEmptyString qui aura pour effet de passer au mode sans fichier.
+//! \todo setlangage()
 class List
 {
 	public:		
-		//! \brief Constructeur.
+		//! \brief Constructeur par défaut.
 		List();
 				
 		//! \brief destructeur.
 		virtual ~List();
+					
+		//! \brief Obtenir le l'engage de la liste.
+		wxString getLanguage()const;
+		
+		//! \brief Suppression de tous les textes.
+		//! 
+		//! Si un non de fichier à été spécifier avec \ref setFileName() ,
+		//! alors se fichier sera aussi supprimer du disque dur.
+		void clear();
+		
+		//! \brief Ajout d'un nouveau texte.
+		//! \param text texte à ajouter.
+		//! \return true si le texte a put être ajouter.
+		//! false si le texte existe déjà ou problème sur le fichier.
+		bool addText(wxString const& text);
+		//! \brief Suppression d'un texte.
+		//! \param text texte à supprimer.
+		//! \return true si le texte a put être supprimer.
+		//! false si le texte n'existe pas ou problème sur le fichier.
+		bool removeText(wxString const& text);
+		
+		//! \brief Pour savoir si un texte existe.
+		//! \param text texte à chercher.
+		//! \return true si le texte existe.
+		bool exist(wxString const& text);
+		
+		//! \brief Pour obtenir tout les textes de la lite.
+		wxArrayString getTexts()const;
+		
+		//! \brief Charger la lite de textes à partir d'un fichier.
+		//!
+		//! Si vous avez au préalable spécifier un fichier avec
+		//! \ref setFileName() , alors le contenue du fichier spécifier
+		//! sera remplacer par le contenue du fichier passer en
+		//! paramètre à cette méthode ( \p file).
+		//! \param file fichier à partir du quelle les données seront charger.
+		//! \return false si problème avec le fichier.
+		bool load(wxFileName const& file);
+		//! \brief Sauvegarder la lite de textes dans un fichier.
+		//! \param file fichier où serons stoker les données.
+		//! \return false si problème avec le fichier.
+		bool sove(wxFileName const& file);
+		
+		//! \brief Obtenir le non de fichier.
+		wxFileName getFileName()const;
+		//! \brief Attribuer un fichier à la liste.
+		//!
+		//! Après cette appelle de méthode, toutes les opérations se
+		//! ferons dans le fichier et non pas dans la mémoire.
+		//! Si il y a, au préalable des données dans la liste, elle serons
+		//! perdue. De nouvelle données serons charger à partir 
+		//! du fichier.
+		//!
+		//! Dans le cas inverse, si vous passez \b wxFileName()
+		//! (mode sans fichier) toutes les opération se ferons dans la ram.
+		//! Si il y a, au préalable des données dans la liste, elle serons
+		//! aussi perdue (elle resterons écrite dans le fichier).
+		//! \return dans le cas ou 
+		bool setFileName(wxFileName const& file);
 		
 	private:
+		bool load(	wxFileName const& file,
+					wxArrayString* texts,
+					wxString* language = nullptr);
+		bool save(	wxFileName const& file,
+					wxArrayString const& texts,
+					wxString const& language);
+		bool exist(wxArrayString const& texts, wxString const& text);
+		bool remove(wxArrayString& texts, wxString const& text);
+		
+		
+		//! \brief Les textes de la listes (si pas de non de fichier spécifier).
+		wxArrayString _texts;
+		//! \brief Fichier de la liste.
+		wxFileName _fileName;
+		//! \brief Langage de la liste.
+		wxString _lg;
 };
 
 #endif //LIST_H
