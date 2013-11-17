@@ -16,8 +16,8 @@
 #include "action.hpp"
 
 #include "action/actTranslation.hpp"
-#include "action/actTranslationToList.hpp"
-#include "action/actLearn.hpp"
+//#include "action/actTranslationToList.hpp"
+//#include "action/actLearn.hpp"
 
 // *********************************************************************
 // Class Action

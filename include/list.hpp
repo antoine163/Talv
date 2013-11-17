@@ -87,11 +87,11 @@ class List
 		//! paramètre à cette méthode ( \p file).
 		//! \param file fichier à partir du quelle les données seront charger.
 		//! \return false si problème avec le fichier.
-		bool load(wxFileName const& file);
+		bool load(wxFileName const& fileName);
 		//! \brief Sauvegarder la lite de textes dans un fichier.
 		//! \param file fichier où serons stoker les données.
 		//! \return false si problème avec le fichier.
-		bool sove(wxFileName const& file);
+		bool sove(wxFileName const& fileName);
 		
 		//! \brief Obtenir le non de fichier.
 		wxFileName getFileName()const;
@@ -108,17 +108,17 @@ class List
 		//! Si il y a, au préalable des données dans la liste, elle serons
 		//! aussi perdue (elle resterons écrite dans le fichier).
 		//! \return dans le cas ou 
-		bool setFileName(wxFileName const& file);
+		void setFileName(wxFileName const& fileName);
 		
 	private:
-		bool load(	wxFileName const& file,
+		bool load(	wxFileName const& fileName,
 					wxArrayString* texts,
-					wxString* language = nullptr);
-		bool save(	wxFileName const& file,
+					wxString* language = nullptr)const;
+		bool save(	wxFileName const& fileName,
 					wxArrayString const& texts,
-					wxString const& language);
-		bool exist(wxArrayString const& texts, wxString const& text);
-		bool remove(wxArrayString& texts, wxString const& text);
+					wxString const& language)const;
+		bool exist(wxArrayString const& texts, wxString const& text)const;
+		bool remove(wxArrayString& texts, wxString const& text)const;
 		
 		
 		//! \brief Les textes de la listes (si pas de non de fichier spécifier).

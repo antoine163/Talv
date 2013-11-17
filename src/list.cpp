@@ -46,7 +46,7 @@ bool List::setLanguage(wxString const& lg)
 	//Il y a un nom de fichier.
 	if(_fileName.HasName())	
 	{
-		wxFile file(_fileName.GetFullPath(), wxFile::write)
+		wxFile file(_fileName.GetFullPath(), wxFile::write);
 	
 		//Écriture de la lange.
 		file.Write(lg);
@@ -64,7 +64,7 @@ bool List::isEmpty()
 	//Il y a un nom de fichier.
 	if(_fileName.HasName())	
 	{
-		wxFile file(_fileName.GetFullPath())
+		wxFile file(_fileName.GetFullPath());
 	
 		//Si il y a un '\n' cela veux dire que la liste n'est pas vide.
 		char tmpc;
@@ -74,7 +74,7 @@ bool List::isEmpty()
 			n = file.Read(&tmpc, 1);
 			
 			if(tmpc == '\n')
-				return false
+				return false;
 			
 		}while(n != wxInvalidOffset);
 			
@@ -105,12 +105,15 @@ bool List::addText(wxString const& text)
 	//Il y a un nom de fichier.
 	if(_fileName.HasName())
 	{
-		wxFile file(_fileName.GetFullPath(), wxFile::write_append)
-		file.Write("\n"text);
+		wxFile file;
+		if(!file.Open(_fileName.GetFullPath(), wxFile::write_append))
+			return false;
+			
+		file.Write("\n"+text);
 		file.Close();
 	}
-	else	
-		_texts->Add(text);
+	else
+		_texts.Add(text);
 	
 	return true;
 }
@@ -153,7 +156,7 @@ bool List::exist(wxString const& text)
 		wxArrayString tmpTexts;
 		
 		//Chargement des textes dans tmpTexts.
-		load(_fileName, &tmpTexts)
+		load(_fileName, &tmpTexts);
 		
 		//le texte existe ?
 		if(exist(tmpTexts, text))
@@ -165,7 +168,7 @@ bool List::exist(wxString const& text)
 			return true;
 	}
 	
-	return false
+	return false;
 }
 
 wxArrayString List::getTexts()const
@@ -186,48 +189,48 @@ wxArrayString List::getTexts()const
 	return wxArrayString();
 }
 
-bool List::load(wxFileName const& file)
+bool List::load(wxFileName const& fileName)
 {
-	if(file == _fileName)
+	if(fileName == _fileName)
 		return true;
 	
 	//Il y a un nom de fichier.
 	if(_fileName.HasName())
 	{	
 		//Chargement de la lange.
-		if(!load(file, nullptr, &_lg))
+		if(!load(fileName, nullptr, &_lg))
 			return false;
 		
 		//Copie de fichier
-		if(!wxCopyFile(file.GetFullPath(), _fileName.GetFullPath(), false))
+		if(!wxCopyFile(fileName.GetFullPath(), _fileName.GetFullPath(), false))
 			return false;
 	}
 	else
 	{
 		//Chargement des textes.
-		if(!load(file, &_texts, &_lg))
+		if(!load(fileName, &_texts, &_lg))
 			return false;
 	}
 	
 	return true;
 }
 
-bool List::sove(wxFileName const& file)
+bool List::sove(wxFileName const& fileName)
 {
-	if(_fileName == file)
+	if(_fileName == fileName)
 		return true;
 		
 	//Il y a un nom de fichier.
 	if(_fileName.HasName())
 	{
 		//Copie de fichier
-		if(!wxCopyFile(_fileName.GetFullPath(), file.GetFullPath()))
+		if(!wxCopyFile(_fileName.GetFullPath(), fileName.GetFullPath()))
 			return false;
 	}
 	else
 	{
 		//Chargement des textes.
-		if(!save(file, &_texts, &_lg))
+		if(!save(fileName, _texts, _lg))
 			return false;
 	}
 	
@@ -239,10 +242,10 @@ wxFileName List::getFileName()const
 	return _fileName;
 }
 
-void List::setFileName(wxFileName const& file)
+void List::setFileName(wxFileName const& fileName)
 {
 	_texts.Clear();	
-	_fileName = file;
+	_fileName = fileName;
 	
 	//Il y a un nom de fichier.
 	if(_fileName.HasName())
@@ -252,33 +255,39 @@ void List::setFileName(wxFileName const& file)
 	}
 }
 
-bool List::load(	wxFileName const& file,
+bool List::load(	wxFileName const& fileName,
 					wxArrayString* texts,
-					wxString* language)
+					wxString* language)const
 {
 	wxString tmpText;
 	
-	wxTextFile file(file.GetFullPath())
+	wxTextFile file;
+	if(!file.Open(fileName.GetFullPath()))
+		return false;
 	
 	//Premier ligne c'est la lange de la liste
 	tmpText = file.GetFirstLine();
 	if(language != nullptr)
-		language = tmpText;
+		*language = tmpText;
 	
 	//Les autres lignes c'est la liste ...
 	if(texts != nullptr)
 	{
-		for(tmpText = file.GetNextLine(); !file.Eof(); str = file.GetNextLine())
+		for(tmpText = file.GetNextLine(); !file.Eof(); tmpText = file.GetNextLine())
 			texts->Add(tmpText);
 	}
 	file.Close();
+	
+	return true;
 }
 
-bool List::save(	wxFileName const& file,
+bool List::save(	wxFileName const& fileName,
 					wxArrayString const& texts,
-					wxString const& language)
+					wxString const& language)const
 {
-	wxFile file(_fileName.GetFullPath(), wxFile::write)
+	wxFile file;
+	if(!file.Open(fileName.GetFullPath(), wxFile::write))
+		return false;
 	
 	//Écriture de la lange.
 	file.Write(language);
@@ -288,9 +297,11 @@ bool List::save(	wxFileName const& file,
 		file.Write("\n"+it);
 		
 	file.Close();
+	
+	return true;
 }
 
-bool List::exist(wxArrayString const& texts, wxString const& text)
+bool List::exist(wxArrayString const& texts, wxString const& text)const
 {
 	int index = texts.Index(text, false);
 	if(index == wxNOT_FOUND)
@@ -299,7 +310,7 @@ bool List::exist(wxArrayString const& texts, wxString const& text)
 	return true;
 }
 
-bool List::remove(wxArrayString& texts, wxString const& text)
+bool List::remove(wxArrayString& texts, wxString const& text)const
 {
 	int index = texts.Index(text, false);
 	if(index == wxNOT_FOUND)
