@@ -19,6 +19,7 @@
 #include "editableByPanel.hpp"
 #include "singleton.hpp"
 #include "managerMap.hpp"
+#include "listBase.hpp"
 
 #include <wx/fileconf.h>
 
@@ -27,18 +28,38 @@
 // *********************************************************************
 
 //! \brief Gestion des listes
-class ManagerList : public ManagerMap<wxString, wxString>,
+//! liste automatique a partir des caches
+class ManagerList : public ManagerMap<wxString, ListBase>,
 					public Singleton<ManagerList>,
 					public EditableByPanel
 {
 	friend class Singleton<ManagerList>;
 	
 	public:	
-		//! \brief Charger les listes à partir du fichier de config.
+		//! \brief Charger la configuration du manager.
 		void load(wxFileConfig& fileConfig);
 		
-		//! \brief Sauvegarde des listes dans le fichier de config.
+		//! \brief Sauvegarde la configuration du manager.
 		void save(wxFileConfig& fileConfig)const;
+		
+		
+		//List* create(	wxString const& listName,
+						//wxString const& lgsrc,
+						//wxString const& lgto);
+		
+		//List* create(	wxString const& listName,
+						//wxArrayString const& listsNames,
+						//Knowledge_e KnowledgeFilter,
+						//int nbTranslationFilter);
+								
+		//List* create(	wxString const& listName,
+						//std::vectore<List const*> const& lists,
+						//Knowledge_e KnowledgeFilter,
+						//int nbTranslationFilter);
+
+		//virtual bool remove(wxString const& listName);
+		//virtual bool removeAll();
+		
 		
 		//! \brief Implémentassions de \ref EditableByPanel.
 		virtual wxPanel* newEditPanel(wxWindow *parent);
@@ -52,6 +73,11 @@ class ManagerList : public ManagerMap<wxString, wxString>,
 		ManagerList();
 		//! \brief destructeur.
 		virtual ~ManagerList();
+		
+		virtual ListBase* copyNewDatas (ListBase const *inc)
+		{
+			return nullptr;
+		}
 };
 
 #endif //MANAGER_LIST_H

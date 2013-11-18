@@ -82,7 +82,7 @@ class ManagerMap
 			(*_data).clear();
 		}
 		
-		//! \brief Passage en mode édit.
+		//! \brief Passage en mode édit. Utilise \ref copyNewDatas().
 		//!
 		//! Deux cas peuvent être distinguer :
 		//! - Le passage en mode édit va copier les datas actuelle de la
@@ -121,8 +121,8 @@ class ManagerMap
 			}
 		}
 				
-		//! \brief Applique les modification apporter par le mode édite au
-		//! data du mode normale.
+		//! \brief Applique les modifications apporter par le mode édite au
+		//! data du mode normale. Utilise \ref copyNewDatas().
 		//! \note Cette méthode n'a pas d'influence en mode normale et
 		//! devra être utiliser seulement en mode édite.
 		//! \see isEdit()
@@ -185,7 +185,11 @@ class ManagerMap
 		
 	protected:
 	
-		//! \brief Méthode pouvant copier une données.
+		//! \brief Méthode pouvant copier une données. Utiliser pour le 
+		//! mode édit.
+		//!
+		//! Vous pouvez utiliser \ref isEdit() pour savoir dans quelle
+		//! mode la donnée sera copier.
 		//! \param inc donnée a copier.
 		//! \return une nouvelle instance de la donner fraîchement copier.
 		virtual T2* copyNewDatas(T2 const* inc)=0;

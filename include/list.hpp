@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.0
+//! \version 1.1
 //! \date 02.05.2013
 //!
 //! ********************************************************************
@@ -16,6 +16,8 @@
 #ifndef LIST_H
 #define LIST_H
 
+#include "listBase.hpp"
+
 #include <wx/string.h>
 #include <wx/filename.h>
 
@@ -23,16 +25,9 @@
 // Class List
 // *********************************************************************
 
-//! \brief Manipulation de textes dans une liste.
-//!
-//! Temps que vous ne spécifier pas de fichier ( avec \ref setFileName() )
-//! tout les textes sont stoker dans la mémoire ram. Au contraire, si 
-//! vous spécifier un n'on de fichier avec \ref setFileName(), dans ce
-//! cas tout les textes sont stoker dans le fichier spécifier. \n
-//! Vous pouvez appeler la méthode \ref setFileName() avec comme argument
-//! wxEmptyString qui aura pour effet de passer au mode sans fichier.
-//! \todo setlangage()
-class List
+//! \brief Manipulation de liste contenant de simple textes.
+//! \see ListBase
+class List : public ListBase
 {
 	public:		
 		//! \brief Constructeur par défaut.
@@ -40,93 +35,113 @@ class List
 				
 		//! \brief destructeur.
 		virtual ~List();
-					
-		//! \brief Obtenir le langage de la liste.
-		wxString getLanguage()const;
-		//! \brief Modifier langage de la liste.
-		//! \attention Cette méthode et utilisable seulement si la liste
-		//! est vide (\ref isEmpty()), a la création ou Après un
-		//! \ref clean() par exemple. Vous pouvez vérifier en appellent
-		//! \ref getLanguage().
-		//! \return true si la lange à pu être changer.
-		bool setLanguage(wxString const& lg);
-		
-		//! \brief Pour savoir si la liste est vide ou pas.
-		bool isEmpty();
-		
-		//! \brief Suppression de tous les textes.
-		//! 
-		//! Si un non de fichier à été spécifier avec \ref setFileName() ,
-		//! alors se fichier sera aussi supprimer du disque dur.
-		void clear();
 		
 		//! \brief Ajout d'un nouveau texte.
 		//! \param text texte à ajouter.
 		//! \return true si le texte a put être ajouter.
 		//! false si le texte existe déjà ou problème sur le fichier.
 		bool addText(wxString const& text);
-		//! \brief Suppression d'un texte.
-		//! \param text texte à supprimer.
-		//! \return true si le texte a put être supprimer.
-		//! false si le texte n'existe pas ou problème sur le fichier.
-		bool removeText(wxString const& text);
-		
-		//! \brief Pour savoir si un texte existe.
-		//! \param text texte à chercher.
-		//! \return true si le texte existe.
-		bool exist(wxString const& text);
 		
 		//! \brief Pour obtenir tout les textes de la lite.
 		wxArrayString getTexts()const;
 		
-		//! \brief Charger la lite de textes à partir d'un fichier.
-		//!
-		//! Si vous avez au préalable spécifier un fichier avec
-		//! \ref setFileName() , alors le contenue du fichier spécifier
-		//! sera remplacer par le contenue du fichier passer en
-		//! paramètre à cette méthode ( \p file).
-		//! \param file fichier à partir du quelle les données seront charger.
-		//! \return false si problème avec le fichier.
-		bool load(wxFileName const& fileName);
-		//! \brief Sauvegarder la lite de textes dans un fichier.
-		//! \param file fichier où serons stoker les données.
-		//! \return false si problème avec le fichier.
-		bool sove(wxFileName const& fileName);
-		
-		//! \brief Obtenir le non de fichier.
-		wxFileName getFileName()const;
-		//! \brief Attribuer un fichier à la liste.
-		//!
-		//! Après cette appelle de méthode, toutes les opérations se
-		//! ferons dans le fichier et non pas dans la mémoire.
-		//! Si il y a, au préalable des données dans la liste, elle serons
-		//! perdue. De nouvelle données serons charger à partir 
-		//! du fichier.
-		//!
-		//! Dans le cas inverse, si vous passez \b wxFileName()
-		//! (mode sans fichier) toutes les opération se ferons dans la ram.
-		//! Si il y a, au préalable des données dans la liste, elle serons
-		//! aussi perdue (elle resterons écrite dans le fichier).
-		//! \return dans le cas ou 
-		void setFileName(wxFileName const& fileName);
+		//! \brief Réimplantation à partir de \ref ListBase
+		//! \see ListBase
+		virtual void setFileName(wxFileName const& fileName);
 		
 	private:
+		
+		//! \brief Implémentassions à partir de \ref ListBase
+		//! \see ListBase
+		virtual bool isEmptyFile()const;
+		//! \brief Implémentassions à partir de \ref ListBase
+		//! \see ListBase
+		virtual bool isEmptyMemory()const;
+		
+		//! \brief Implémentassions à partir de \ref ListBase
+		//! \see ListBase
+		virtual void clearFile();
+		//! \brief Implémentassions à partir de \ref ListBase
+		//! \see ListBase
+		virtual void clearMemory();
+		
+		//! \brief Implémentassions à partir de \ref ListBase
+		//! \see ListBase
+		virtual bool removeTextFile(wxString const& text);
+		//! \brief Implémentassions à partir de \ref ListBase
+		//! \see ListBase
+		virtual bool removeTextMemory(wxString const& text);
+		
+		//! \brief Implémentassions à partir de \ref ListBase
+		//! \see ListBase
+		virtual bool existTextFile(wxString const& text)const;
+		//! \brief Implémentassions à partir de \ref ListBase
+		//! \see ListBase
+		virtual bool existTextMemory(wxString const& text)const;
+		
+		//! \brief Implémentassions à partir de \ref ListBase
+		//! \see ListBase
+		virtual bool loadFile(wxFileName const& fileName);
+		//! \brief Implémentassions à partir de \ref ListBase
+		//! \see ListBase
+		virtual bool loadMemory(wxFileName const& fileName);
+		//! \brief Implémentassions à partir de \ref ListBase
+		//! \see ListBase
+		
+		virtual bool saveFile(wxFileName const& fileName)const;
+		//! \brief Implémentassions à partir de \ref ListBase
+		//! \see ListBase
+		virtual bool saveMemory(wxFileName const& fileName)const;
+		//! \brief Implémentassions à partir de \ref ListBase
+		//! \see ListBase
+		
+		//! \brief Charge les textes d'un fichier dans la mémoire.
+		//! \param fileName c'est le fichier.
+		//! \param texts Les textes trouver dans le fichier serons stoker ici.
+		//! Si vous ne voulez pas de cette informations vous pouvez
+		//! passer nullptr.
+		//! \param lgsrc Le langage source trouver dans le fichier sera
+		//! stoker ici. Si vous ne voulez pas de cette informations
+		//! vous pouvez passer nullptr.
+		//! \param lgto Le langage de destination trouver dans le fichier sera
+		//! stoker ici. Si vous ne voulez pas de cette informations
+		//! vous pouvez passer nullptr.
+		//!
+		//! \note Par exemple si vous passer nullptr a \p lgsrc
+		//! et que vous donné un pointeur valide a \p lgto
+		//! la valeur de se pointeur ne sera pas modifier. Et vis versa.
+		//! \return true si tout c'est bien passer.
 		bool load(	wxFileName const& fileName,
 					wxArrayString* texts,
-					wxString* language = nullptr)const;
+					wxString* lgsrc = nullptr,
+					wxString* lgto = nullptr)const;
+					
+		//! \brief Sauvegarde les textes contenue dans la mémoire dans
+		//! un fichier.
+		//! \param fileName c'est le fichier.
+		//! \param texts Les textes a écrire dans le fichier.
+		//! \param lgsrc Le langage source a écrie dans le fichier.
+		//! \param lgto Le langage de destination a écrie dans le fichier.
+		//! \return true si tout c'est bien passer.
 		bool save(	wxFileName const& fileName,
 					wxArrayString const& texts,
-					wxString const& language)const;
+					wxString const& lgsrc,
+					wxString const& lgto)const;
+			
+		//! \brief Pour savoir si un texte existe dans un wxArrayString.
+		//! \param texts les textes où chercher.
+		//! \param text le texte a chercher.
+		//! \return true si tout c'est bien passer.
 		bool exist(wxArrayString const& texts, wxString const& text)const;
+		//! \brief Pour supprimer un texte dans un wxArrayString.
+		//! \param texts les textes où supprimer le texte.
+		//! \param text le texte a supprimer.
+		//! \return true si tout c'est bien passer.
 		bool remove(wxArrayString& texts, wxString const& text)const;
 		
 		
 		//! \brief Les textes de la listes (si pas de non de fichier spécifier).
 		wxArrayString _texts;
-		//! \brief Fichier de la liste.
-		wxFileName _fileName;
-		//! \brief Langage de la liste.
-		wxString _lg;
 };
 
 #endif //LIST_H

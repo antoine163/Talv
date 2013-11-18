@@ -31,15 +31,22 @@ class Cache
 		virtual ~Cache();
 		
 		
+		void getLanguages(wxString* lgsrc, wxString* lgto)const;
+		void setLanguages(wxString const& lgsrc, wxString const& lgto);
 		
-		//Pour l'idée crée des cache a partir de liste et d'autre cache
-		bool creat(Cache const& cache);
-		bool creat(std::vector<Cache*> caches);
+		void clear();
 		
-		bool creat(List const& list);
-		bool creat(std::vector<List*> lists);
+		//! \brief Pour savoir si le cache est vide ou pas.
+		bool isEmpty();
 		
-		getRandomText();
+		int addText(	wxString const& text,
+						wxString const& mainTranslation);
+		
+		int addText(	wxString const& text,
+						wxString const& mainTranslation,
+						std::map<wxString, wxArrayString> const& translations);
+		
+		bool removeText(wxString const& text);
 		
 	private:
 };

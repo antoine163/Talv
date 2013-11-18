@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.0
+//! \version 1.1
 //! \date 02.05.2013
 //!
 //! ********************************************************************
@@ -33,73 +33,10 @@ List::~List()
 {
 }
 
-wxString List::getLanguage()const
-{
-	return _lg;
-}
-
-bool List::setLanguage(wxString const& lg)
-{
-	if(!isEmpty())
-		return false;
-		
-	//Il y a un nom de fichier.
-	if(_fileName.HasName())	
-	{
-		wxFile file(_fileName.GetFullPath(), wxFile::write);
-	
-		//Écriture de la lange.
-		file.Write(lg);
-			
-		file.Close();
-	}
-		
-	_lg = lg;
-	
-	return true;
-}
-
-bool List::isEmpty()
-{
-	//Il y a un nom de fichier.
-	if(_fileName.HasName())	
-	{
-		wxFile file(_fileName.GetFullPath());
-	
-		//Si il y a un '\n' cela veux dire que la liste n'est pas vide.
-		char tmpc;
-		ssize_t n;
-		do
-		{
-			n = file.Read(&tmpc, 1);
-			
-			if(tmpc == '\n')
-				return false;
-			
-		}while(n != wxInvalidOffset);
-			
-		file.Close();
-	}
-	else
-		return _texts.IsEmpty();
-	
-	return true;
-}
-
-void List::clear()
-{
-	//Il y a un nom de fichier.
-	if(_fileName.HasName())
-		wxRemoveFile(_fileName.GetFullPath());
-
-	_lg.Clear();
-	_texts.Clear();
-}
-
 bool List::addText(wxString const& text)
 {
 	//Le texte existe déjà ?
-	if(exist(text))
+	if(existText(text))
 		return false;
 	
 	//Il y a un nom de fichier.
@@ -116,59 +53,6 @@ bool List::addText(wxString const& text)
 		_texts.Add(text);
 	
 	return true;
-}
-
-bool List::removeText(wxString const& text)
-{
-	//Il y a un nom de fichier.
-	if(_fileName.HasName())
-	{
-		wxArrayString tmpTexts;
-		wxString tmpLg;
-		
-		//Chargement des textes dans tmpTexts.
-		if(!load(_fileName, &tmpTexts, &tmpLg))
-			return false;
-		
-		//Suppression du texte si il existe.
-		if(!remove(tmpTexts, text))
-			return false;
-		
-		//Sauvegarde des textes dans le fichier.
-		if(!save(_fileName, tmpTexts, tmpLg))
-			return false;
-	}
-	else
-	{
-		//Suppression du texte si il existe.
-		if(!remove(_texts, text))
-			return false;
-	}
-	
-	return true;
-}
-
-bool List::exist(wxString const& text)
-{
-	//Il y a un nom de fichier.
-	if(_fileName.HasName())
-	{
-		wxArrayString tmpTexts;
-		
-		//Chargement des textes dans tmpTexts.
-		load(_fileName, &tmpTexts);
-		
-		//le texte existe ?
-		if(exist(tmpTexts, text))
-			return true;
-	}
-	else
-	{
-		if(exist(_texts, text))
-			return true;
-	}
-	
-	return false;
 }
 
 wxArrayString List::getTexts()const
@@ -189,75 +73,131 @@ wxArrayString List::getTexts()const
 	return wxArrayString();
 }
 
-bool List::load(wxFileName const& fileName)
-{
-	if(fileName == _fileName)
-		return true;
-	
-	//Il y a un nom de fichier.
-	if(_fileName.HasName())
-	{	
-		//Chargement de la lange.
-		if(!load(fileName, nullptr, &_lg))
-			return false;
-		
-		//Copie de fichier
-		if(!wxCopyFile(fileName.GetFullPath(), _fileName.GetFullPath(), false))
-			return false;
-	}
-	else
-	{
-		//Chargement des textes.
-		if(!load(fileName, &_texts, &_lg))
-			return false;
-	}
-	
-	return true;
-}
-
-bool List::sove(wxFileName const& fileName)
-{
-	if(_fileName == fileName)
-		return true;
-		
-	//Il y a un nom de fichier.
-	if(_fileName.HasName())
-	{
-		//Copie de fichier
-		if(!wxCopyFile(_fileName.GetFullPath(), fileName.GetFullPath()))
-			return false;
-	}
-	else
-	{
-		//Chargement des textes.
-		if(!save(fileName, _texts, _lg))
-			return false;
-	}
-	
-	return true;
-}
-
-wxFileName List::getFileName()const
-{
-	return _fileName;
-}
-
 void List::setFileName(wxFileName const& fileName)
 {
-	_texts.Clear();	
-	_fileName = fileName;
+	ListBase::setFileName(fileName);
 	
 	//Il y a un nom de fichier.
 	if(_fileName.HasName())
 	{
-		//Chargement de la lange
-		load(_fileName, nullptr, &_lg);
+		//Si le fichier existe on chargement les langes.
+		if(_fileName.FileExists())
+			load(_fileName, nullptr, &_lgsrc, &_lgto);
+		//sinon on crée le fichier.
+		else
+			save(_fileName, wxArrayString(), _lgsrc, _lgto);
 	}
+	
+}
+
+bool List::isEmptyFile()const
+{
+	wxFile file(_fileName.GetFullPath());
+	
+	//Si il y a un '\n' cela veux dire que la liste n'est pas vide.
+	char tmpc;
+	ssize_t n;
+	do
+	{
+		n = file.Read(&tmpc, 1);
+		
+		if(tmpc == '\n')
+			return false;
+		
+	}while(n != wxInvalidOffset);
+		
+	file.Close();
+	
+	return true;
+}
+
+bool List::isEmptyMemory()const
+{
+	return _texts.IsEmpty();
+}
+
+void List::clearFile()
+{
+	wxRemoveFile(_fileName.GetFullPath());
+}
+
+void List::clearMemory()
+{
+	_texts.Clear();
+}
+
+bool List::removeTextFile(wxString const& text)
+{
+	wxArrayString tmpTexts;
+	
+	//Chargement des textes dans tmpTexts.
+	if(!load(_fileName, &tmpTexts))
+		return false;
+	
+	//Suppression du texte si il existe.
+	if(!remove(tmpTexts, text))
+		return false;
+	
+	//Sauvegarde des textes dans le fichier.
+	if(!save(_fileName, tmpTexts, _lgsrc, _lgto))
+		return false;
+		
+	return true;
+}
+
+bool List::removeTextMemory(wxString const& text)
+{
+	return remove(_texts, text);
+}
+
+bool List::existTextFile(wxString const& text)const
+{
+	wxArrayString tmpTexts;
+		
+	//Chargement des textes dans tmpTexts.
+	load(_fileName, &tmpTexts);
+	
+	//le texte existe ?
+	return exist(tmpTexts, text);
+}
+
+bool List::existTextMemory(wxString const& text)const
+{
+	return exist(_texts, text);
+}
+
+bool List::loadFile(wxFileName const& fileName)
+{
+	//Chargement des langes.
+	if(!load(fileName, nullptr, &_lgsrc, &_lgto))
+		return false;
+	
+	//Copie de fichier
+	if(!wxCopyFile(fileName.GetFullPath(), _fileName.GetFullPath(), false))
+		return false;
+		
+	return true;
+}
+
+bool List::loadMemory(wxFileName const& fileName)
+{
+	return load(fileName, &_texts, &_lgsrc, &_lgto);
+}
+
+bool List::saveFile(wxFileName const& fileName)const
+{
+	return wxCopyFile(_fileName.GetFullPath(), fileName.GetFullPath());
+}
+
+bool List::saveMemory(wxFileName const& fileName)const
+{
+	return save(fileName, _texts, _lgsrc, _lgto);
 }
 
 bool List::load(	wxFileName const& fileName,
 					wxArrayString* texts,
-					wxString* language)const
+					wxString* lgsrc,
+					wxString* lgto)const
 {
 	wxString tmpText;
 	
@@ -267,10 +207,13 @@ bool List::load(	wxFileName const& fileName,
 	
 	//Premier ligne c'est la lange de la liste
 	tmpText = file.GetFirstLine();
-	if(language != nullptr)
-		*language = tmpText;
+	if(lgsrc != nullptr && lgto != nullptr)
+	{
+		*lgsrc = tmpText.BeforeFirst(' ');
+		*lgto = tmpText.AfterLast(' ');
+	}
 	
-	//Les autres lignes c'est la liste ...
+	//Les autres lignes c'est les textes ...
 	if(texts != nullptr)
 	{
 		for(tmpText = file.GetNextLine(); !file.Eof(); tmpText = file.GetNextLine())
@@ -283,14 +226,15 @@ bool List::load(	wxFileName const& fileName,
 
 bool List::save(	wxFileName const& fileName,
 					wxArrayString const& texts,
-					wxString const& language)const
+					wxString const& lgsrc,
+					wxString const& lgto)const
 {
 	wxFile file;
 	if(!file.Open(fileName.GetFullPath(), wxFile::write))
 		return false;
 	
-	//Écriture de la lange.
-	file.Write(language);
+	//Écriture des langes.
+	file.Write(lgsrc+' '+lgto);
 	
 	//Écriture des textes.
 	for(auto it: texts)
@@ -320,4 +264,3 @@ bool List::remove(wxArrayString& texts, wxString const& text)const
 	
 	return true;
 }
-
