@@ -15,7 +15,7 @@
 #Non du projet
 PROJECT_NAME=talv
 #Numéro de version
-PROJECT_VERSION=1.0
+PROJECT_VERSION=0.3
 
 
 ########################################################################

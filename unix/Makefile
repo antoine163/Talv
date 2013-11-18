@@ -3,7 +3,7 @@
 #	Makfile for Linux.
 #
 # - author 	:	Antoine Maleyrie : antoine.maleyrie@gmail.com
-# - version	:	0.12
+# - version	:	0.13
 # - date 	:	10.03.2013
 #
 ########################################################################
@@ -18,7 +18,7 @@ EXEC_NAME=$(PROJECT_NAME)
 # Flags de compilation pour les libs.
 ########################################################################
 # Flags pour wxWidgets
-CXX_FLAGS+=`wx-config-2.9 --cxxflags`
+CXX_FLAGS+=`wx-config-3.0 --cxxflags`
 # Flags libnotify (si utiliser)
 ifeq ($(EMULATE_NOTIFICATION), no)
 CXX_FLAGS+=`pkg-config --cflags libnotify`
@@ -29,7 +29,7 @@ endif
 # Flags de linkage pour les libs.
 ########################################################################
 # Flags pour wxWidgets
-LD_FLAGS+=`wx-config-2.9 --libs base,core,adv,net`
+LD_FLAGS+=`wx-config-3.0 --libs base,core,adv,net`
 # Flags pour la xlib
 LD_FLAGS+=-lX11
 # Flags pour libnotify (si utiliser)

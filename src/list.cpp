@@ -80,7 +80,7 @@ void List::setFileName(wxFileName const& fileName)
 	//Il y a un nom de fichier.
 	if(_fileName.HasName())
 	{
-		//Si le fichier existe on chargement les langes.
+		//Si le fichier existe on charge les langes.
 		if(_fileName.FileExists())
 			load(_fileName, nullptr, &_lgsrc, &_lgto);
 		//sinon on crée le fichier.
