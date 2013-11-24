@@ -31,7 +31,7 @@ class ManagerMap
 		ManagerMap() : _data(&_dataNormal)
 		{}
 		
-		//! \brief destructeur.
+		//! \brief Destructeur.
 		virtual ~ManagerMap()
 		{
 			removeAll();

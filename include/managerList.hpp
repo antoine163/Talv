@@ -43,22 +43,31 @@ class ManagerList : public ManagerMap<wxString, ListBase>,
 		void save(wxFileConfig& fileConfig)const;
 		
 		
-		//List* create(	wxString const& listName,
-						//wxString const& lgsrc,
-						//wxString const& lgto);
+		List* create(	wxString const& newListName,
+						wxString const& lgsrc,
+						wxString const& lgto);
 		
-		//List* create(	wxString const& listName,
-						//wxArrayString const& listsNames,
-						//Knowledge_e KnowledgeFilter,
-						//int nbTranslationFilter);
+		List* create(	wxString const& newListName,
+						wxArrayString const& listsNames,
+						Knowledge_e KnowledgeFilter = KNOWLEDGE_ALL,
+						int nbTranslationFilter = 0);//>=0
 								
-		//List* create(	wxString const& listName,
-						//std::vectore<List const*> const& lists,
-						//Knowledge_e KnowledgeFilter,
-						//int nbTranslationFilter);
+		List* create(	wxString const& newListName,
+						std::vectore<List const*> const& lists,
+						Knowledge_e KnowledgeFilter = KNOWLEDGE_ALL,
+						int nbTranslationFilter); = 0);//>=0
+						
+		//! \brief Obtenir le nom de touts les lites.
+		//! \return le nom de tout les listes.
+		wxArrayString getNameLists()const;
+		
+		//! \brief Obtenir le nom de touts les lites en fonction de leur lange.
+		//! \return le nom de tout les listes.
+		wxArrayString getNameListsByLanguages(	wxString const& lgsrc,
+												wxString const& lgto)const;
 
-		//virtual bool remove(wxString const& listName);
-		//virtual bool removeAll();
+		virtual bool remove(wxString const& listName);
+		virtual bool removeAll();
 		
 		
 		//! \brief Implémentassions de \ref EditableByPanel.

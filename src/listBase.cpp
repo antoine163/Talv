@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.1
+//! \version 0.2
 //! \date 17.11.2013
 //!
 //! ********************************************************************
@@ -27,13 +27,13 @@ ListBase::~ListBase()
 {
 }
 
-void ListBase::getLanguages(wxString* lgsrc, wxString* lgto)const
+Status_e ListBase::getLanguages(wxString* lgsrc, wxString* lgto)const
 {
 	*lgsrc = _lgsrc;
 	*lgto = _lgto;
 }
 
-bool ListBase::setLanguages(wxString const& lgsrc, wxString const& lgto)
+Status_e ListBase::setLanguages(wxString const& lgsrc, wxString const& lgto)
 {
 	if(!isEmpty())
 		return false;
@@ -44,7 +44,7 @@ bool ListBase::setLanguages(wxString const& lgsrc, wxString const& lgto)
 	return true;
 }
 
-bool ListBase::isEmpty()const
+Status_e ListBase::isEmpty()const
 {
 	if(_fileName.HasName())
 		return isEmptyFile();
@@ -54,7 +54,7 @@ bool ListBase::isEmpty()const
 	return false;
 }
 
-void ListBase::clear()
+Status_e ListBase::clear()
 {
 	_fileName.Clear();
 	_lgsrc.Clear();
@@ -66,7 +66,7 @@ void ListBase::clear()
 		clearMemory();
 }
 
-bool ListBase::removeText(wxString const& text)
+Status_e ListBase::removeText(wxString const& text)
 {
 	if(_fileName.HasName())
 		return removeTextFile(text);
@@ -76,7 +76,7 @@ bool ListBase::removeText(wxString const& text)
 	return false;
 }
 
-bool ListBase::existText(wxString const& text)const
+Status_e ListBase::existText(wxString const& text)const
 {
 	if(_fileName.HasName())
 		return existTextFile(text);
@@ -86,7 +86,7 @@ bool ListBase::existText(wxString const& text)const
 	return false;
 }
 
-bool ListBase::load(wxFileName const& fileName)
+Status_e ListBase::load(wxFileName const& fileName)
 {		
 	if(_fileName.HasName())
 	{
@@ -101,7 +101,7 @@ bool ListBase::load(wxFileName const& fileName)
 	return false;
 }
 
-bool ListBase::save(wxFileName const& fileName)const
+Status_e ListBase::save(wxFileName const& fileName)const
 {		
 	if(_fileName.HasName())
 	{
@@ -121,9 +121,34 @@ wxFileName ListBase::getFileName()const
 	return _fileName;
 }
 
-void ListBase::setFileName(wxFileName const& fileName)
+Status_e ListBase::setFileName(wxFileName const& fileName)
 {
 	_lgsrc.Clear();
 	_lgto.Clear();
 	_fileName = fileName;
+	
+	if(_fileName.HasName())
+	{
+		wxFile file;
+		
+		//Le fichier existe déjà ?
+		if(_fileName.FileExists())
+		{
+			//On charge les langes.
+			if(!file.Open(fileName.GetFullPath(), wxFile::write))
+			return false;
+		
+			//Écriture des langes.
+			file.Write(lgsrc+' '+lgto);
+			
+			//Écriture des textes.
+			for(auto it: texts)
+				file.Write("\n"+it);
+				
+			file.Close();
+		}
+		else
+		{
+		}
+	}
 }

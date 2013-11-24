@@ -267,6 +267,7 @@ wxString Resource::getClipboard()
 	return text;
 }
 
+//! \todo utiliser plutôt FromUTF8Unchecked 
 wxString Resource::getTranslations(
 						std::map<wxString, wxArrayString>* translations,
 						wxString const& text,

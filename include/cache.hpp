@@ -29,58 +29,15 @@ class Cache : public ListBase
 		//! \brief Constructeur.
 		Cache();
 				
-		//! \brief destructeur.
+		//! \brief Destructeur.
 		virtual ~Cache();
 		
-		//int addText(	wxString const& text,
-						//wxString const& mainTranslation);
+		int addText(wxString const& text, DataText const& dataText);
+		int getText(wxString const& text, DataText* dataText);
+		int updateText(wxString const& text, DataText const& dataText);
 		
-		//int addText(	wxString const& text,
-						//wxString const& mainTranslation,
-						//std::map<wxString, wxArrayString> const& translations);
-						
-		//int addText(	wxString const& text,
-						//Knowledge_e knowledge,
-						//unsigned int nbTranslation,
-						//wxString const& mainTranslation,
-						//std::map<wxString, wxArrayString> const& translations);
-						
-						
-						
-		//int getText(	wxString const& text,
-						//wxString* mainTranslation);
-		
-		//int getText(	wxString const& text,
-						//wxString* mainTranslation,
-						//std::map<wxString, wxArrayString>* translations);
-		
-		//int getText(	wxString const& text,
-						//Knowledge_e knowledge,
-						//unsigned int nbTranslation,
-						//wxString* mainTranslation,
-						//std::map<wxString, wxArrayString>* translations);
-						
-						
-						
-		//int updateText(	wxString const& text,
-						//wxString const& mainTranslation,
-						//std::map<wxString, wxArrayString> const& translations);
-						
-		//int updateText(	wxString const& text,
-						//wxString const& mainTranslation,
-						//std::map<wxString, wxArrayString> const& translations);
-						
-		//int updateText(	wxString const& text,
-						//Knowledge_e knowledge,
-						//unsigned int nbTranslation,
-						//wxString const& mainTranslation,
-						//std::map<wxString, wxArrayString> const& translations);
-						
-		//int getKnowledge(wxString const& text, Knowledge_e* knowledge);
-		//int updateKnowledge(wxString const& text, Knowledge_e knowledge);
-		
-		//int updateNbTranslation(wxString const& text, unsigned int nbTranslation);
-		//int updateNbTranslation(wxString const& text, unsigned int nbTranslation);
+		//! \brief Pour obtenir le cache sous forme de liste.
+		Liste* getListe();
 		
 	private:
 		//! \brief Implémentassions à partir de \ref ListBase
@@ -120,12 +77,14 @@ class Cache : public ListBase
 		//! \brief Implémentassions à partir de \ref ListBase
 		//! \see ListBase
 		
+		//! \brief Implémentassions à partir de \ref ListBase
+		//! \see ListBase
 		virtual bool saveFile(wxFileName const& fileName)const;
 		//! \brief Implémentassions à partir de \ref ListBase
 		//! \see ListBase
 		virtual bool saveMemory(wxFileName const& fileName)const;
-		//! \brief Implémentassions à partir de \ref ListBase
-		//! \see ListBase
+		
+		std::vector<DataText> _texts;
 };
 
 #endif //CACHE_H

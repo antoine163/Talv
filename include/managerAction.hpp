@@ -100,7 +100,7 @@ class ManagerAction : 	public wxEvtHandler,
 		//! \brief Permet de savoir si une liste est utiliser par une ou des actions.
 		bool actionUseList(wxString const& listName);
 		
-		//! \brief Re implémentassions de \ref ManagerBase.
+		//! \brief Re implémentassions de \ref ManagerMap.
 		virtual void apply();
 		
 		//! \brief Implémentassions de \ref EditableByPanel.
@@ -119,7 +119,7 @@ class ManagerAction : 	public wxEvtHandler,
 		//! \brief destructeur.
 		virtual ~ManagerAction();
 		
-		//! \brief Implémentassions de \ref ManagerBase.
+		//! \brief Implémentassions de \ref ManagerMap.
 		virtual Action* copyNewDatas(Action const* inc);
 		
 		//! \brief Méthode appeler lorsque un événement de raccourci clavier survient.

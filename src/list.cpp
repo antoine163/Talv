@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.1
+//! \version 2.0
 //! \date 02.05.2013
 //!
 //! ********************************************************************
@@ -14,12 +14,7 @@
 */
 
 #include "list.hpp"
-#include <wx/file.h>
-#include <wx/textfile.h>
-#include <wx/filefn.h> 
-
-//TEST
-#include <iostream>
+#include <wx/buffer.h>
 
 // *********************************************************************
 // Class List
@@ -33,234 +28,356 @@ List::~List()
 {
 }
 
-bool List::addText(wxString const& text)
+Status_e List::getLanguages(wxString* lgsrc, wxString* lgto)const
 {
-	//Le texte existe déjà ?
-	if(existText(text))
-		return false;
+	if(!_fileName.HasName())
+		return FILE_NO_NAME;
+		
+	wxFile file;
+	if(!file.Open(_fileName.GetFullPath(), wxFile::read))
+		return FILE_OPEN_FAILED;
 	
-	//Il y a un nom de fichier.
-	if(_fileName.HasName())
-	{
-		wxFile file;
-		if(!file.Open(_fileName.GetFullPath(), wxFile::write_append))
-			return false;
-			
-		file.Write("\n"+text);
-		file.Close();
-	}
-	else
-		_texts.Add(text);
+	Status_e valReturn = SUCCESS;
 	
-	return true;
+	//Lecture du langage source.
+	valReturn = readInFile(file, lgsrc);
+	
+	//Si ok. Lecture de l'autre langage.
+	if(valReturn == SUCCESS)
+		valReturn = readInFile(file, lgto);
+		
+	file.Close();
+	return valReturn;
 }
 
-wxArrayString List::getTexts()const
+Status_e List::setLanguages(wxString const& lgsrc, wxString const& lgto)
 {
-	//Il y a un nom de fichier.
-	if(_fileName.HasName())
-	{
-		wxArrayString tmpTexts;
+	if(!_fileName.HasName())
+		return FILE_NO_NAME;
 		
-		//Chargement des textes dans tmpTexts.
-		load(_fileName, &tmpTexts);
-		
-		return tmpTexts;
-	}
-	else
-		return _texts;
+	Status_e valReturn = SUCCESS;
 	
-	return wxArrayString();
+	//On vérifie si la liste est vide
+	valReturn = isEmpty();
+	if(valReturn != LIST_EMPTY)
+		return valReturn;
+		
+	
+	wxFile file;
+	//On crées un nouveau fichier avec les l'engages, en écrasant
+	//au préalable l'ancien.
+	if(!file.Create(_fileName.GetFullPath(), true))
+		valReturn = FILE_CREATE_FAILED;
+	else
+	{
+		//Écriture du langage source.
+		valReturn = writeInFile(file, lgsrc);
+		//Si ok. Écriture de l'autre langage.
+		if(valReturn == SUCCESS)
+			valReturn = writeInFile(file, lgto);
+	}
+		
+	file.Close();
+	return valReturn;
+}
+
+Status_e List::isEmpty()const
+{
+	if(!_fileName.HasName())
+		return FILE_NO_NAME;
+		
+	if(!_fileName.FileExists())
+		return LIST_EMPTY;
+		
+	wxFile file;
+	if(!file.Open(_fileName.GetFullPath(), wxFile::read))
+		return FILE_OPEN_FAILED;
+		
+	//Positionne le curseur Après les langages.
+	Status_e valReturn = filePointerAfterHeader(file);
+	if(valReturn == SUCCESS)
+	{
+		if(file.Eof())
+			valReturn = LIST_EMPTY;
+		else
+			valReturn = LIST_NO_EMPTY;
+	}
+		
+	file.Close();
+	return valReturn;
+}
+
+Status_e List::clear()
+{
+	if(!_fileName.HasName())
+		return FILE_NO_NAME;
+		
+	if(!wxRemoveFile(_fileName.GetFullPath()))
+		return FILE_NO_REMOVE;
+		
+	_fileName.Clear();
+		
+	return SUCCESS;
+}
+
+Status_e List::addText(wxString const& text)
+{
+	Status_e valReturn = existText(text);
+	
+	if(valReturn == TEXT_EXIST)
+		return valReturn;
+	
+	wxArrayString texts;
+	texts.Add(text);
+	return addTexts(texts);
+}
+
+Status_e List::replaceTexts(wxArrayString const& texts)
+{
+	wxString lgsrc;
+	wxString lgto;
+	Status_e valReturn = getLanguages(&lgsrc, &lgto);
+	if(valReturn != SUCCESS)
+		return valReturn;
+		
+	wxFileName tmpFileName = _fileName;
+	
+	valReturn = clear();
+	if(valReturn != SUCCESS)
+		return valReturn;
+	
+	_fileName = tmpFileName;
+	
+	valReturn = setLanguages(lgsrc, lgto);
+	if(valReturn != SUCCESS)
+		return valReturn;
+	
+	return addTexts(texts);
+}
+
+Status_e List::getTexts(wxArrayString* texts)const
+{
+	if(!_fileName.HasName())
+		return FILE_NO_NAME;
+		
+	wxFile file;
+	if(!file.Open(_fileName.GetFullPath(), wxFile::read))
+		return FILE_OPEN_FAILED;
+		
+	Status_e valReturn = filePointerAfterHeader(file);
+	
+	//On lie les textes tend que la lecture réussi et que l'on
+	//est pas arriver a la fin du fichier.
+	wxString tmpStr;
+	while(valReturn == SUCCESS && !file.Eof())
+	{
+		valReturn = readInFile(file, &tmpStr);
+		text->Add(tmpStr);
+	}
+		
+	file.Close();
+	return valReturn;
+}
+
+Status_e List::existText(wxString const& text)const
+{
+	if(!_fileName.HasName())
+		return FILE_NO_NAME;
+		
+	wxFile file;
+	if(!file.Open(_fileName.GetFullPath(), wxFile::read))
+		return FILE_OPEN_FAILED;
+		
+	Status_e valReturn = filePointerAfterHeader(file);
+	
+	//On lie les textes tend que la lecture réussi et que l'on
+	//est pas arriver a la fin du fichier ou que l'on a pas trouver
+	//le texte rechercher.
+	wxString tmpStr;
+	while(valReturn == SUCCESS && !file.Eof())
+	{
+		valReturn = readInFile(file, &tmpStr);
+		
+		if(valReturn == SUCCESS && tmpStr == text)
+			valReturn = TEXT_EXIST;
+	}
+	
+	//Si valReturn == SUCCESS le texte n'a pas été trouver.
+	if(valReturn == SUCCESS)
+		valReturn = TEXT_NO_EXIST;
+		
+	file.Close();
+	return valReturn;
+}
+
+Status_e List::removeText(wxString const& text)
+{
+	if(!_fileName.HasName())
+		return FILE_NO_NAME;
+		
+	wxFile file;
+	if(!file.Open(_fileName.GetFullPath(), wxFile::read_write))
+		return FILE_OPEN_FAILED;
+		
+	Status_e valReturn = filePointerAfterHeader(file);
+	wxString tmpStr;
+	wxFileOffset fileOffsetLastText = wxInvalidOffset;
+	
+	//On lie les textes tend que la lecture réussi et que l'on
+	//est pas arriver a la fin du fichier ou que l'on a pas trouver
+	//le texte rechercher.
+	while(valReturn == SUCCESS && !file.Eof())
+	{
+		fileOffsetLastText = file.Tell();
+		valReturn = readInFile(file, &tmpStr);
+		
+		if(valReturn == SUCCESS && tmpStr == text)
+			valReturn = TEXT_EXIST;
+	}
+	
+	//Si valReturn == SUCCESS le texte n'a pas été trouver car le curseur
+	//est a la fin du fichier.
+	if(valReturn == SUCCESS)
+		valReturn = TEXT_NO_EXIST;
+	else
+	{
+		wxMemoryBuffer topFile;
+		wxMemoryBuffer bottomFile;
+		size_t sizeRead;
+		
+		//Mis en buffer du bas du fichier
+		sizeRead = file.Length() - file.Tell();
+		if((size_t)file.Read(bottomFile.GetWriteBuf(sizeRead), sizeRead) != sizeRead)
+		{
+			file.Close();
+			return FILE_READ_ERROR;
+		}
+		bottomFile.UngetWriteBuf(sizeRead);
+		
+		//Mis en buffer du haut du fichier
+		sizeRead = fileOffsetLastText;
+		file.Seek(0);
+		if((size_t)file.Read(topFile.GetWriteBuf(sizeRead), sizeRead) != sizeRead)
+		{
+			file.Close();
+			return FILE_READ_ERROR;
+		}
+		topFile.UngetWriteBuf(sizeRead);
+
+		//On ferme le fichier et on en crée un nouveau.
+		file.Close();
+		if(!file.Create(_fileName.GetFullPath(), true))
+			valReturn = FILE_CREATE_FAILED;
+		else
+		{
+			//On écris les données précédemment lu (mais bien sur sen le
+			//texte que le doit supprimer)
+			
+			size_t sizeWrite = topFile.GetDataLen();
+			if(file.Write(topFile.GetData(), sizeWrite) != sizeWrite)
+			{
+				file.Close();
+				return FILE_WRITE_ERROR;
+			}
+			
+			sizeWrite = bottomFile.GetDataLen();
+			if(file.Write(bottomFile.GetData(), sizeWrite) != sizeWrite)
+			{
+				file.Close();
+				return FILE_WRITE_ERROR;
+			}
+			valReturn = SUCCESS;
+		}
+	}
+		
+	file.Close();
+	return valReturn;
+}
+
+wxFileName List::getFileName()const
+{
+	return _fileName;
 }
 
 void List::setFileName(wxFileName const& fileName)
 {
-	ListBase::setFileName(fileName);
-	
-	//Il y a un nom de fichier.
-	if(_fileName.HasName())
-	{
-		//Si le fichier existe on charge les langes.
-		if(_fileName.FileExists())
-			load(_fileName, nullptr, &_lgsrc, &_lgto);
-		//sinon on crée le fichier.
-		else
-			save(_fileName, wxArrayString(), _lgsrc, _lgto);
-	}
-	
+	_fileName = fileName;
 }
 
-bool List::isEmptyFile()const
+Status_e List::readInFile(wxFile& file, wxString* str)const
 {
-	wxFile file(_fileName.GetFullPath());
+	uint8_t sizeStr;
 	
-	//Si il y a un '\n' cela veux dire que la liste n'est pas vide.
-	char tmpc;
-	ssize_t n;
-	do
-	{
-		n = file.Read(&tmpc, 1);
+	//Lecture de la taille du texte.
+	if(file.Read(&sizeStr, sizeof sizeStr) != sizeof sizeStr)
+		return FILE_READ_ERROR;
+	
+	//Lecture du texte.
+	wxMemoryBuffer buffer;
+	if(file.Read(buffer.GetWriteBuf(sizeStr), sizeStr) != sizeStr)
+		return FILE_READ_ERROR;
+	buffer.UngetWriteBuf(sizeStr);
 		
-		if(tmpc == '\n')
-			return false;
+	str->Clear();
+	str->Append(wxString::FromUTF8((const char *)buffer.GetData(), buffer.GetDataLen()));
+	
+	return SUCCESS;
+}
+
+Status_e List::writeInFile(wxFile& file, wxString const& str)
+{
+	uint8_t sizeStr = str.Length();
+	
+	//Écriture de la taille du texte.
+	if(file.Write(&sizeStr, sizeof sizeStr) != sizeof sizeStr)
+		return FILE_WRITE_ERROR;
+	
+	//Écriture du texte.
+	if(!file.Write(str))
+		return FILE_WRITE_ERROR;
+	
+	return SUCCESS;
+}
+
+Status_e List::filePointerAfterHeader(wxFile& file)const
+{
+	uint8_t sizelg;
+	
+	//Lecture de la taille du premier langage.
+	if(file.Read(&sizelg, sizeof sizelg) != sizeof sizelg)
+		return FILE_READ_ERROR;
 		
-	}while(n != wxInvalidOffset);
+	//Pointer sur la taille du deuxième langage.
+	if(file.Seek(sizelg, wxFromCurrent) ==  wxInvalidOffset)
+		return FILE_READ_ERROR;
+	
+	//Lecture de la taille du deuxième langage.
+	if(file.Read(&sizelg, sizeof sizelg) != sizeof sizelg)
+		return FILE_READ_ERROR;
 		
-	file.Close();
+	//Pointer sur la taille du premier texte ou la fin du fichier
+	file.Seek(sizelg, wxFromCurrent);
 	
-	return true;
+	return SUCCESS;
 }
 
-bool List::isEmptyMemory()const
+Status_e List::addTexts(wxArrayString const& texts)
 {
-	return _texts.IsEmpty();
-}
-
-void List::clearFile()
-{
-	wxRemoveFile(_fileName.GetFullPath());
-}
-
-void List::clearMemory()
-{
-	_texts.Clear();
-}
-
-bool List::removeTextFile(wxString const& text)
-{
-	wxArrayString tmpTexts;
-	
-	//Chargement des textes dans tmpTexts.
-	if(!load(_fileName, &tmpTexts))
-		return false;
-	
-	//Suppression du texte si il existe.
-	if(!remove(tmpTexts, text))
-		return false;
-	
-	//Sauvegarde des textes dans le fichier.
-	if(!save(_fileName, tmpTexts, _lgsrc, _lgto))
-		return false;
+	if(!_fileName.HasName())
+		return FILE_NO_NAME;
 		
-	return true;
-}
-
-bool List::removeTextMemory(wxString const& text)
-{
-	return remove(_texts, text);
-}
-
-bool List::existTextFile(wxString const& text)const
-{
-	wxArrayString tmpTexts;
-		
-	//Chargement des textes dans tmpTexts.
-	load(_fileName, &tmpTexts);
-	
-	//le texte existe ?
-	return exist(tmpTexts, text);
-}
-
-bool List::existTextMemory(wxString const& text)const
-{
-	return exist(_texts, text);
-}
-
-bool List::loadFile(wxFileName const& fileName)
-{
-	//Chargement des langes.
-	if(!load(fileName, nullptr, &_lgsrc, &_lgto))
-		return false;
-	
-	//Copie de fichier
-	if(!wxCopyFile(fileName.GetFullPath(), _fileName.GetFullPath(), false))
-		return false;
-		
-	return true;
-}
-
-bool List::loadMemory(wxFileName const& fileName)
-{
-	return load(fileName, &_texts, &_lgsrc, &_lgto);
-}
-
-bool List::saveFile(wxFileName const& fileName)const
-{
-	return wxCopyFile(_fileName.GetFullPath(), fileName.GetFullPath());
-}
-
-bool List::saveMemory(wxFileName const& fileName)const
-{
-	return save(fileName, _texts, _lgsrc, _lgto);
-}
-
-bool List::load(	wxFileName const& fileName,
-					wxArrayString* texts,
-					wxString* lgsrc,
-					wxString* lgto)const
-{
-	wxString tmpText;
-	
-	wxTextFile file;
-	if(!file.Open(fileName.GetFullPath()))
-		return false;
-	
-	//Premier ligne c'est la lange de la liste
-	tmpText = file.GetFirstLine();
-	if(lgsrc != nullptr && lgto != nullptr)
-	{
-		*lgsrc = tmpText.BeforeFirst(' ');
-		*lgto = tmpText.AfterLast(' ');
-	}
-	
-	//Les autres lignes c'est les textes ...
-	if(texts != nullptr)
-	{
-		for(tmpText = file.GetNextLine(); !file.Eof(); tmpText = file.GetNextLine())
-			texts->Add(tmpText);
-	}
-	file.Close();
-	
-	return true;
-}
-
-bool List::save(	wxFileName const& fileName,
-					wxArrayString const& texts,
-					wxString const& lgsrc,
-					wxString const& lgto)const
-{
 	wxFile file;
-	if(!file.Open(fileName.GetFullPath(), wxFile::write))
-		return false;
-	
-	//Écriture des langes.
-	file.Write(lgsrc+' '+lgto);
-	
-	//Écriture des textes.
-	for(auto it: texts)
-		file.Write("\n"+it);
+	if(!file.Open(_fileName.GetFullPath(), wxFile::write_append))
+		return FILE_OPEN_FAILED;
+		
+	Status_e valReturn = SUCCESS;
+	for(auto& it: texts)
+	{
+		valReturn = writeInFile(file, it);
+		if(valReturn != SUCCESS)
+			break;
+	}
 		
 	file.Close();
-	
-	return true;
-}
-
-bool List::exist(wxArrayString const& texts, wxString const& text)const
-{
-	int index = texts.Index(text, false);
-	if(index == wxNOT_FOUND)
-		return false;
-		
-	return true;
-}
-
-bool List::remove(wxArrayString& texts, wxString const& text)const
-{
-	int index = texts.Index(text, false);
-	if(index == wxNOT_FOUND)
-		return false;
-		
-	texts.RemoveAt(index);
-	
-	return true;
+	return valReturn;
 }

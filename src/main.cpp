@@ -72,6 +72,7 @@ bool App::OnInit()
 		
 	//Bind pour attraper l'évènement pour quitter qui peut venir de n'importe où dans le code.
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnExit, this, wxID_EXIT);
+	
 		
 	return true;
 }
