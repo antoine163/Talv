@@ -28,34 +28,38 @@
 // *********************************************************************
 
 //! \brief Gestion des listes
-//! liste automatique a partir des caches
-class ManagerList : public ManagerMap<wxString, ListBase>,
-					public Singleton<ManagerList>,
+class ManagerList : public Singleton<ManagerList>,
 					public EditableByPanel
 {
 	friend class Singleton<ManagerList>;
 	
 	public:	
 		//! \brief Charger la configuration du manager.
+		//! A partie de fichier de configuration et aussi du répertoire ou
+		//! se trouve les listes
 		void load(wxFileConfig& fileConfig);
 		
 		//! \brief Sauvegarde la configuration du manager.
 		void save(wxFileConfig& fileConfig)const;
 		
 		
-		List* create(	wxString const& newListName,
+		List create(	wxString const& newListName,
 						wxString const& lgsrc,
 						wxString const& lgto);
 		
-		List* create(	wxString const& newListName,
+		List create(	wxString const& newListName,
 						wxArrayString const& listsNames,
 						Knowledge_e KnowledgeFilter = KNOWLEDGE_ALL,
 						int nbTranslationFilter = 0);//>=0
 								
-		List* create(	wxString const& newListName,
+		List create(	wxString const& newListName,
 						std::vectore<List const*> const& lists,
 						Knowledge_e KnowledgeFilter = KNOWLEDGE_ALL,
-						int nbTranslationFilter); = 0);//>=0
+						int nbTranslationFilter = 0);//>=0
+						
+		//! \brief Obtenir une lite.
+		//! \return le nom de la liste.
+		List getList(wxString const& listName);
 						
 		//! \brief Obtenir le nom de touts les lites.
 		//! \return le nom de tout les listes.
@@ -66,9 +70,7 @@ class ManagerList : public ManagerMap<wxString, ListBase>,
 		wxArrayString getNameListsByLanguages(	wxString const& lgsrc,
 												wxString const& lgto)const;
 
-		virtual bool remove(wxString const& listName);
-		virtual bool removeAll();
-		
+		bool remove(wxString const& listName);
 		
 		//! \brief Implémentassions de \ref EditableByPanel.
 		virtual wxPanel* newEditPanel(wxWindow *parent);
@@ -82,11 +84,6 @@ class ManagerList : public ManagerMap<wxString, ListBase>,
 		ManagerList();
 		//! \brief destructeur.
 		virtual ~ManagerList();
-		
-		virtual ListBase* copyNewDatas (ListBase const *inc)
-		{
-			return nullptr;
-		}
 };
 
 #endif //MANAGER_LIST_H

@@ -75,13 +75,13 @@ class EditableByPanel
 };
 
 // *********************************************************************
-// Class EditableByPanelManager
+// Class ManagerEditableByPanel
 // *********************************************************************
 
 //! \brief Classe permettant de stoker tout les instances de la classe \ref EditableByPanel.
-class EditableByPanelManager : public Singleton<EditableByPanelManager>
+class ManagerEditableByPanel : public Singleton<ManagerEditableByPanel>
 {	
-	friend class Singleton<EditableByPanelManager>;
+	friend class Singleton<ManagerEditableByPanel>;
 	friend class EditableByPanel;
 	
 	public:
@@ -90,9 +90,9 @@ class EditableByPanelManager : public Singleton<EditableByPanelManager>
 		
 	private:
 		//! \brief Constructeur.
-		EditableByPanelManager();
+		ManagerEditableByPanel();
 		//! \brief Destructeur.
-		~EditableByPanelManager();
+		~ManagerEditableByPanel();
 		
 		//! \brief Ajouter une instance.
 		//!

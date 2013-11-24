@@ -25,12 +25,12 @@
 EditableByPanel::EditableByPanel(wxString const& name)
 : _name(name)
 {
-	EditableByPanelManager::getInstance()->add(this);
+	ManagerEditableByPanel::getInstance()->add(this);
 }
 
 EditableByPanel::~EditableByPanel()
 {	
-	EditableByPanelManager::getInstance()->remove(this);
+	ManagerEditableByPanel::getInstance()->remove(this);
 }
 
 const wxString& EditableByPanel::getName()const
@@ -39,28 +39,28 @@ const wxString& EditableByPanel::getName()const
 }
 
 // *********************************************************************
-// Class EditableByPanelManager
+// Class ManagerEditableByPanel
 // *********************************************************************
 
-EditableByPanelManager::EditableByPanelManager()
+ManagerEditableByPanel::ManagerEditableByPanel()
 {
 }
 	
-EditableByPanelManager::~EditableByPanelManager()
+ManagerEditableByPanel::~ManagerEditableByPanel()
 {
 }
 
-std::vector<EditableByPanel*> const& EditableByPanelManager::getEditableByPanel()
+std::vector<EditableByPanel*> const& ManagerEditableByPanel::getEditableByPanel()
 {
 	return _iAll;
 }
 
-void EditableByPanelManager::add(EditableByPanel* val)
+void ManagerEditableByPanel::add(EditableByPanel* val)
 {
 	_iAll.push_back(val);
 }
 
-void EditableByPanelManager::remove(EditableByPanel* val)
+void ManagerEditableByPanel::remove(EditableByPanel* val)
 {
 	for(size_t i = 0; i < _iAll.size(); i++)
 	{

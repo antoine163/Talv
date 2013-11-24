@@ -172,7 +172,7 @@ Status_e List::getTexts(wxArrayString* texts)const
 	while(valReturn == SUCCESS && !file.Eof())
 	{
 		valReturn = readInFile(file, &tmpStr);
-		text->Add(tmpStr);
+		texts->Add(tmpStr);
 	}
 		
 	file.Close();

@@ -28,7 +28,7 @@
 DialogPreferences::DialogPreferences()
 : GuiDialogPreferences(nullptr)
 {	
-	for(auto it : EditableByPanelManager::getInstance()->getEditableByPanel())
+	for(auto it : ManagerEditableByPanel::getInstance()->getEditableByPanel())
 	{		
 		//Ajout des panels
 		wxPanel* panel = it->newEditPanel(_notebook);
@@ -49,7 +49,7 @@ void DialogPreferences::applyAndSave()
 								wxStandardPaths::Get().GetUserDataDir()+'/'+PROJECT_NAME);
 	fileConfig.DeleteAll();
 	
-	for(auto it : EditableByPanelManager::getInstance()->getEditableByPanel())
+	for(auto it : ManagerEditableByPanel::getInstance()->getEditableByPanel())
 	{		
 		it->panelApply();
 		it->panelSave(fileConfig);
