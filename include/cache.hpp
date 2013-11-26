@@ -16,14 +16,21 @@
 #ifndef CACHE_H
 #define CACHE_H
 
-#include "listBase.hpp"
+
+#include "def.hpp"
+#include "dataText.hpp"
+
+#include <wx/filename.h>
+#include <wx/file.h>
+
+#include <map>
 
 // *********************************************************************
 // Class Cache
 // *********************************************************************
 
 //! \brief 
-class Cache : public ListBase
+class Cache
 {
 	public:		
 		//! \brief Constructeur.
@@ -32,59 +39,30 @@ class Cache : public ListBase
 		//! \brief Destructeur.
 		virtual ~Cache();
 		
-		int addText(wxString const& text, DataText const& dataText);
-		int getText(wxString const& text, DataText* dataText);
-		int updateText(wxString const& text, DataText const& dataText);
+		Status_e getLanguages(wxString* lgsrc, wxString* lgto)const;
+		Status_e setLanguages(wxString const& lgsrc, wxString const& lgto);
+		Status_e isEmpty()const;
+		Status_e clear();
 		
-		//! \brief Pour obtenir le cache sous forme de liste.
-		Liste* getListe();
+		Status_e existText(wxString const& text)const;
+		Status_e addText(wxString const& text, DataText const& dataText);
+		Status_e updateText(wxString const& text, DataText const& dataText);
+		
+		Status_e replaceTexts(std::map<wxString, DataText> const& texts);
+		
+		Status_e getTexts(wxArrayString* texts);//+ les filtres
+		Status_e getDataTexts(std::map<wxString, DataText>* texts);//+ les filtres
 		
 	private:
-		//! \brief Implémentassions à partir de \ref ListBase
-		//! \see ListBase
-		virtual bool isEmptyFile()const;
-		//! \brief Implémentassions à partir de \ref ListBase
-		//! \see ListBase
-		virtual bool isEmptyMemory()const;
-		
-		//! \brief Implémentassions à partir de \ref ListBase
-		//! \see ListBase
-		virtual void clearFile();
-		//! \brief Implémentassions à partir de \ref ListBase
-		//! \see ListBase
-		virtual void clearMemory();
-		
-		//! \brief Implémentassions à partir de \ref ListBase
-		//! \see ListBase
-		virtual bool removeTextFile(wxString const& text);
-		//! \brief Implémentassions à partir de \ref ListBase
-		//! \see ListBase
-		virtual bool removeTextMemory(wxString const& text);
-		
-		//! \brief Implémentassions à partir de \ref ListBase
-		//! \see ListBase
-		virtual bool existTextFile(wxString const& text)const;
-		//! \brief Implémentassions à partir de \ref ListBase
-		//! \see ListBase
-		virtual bool existTextMemory(wxString const& text)const;
-		
-		//! \brief Implémentassions à partir de \ref ListBase
-		//! \see ListBase
-		virtual bool loadFile(wxFileName const& fileName);
-		//! \brief Implémentassions à partir de \ref ListBase
-		//! \see ListBase
-		virtual bool loadMemory(wxFileName const& fileName);
-		//! \brief Implémentassions à partir de \ref ListBase
-		//! \see ListBase
-		
-		//! \brief Implémentassions à partir de \ref ListBase
-		//! \see ListBase
-		virtual bool saveFile(wxFileName const& fileName)const;
-		//! \brief Implémentassions à partir de \ref ListBase
-		//! \see ListBase
-		virtual bool saveMemory(wxFileName const& fileName)const;
-		
-		std::vector<DataText> _texts;
+		Status_e readTextInFile(	wxFile& file,
+									wxString* text,
+									DataText* data)const;
+		Status_e writeTextInFile(	wxFile& file,
+									wxString const&text,
+									DataText const& data);
+
+		//! \brief Fichier du cache.
+		wxFileName _fileName;
 };
 
 #endif //CACHE_H

@@ -29,126 +29,149 @@ ListBase::~ListBase()
 
 Status_e ListBase::getLanguages(wxString* lgsrc, wxString* lgto)const
 {
-	*lgsrc = _lgsrc;
-	*lgto = _lgto;
+	if(!_fileName.HasName())
+		return FILE_NO_NAME;
+		
+	wxFile file;
+	if(!file.Open(_fileName.GetFullPath(), wxFile::read))
+		return FILE_OPEN_FAILED;
+	
+	Status_e valReturn = SUCCESS;
+	
+	//Lecture du langage source.
+	valReturn = readStringInFile(file, lgsrc);
+	
+	//Si ok. Lecture de l'autre langage.
+	if(valReturn == SUCCESS)
+		valReturn = readStringInFile(file, lgto);
+		
+	file.Close();
+	return valReturn;
 }
 
 Status_e ListBase::setLanguages(wxString const& lgsrc, wxString const& lgto)
 {
-	if(!isEmpty())
-		return false;
+	if(!_fileName.HasName())
+		return FILE_NO_NAME;
 		
-	_lgsrc = lgsrc;
-	_lgto = lgto;
+	Status_e valReturn = SUCCESS;
 	
-	return true;
+	//On vérifie si la liste est vide
+	valReturn = isEmpty();
+	if(valReturn != LIST_EMPTY)
+		return valReturn;
+		
+	
+	wxFile file;
+	//On crées un nouveau fichier avec les l'engages, en écrasant
+	//au préalable l'ancien.
+	if(!file.Create(_fileName.GetFullPath(), true))
+		valReturn = FILE_CREATE_FAILED;
+	else
+	{
+		//Écriture du langage source.
+		valReturn = writeStringInFile(file, lgsrc);
+		//Si ok. Écriture de l'autre langage.
+		if(valReturn == SUCCESS)
+			valReturn = writeStringInFile(file, lgto);
+	}
+		
+	file.Close();
+	return valReturn;
 }
 
 Status_e ListBase::isEmpty()const
 {
-	if(_fileName.HasName())
-		return isEmptyFile();
-	else
-		return isEmptyMemory();
-	
-	return false;
+	if(!_fileName.HasName())
+		return FILE_NO_NAME;
+		
+	if(!_fileName.FileExists())
+		return LIST_EMPTY;
+		
+	wxFile file;
+	if(!file.Open(_fileName.GetFullPath(), wxFile::read))
+		return FILE_OPEN_FAILED;
+		
+	//Positionne le curseur Après les langages.
+	Status_e valReturn = filePointerAfterHeader(file);
+	if(valReturn == SUCCESS)
+	{
+		if(file.Eof())
+			valReturn = LIST_EMPTY;
+		else
+			valReturn = LIST_NO_EMPTY;
+	}
+		
+	file.Close();
+	return valReturn;
 }
 
 Status_e ListBase::clear()
 {
+	if(!_fileName.HasName())
+		return FILE_NO_NAME;
+		
+	if(!wxRemoveFile(_fileName.GetFullPath()))
+		return FILE_NO_REMOVE;
+		
 	_fileName.Clear();
-	_lgsrc.Clear();
-	_lgto.Clear();
-	
-	if(_fileName.HasName())
-		clearFile();
-	else
-		clearMemory();
-}
-
-Status_e ListBase::removeText(wxString const& text)
-{
-	if(_fileName.HasName())
-		return removeTextFile(text);
-	else
-		return removeTextMemory(text);
-	
-	return false;
-}
-
-Status_e ListBase::existText(wxString const& text)const
-{
-	if(_fileName.HasName())
-		return existTextFile(text);
-	else
-		return existTextMemory(text);
-	
-	return false;
-}
-
-Status_e ListBase::load(wxFileName const& fileName)
-{		
-	if(_fileName.HasName())
-	{
-		if(fileName == _fileName)
-			return true;
-			
-		return loadFile(fileName);
-	}
-	else
-		return loadMemory(fileName);
-	
-	return false;
-}
-
-Status_e ListBase::save(wxFileName const& fileName)const
-{		
-	if(_fileName.HasName())
-	{
-		if(fileName == _fileName)
-			return true;
-			
-		return saveFile(fileName);
-	}
-	else
-		return saveMemory(fileName);
-	
-	return false;
-}
-
-wxFileName ListBase::getFileName()const
-{
-	return _fileName;
-}
-
-Status_e ListBase::setFileName(wxFileName const& fileName)
-{
-	_lgsrc.Clear();
-	_lgto.Clear();
-	_fileName = fileName;
-	
-	if(_fileName.HasName())
-	{
-		wxFile file;
 		
-		//Le fichier existe déjà ?
-		if(_fileName.FileExists())
-		{
-			//On charge les langes.
-			if(!file.Open(fileName.GetFullPath(), wxFile::write))
-			return false;
+	return SUCCESS;
+}
+
+Status_e ListBase::filePointerAfterHeader(wxFile& file)const
+{
+	uint8_t sizelg;
+	
+	//Lecture de la taille du premier langage.
+	if(file.Read(&sizelg, sizeof sizelg) != sizeof sizelg)
+		return FILE_READ_ERROR;
 		
-			//Écriture des langes.
-			file.Write(lgsrc+' '+lgto);
-			
-			//Écriture des textes.
-			for(auto it: texts)
-				file.Write("\n"+it);
-				
-			file.Close();
-		}
-		else
-		{
-		}
-	}
+	//Pointer sur la taille du deuxième langage.
+	if(file.Seek(sizelg, wxFromCurrent) ==  wxInvalidOffset)
+		return FILE_READ_ERROR;
+	
+	//Lecture de la taille du deuxième langage.
+	if(file.Read(&sizelg, sizeof sizelg) != sizeof sizelg)
+		return FILE_READ_ERROR;
+		
+	//Pointer sur la taille du premier texte ou la fin du fichier
+	file.Seek(sizelg, wxFromCurrent);
+	
+	return SUCCESS;
+}
+
+Status_e ListBase::readStringInFile(wxFile& file, wxString* str)const
+{
+	uint8_t sizeStr;
+	
+	//Lecture de la taille du texte.
+	if(file.Read(&sizeStr, sizeof sizeStr) != sizeof sizeStr)
+		return FILE_READ_ERROR;
+	
+	//Lecture du texte.
+	wxMemoryBuffer buffer;
+	if(file.Read(buffer.GetWriteBuf(sizeStr), sizeStr) != sizeStr)
+		return FILE_READ_ERROR;
+	buffer.UngetWriteBuf(sizeStr);
+		
+	str->Clear();
+	str->Append(wxString::FromUTF8Unchecked((const char *)buffer.GetData(), buffer.GetDataLen()));
+	
+	return SUCCESS;
+}
+
+Status_e ListBase::writeStringInFile(wxFile& file, wxString const& str)
+{
+	uint8_t sizeStr = str.Length();
+	
+	//Écriture de la taille du texte.
+	if(file.Write(&sizeStr, sizeof sizeStr) != sizeof sizeStr)
+		return FILE_WRITE_ERROR;
+	
+	//Écriture du texte.
+	if(!file.Write(str))
+		return FILE_WRITE_ERROR;
+	
+	return SUCCESS;
 }

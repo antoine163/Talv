@@ -26,12 +26,60 @@
 
 //TEST
 #include <iostream>
+#include "cache.hpp"
+#include "def.hpp"
 
 // *********************************************************************
 // Class App
 // *********************************************************************
 
 IMPLEMENT_APP(App);
+
+void printerr(Status_e err)
+{
+	switch(err)
+	{
+		case SUCCESS:
+		std::cout << "SUCCESS" << std::endl;
+		break;
+		case FILE_NO_NAME:
+		std::cout << "FILE_NO_NAME" << std::endl;
+		break;
+		case FILE_NO_REMOVE:
+		std::cout << "FILE_NO_REMOVE" << std::endl;
+		break;
+		case FILE_OPEN_FAILED:
+		std::cout << "FILE_OPEN_FAILED" << std::endl;
+		break;
+		case FILE_CREATE_FAILED:
+		std::cout << "FILE_CREATE_FAILED" << std::endl;
+		break;
+		case FILE_READ_ERROR:
+		std::cout << "FILE_READ_ERROR" << std::endl;
+		break;
+		case FILE_WRITE_ERROR:
+		std::cout << "FILE_WRITE_ERROR" << std::endl;
+		break;
+		case LIST_EMPTY:
+		std::cout << "LIST_EMPTY" << std::endl;
+		break;
+		case LIST_NO_EMPTY:
+		std::cout << "LIST_NO_EMPTY" << std::endl;
+		break;
+		case CACHE_EMPTY:
+		std::cout << "CACHE_EMPTY" << std::endl;
+		break;
+		case CACHE_NO_EMPTY:
+		std::cout << "CACHE_NO_EMPTY" << std::endl;
+		break;
+		case TEXT_EXIST:
+		std::cout << "TEXT_EXIST" << std::endl;
+		break;
+		case TEXT_NO_EXIST:
+		std::cout << "TEXT_NO_EXIST" << std::endl;
+		break;
+	}
+}
 
 bool App::OnInit()
 {  	
@@ -72,6 +120,15 @@ bool App::OnInit()
 		
 	//Bind pour attraper l'évènement pour quitter qui peut venir de n'importe où dans le code.
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnExit, this, wxID_EXIT);
+	
+	
+	///TEST
+	//Cache myCache;
+	//myCache
+	
+	
+	
+	///TEST
 	
 		
 	return true;

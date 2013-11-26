@@ -38,7 +38,9 @@ class ManagerCache : 	public ManagerMap<ShortcutKey, Cache>,
 		//! \brief Sauvegarde la configuration du manager.
 		void save(wxFileConfig& fileConfig)const;
 		
-	
+		Cache getCache(	wxString const& lgsrc,
+						wxString const& lgto);
+		
 		//! \brief Obtenir le nom de touts les caches.
 		//! \return le nom de tout les caches.
 		wxArrayString getNameCaches()const;
