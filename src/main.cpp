@@ -123,8 +123,10 @@ bool App::OnInit()
 	
 	
 	///TEST
-	//Cache myCache;
-	//myCache
+	Cache myCache;
+	myCache.setFileName(wxFileName("/home/antoine/testcache"));
+	
+	//printerr(myCache.setLanguages("en", "fr"));
 	
 	
 	

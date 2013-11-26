@@ -119,6 +119,16 @@ Status_e ListBase::clear()
 	return SUCCESS;
 }
 
+wxFileName ListBase::getFileName()const
+{
+	return _fileName;
+}
+
+void ListBase::setFileName(wxFileName const& fileName)
+{
+	_fileName = fileName;
+}
+
 Status_e ListBase::filePointerAfterHeader(wxFile& file)const
 {
 	uint8_t sizelg;

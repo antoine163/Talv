@@ -81,7 +81,7 @@ class ListBase
 		
 		//! \brief Modifier le non du fichier.
 		//!
-		//! Cette méthode de ne copie les données du fichier actuelle
+		//! Cette méthode ne copie les données du fichier actuelle
 		//! ver le nouveau.
 		void setFileName(wxFileName const& fileName);
 		
