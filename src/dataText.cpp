@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.1
+//! \version 0.3
 //! \date 19.11.2013
 //!
 //! ********************************************************************
@@ -46,18 +46,23 @@ void DataText::setMainTranslation(wxString const& translation)
 	_mainTranslation = translation;
 }
 
+std::map<wxString, wxArrayString> const& DataText::getTranslations()const
+{
+	return _translations;
+}
+
 wxArrayString DataText::getTranslations(wxString const& nature)const
 {
 	if(_translations.count(nature) == 0)
 		return wxArrayString();
 		
-	return _translations[nature];
+	return _translations.at(nature);
 }
 wxArrayString DataText::getNatures()const
 {
 	wxArrayString tmpArrayString;
 	
-	for (auto& it: _translations)
+	for(auto& it: _translations)
 		tmpArrayString.Add(it.first);
   
   return tmpArrayString;
@@ -65,7 +70,7 @@ wxArrayString DataText::getNatures()const
 
 void DataText::addTranslation(wxString const& nature, wxString const& translation)
 {
-	_translations[nature] = translation;
+	_translations[nature].Add(translation);
 }
 
 Knowledge_e DataText::getKnowledge()const
@@ -96,7 +101,7 @@ void DataText::incrementNbTranslation()
 void DataText::clear()
 {
 	_mainTranslation.Clear();
-	_translations.Clear();
+	_translations.clear();
 	_knowledge = KNOWLEDGE_UNKNOWN;
 	_nbTranslation = 0;
 }

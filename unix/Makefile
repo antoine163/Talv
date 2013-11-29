@@ -57,6 +57,7 @@ SRC+=../src/action.cpp
 SRC+=../src/listBase.cpp
 SRC+=../src/list.cpp
 SRC+=../src/cache.cpp
+SRC+=../src/dataText.cpp
 SRC+=../src/resource.cpp
 #wxJSON
 SRC+=../src/wxJSON/jsonval.cpp

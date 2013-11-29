@@ -31,11 +31,8 @@ enum Status_e
 	FILE_WRITE_ERROR,	//!< Erreur l'or d'une lecture dans le fichier.
 	
 	
-	LIST_EMPTY,			//!< La liste ne contient aucun textes.
-	LIST_NO_EMPTY,		//!< La liste contient des textes.
-	
-	CACHE_EMPTY,		//!< La cache ne contient aucun textes.
-	CACHE_NO_EMPTY,		//!< La cache contient des textes.
+	EMPTY,				//!< Le conteneur est vide.
+	NO_EMPTY,			//!< Le conteneur n'est pas vide.
 	
 	TEXT_EXIST,			//!< Le texte existe.
 	TEXT_NO_EXIST		//!< Le texte n'existe pas.

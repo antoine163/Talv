@@ -65,6 +65,12 @@ enum KeyModifier_e
 	#endif
 };
 
+inline KeyModifier_e operator|(KeyModifier_e val1, KeyModifier_e val2)
+{
+	unsigned int val = (unsigned int)val1|(unsigned int)val2;
+	return static_cast<KeyModifier_e>(val);
+}
+
 // *********************************************************************
 // Class ShortcutKey
 // *********************************************************************
@@ -249,7 +255,7 @@ class ShortcutThread : protected wxThread
 //! 	Bind(EVT_SHORTCUT, &App::OnShortcut, this, id);
 //! 	
 //! 	//Création d'un raccourci, touche super+ctrl+a 
-//! 	id = _shortcut->creat((KeyModifier_e)(KeyModifier_e::SUPER|KeyModifier_e::CONTROL), 'a');
+//! 	id = _shortcut->creat(KeyModifier_e::SUPER|KeyModifier_e::CONTROL, 'a');
 //! 	//lie l'événement à la méthode de callBack.
 //! 	Bind(EVT_SHORTCUT, &App::OnShortcut, this, id);
 //! 

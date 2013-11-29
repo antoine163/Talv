@@ -32,7 +32,7 @@ Status_e List::addText(wxString const& text)
 {
 	Status_e valReturn = existText(text);
 	
-	if(valReturn == TEXT_EXIST)
+	if(valReturn != TEXT_NO_EXIST)
 		return valReturn;
 	
 	wxArrayString texts;

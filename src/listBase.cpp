@@ -58,12 +58,12 @@ Status_e ListBase::setLanguages(wxString const& lgsrc, wxString const& lgto)
 	
 	//On vérifie si la liste est vide
 	valReturn = isEmpty();
-	if(valReturn != LIST_EMPTY)
+	if(valReturn != EMPTY)
 		return valReturn;
 		
 	
 	wxFile file;
-	//On crées un nouveau fichier avec les l'engages, en écrasant
+	//On crées un nouveau fichier, en écrasant
 	//au préalable l'ancien.
 	if(!file.Create(_fileName.GetFullPath(), true))
 		valReturn = FILE_CREATE_FAILED;
@@ -86,7 +86,7 @@ Status_e ListBase::isEmpty()const
 		return FILE_NO_NAME;
 		
 	if(!_fileName.FileExists())
-		return LIST_EMPTY;
+		return EMPTY;
 		
 	wxFile file;
 	if(!file.Open(_fileName.GetFullPath(), wxFile::read))
@@ -97,9 +97,9 @@ Status_e ListBase::isEmpty()const
 	if(valReturn == SUCCESS)
 	{
 		if(file.Eof())
-			valReturn = LIST_EMPTY;
+			valReturn = EMPTY;
 		else
-			valReturn = LIST_NO_EMPTY;
+			valReturn = NO_EMPTY;
 	}
 		
 	file.Close();
@@ -173,7 +173,7 @@ Status_e ListBase::readStringInFile(wxFile& file, wxString* str)const
 
 Status_e ListBase::writeStringInFile(wxFile& file, wxString const& str)
 {
-	uint8_t sizeStr = str.Length();
+	uint8_t sizeStr = strlen(str.fn_str());
 	
 	//Écriture de la taille du texte.
 	if(file.Write(&sizeStr, sizeof sizeStr) != sizeof sizeStr)

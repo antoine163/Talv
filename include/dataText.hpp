@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.1
+//! \version 0.3
 //! \date 19.11.2013
 //!
 //! ********************************************************************
@@ -17,8 +17,14 @@
 #define DATA_TEXT_H
 
 #include <map>
+
 #include <wx/string.h>
 #include <wx/arrstr.h>
+#include <wx/file.h>
+
+#include "def.hpp"
+
+class Cache;
 
 // *********************************************************************
 // Enum Knowledge_e
@@ -33,6 +39,12 @@ enum Knowledge_e
 	KNOWLEDGE_VERY_KNOWN	= 0x08
 };
 
+inline Knowledge_e operator|(Knowledge_e val1, Knowledge_e val2)
+{
+	unsigned int val = (unsigned int)val1|(unsigned int)val2;
+	return static_cast<Knowledge_e>(val);
+}
+
 // *********************************************************************
 // Class DataText
 // *********************************************************************
@@ -40,6 +52,8 @@ enum Knowledge_e
 //! \brief classe représentent les données d'un texte traduit.
 class DataText
 {
+	friend class Cache;
+	
 	public:		
 		//! \brief Constructeur.
 		DataText();
@@ -55,6 +69,10 @@ class DataText
 		//! \brief Pour modifier la traduction principale.
 		void setMainTranslation(wxString const& translation);
 		
+		//! \brief Pour récupérer touts les traductions.
+		//! \return le wxString correspond aux natures et le wxArrayString
+		//! aux traductions.
+		std::map<wxString, wxArrayString> const& getTranslations()const;
 		//! \brief Pour récupérer les traductions en fonction de la nature
 		//! traduction.
 		wxArrayString getTranslations(wxString const& nature)const;
@@ -79,7 +97,7 @@ class DataText
 		//! \brief Remise à zéro de tous les paramètres.
 		void clear();
 		
-	private:	
+	private:
 		wxString _mainTranslation;
 		std::map<wxString, wxArrayString> _translations;
 		

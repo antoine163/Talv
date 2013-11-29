@@ -16,7 +16,6 @@
 #ifndef LIST_H
 #define LIST_H
 
-#include "def.hpp"
 #include "listBase.hpp"
 
 #include <wx/filename.h>
@@ -25,7 +24,7 @@
 // *********************************************************************
 // Class List
 // *********************************************************************
-//! \brief Manipulation de liste de textes.
+//! \brief Manipulation de liste de texte.
 //!
 //! Cette classe permet de manipuler un fichier contenant une liste de textes.
 //!
@@ -41,7 +40,7 @@ class List : public ListBase
 		//! \brief Destructeur.
 		virtual ~List();
 		
-		//! \brief Ajout un textes à la liste si il n'est pas déjà existent.
+		//! \brief Ajout un texte à la liste si il n'est pas déjà existent.
 		//! \param text le texte à ajouter.
 		//! \return \ref SUCCESS, \ref TEXT_EXIST, \ref FILE_OPEN_FAILED,
 		//! \ref FILE_READ_ERROR, \ref FILE_WRITE_ERROR, \ref FILE_NO_NAME
@@ -89,7 +88,7 @@ class List : public ListBase
 		//! \param texts les text à ajouter.
 		//! \return \ref SUCCESS, \ref FILE_OPEN_FAILED,
 		//! \ref FILE_WRITE_ERROR, \ref FILE_NO_NAME
-		Status_e addTexts(wxArrayString const& texts);
+		virtual Status_e addTexts(wxArrayString const& texts);
 };
 
 #endif //LIST_H

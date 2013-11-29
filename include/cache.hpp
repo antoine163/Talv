@@ -17,7 +17,6 @@
 #define CACHE_H
 
 
-#include "def.hpp"
 #include "dataText.hpp"
 #include "listBase.hpp"
 
@@ -30,7 +29,13 @@
 // Class Cache
 // *********************************************************************
 
-//! \brief 
+//! \brief Manipulation de donnée de texte.
+//!
+//! Cette classe permet de manipuler un fichier contenant des données de textes.
+//!
+//! Pour crée un cache vous devais commencer par renseigner le non du fichier
+//! avec \ref setFileName(). Ensuit vous dévirez appeler \ref setLanguages() dans 
+//! quele cas le fichier ne sera pas crée sur le disque.
 class Cache : public ListBase
 {
 	public:		
@@ -40,22 +45,182 @@ class Cache : public ListBase
 		//! \brief Destructeur.
 		virtual ~Cache();
 		
-		//Status_e existText(wxString const& text)const;
-		//Status_e addText(wxString const& text, DataText const& dataText);
-		//Status_e updateText(wxString const& text, DataText const& dataText);
+		//! \brief Savoir si un texte est déjà existent dans le fichier.
+		//! \param text Le texte rechercher.
+		//! \return \ref TEXT_EXIST, \ref TEXT_NO_EXIST, 
+		//! \ref FILE_OPEN_FAILED, \ref FILE_READ_ERROR, \ref FILE_NO_NAME
+		//!
+		//! - Si \ref FILE_NO_NAME vous devriez appeler \ref setFileName()
+		Status_e existText(wxString const& text)const;
 		
-		//Status_e replaceTexts(std::map<wxString, DataText> const& texts);
+		//! \brief Ajout un texte et c'est données à la liste si il
+		//! n'est pas déjà existent.
+		//! \param text le texte à ajouter.
+		//! \param dataText les données du texte à ajouter.
+		//! \return \ref SUCCESS, \ref TEXT_EXIST, \ref FILE_OPEN_FAILED,
+		//! \ref FILE_READ_ERROR, \ref FILE_WRITE_ERROR, \ref FILE_NO_NAME
+		//!
+		//! - Si \ref FILE_NO_NAME vous devriez appeler \ref setFileName()
+		Status_e addText(wxString const& text, DataText const& dataText);
 		
-		//Status_e getTexts(wxArrayString* texts);//+ les filtres
-		//Status_e getDataTexts(std::map<wxString, DataText>* texts);//+ les filtres
+		//! \brief Mise a jour des données d'un texte.
+		//! \param text le texte à mètre à jour.
+		//! \param dataText les nouvelle données du texte.
+		//! \return \ref SUCCESS, \ref TEXT_NO_EXIST, \ref FILE_OPEN_FAILED,
+		//! \ref FILE_READ_ERROR, \ref FILE_WRITE_ERROR, \ref FILE_NO_NAME
+		//!
+		//! - Si \ref FILE_NO_NAME vous devriez appeler \ref setFileName()
+		Status_e updateText(wxString const& text, DataText const& dataText);
 		
+		//! \brief Remplace touts les textes et leur données pas de nouveaux.
+		//! \param texts les textes et données à ajouter.
+		//! \return \ref SUCCESS, \ref FILE_OPEN_FAILED,
+		//! \ref FILE_WRITE_ERROR, \ref FILE_READ_ERROR, \ref FILE_NO_NAME
+		//!
+		//! - Si \ref FILE_NO_NAME vous devriez appeler \ref setFileName()
+		Status_e replaceTexts(std::map<wxString, DataText> const& texts);
+		
+		//! \brief Obtenir tout les textes (sent les données) contenue
+		//! dans le fichier.
+		//! \param texts là où seront stoker les texte.
+		//! Ce paramètre ne doit pas être nullptr.
+		//! \param KnowledgeFilter filtre pour récupérer que les textes
+		//! avec une certaine connaissance. Vous pouvez utiliser le \b |.
+		//! Par exemple, si vous voulez récupère que les textes inconnue et
+		//! connue, vous pouvez écrire : \p KNOWLEDGE_UNKNOWN \b |
+		//! \p KNOWLEDGE_KNOWN
+		//! \param nbTranslationFilter filtre pour récupérer que les textes
+		//! \b >= à un nombre de traduction. Par exemple si vous voulez
+		//! récupérer que les textes avec un nombre de traductions 
+		//! supérieur ou égale a 7. Il vous faudra passer 7 comme argument.
+		//! \return \ref SUCCESS, \ref FILE_OPEN_FAILED, 
+		//! \ref FILE_READ_ERROR, \ref FILE_NO_NAME
+		//!
+		//! - Si \ref FILE_NO_NAME vous devriez appeler \ref setFileName()
+		Status_e getTexts(	wxArrayString* texts,
+							Knowledge_e KnowledgeFilter = KNOWLEDGE_ALL,
+							unsigned int nbTranslationFilter = 0)const;
+							
+		//! \brief Obtenir tout les textes contenue dans le fichier.
+		//! \param texts là où seront stoker les texte et les données.
+		//! Ce paramètre ne doit pas être nullptr.
+		//! \param KnowledgeFilter filtre pour récupérer que les textes
+		//! avec une certaine connaissance. Vous pouvez utiliser le \b |.
+		//! Par exemple, si vous voulez récupère que les textes inconnue et
+		//! connue, vous pouvez écrire : \p KNOWLEDGE_UNKNOWN \b |
+		//! \p KNOWLEDGE_KNOWN
+		//! \param nbTranslationFilter filtre pour récupérer que les textes
+		//! \b >= à un nombre de traduction. Par exemple si vous voulez
+		//! récupérer que les textes avec un nombre de traductions 
+		//! supérieur ou égale a 7. Il vous faudra passer 7 comme argument.
+		//! \return \ref SUCCESS, \ref FILE_OPEN_FAILED, 
+		//! \ref FILE_READ_ERROR, \ref FILE_NO_NAME
+		//!
+		//! - Si \ref FILE_NO_NAME vous devriez appeler \ref setFileName()
+		Status_e getTextsAndData(	std::map<wxString, DataText>* texts,
+									Knowledge_e KnowledgeFilter = KNOWLEDGE_ALL,
+									unsigned int nbTranslationFilter = 0)const;								
+	protected:
+		//! \brief Ajoute des textes et leur données à la liste.
+		//! Ne vérifie pas si les textes son déjà existent.
+		//! \param texts les text et leur données à ajouter.
+		//! \return \ref SUCCESS, \ref FILE_OPEN_FAILED,
+		//! \ref FILE_WRITE_ERROR, \ref FILE_NO_NAME
+		virtual Status_e addTexts(std::map<wxString, DataText> const& texts);
+		
+		//! \brief Cherche l'offset d'un texte et de c'est données dans
+		//! un fichier.
+		//!
+		//! Le fichier devra déjà être ouvert en lecture. 
+		//! \param file Le fichier où cherche les offsets.
+		//! \param text le texte a rechercher.
+		//! \param offsetText Là où sera stoker l'offset où se trouve le 
+		//! texte. Vous pouvez passer nullptr si l'informations ne vous
+		//!intéresse pas.
+		//! \param offsetDataText Là où sera stoker l'offset où se trouve le 
+		//! les données du texte. Vous pouvez passer nullptr si
+		//! l'informations ne vous intéresse pas.
+		//! \return \ref TEXT_EXIST, \ref TEXT_NO_EXIST, \ref FILE_READ_ERROR
+		//!
+		//! \note La valeur des offsets peuvent avoir été modifier même si le texte
+		//! na pas été trouver.
+		//! 
+		//! Après l'appelle de cette méthode, le curseur du fichier
+		//! pointera sur là position juste après les données (l'octet
+		//! juste après la fin des données. Si il y a un texte après
+		//! les données alors le curseur pointera dessus. Sa peut être
+		//! aussi la fin du fichier).
+		virtual Status_e findOffsetTextAndDataTextInFile(	wxFile& file,
+															wxString const& text,
+															wxFileOffset* offsetText,
+															wxFileOffset* offsetDataText)const;
+		
+		//! \brief Lis les données d'un texte a partir du curseur
+		//! actuelle du fichier.
+		//!
+		//! Le fichier devra déjà être ouvert en lecture. 
+		//! \param file Le fichier où lire les données du texte.
+		//! \param data là ou sera stoker le résulta de la lecture.
+		//! Doit être un pointeur valide.
+		//! \return \ref SUCCESS, \ref FILE_READ_ERROR
+		//!
+		//! Après l'appelle de cette méthode, le curseur du fichier
+		//! pointera sur là position juste après les données (l'octet
+		//! juste après la fin des données sa peut être aussi la fin
+		//! du fichier).
+		virtual Status_e readDataTextInFile(wxFile& file,
+											DataText* data)const;
+											
+		//! \brief Lis les une parti des données d'un texte a partir du
+		//! curseur actuelle du fichier.
+		//!
+		//! Le fichier devra déjà être ouvert en lecture. 
+		//! \param file Le fichier où lire les données du texte.
+		//! \param dataKnowledge là ou sera stoker la connaissance.
+		//! Doit être un pointeur valide.
+		//! \param nbTranslation là ou sera stoker le nombre de traductions.
+		//! Doit être un pointeur valide.
+		//! \return \ref SUCCESS, \ref FILE_READ_ERROR
+		//!
+		//! Après l'appelle de cette méthode, le curseur du fichier
+		//! pointera sur là position juste après les données (l'octet
+		//! juste après la fin des données sa peut être aussi la fin
+		//! du fichier).
+		virtual Status_e readDataTextInFile(wxFile& file, 
+											Knowledge_e* dataKnowledge,
+											unsigned int* nbTranslation)const;
+		
+		//! \brief Écrire les données d'un texte a partir du curseur
+		//! actuelle du fichier.
+		//!
+		//! Le fichier devra déjà être ouvert en écriture. 
+		//! \param file Le fichier où écrire les données.
+		//! \param data les données à écrie.
+		//! \return \ref SUCCESS, \ref FILE_WRITE_ERROR
+		//!
+		//! Après l'appelle de cette méthode, le curseur du fichier
+		//! pointera sur là position juste après les données (l'octet
+		//! juste après les données sa peut être aussi la fin du fichier).
+		virtual Status_e writeDataTextInFile(	wxFile& file, 
+												DataText const& data);
+												
+		//! \brief Écrire une partir des données d'un texte a partir
+		//! du curseur actuelle du fichier.
+		//!
+		//! Le fichier devra déjà être ouvert en écriture et lecture. 
+		//! \param file Le fichier où écrire le texte.
+		//! \param dataKnowledge la connaissance a écrier.
+		//! \param dataNbTranslation le nombre d traduction a écrier.
+		//! \return \ref SUCCESS, \ref FILE_READ_ERROR,
+		//! \ref FILE_WRITE_ERROR
+		//!
+		//! Après l'appelle de cette méthode, le curseur du fichier
+		//! pointera sur là position juste après les données (l'octet
+		//! juste après les données sa peut être aussi la fin du fichier).
+		virtual Status_e writeDataTextInFile(	wxFile& file,
+												Knowledge_e dataKnowledge,
+												unsigned int dataNbTranslation);
 	private:
-		//Status_e readTextInFile(	wxFile& file,
-									//wxString* text,
-									//DataText* data)const;
-		//Status_e writeTextInFile(	wxFile& file,
-									//wxString const&text,
-									//DataText const& data);
 };
 
 #endif //CACHE_H
