@@ -1,277 +1,161 @@
-//! \file **************************************************************
+//! \file **********************************************************************
 //! \brief Source Poins d'entrée de l'application.
 //! 
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.15
+//! \version 1.16
 //! \date 12.12.12
 //!
-//! ********************************************************************
+//! ****************************************************************************
 
-/*
-*	Copyright © 2012-2013 - Antoine Maleyrie.
-*/
-
+//App
 #include "main.hpp"
-#include "resource.hpp"
-#include "notification.hpp"
-#include "managerAction.hpp"
-//#include "managerList.hpp"
-#include "dialogPreferences.hpp"
+#include "defs.hpp"
 
-#include <wx/fileconf.h>
+//WxWidgets
+#include <wx/image.h> 
 #include <wx/stdpaths.h>
-#include <unistd.h>
+#include <wx/aboutdlg.h>
 
-//TEST
+//Test
 #include <iostream>
-#include "cache.hpp"
 
-// *********************************************************************
+// *****************************************************************************
 // Class App
-// *********************************************************************
+// *****************************************************************************
 
-IMPLEMENT_APP(App);
-
-void printerr(Status_e err)
-{
-	switch(err)
-	{
-		case SUCCESS:
-		std::cout << "SUCCESS" << std::endl;
-		break;
-		case FILE_NO_NAME:
-		std::cout << "FILE_NO_NAME" << std::endl;
-		break;
-		case FILE_NO_REMOVE:
-		std::cout << "FILE_NO_REMOVE" << std::endl;
-		break;
-		case FILE_OPEN_FAILED:
-		std::cout << "FILE_OPEN_FAILED" << std::endl;
-		break;
-		case FILE_CREATE_FAILED:
-		std::cout << "FILE_CREATE_FAILED" << std::endl;
-		break;
-		case FILE_READ_ERROR:
-		std::cout << "FILE_READ_ERROR" << std::endl;
-		break;
-		case FILE_WRITE_ERROR:
-		std::cout << "FILE_WRITE_ERROR" << std::endl;
-		break;
-		case EMPTY:
-		std::cout << "EMPTY" << std::endl;
-		break;
-		case NO_EMPTY:
-		std::cout << "NO_EMPTY" << std::endl;
-		break;
-		case TEXT_EXIST:
-		std::cout << "TEXT_EXIST" << std::endl;
-		break;
-		case TEXT_NO_EXIST:
-		std::cout << "TEXT_NO_EXIST" << std::endl;
-		break;
-	}
-}
-
-void printtextanddatatext(wxString const& text, DataText const& dataText)
-{
-	std::cout << text << " : " << dataText.getMainTranslation() << std::endl;
-	std::cout << "Knowledge = " ;
-	switch(dataText.getKnowledge())
-	{
-		case KNOWLEDGE_UNKNOWN:
-		std::cout << "KNOWLEDGE_UNKNOWN" << std::endl;
-		break;
-		case KNOWLEDGE_LITTLE_KNOWN:
-		std::cout << "KNOWLEDGE_LITTLE_KNOWN" << std::endl;
-		break;
-		case KNOWLEDGE_KNOWN:
-		std::cout << "KNOWLEDGE_KNOWN" << std::endl;
-		break;
-		case KNOWLEDGE_VERY_KNOWN:
-		std::cout << "KNOWLEDGE_VERY_KNOWN" << std::endl;
-		break;
-	}
-	std::cout << "NbTranslation = " << dataText.getNbTranslation() << std::endl;
-	for(auto& itn: dataText.getNatures())
-	{
-		std::cout << "+ " << itn << std::endl;
-		
-		for(auto& it: dataText.getTranslations(itn))
-			std::cout << "| " << it << std::endl;
-	}
-}
+wxIMPLEMENT_APP(App);
 
 bool App::OnInit()
 {  	
 	//Init général
 	wxInitAllImageHandlers();
 	SetExitOnFrameDelete(false);
-	_taskIcon = nullptr;
 	
 	//Changement du Préfixe seulement sous unix
 	#if defined(__UNIX__)
 	wxStandardPaths::Get().SetInstallPrefix("/usr");
 	#endif
-	
-	//On charge le langage par défaut de l'os.
-	_locale = new wxLocale(wxLANGUAGE_DEFAULT);
-	_locale->AddCatalog(PROJECT_NAME);
-	
-	//Chargement de la config
-	wxFileConfig fileConfig(	PROJECT_NAME,
-								wxEmptyString,
-								wxStandardPaths::Get().GetUserDataDir()+'/'+PROJECT_NAME);
-	
-	//Chargement des ressource se trouvent dans le fichier de config.
-	Resource::getInstance()->load(fileConfig);
-	
-	//Chargement de la configuration des notifications.
-	Notification::getInstance()->load(fileConfig);
-	
-	//Crée de l'instance de ActionManager et Installation des raccourcis/actions
-	ManagerAction::getInstance()->load(fileConfig);
-
-	//Chargement des listes se trouvent dans le fichier de config.
-	//ManagerList::getInstance()->load(fileConfig);
-
-	//Création du menu ou pas.
-	if(Resource::getInstance()->getShowMenu())
-		_taskIcon = new TaskIcon();
 		
-	//Bind pour attraper l'évènement pour quitter qui peut venir de n'importe où dans le code.
-	Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnExit, this, wxID_EXIT);
+	//Bind.
+	Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnQuit, this, ID_QUIT);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnAbout, this, ID_ABOUT);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnPreferences, this, ID_PREFERENCES);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnEnableShortcuts, this, ID_ENABLE_SHORTKUT);
 	
 	
-	///TEST
-	Cache myCache;
-	myCache.setFileName(wxFileName("/home/antoine/testcache"));
+	//! \todo migrais vair le manager générale
+	_taskIcon = new TaskIcon();
 	
-	wxString lgsrc = "en";
-	wxString lgto = "fr";
-	printerr(myCache.setLanguages(lgsrc, lgto));
-	std::cout << lgsrc << " : " << lgto << std::endl;
-	
-	std::map<wxString, DataText> texts;
-	
-	
-	///Lecture du cache ------------------------------------------
-	//wxArrayString texts;
-	//printerr(myCache.getTexts(&texts, KNOWLEDGE_ALL, 7));
-	
-	//for(auto& it: texts)
-		//std::cout << it << std::endl;
-		
-	///text existe ? ------------------------------------------
-	//printerr(myCache.existText("disturb"));
-
-	
-	///Écriture du cache ------------------------------------------
-	
-	texts.clear();
-	wxString text = "until";
-	DataText myDataText;
-	myDataText.clear();
-	myDataText.setKnowledge(KNOWLEDGE_LITTLE_KNOWN);
-	myDataText.setNbTranslation(3);
-	myDataText.setMainTranslation("jusqu'à ce que");
-	myDataText.addTranslation("conjonction", "jusqu'à ce que");
-	myDataText.addTranslation("conjonction", "tant que");
-	myDataText.addTranslation("conjonction", "avant que");
-	myDataText.addTranslation("conjonction", "en attendant que");
-	
-	myDataText.addTranslation("préposition", "jusqu'à");
-	myDataText.addTranslation("préposition", "avant");
-	
-	texts[text] = myDataText;
-	 
-	text = "disturb";
-	myDataText.clear();
-	myDataText.setKnowledge(KNOWLEDGE_KNOWN);
-	myDataText.setNbTranslation(10);
-	myDataText.setMainTranslation("déranger");
-	myDataText.addTranslation("pronom", "déranger");
-	myDataText.addTranslation("pronom", "troubler");
-	myDataText.addTranslation("pronom", "inquiéter");
-	myDataText.addTranslation("pronom", "remuer");
-	myDataText.addTranslation("pronom", "importuner");
-	myDataText.addTranslation("pronom", "dérégler");
-	myDataText.addTranslation("pronom", "émouvoir");
-	myDataText.addTranslation("pronom", "disperser");
-	
-	texts[text] = myDataText;
-	
-	printerr(myCache.replaceTexts(texts));
-	
-	///Lecture du cache ------------------------------------------
-	texts.clear();
-	printerr(myCache.getTextsAndData(&texts));
-	
-	for(auto& it: texts)
-		printtextanddatatext(it.first, it.second);
-	
-	std::cout << "----------------------------------------" << std::endl;
-	
-	///update texte ------------------------------------------
-	text = "disturb";
-	myDataText.clear();
-	myDataText.setKnowledge(KNOWLEDGE_KNOWN);
-	myDataText.setNbTranslation(10);
-	myDataText.setMainTranslation("déranger");
-	myDataText.addTranslation("pronom", "déranger@");
-	myDataText.addTranslation("pronom", "troubler");
-	myDataText.addTranslation("pronom", "inquiéter");
-	myDataText.addTranslation("pronom", "remuer");
-	myDataText.addTranslation("pronom", "importuner");
-	myDataText.addTranslation("pronom", "dérégler");
-	myDataText.addTranslation("pronom", "émouvoir");
-	myDataText.addTranslation("pronom", "disperser");
-	
-	printerr(myCache.updateText(text, myDataText));
-	
-		
-	///Lecture du cache ------------------------------------------
-	texts.clear();
-	printerr(myCache.getTextsAndData(&texts));
-	
-	for(auto& it: texts)
-		printtextanddatatext(it.first, it.second);
-	
-	std::cout << "----end-----" << std::endl;
-	///TEST
-	
-		
 	return true;
 }
 
 int App::OnExit()
 {	
-	//Unbind l'évènement pour quitter.
-	Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::OnExit, this, wxID_EXIT);
+	//Unbind.
+	Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::OnQuit, this, ID_QUIT);
+	Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::OnAbout, this, ID_ABOUT);
+	Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::OnPreferences, this, ID_PREFERENCES);
+	Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::OnEnableShortcuts, this, ID_ENABLE_SHORTKUT);
 	
-	//Suppression du menu.
-	delete _taskIcon;
 	
-	//Suppression du mangeur d'action.
-	ManagerAction::kill();
-	
-	//Suppression des ressources.
-	Resource::kill();
-	
-	//Suppression des notifications.
-	Notification::kill();
-	
-	//Suppression des liste.
-	//ManagerList::kill();
-	
-	//Suppression du module de la traduction de l'application.
+	// suppression des locale
 	delete _locale;
+	
+	//! \todo migrais vair le manager générale
+	delete _taskIcon;
 	
 	return 0;
 }
 
-void App::OnExit(wxCommandEvent&)
+void App::OnQuit(wxCommandEvent&)
 {		
 	ExitMainLoop();
+}
+
+void App::OnAbout(wxCommandEvent&)
+{	
+	wxAboutDialogInfo info;
+
+	info.SetName(PROJECT_NAME);
+	info.SetVersion(PROJECT_VERSION);
+	
+	wxIcon tmpIcon;
+	tmpIcon.LoadFile("../icons/32x32/" PROJECT_NAME ".png", wxBITMAP_TYPE_PNG);
+	info.SetIcon(tmpIcon);
+	
+	wxString msg;
+	msg << wxString::FromUTF8Unchecked("Traduction A La Volées.");
+	msg << _("\n Translation on the fly in English.") << "\n\n";
+	msg << _("Build on") << " ";
+	#if defined(__UNIX__)
+	msg << "Unix";
+	#elif defined(__WXMSW__)
+	msg << "Windows";
+	#endif
+	#ifdef __i386
+	msg << " " << _("in") << " " << " i386\n";
+	#elif __amd64
+	msg << " " << _("in") << " " << " x86_64\n";
+	#endif
+	msg << _("Date") <<  " : " << __DATE__;
+	
+	info.SetDescription(msg);
+	
+	info.SetCopyright("(C) 2012-1013");
+	info.SetWebSite("http://antoine163.github.com/talv/");
+	
+	info.AddDeveloper("Maleyrie Antoine <antoine.maleyrie@gmail.com>");
+	info.AddDocWriter("Maleyrie Antoine <antoine.maleyrie@gmail.com>");
+	
+	//info.AddTranslator("Maleyrie Antoine <antoine.maleyrie@gmail.com>");
+	
+	info.SetLicence(
+	"The MIT License (MIT)\n\n"\
+	
+	"Copyright (c) 2012-2013 - Antoine Maleyrie.\n\n"\
+
+	"Permission is hereby granted, free of charge, to any person obtaining a copy\n"\
+	"of this software and associated documentation files (the \"Software\"), to deal\n" \
+	"in the Software without restriction, including without limitation the rights\n" \
+	"to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n" \
+	"copies of the Software, and to permit persons to whom the Software is\n"\
+	"furnished to do so, subject to the following conditions:\n\n"\
+
+	"The above copyright notice and this permission notice shall be included in all\n"\
+	"copies or substantial portions of the Software.\n\n"\
+
+	"THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n"\
+	"IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n"\
+	"FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n"\
+	"AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n"\
+	"LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n"\
+	"OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n"\
+	"SOFTWARE.");
+	
+	wxAboutBox(info);
+}
+
+void App::OnPreferences(wxCommandEvent&)
+{
+	std::cout << "OnPreferences" << std::endl;
+	////Création du dialog.
+	//DialogPreferences dlg;
+	
+	////Affichage du dialog.
+	//if(dlg.ShowModal() == wxID_OK)
+	//{		
+		////Vérification si on doit afficher ou pasl'icône dans la zone de
+		////notification.
+		//if(!Resource::getInstance()->getShowMenu())
+			//Destroy();
+	//}
+}
+
+void App::OnEnableShortcuts(wxCommandEvent& event)
+{
+	std::cout << "OnEnableShortcuts : " << event.IsChecked() << std::endl;
+	//_enableShortcuts = event.IsChecked();
+	//ManagerAction::getInstance()->enableShortcuts(_enableShortcuts);
 }

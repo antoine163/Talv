@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.5
+//! \version 0.6
 //! \date 30.03.2013
 //!
 //! ********************************************************************
@@ -27,7 +27,7 @@ class Singleton
 	public:
 		//! \brief Obtenir l'instance de la classe.
 		//! Elle sera crée si elle n'existe pas.
-		static T* getInstance()
+		static T* get()
 		{
 			if(_singleton == nullptr)
 				_singleton = new T;
