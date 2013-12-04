@@ -26,13 +26,11 @@
 TaskIcon::TaskIcon(wxTaskBarIconType iconType)
 : wxTaskBarIcon(iconType)
 {
+	//! \todo maitre le bon chemin vais l'iconne
 	//Task Icon
 	wxIcon tmpIcon;
 	tmpIcon.LoadFile("../icons/16x16/" PROJECT_NAME ".png", wxBITMAP_TYPE_PNG);
 	SetIcon(tmpIcon, PROJECT_NAME);
-	
-	////Init id
-	//_idEnableShortcuts = wxNewId();
 }
 
 TaskIcon::~TaskIcon()

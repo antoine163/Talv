@@ -13,13 +13,30 @@
 #include "main.hpp"
 #include "defs.hpp"
 
+//Stl
+#include <csignal>
+
 //WxWidgets
 #include <wx/image.h> 
 #include <wx/stdpaths.h>
 #include <wx/aboutdlg.h>
+#include <wx/event.h>
+#include <wx/file.h>
+#include <wx/filefn.h>
 
 //Test
 #include <iostream>
+#include <string>
+
+//Récupération du signale USER1.
+static wxEvtHandler* evtHandlerMain = nullptr;
+void signal_user1(int)
+{
+	//Envoi d'un évènement pour afficher les preferences.
+	wxCommandEvent *event =
+		new wxCommandEvent(wxEVT_COMMAND_MENU_SELECTED, ID_PREFERENCES);
+	wxQueueEvent(evtHandlerMain, event);
+}
 
 // *****************************************************************************
 // Class App
@@ -29,14 +46,47 @@ wxIMPLEMENT_APP(App);
 
 bool App::OnInit()
 {  	
-	//Init général
-	wxInitAllImageHandlers();
-	SetExitOnFrameDelete(false);
+	wxStandardPaths& standardPaths = wxStandardPaths::Get();
 	
 	//Changement du Préfixe seulement sous unix
 	#if defined(__UNIX__)
-	wxStandardPaths::Get().SetInstallPrefix("/usr");
+	standardPaths.SetInstallPrefix("/usr");
 	#endif
+	
+	//Chemin vair le fichier d'instance du programme.
+	wxString fileSingleInstance = wxStandardPaths::Get().GetTempDir()+'/'+PROJECT_NAME+'-'+wxGetUserId();
+	//Si le fichier existe ceci veux dire qu'il y a une autre instances de ce 
+	//programme en cour d'exécution.
+	if(wxFileExists(fileSingleInstance))
+	{	
+		//On lis le pid de l'autre instances.
+		int pid;
+		wxFile file(fileSingleInstance);
+		file.Read(&pid, sizeof pid);
+		file.Close();
+		
+		//Et on luis envois le signale USER1.
+		wxKill(pid, (wxSignal)SIGUSR1);
+		return false;
+	}
+	else
+	{
+		//si le fichier n'existe pas, alors on le crée avec le pid de
+		//cette instances.
+		int pid = getpid();
+		wxFile file(fileSingleInstance, wxFile::write);
+		file.Write(&pid, sizeof pid);
+		file.Close();
+	}
+	
+	//Installassions du gestionnaire de signale.
+	//Pour récupère le signale USER1.
+	std::signal(SIGUSR1, signal_user1);
+	evtHandlerMain = this;
+	
+	//Init général
+	wxInitAllImageHandlers();
+	SetExitOnFrameDelete(false);
 		
 	//Bind.
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnQuit, this, ID_QUIT);
@@ -59,9 +109,12 @@ int App::OnExit()
 	Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::OnPreferences, this, ID_PREFERENCES);
 	Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::OnEnableShortcuts, this, ID_ENABLE_SHORTKUT);
 	
-	
-	// suppression des locale
+	//Suppression des locale
 	delete _locale;
+	
+	//Suppression du fichier d'instance du programme.
+	wxString fileSingleInstance = wxStandardPaths::Get().GetTempDir()+'/'+PROJECT_NAME+'-'+wxGetUserId();
+	wxRemoveFile(fileSingleInstance);
 	
 	//! \todo migrais vair le manager générale
 	delete _taskIcon;
