@@ -17,6 +17,10 @@
 #include <wx/menu.h>
 #include <wx/icon.h>
 #include <wx/artprov.h>
+#include <wx/stdpaths.h>
+
+//Test
+#include <iostream>
 
 
 // *****************************************************************************
@@ -26,6 +30,11 @@
 TaskIcon::TaskIcon(wxTaskBarIconType iconType)
 : wxTaskBarIcon(iconType)
 {
+	std::cout << wxStandardPaths::Get().GetUserDataDir() << std::endl;
+	std::cout << wxStandardPaths::Get().GetDataDir() << std::endl;
+	std::cout << wxStandardPaths::Get().GetLocalDataDir() << std::endl;
+	
+	
 	//! \todo maitre le bon chemin vais l'iconne
 	//Task Icon
 	wxIcon tmpIcon;

@@ -48,7 +48,7 @@ bool App::OnInit()
 {  	
 	wxStandardPaths& standardPaths = wxStandardPaths::Get();
 	
-	//Changement du Préfixe seulement sous unix
+	//Changement du préfixe seulement sous unix
 	#if defined(__UNIX__)
 	standardPaths.SetInstallPrefix("/usr");
 	#endif
@@ -66,18 +66,16 @@ bool App::OnInit()
 		file.Close();
 		
 		//Et on luis envois le signale USER1.
-		wxKill(pid, (wxSignal)SIGUSR1);
-		return false;
+		if(wxKill(pid, (wxSignal)SIGUSR1) == 0)
+			return false;
 	}
-	else
-	{
-		//si le fichier n'existe pas, alors on le crée avec le pid de
-		//cette instances.
-		int pid = getpid();
-		wxFile file(fileSingleInstance, wxFile::write);
-		file.Write(&pid, sizeof pid);
-		file.Close();
-	}
+	
+	//Si le fichier n'existe pas, alors on le crée avec le pid de
+	//cette instances.
+	int pid = getpid();
+	wxFile file(fileSingleInstance, wxFile::write);
+	file.Write(&pid, sizeof pid);
+	file.Close();
 	
 	//Installassions du gestionnaire de signale.
 	//Pour récupère le signale USER1.
