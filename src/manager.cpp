@@ -1,68 +1,60 @@
-//! \file **************************************************************
-//! \brief Source ManagerBase
+//! \file **********************************************************************
+//! \brief Source Manager
 //! 
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
 //! \version 0.1
-//! \date 30.11.2013
+//! \date 04.12.2013
 //!
-//! ********************************************************************
+//! ****************************************************************************
 
-/*
-*	Copyright © 2013 - Antoine Maleyrie.
-*/
+//App
+#include "manager.hpp"
 
-#include "managerBase.hpp"
+//Stl
+#include <cstddef>
 
-// *********************************************************************
-// Class ManagerBase
-// *********************************************************************
+//
+#define CREATE_MANAGER(manager) manager** _ins = manager::getPtr();		\
+								*_ins = new manager();					\
+								getManagers().push_back(*_ins);
+								
+#define KILL_MANAGER(manager) 	manager** _ins = manager::getPtr();		\
+								delete *_ins;							\
+								*_ins = nullptr;
+#include "managerDefs.hpp"
 
-//ManagerBase::ManagerBase()
-//{
-	////std::vector<ManagerBase*>& _iManagers = ManagerBase::getManagers();
-	////_iManagers.push_back(this);
-//}
+// *****************************************************************************
+// Class Manager
+// *****************************************************************************
 
-//ManagerBase::~ManagerBase()
-//{
-	////std::vector<ManagerBase*>& _iManagers = ManagerBase::getManagers();
+Manager::Manager()
+{
+}
 
-	////for(size_t i = 0; i < _iManagers.size(); i++)
-	////{
-		////if(_iManagers[i] == this)
-		////{
-			////_iManagers.erase(_iManagers.begin()+i);
-			////break;
-		////}
-	////}
-//}
+Manager::~Manager()
+{
+}
 
-//void ManagerBase::load(wxFileConfig&)
-//{
-//}
+wxWindow* Manager::newEditWindow(wxWindow*)
+{
+	return nullptr;
+}
 
-//void ManagerBase::save(wxFileConfig&)const
-//{
-//}
+void Manager::createManagers()
+{
+	MAKE_CREATE_MANAGERS();
+}
 
-//wxWindow* ManagerBase::newEditWindow(wxWindow*)
-//{
-	//return nullptr;
-//}
-
-//std::vector<ManagerBase*>& ManagerBase::getManagers()
-//{
-	//static std::vector<ManagerBase*> _iManagers;
-	//return _iManagers;
-//}
-	
-//void ManagerBase::creatAllManagers()
-//{
-//}
-	
-//void ManagerBase::killAllManagers()
-//{
-//}
-			
+void Manager::killManagers()
+{
+	MAKE_KILL_MANAGERS();
+	getManagers().clear();
+}
+		
+std::vector<Manager*>& Manager::getManagers()
+{
+	static std::vector<Manager*> _iManagers;
+	return _iManagers;
+}

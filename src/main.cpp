@@ -12,6 +12,7 @@
 //App
 #include "main.hpp"
 #include "defs.hpp"
+#include "manager.hpp"
 
 //Stl
 #include <csignal>
@@ -26,7 +27,6 @@
 
 //Test
 #include <iostream>
-#include <string>
 
 //Récupération du signale USER1.
 static wxEvtHandler* evtHandlerMain = nullptr;
@@ -85,6 +85,9 @@ bool App::OnInit()
 	//Init général
 	wxInitAllImageHandlers();
 	SetExitOnFrameDelete(false);
+	
+	//Création de tout les managers.
+	Manager::createManagers();
 		
 	//Bind.
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnQuit, this, ID_QUIT);
@@ -106,6 +109,9 @@ int App::OnExit()
 	Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::OnAbout, this, ID_ABOUT);
 	Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::OnPreferences, this, ID_PREFERENCES);
 	Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::OnEnableShortcuts, this, ID_ENABLE_SHORTKUT);
+	
+	//Suppression de tout les managers.
+	Manager::killManagers();
 	
 	//Suppression des locale
 	delete _locale;
@@ -132,8 +138,17 @@ void App::OnAbout(wxCommandEvent&)
 	info.SetName(PROJECT_NAME);
 	info.SetVersion(PROJECT_VERSION);
 	
+	//! \todo implémenter avec managerGeneral
 	wxIcon tmpIcon;
-	tmpIcon.LoadFile("../icons/32x32/" PROJECT_NAME ".png", wxBITMAP_TYPE_PNG);
+	#if defined(__WXMSW__)
+	tmpIcon.LoadFile(FILE_NAME_APP_ICONS, wxBITMAP_TYPE_PNG);
+	#else
+	if(wxFileExists(FILE_NAME_APP_ICONS))
+		tmpIcon.LoadFile(FILE_NAME_APP_ICONS, wxBITMAP_TYPE_PNG);
+	else
+		tmpIcon.LoadFile(wxStandardPaths::Get().GetDataDir()+
+						'/'+FILE_NAME_APP_ICONS, wxBITMAP_TYPE_PNG);
+	#endif
 	info.SetIcon(tmpIcon);
 	
 	wxString msg;

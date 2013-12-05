@@ -19,9 +19,6 @@
 #include <wx/artprov.h>
 #include <wx/stdpaths.h>
 
-//Test
-#include <iostream>
-
 
 // *****************************************************************************
 // Class TaskIcon
@@ -30,15 +27,19 @@
 TaskIcon::TaskIcon(wxTaskBarIconType iconType)
 : wxTaskBarIcon(iconType)
 {
-	std::cout << wxStandardPaths::Get().GetUserDataDir() << std::endl;
-	std::cout << wxStandardPaths::Get().GetDataDir() << std::endl;
-	std::cout << wxStandardPaths::Get().GetLocalDataDir() << std::endl;
-	
-	
-	//! \todo maitre le bon chemin vais l'iconne
 	//Task Icon
+	//! \todo implémenter avec managerGeneral
 	wxIcon tmpIcon;
-	tmpIcon.LoadFile("../icons/16x16/" PROJECT_NAME ".png", wxBITMAP_TYPE_PNG);
+	#if defined(__WXMSW__)
+	tmpIcon.LoadFile(FILE_NAME_APP_ICONS, wxBITMAP_TYPE_PNG);
+	#else
+	if(wxFileExists(FILE_NAME_APP_ICONS))
+		tmpIcon.LoadFile(FILE_NAME_APP_ICONS, wxBITMAP_TYPE_PNG);
+	else
+		tmpIcon.LoadFile(wxStandardPaths::Get().GetDataDir()+
+						'/'+FILE_NAME_APP_ICONS, wxBITMAP_TYPE_PNG);
+	#endif
+	
 	SetIcon(tmpIcon, PROJECT_NAME);
 }
 

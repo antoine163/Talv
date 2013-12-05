@@ -15,6 +15,9 @@
 //WxWidgets
 #include <wx/taskbar.h>
 
+//! \todo implémenter avec managerGeneral
+#define FILE_NAME_APP_ICONS "icons/16x16/" PROJECT_NAME ".png"
+
 // *****************************************************************************
 // Class TaskIcon
 // *****************************************************************************

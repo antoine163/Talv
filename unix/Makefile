@@ -45,7 +45,8 @@ OBJ_DIR = obj
 ################################################################################
 SRC=../src/main.cpp	
 SRC+=../src/taskIcon.cpp
-#SRC+=../src/managerBase.cpp	
+SRC+=../src/manager.cpp	
+SRC+=../src/manager/manGeneral.cpp	
 #SRC+=../src/managerCache.cpp	
 #SRC+=../src/shortcut.cpp
 #SRC+=../src/managerAction.cpp
@@ -123,7 +124,7 @@ debug: build
 # Linkage des sources.
 ################################################################################
 build: $(OBJS)
-	$(CXX) -o $(EXEC_NAME) $^ $(LD_FLAGS)
+	$(CXX) -o ../$(EXEC_NAME) $^ $(LD_FLAGS)
 
 
 ################################################################################
@@ -140,7 +141,7 @@ $(OBJ_DIR)/%.o: ../%.cpp
 .PHONY: run
 run:
 	@echo "run : $(EXEC_NAME)"
-	@./$(EXEC_NAME)
+	@cd ../ && ./$(EXEC_NAME)
 	
 	
 ################################################################################
@@ -148,7 +149,8 @@ run:
 ################################################################################
 .PHONY: rungdb
 rungdb: debug
-	@gdb $(EXEC_NAME)
+	@echo "run : $(EXEC_NAME)"
+	@cd ../ && gdb $(EXEC_NAME)
 
 
 ################################################################################
@@ -174,5 +176,5 @@ cleandoc:
 .PHONY: clean
 clean:
 	@rm -r $(OBJ_DIR)
-	@rm $(EXEC_NAME)
+	@rm ../$(EXEC_NAME)
 	@echo "The project is clean."
