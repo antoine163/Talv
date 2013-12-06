@@ -12,13 +12,13 @@
 //App
 #include "taskIcon.hpp"
 #include "defs.hpp"
+#include "manager/manGeneral.hpp"
 
 //WxWidgets
 #include <wx/menu.h>
 #include <wx/icon.h>
 #include <wx/artprov.h>
 #include <wx/stdpaths.h>
-
 
 // *****************************************************************************
 // Class TaskIcon
@@ -28,19 +28,7 @@ TaskIcon::TaskIcon(wxTaskBarIconType iconType)
 : wxTaskBarIcon(iconType)
 {
 	//Task Icon
-	//! \todo implémenter avec managerGeneral
-	wxIcon tmpIcon;
-	#if defined(__WXMSW__)
-	tmpIcon.LoadFile(FILE_NAME_APP_ICONS, wxBITMAP_TYPE_PNG);
-	#else
-	if(wxFileExists(FILE_NAME_APP_ICONS))
-		tmpIcon.LoadFile(FILE_NAME_APP_ICONS, wxBITMAP_TYPE_PNG);
-	else
-		tmpIcon.LoadFile(wxStandardPaths::Get().GetDataDir()+
-						'/'+FILE_NAME_APP_ICONS, wxBITMAP_TYPE_PNG);
-	#endif
-	
-	SetIcon(tmpIcon, PROJECT_NAME);
+	SetIcon(ManGeneral::get().getIconApp(), PROJECT_NAME);
 }
 
 TaskIcon::~TaskIcon()

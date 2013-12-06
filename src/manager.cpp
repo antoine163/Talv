@@ -15,6 +15,9 @@
 //Stl
 #include <cstddef>
 
+//WxWidgets
+#include <wx/stdpaths.h>
+
 //
 #define CREATE_MANAGER(manager) manager** _ins = manager::getPtr();		\
 								*_ins = new manager();					\
@@ -51,6 +54,20 @@ void Manager::killManagers()
 {
 	MAKE_KILL_MANAGERS();
 	getManagers().clear();
+}
+
+void Manager::loadManagers()
+{
+	//Préparation du wxFileConfig
+	wxFileConfig fileConfig(	PROJECT_NAME,
+								wxEmptyString,
+								wxStandardPaths::Get().GetUserDataDir()+'/'+PROJECT_NAME);
+		
+	//Appelle de la méthode load de touts les managers avec le fichier de
+	//configuration	.					
+	auto _iManagers = getManagers();
+	for(auto it : _iManagers)
+		it->load(fileConfig);
 }
 		
 std::vector<Manager*>& Manager::getManagers()

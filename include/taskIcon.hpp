@@ -15,9 +15,6 @@
 //WxWidgets
 #include <wx/taskbar.h>
 
-//! \todo implémenter avec managerGeneral
-#define FILE_NAME_APP_ICONS "icons/16x16/" PROJECT_NAME ".png"
-
 // *****************************************************************************
 // Class TaskIcon
 // *****************************************************************************
@@ -27,7 +24,7 @@ class TaskIcon : public wxTaskBarIcon
 {
 	public:
 		TaskIcon(wxTaskBarIconType iconType=wxTBI_DEFAULT_TYPE);
-		~TaskIcon();
+		virtual ~TaskIcon();
 		
 	protected:
 		virtual	wxMenu* CreatePopupMenu();

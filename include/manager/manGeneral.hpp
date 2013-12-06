@@ -14,6 +14,14 @@
 
 //App
 #include "manager.hpp"
+#include "taskIcon.hpp"
+
+//Std
+#include <map>
+
+//WxWidgets
+#include <wx/icon.h>
+#include <wx/string.h>
 
 // *****************************************************************************
 // Class ManGeneral
@@ -25,12 +33,39 @@ class ManGeneral : public Manager
 {
 	DECLARE_MANAGER(ManGeneral);
 	
-	public:	
-		//virtual wxWindow* newEditWindow(wxWindow* parent);
+	public:
+		//Langage
+		wxArrayString getLgs()const;
+		wxString acrToLg(wxString const& acr)const;
+		wxString lgToAcr(wxString const& lg)const;
+		
+		//Presse papier
+		wxString getClipboard()const;
+		
+		//TaskIcon
+		void showTaskIcon(bool show = true);
+		bool isShowTaskIcon()const;
+		
+		////Lancement au démarrage
+		//void launchAtStartup(bool launch = true);
+		//bool isLaunchAtStartup()const;
+		
+		//Icônes
+		wxIcon const& getIconApp()const;
+		wxString const& getPathIcons()const;
+	
+		virtual wxWindow* newEditWindow(wxWindow* parent);
 	
 	private:
 		virtual void manLoad(wxFileConfig& fileConfig);
 		virtual void manSave(wxFileConfig& fileConfig)const;
+		
+		//! \brief Liste des acronymes et des langues <acronyme, langue>.
+		std::map<wxString, wxString> _langues;
+		
+		wxString _pathIcons;
+		wxIcon _iconApp;
+		TaskIcon* _taskIcon;
 };
 
 #endif //MAN_GENERAL_H

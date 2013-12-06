@@ -12,9 +12,6 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-//App
-#include "taskIcon.hpp"
-
 //WxWidgets
 #include <wx/app.h>
 #include <wx/intl.h>
@@ -48,13 +45,7 @@ class App : public wxApp
 		//! a propos.
 		void OnAbout(wxCommandEvent&);
 	
-	private:
-	
-		//! \todo migrais vair le manager générale
-		//! \brief Menu dans la zone de notification.
-		TaskIcon* _taskIcon;
-		
-		
+	private:		
 		//! \brief Pour la traduction de l'application.
 		wxLocale* _locale;
 };

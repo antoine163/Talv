@@ -13,6 +13,7 @@
 #include "main.hpp"
 #include "defs.hpp"
 #include "manager.hpp"
+#include "manager/manGeneral.hpp"
 
 //Stl
 #include <csignal>
@@ -88,16 +89,15 @@ bool App::OnInit()
 	
 	//Création de tout les managers.
 	Manager::createManagers();
-		
+	
+	//Chargement de la confige de tous les manager.
+	Manager::loadManagers();
+	
 	//Bind.
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnQuit, this, ID_QUIT);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnAbout, this, ID_ABOUT);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnPreferences, this, ID_PREFERENCES);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnEnableShortcuts, this, ID_ENABLE_SHORTKUT);
-	
-	
-	//! \todo migrais vair le manager générale
-	_taskIcon = new TaskIcon();
 	
 	return true;
 }
@@ -114,20 +114,17 @@ int App::OnExit()
 	Manager::killManagers();
 	
 	//Suppression des locale
-	delete _locale;
+	//delete _locale;
 	
 	//Suppression du fichier d'instance du programme.
 	wxString fileSingleInstance = wxStandardPaths::Get().GetTempDir()+'/'+PROJECT_NAME+'-'+wxGetUserId();
 	wxRemoveFile(fileSingleInstance);
 	
-	//! \todo migrais vair le manager générale
-	delete _taskIcon;
-	
 	return 0;
 }
 
 void App::OnQuit(wxCommandEvent&)
-{		
+{
 	ExitMainLoop();
 }
 
@@ -138,18 +135,7 @@ void App::OnAbout(wxCommandEvent&)
 	info.SetName(PROJECT_NAME);
 	info.SetVersion(PROJECT_VERSION);
 	
-	//! \todo implémenter avec managerGeneral
-	wxIcon tmpIcon;
-	#if defined(__WXMSW__)
-	tmpIcon.LoadFile(FILE_NAME_APP_ICONS, wxBITMAP_TYPE_PNG);
-	#else
-	if(wxFileExists(FILE_NAME_APP_ICONS))
-		tmpIcon.LoadFile(FILE_NAME_APP_ICONS, wxBITMAP_TYPE_PNG);
-	else
-		tmpIcon.LoadFile(wxStandardPaths::Get().GetDataDir()+
-						'/'+FILE_NAME_APP_ICONS, wxBITMAP_TYPE_PNG);
-	#endif
-	info.SetIcon(tmpIcon);
+	info.SetIcon(ManGeneral::get().getIconApp());
 	
 	wxString msg;
 	msg << wxString::FromUTF8Unchecked("Traduction A La Volées.");

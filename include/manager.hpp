@@ -33,7 +33,7 @@
 	public:													\
 		virtual void load(wxFileConfig& fileConfig);		\
 		virtual void save(wxFileConfig& fileConfig)const;	\
-		static manager* get();								\
+		static manager& get();								\
 	private:												\
 		manager();											\
 		virtual ~manager();									\
@@ -44,16 +44,18 @@
 	void manager::load(wxFileConfig& fileConfig)			\
 	{														\
 		fileConfig.SetPath(#manager "/");					\
+		manLoad(fileConfig);								\
 	}														\
 															\
 	void manager::save(wxFileConfig& fileConfig)const		\
 	{														\
 		fileConfig.SetPath(#manager "/");					\
+		manSave(fileConfig);								\
 	}														\
 															\
-	manager* manager::get()									\
+	manager& manager::get()									\
 	{														\
-		return *getPtr();									\
+		return **getPtr();									\
 	}														\
 															\
 	manager** manager::getPtr()								\
@@ -86,6 +88,7 @@ class Manager
 		
 		static void createManagers();
 		static void killManagers();
+		static void loadManagers();
 		static std::vector<Manager*>& getManagers();
 		
 	protected:
