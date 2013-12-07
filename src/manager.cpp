@@ -69,6 +69,21 @@ void Manager::loadManagers()
 	for(auto it : _iManagers)
 		it->load(fileConfig);
 }
+
+void Manager::saveManagers()
+{
+	//Préparation du wxFileConfig
+	wxFileConfig fileConfig(	PROJECT_NAME,
+								wxEmptyString,
+								wxStandardPaths::Get().GetUserDataDir()+'/'+PROJECT_NAME);
+	fileConfig.DeleteAll();
+		
+	//Appelle de la méthode save de touts les managers avec le fichier de
+	//configuration	.					
+	auto _iManagers = getManagers();
+	for(auto it : _iManagers)
+		it->save(fileConfig);
+}
 		
 std::vector<Manager*>& Manager::getManagers()
 {

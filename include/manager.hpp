@@ -89,6 +89,7 @@ class Manager
 		static void createManagers();
 		static void killManagers();
 		static void loadManagers();
+		static void saveManagers();
 		static std::vector<Manager*>& getManagers();
 		
 	protected:

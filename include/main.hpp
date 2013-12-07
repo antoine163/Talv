@@ -31,19 +31,19 @@ class App : public wxApp
 		
 		//! \brief Méthode pour récupérer l'évènement pour quitter
 		//! l'application.
-		void OnQuit(wxCommandEvent&);
+		void onQuit(wxCommandEvent&);
 		
 		//! \brief Méthode pour récupérer l'évènement pour lancer le dialogue
 		//! des préférences.
-		void OnPreferences(wxCommandEvent&);
+		void onPreferences(wxCommandEvent&);
 		
 		//! \brief Méthode pour récupérer l'évènement pour lancer activer ou
 		//! désactiver les actions.
-		void OnEnableShortcuts(wxCommandEvent& event);
+		void onEnableShortcuts(wxCommandEvent& event);
 		
 		//! \brief Méthode pour récupérer l'évènement pour lancer le dialogue
 		//! a propos.
-		void OnAbout(wxCommandEvent&);
+		void onAbout(wxCommandEvent&);
 	
 	private:		
 		//! \brief Pour la traduction de l'application.

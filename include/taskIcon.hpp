@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.8
+//! \version 0.9
 //! \date 10.12.12
 //!
 //! ****************************************************************************
@@ -26,9 +26,12 @@ class TaskIcon : public wxTaskBarIcon
 		TaskIcon(wxTaskBarIconType iconType=wxTBI_DEFAULT_TYPE);
 		virtual ~TaskIcon();
 		
+		void enable(bool enable = true);
+		
 	protected:
 		virtual	wxMenu* CreatePopupMenu();
-
+		bool _enableMenu;
+	
 	private:
 };
 

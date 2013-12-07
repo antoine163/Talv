@@ -27,16 +27,6 @@
 
 ManGeneral::ManGeneral() : _taskIcon(nullptr)
 {
-	//Détermination du pach ou se trouve les icônes.
-	_pathIcons = "./icons";
-	#if defined(__UNIX__) //ET Mac ?
-	if(!wxDirExists(_pathIcons))
-		_pathIcons = wxStandardPaths::Get().GetDataDir()+"/icons";
-	#endif
-
-	//Chargement de l'icône de l'application.
-	_iconApp.LoadFile(_pathIcons+"/32x32/talv.png", wxBITMAP_TYPE_PNG);
-	
 	//creation de la liste des langues.
 	_langues["af"] = _("Afrikaans");
 	_langues["sq"] = _("Albanian");
@@ -112,7 +102,6 @@ ManGeneral::~ManGeneral()
 }
 
 IMPLEMENT_MANAGER(ManGeneral);
-
 
 wxArrayString ManGeneral::getLgs()const
 {
@@ -245,7 +234,11 @@ void ManGeneral::showTaskIcon(bool show)
 	else
 	{
 		if(_taskIcon != nullptr)
+		{
+			//_taskIcon->Destroy();
 			delete _taskIcon;
+			_taskIcon = nullptr;
+		}
 	}
 }
 
@@ -257,6 +250,12 @@ bool ManGeneral::isShowTaskIcon()const
 	return false;
 }
 
+void ManGeneral::enableTaskIcon(bool enable)
+{
+	if(_taskIcon != nullptr)
+			_taskIcon->enable(enable);
+}
+
 //void ManGeneral::launchAtStartup(bool launch)
 //{
 //}
@@ -266,19 +265,60 @@ bool ManGeneral::isShowTaskIcon()const
 	//return false;
 //}
 
-wxIcon const& ManGeneral::getIconApp()const
+wxIcon ManGeneral::getIconApp(IconSize_e size)const
 {
-	return _iconApp;
+	//Chargement de l'icône de l'application.
+	wxString nameIcon = PROJECT_NAME;
+	nameIcon.MakeLower();
+	return wxIcon(	getPathIcons(size)+'/'+nameIcon+".png",
+					wxBITMAP_TYPE_PNG);
 }
 
-wxString const& ManGeneral::getPathIcons()const
+wxString ManGeneral::getPathIcons()const
 {
+	//Détermination du pach ou se trouve les icônes.
+	#if defined(__UNIX__) //ET Mac ?
+	static wxString _pathIcons;
+	if(_pathIcons.IsEmpty())
+	{
+		_pathIcons = "./icons";
+		if(!wxDirExists(_pathIcons))
+			_pathIcons = wxStandardPaths::Get().GetDataDir()+"/icons";
+	}
+	#else
+	static wxString _pathIcons = "./icons";
+	#endif
+	
 	return _pathIcons;
+}
+
+wxString ManGeneral::getPathIcons(IconSize_e size)const
+{
+	wxString path = getPathIcons();
+	
+	switch(size)
+	{
+		case ICON_SIZE_16X16:
+			path << "/16x16";
+		break;
+		
+		case ICON_SIZE_32X32:
+			path << "/32x32";
+		break;
+	}
+	
+	return path;
 }
 
 wxWindow* ManGeneral::newEditWindow(wxWindow* parent)
 {
-	return nullptr;
+	wxWindow* tmp = new wxWindow(	parent,
+									wxID_ANY,
+									wxDefaultPosition,
+									wxDefaultSize,
+									0,
+									_("General"));
+	return tmp;
 }
 
 void ManGeneral::manLoad(wxFileConfig&)

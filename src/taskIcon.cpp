@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.8
+//! \version 0.9
 //! \date 10.12.12
 //!
 //! ****************************************************************************
@@ -25,18 +25,25 @@
 // *****************************************************************************
 
 TaskIcon::TaskIcon(wxTaskBarIconType iconType)
-: wxTaskBarIcon(iconType)
+: wxTaskBarIcon(iconType), _enableMenu(true)
 {
 	//Task Icon
-	SetIcon(ManGeneral::get().getIconApp(), PROJECT_NAME);
+	SetIcon(ManGeneral::get().getIconApp(ICON_SIZE_16X16), PROJECT_NAME);
 }
 
 TaskIcon::~TaskIcon()
 {
 }
+
+void TaskIcon::enable(bool enable)
+{
+	_enableMenu = enable;
+}
 		
 wxMenu* TaskIcon::CreatePopupMenu()
 {
+
+		
 	//Menu
 	wxMenu* menu = new wxMenu();
 	
@@ -47,6 +54,7 @@ wxMenu* TaskIcon::CreatePopupMenu()
 													_("Open Preferences"),
 													wxITEM_NORMAL);
 	menu->Append(itemPreferences);
+	itemPreferences->Enable(_enableMenu);
 	
 	//Item EnableShortcuts
 	wxMenuItem* itemEnableShortcuts = new wxMenuItem(menu,
@@ -57,6 +65,7 @@ wxMenu* TaskIcon::CreatePopupMenu()
 	menu->Append(itemEnableShortcuts);
 	//!\todo a modifier avec le manager d'action
 	itemEnableShortcuts->Check(true);
+	itemEnableShortcuts->Enable(_enableMenu);
 	
 	//Item About
 	wxMenuItem* itemAbout = new wxMenuItem(	menu, 
@@ -65,6 +74,7 @@ wxMenu* TaskIcon::CreatePopupMenu()
 											_("About")+" "+PROJECT_NAME,
 											wxITEM_NORMAL);
 	menu->Append(itemAbout);
+	itemAbout->Enable(_enableMenu);
 	
 	//Item Exit
 	wxMenuItem* itemExit = new wxMenuItem(	menu, 
@@ -74,6 +84,7 @@ wxMenu* TaskIcon::CreatePopupMenu()
 											wxITEM_NORMAL);			
 	itemExit->SetBitmap(wxArtProvider::GetBitmap(wxART_QUIT, wxART_MENU));		
 	menu->Append(itemExit);
+	itemExit->Enable(_enableMenu);
 	
 	return menu;
 }

@@ -12,6 +12,7 @@
 //App
 #include "main.hpp"
 #include "defs.hpp"
+#include "dialog/dialogPreferences.hpp"
 #include "manager.hpp"
 #include "manager/manGeneral.hpp"
 
@@ -94,10 +95,10 @@ bool App::OnInit()
 	Manager::loadManagers();
 	
 	//Bind.
-	Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnQuit, this, ID_QUIT);
-	Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnAbout, this, ID_ABOUT);
-	Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnPreferences, this, ID_PREFERENCES);
-	Bind(wxEVT_COMMAND_MENU_SELECTED, &App::OnEnableShortcuts, this, ID_ENABLE_SHORTKUT);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, &App::onQuit, this, ID_QUIT);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, &App::onAbout, this, ID_ABOUT);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, &App::onPreferences, this, ID_PREFERENCES);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, &App::onEnableShortcuts, this, ID_ENABLE_SHORTKUT);
 	
 	return true;
 }
@@ -105,10 +106,10 @@ bool App::OnInit()
 int App::OnExit()
 {	
 	//Unbind.
-	Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::OnQuit, this, ID_QUIT);
-	Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::OnAbout, this, ID_ABOUT);
-	Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::OnPreferences, this, ID_PREFERENCES);
-	Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::OnEnableShortcuts, this, ID_ENABLE_SHORTKUT);
+	Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::onQuit, this, ID_QUIT);
+	Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::onAbout, this, ID_ABOUT);
+	Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::onPreferences, this, ID_PREFERENCES);
+	Unbind(wxEVT_COMMAND_MENU_SELECTED, &App::onEnableShortcuts, this, ID_ENABLE_SHORTKUT);
 	
 	//Suppression de tout les managers.
 	Manager::killManagers();
@@ -123,19 +124,19 @@ int App::OnExit()
 	return 0;
 }
 
-void App::OnQuit(wxCommandEvent&)
+void App::onQuit(wxCommandEvent&)
 {
 	ExitMainLoop();
 }
 
-void App::OnAbout(wxCommandEvent&)
+void App::onAbout(wxCommandEvent&)
 {	
 	wxAboutDialogInfo info;
 
 	info.SetName(PROJECT_NAME);
 	info.SetVersion(PROJECT_VERSION);
 	
-	info.SetIcon(ManGeneral::get().getIconApp());
+	info.SetIcon(ManGeneral::get().getIconApp(ICON_SIZE_32X32));
 	
 	wxString msg;
 	msg << wxString::FromUTF8Unchecked("Traduction A La Volées.");
@@ -189,23 +190,16 @@ void App::OnAbout(wxCommandEvent&)
 	wxAboutBox(info);
 }
 
-void App::OnPreferences(wxCommandEvent&)
-{
-	std::cout << "OnPreferences" << std::endl;
-	////Création du dialog.
-	//DialogPreferences dlg;
-	
-	////Affichage du dialog.
-	//if(dlg.ShowModal() == wxID_OK)
-	//{		
-		////Vérification si on doit afficher ou pasl'icône dans la zone de
-		////notification.
-		//if(!Resource::getInstance()->getShowMenu())
-			//Destroy();
-	//}
+void App::onPreferences(wxCommandEvent&)
+{	
+	//Création du dialog.
+	DialogPreferences* dlg = new DialogPreferences();
+
+	//Affichage du dialog.
+	dlg->Show();
 }
 
-void App::OnEnableShortcuts(wxCommandEvent& event)
+void App::onEnableShortcuts(wxCommandEvent& event)
 {
 	std::cout << "OnEnableShortcuts : " << event.IsChecked() << std::endl;
 	//_enableShortcuts = event.IsChecked();

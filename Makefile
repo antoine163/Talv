@@ -13,7 +13,7 @@
 # Paramètre généraux.
 ################################################################################
 #Non du projet
-PROJECT_NAME=talv
+PROJECT_NAME=Talv
 #Numéro de version
 PROJECT_VERSION=0.3
 

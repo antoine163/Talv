@@ -24,6 +24,15 @@
 #include <wx/string.h>
 
 // *****************************************************************************
+// Enum SizeIcon_e
+// *****************************************************************************
+enum IconSize_e
+{
+	ICON_SIZE_16X16,
+	ICON_SIZE_32X32
+};
+
+// *****************************************************************************
 // Class ManGeneral
 // *****************************************************************************
 
@@ -45,14 +54,18 @@ class ManGeneral : public Manager
 		//TaskIcon
 		void showTaskIcon(bool show = true);
 		bool isShowTaskIcon()const;
+		void enableTaskIcon(bool enable = true);
 		
 		////Lancement au démarrage
 		//void launchAtStartup(bool launch = true);
 		//bool isLaunchAtStartup()const;
 		
 		//Icônes
-		wxIcon const& getIconApp()const;
-		wxString const& getPathIcons()const;
+		wxIcon getIconApp(IconSize_e size)const;
+		wxString getPathIcons()const;
+		wxString getPathIcons(IconSize_e size)const;
+		
+		
 	
 		virtual wxWindow* newEditWindow(wxWindow* parent);
 	
@@ -63,8 +76,6 @@ class ManGeneral : public Manager
 		//! \brief Liste des acronymes et des langues <acronyme, langue>.
 		std::map<wxString, wxString> _langues;
 		
-		wxString _pathIcons;
-		wxIcon _iconApp;
 		TaskIcon* _taskIcon;
 };
 

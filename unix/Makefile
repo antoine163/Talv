@@ -3,7 +3,7 @@
 #	Makfile for Linux.
 #
 # - author 	:	Antoine Maleyrie : antoine.maleyrie@gmail.com
-# - version	:	0.14
+# - version	:	0.15
 # - date 	:	10.03.2013
 #
 ################################################################################
@@ -11,7 +11,8 @@
 ################################################################################
 # Non de l'exécutable.
 ################################################################################
-EXEC_NAME=$(PROJECT_NAME)
+#EXEC_NAME=$(PROJECT_NAME)
+EXEC_NAME=talv
 
 
 ################################################################################
@@ -44,9 +45,38 @@ OBJ_DIR = obj
 # Liste des fichiers source C++.
 ################################################################################
 SRC=../src/main.cpp	
+
+#Divers
 SRC+=../src/taskIcon.cpp
+#SRC+=../src/shortcut.cpp
+#SRC+=../src/dataText.cpp
+#SRC+=../src/fileText.cpp
+#SRC+=../src/cache.cpp
+#SRC+=../src/list.cpp
+
+#Controls
+
+#Dialogs
+SRC+=../src/dialog/dialogPreferences.cpp
+
+#wxJSON
+SRC+=../src/wxJSON/jsonval.cpp
+SRC+=../src/wxJSON/jsonreader.cpp
+
+#Managers
 SRC+=../src/manager.cpp	
-SRC+=../src/manager/manGeneral.cpp	
+SRC+=../src/manager/manGeneral.cpp
+
+#Actions
+#SRC+=../src/action.cpp
+
+#Translates
+#SRC+=../src/translate.cpp
+
+#Tts
+#SRC+=../src/tts.cpp
+
+
 #SRC+=../src/managerCache.cpp	
 #SRC+=../src/shortcut.cpp
 #SRC+=../src/managerAction.cpp
@@ -57,9 +87,7 @@ SRC+=../src/manager/manGeneral.cpp
 #SRC+=../src/cache.cpp
 #SRC+=../src/dataText.cpp
 #SRC+=../src/resource.cpp
-#wxJSON
-#SRC+=../src/wxJSON/jsonval.cpp
-#SRC+=../src/wxJSON/jsonreader.cpp
+
 #Notification
 #SRC+=../src/notification.cpp
 #ifeq ($(EMULATE_NOTIFICATION), yes)
@@ -94,7 +122,6 @@ OBJS=$(patsubst ../%.cpp,$(OBJ_DIR)/%.o, $(SRC))
 ################################################################################
 DIR = ../include
 DIR += ../include/wxJSON
-DIR += ../gui
 INCLUDE_DIRS = $(patsubst %,-I%, $(DIR))
 
 
