@@ -28,41 +28,41 @@
 #include <wx/fileconf.h>
 #include <wx/window.h>
 
-#define DECLARE_MANAGER(manager)							\
-	friend class Manager;									\
-	public:													\
-		virtual void load(wxFileConfig& fileConfig);		\
-		virtual void save(wxFileConfig& fileConfig)const;	\
-		static manager& get();								\
-	private:												\
-		manager();											\
-		virtual ~manager();									\
-		static manager** getPtr();
+#define DECLARE_MANAGER(manager)								\
+		friend class Manager;									\
+		public:													\
+			virtual void load(wxFileConfig& fileConfig);		\
+			virtual void save(wxFileConfig& fileConfig)const;	\
+			static manager& get();								\
+		private:												\
+			manager();											\
+			virtual ~manager();									\
+			static manager** getPtr();
 	
 
-#define IMPLEMENT_MANAGER(manager)							\
-	void manager::load(wxFileConfig& fileConfig)			\
-	{														\
-		fileConfig.SetPath(#manager "/");					\
-		manLoad(fileConfig);								\
-	}														\
-															\
-	void manager::save(wxFileConfig& fileConfig)const		\
-	{														\
-		fileConfig.SetPath(#manager "/");					\
-		manSave(fileConfig);								\
-	}														\
-															\
-	manager& manager::get()									\
-	{														\
-		return **getPtr();									\
-	}														\
-															\
-	manager** manager::getPtr()								\
-	{														\
-		static manager* _ins = nullptr;						\
-		return &_ins;										\
-	}
+#define IMPLEMENT_MANAGER(manager)								\
+		void manager::load(wxFileConfig& fileConfig)			\
+		{														\
+			fileConfig.SetPath(#manager "/");					\
+			manLoad(fileConfig);								\
+		}														\
+																\
+		void manager::save(wxFileConfig& fileConfig)const		\
+		{														\
+			fileConfig.SetPath(#manager "/");					\
+			manSave(fileConfig);								\
+		}														\
+																\
+		manager& manager::get()									\
+		{														\
+			return **getPtr();									\
+		}														\
+																\
+		manager** manager::getPtr()								\
+		{														\
+			static manager* _ins = nullptr;						\
+			return &_ins;										\
+		}
 
 // *****************************************************************************
 // Class Manager

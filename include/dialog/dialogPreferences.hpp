@@ -20,6 +20,9 @@
 // *****************************************************************************
 
 //! \brief Dialogue générale des préférences.
+//!
+//! Se dialogue va appeler  \ref Manager::newEditWindow() de touts les managers
+//! et les insérais dans un \b wxNotebook.
 class DialogPreferences : public wxDialog 
 {
 	public:
@@ -30,10 +33,14 @@ class DialogPreferences : public wxDialog
 		~DialogPreferences();
 		
 	private:
+		//! \brief CallBack lorsque le dialogue est fermer.
 		void onClose(wxCloseEvent& event);
 		
+		//! \brief CallBack lorsque le bouton \b Apply à été cliquet.
 		void onButtonClickApply(wxCommandEvent& event);
+		//! \brief CallBack lorsque le bouton \b Cancel à été cliquet.
 		void onButtonClickCancel(wxCommandEvent& event);
+		//! \brief CallBack lorsque le bouton \b OK à été cliquet.
 		void onButtonClickOK(wxCommandEvent& event);
 		
 };

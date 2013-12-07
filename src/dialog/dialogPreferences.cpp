@@ -41,8 +41,8 @@ DialogPreferences::DialogPreferences()
 	//Création de la bannière.
 	wxBannerWindow* banner = new wxBannerWindow(this, wxTOP);
 	banner->SetText(PROJECT_NAME, _("Translation on the fly."));
-	banner->SetGradient(wxColour(127, 127, 127, 0),
-						wxColour(127, 127, 127, 127));	
+	banner->SetGradient(wxColour(127, 127, 127, 127),
+						wxColour(127, 127, 127, 0));	
 	wxStaticBitmap* bitmapApp = new wxStaticBitmap(this, wxID_ANY, wxBitmap());
 	bitmapApp->SetIcon(ManGeneral::get().getIconApp(ICON_SIZE_32X32));
 	
@@ -53,7 +53,11 @@ DialogPreferences::DialogPreferences()
 	banner->SetSizer(bannerSizer);
 	
 	//Création du notebook.
-	wxNotebook* notebook = new wxNotebook(this, wxID_ANY);
+	wxNotebook* notebook = new wxNotebook(	this,
+											wxID_ANY, 
+											wxDefaultPosition,
+											wxDefaultSize,
+											wxNB_LEFT);
 	for(auto it : Manager::getManagers())
 	{
 		wxWindow* tmpWindow = it->newEditWindow(notebook);

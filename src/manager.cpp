@@ -19,13 +19,15 @@
 #include <wx/stdpaths.h>
 
 //
-#define CREATE_MANAGER(manager) manager** _ins = manager::getPtr();		\
-								*_ins = new manager();					\
-								getManagers().push_back(*_ins);
+#define CREATE_MANAGER(manager) 						\
+		manager** _ins ## manager = manager::getPtr();	\
+		*_ins ## manager = new manager();				\
+		getManagers().push_back(*_ins ## manager);
 								
-#define KILL_MANAGER(manager) 	manager** _ins = manager::getPtr();		\
-								delete *_ins;							\
-								*_ins = nullptr;
+#define KILL_MANAGER(manager) 							\
+		manager** _ins ## manager = manager::getPtr();	\
+		delete *_ins ## manager;						\
+		*_ins ## manager = nullptr;
 #include "managerDefs.hpp"
 
 // *****************************************************************************

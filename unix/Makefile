@@ -66,6 +66,11 @@ SRC+=../src/wxJSON/jsonreader.cpp
 #Managers
 SRC+=../src/manager.cpp	
 SRC+=../src/manager/manGeneral.cpp
+SRC+=../src/manager/manAction.cpp
+SRC+=../src/manager/manList.cpp
+SRC+=../src/manager/manNotification.cpp
+SRC+=../src/manager/manTts.cpp
+SRC+=../src/manager/manNetwork.cpp
 
 #Actions
 #SRC+=../src/action.cpp

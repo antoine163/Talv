@@ -1,53 +1,46 @@
-//! \file **************************************************************
+//! \file **********************************************************************
 //! \brief Source Gestion des listes
 //! 
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.0
+//! \version 2.0
 //! \date 02.05.2013
 //!
-//! ********************************************************************
+//! ****************************************************************************
 
-/*
-*	Copyright © 2013 - Antoine Maleyrie.
-*/
+//App
+#include "manager/manList.hpp"
 
-#include "managerList.hpp"
+// *****************************************************************************
+// Class ManList
+// *****************************************************************************
 
-// *********************************************************************
-// Class ManagerList
-// *********************************************************************
-
-ManagerList::ManagerList() :
-EditableByPanel(_("Lits"))
+ManList::ManList()
 {
 }
 
-ManagerList::~ManagerList()
+ManList::~ManList()
 {
 }
 
-void ManagerList::load(wxFileConfig& fileConfig)
+IMPLEMENT_MANAGER(ManList);
+
+wxWindow* ManList::newEditWindow(wxWindow* parent)
+{
+	wxWindow* tmp = new wxWindow(	parent,
+									wxID_ANY,
+									wxDefaultPosition,
+									wxDefaultSize,
+									0,
+									_("Lists"));
+	return tmp;
+}
+
+void ManList::manLoad(wxFileConfig&)
 {
 }
 
-void ManagerList::save(wxFileConfig& fileConfig)const
+void ManList::manSave(wxFileConfig&)const
 {
-}
-
-
-wxPanel* ManagerList::newEditPanel(wxWindow *parent)
-{
-	return nullptr;
-}
-
-bool ManagerList::panelCheck()const
-{
-	return true;
-}
-
-bool ManagerList::panelApply()
-{
-	return true;
 }

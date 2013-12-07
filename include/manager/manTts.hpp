@@ -1,29 +1,29 @@
 //! \file **********************************************************************
-//! \brief Header Gestion des actions/raccourcis
+//! \brief Header Gestion de tts (text to speech)
 //! 
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 3.0
-//! \date 20.03.2013
+//! \version 0.1
+//! \date 08.12.2013
 //!
 //! ****************************************************************************
 
-#ifndef MAN_ACTION_H
-#define MAN_ACTION_H
+#ifndef MAN_TTS_H
+#define MAN_TTS_H
 
 //App
 #include "manager.hpp"
 
 // *****************************************************************************
-// Class ManAction
+// Class ManTts
 // *****************************************************************************
 
 //! \ingroup managers
-//! \brief ManAction
-class ManAction : public Manager
+//! \brief ManTts
+class ManTts : public Manager
 {
-	DECLARE_MANAGER(ManAction);
+	DECLARE_MANAGER(ManTts);
 	
 	public:
 		virtual wxWindow* newEditWindow(wxWindow* parent);
@@ -33,4 +33,4 @@ class ManAction : public Manager
 		virtual void manSave(wxFileConfig& fileConfig)const;
 };
 
-#endif //MAN_ACTION_H
+#endif //MAN_TTS_H

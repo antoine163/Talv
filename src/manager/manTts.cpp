@@ -1,5 +1,5 @@
 //! \file **********************************************************************
-//! \brief Header Gestion réseau
+//! \brief Header Gestion de tts (text to speech)
 //! 
 //! - Compilateur : GCC,MinGW
 //!
@@ -10,37 +10,37 @@
 //! ****************************************************************************
 
 //App
-#include "manager/manNetwork.hpp"
+#include "manager/manTts.hpp"
 
 // *****************************************************************************
-// Class ManNetwork
+// Class ManTts
 // *****************************************************************************
 
-ManNetwork::ManNetwork()
+ManTts::ManTts()
 {
 }
 
-ManNetwork::~ManNetwork()
+ManTts::~ManTts()
 {
 }
 
-IMPLEMENT_MANAGER(ManNetwork);
+IMPLEMENT_MANAGER(ManTts);
 
-wxWindow* ManNetwork::newEditWindow(wxWindow* parent)
+wxWindow* ManTts::newEditWindow(wxWindow* parent)
 {
 	wxWindow* tmp = new wxWindow(	parent,
 									wxID_ANY,
 									wxDefaultPosition,
 									wxDefaultSize,
 									0,
-									_("Network"));
+									_("Text to speech"));
 	return tmp;
 }
 
-void ManNetwork::manLoad(wxFileConfig&)
+void ManTts::manLoad(wxFileConfig&)
 {
 }
 
-void ManNetwork::manSave(wxFileConfig&)const
+void ManTts::manSave(wxFileConfig&)const
 {
 }
