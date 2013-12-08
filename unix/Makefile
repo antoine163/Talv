@@ -3,23 +3,27 @@
 #	Makfile for Linux.
 #
 # - author 	:	Antoine Maleyrie : antoine.maleyrie@gmail.com
-# - version	:	0.15
+# - version	:	0.16
 # - date 	:	10.03.2013
 #
 ################################################################################
 
 ################################################################################
-# Non de l'exécutable.
+# Nom de l'exécutable.
 ################################################################################
 #EXEC_NAME=$(PROJECT_NAME)
 EXEC_NAME=talv
 
+################################################################################
+# Nom du script de configuration de WxWidgets.
+################################################################################
+WX_CONFIG = wx-config-3.0
 
 ################################################################################
 # Flags de compilation pour les libs.
 ################################################################################
 # Flags pour wxWidgets
-CXX_FLAGS+=`wx-config-3.0 --cxxflags`
+CXX_FLAGS+=`$(WX_CONFIG) --cxxflags`
 # Flags libnotify
 CXX_FLAGS+=`pkg-config --cflags libnotify`
 
@@ -28,7 +32,7 @@ CXX_FLAGS+=`pkg-config --cflags libnotify`
 # Flags de linkage pour les libs.
 ################################################################################
 # Flags pour wxWidgets
-LD_FLAGS+=`wx-config-3.0 --libs base,core,adv,net`
+LD_FLAGS+=`$(WX_CONFIG) --libs base,core,adv,net`
 # Flags pour la xlib
 LD_FLAGS+=-lX11
 # Flags pour libnotify
@@ -55,6 +59,7 @@ SRC+=../src/taskIcon.cpp
 #SRC+=../src/list.cpp
 
 #Controls
+SRC+=../src/control/controlDataList.cpp
 
 #Dialogs
 SRC+=../src/dialog/dialogPreferences.cpp

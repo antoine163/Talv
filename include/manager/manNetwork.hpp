@@ -19,7 +19,7 @@
 // Class ManList
 // *****************************************************************************
 
-//! \ingroup managers
+//! \ingroup manager
 //! \brief ManNetwork
 class ManNetwork : public Manager
 {

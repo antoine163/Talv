@@ -43,6 +43,13 @@
 	wxString const& action::getDescription()const{static wxString r=description; return r;}\
 	wxString const& action::getActTypeName()const{static wxString r=#action; return r;}\
 	Action* action::newClone()const{return new action(*this);}
+	
+//! \defgroup action Actions
+//! \brief Liste des actions
+//!
+//! Les classes dans cette section sont des actions.
+//! Les classes préfixer par \b Act sont touts basée sur la classe \ref Action.
+
 
 // *********************************************************************
 // Class Action

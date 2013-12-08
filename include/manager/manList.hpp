@@ -14,12 +14,13 @@
 
 //App
 #include "manager.hpp"
+#include "control/controlDataList.hpp"
 
 // *****************************************************************************
 // Class ManList
 // *****************************************************************************
 
-//! \ingroup managers
+//! \ingroup manager
 //! \brief ManList
 class ManList : public Manager
 {
@@ -31,6 +32,21 @@ class ManList : public Manager
 	private:
 		virtual void manLoad(wxFileConfig& fileConfig);
 		virtual void manSave(wxFileConfig& fileConfig)const;
+};
+
+// *****************************************************************************
+// Class WinManList
+// *****************************************************************************
+
+//! \brief WinManList
+class WinManList : public wxWindow
+{
+	public:
+		WinManList(wxWindow* parent);
+		~WinManList();
+	
+	private:
+		ControlDataList* _controlDataList;
 };
 
 #endif //MAN_LIST_H

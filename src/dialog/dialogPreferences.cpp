@@ -71,14 +71,18 @@ DialogPreferences::DialogPreferences()
 	//Créations des boutons.
 	wxSizer* buttons = CreateButtonSizer(wxAPPLY|wxCANCEL|wxOK);
 	
-	//Mise en forme du GUI avec des sizers.
+	//Mise en forme du GUI avec un sizer.
 	wxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 	mainSizer->Add(banner, 		0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM|wxTOP, 	4);
 	mainSizer->Add(notebook, 	1, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		4);
 	mainSizer->Add(staticLine, 	0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM,		4);
 	mainSizer->Add(buttons, 	0, wxEXPAND|wxBOTTOM, 						4);
 	
-	SetSizerAndFit(mainSizer);
+	SetMinSize(wxSize(600, 350));
+	SetSize(wxSize(600, 350));
+	SetSizer(mainSizer);
+	//SetSizerAndFit(mainSizer);
+	
 	
 	//Bind des boutons
 	Bind(wxEVT_BUTTON, &DialogPreferences::onButtonClickApply, this, wxID_APPLY);

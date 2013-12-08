@@ -14,12 +14,13 @@
 
 //App
 #include "manager.hpp"
+#include "control/controlDataList.hpp"
 
 // *****************************************************************************
 // Class ManAction
 // *****************************************************************************
 
-//! \ingroup managers
+//! \ingroup manager, action
 //! \brief ManAction
 class ManAction : public Manager
 {
@@ -32,5 +33,21 @@ class ManAction : public Manager
 		virtual void manLoad(wxFileConfig& fileConfig);
 		virtual void manSave(wxFileConfig& fileConfig)const;
 };
+
+// *****************************************************************************
+// Class WinManAction
+// *****************************************************************************
+
+//! \brief WinManAction
+class WinManAction : public wxWindow
+{
+	public:
+		WinManAction(wxWindow* parent);
+		~WinManAction();
+	
+	private:
+		ControlDataList* _controlDataList;
+};
+
 
 #endif //MAN_ACTION_H

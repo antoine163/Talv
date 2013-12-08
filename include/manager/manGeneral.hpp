@@ -36,7 +36,7 @@ enum IconSize_e
 // Class ManGeneral
 // *****************************************************************************
 
-//! \ingroup managers
+//! \ingroup manager
 //! \brief ManGeneral
 class ManGeneral : public Manager
 {

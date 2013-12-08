@@ -19,7 +19,7 @@
 // Class ManTts
 // *****************************************************************************
 
-//! \ingroup managers
+//! \ingroup manager
 //! \brief ManTts
 class ManTts : public Manager
 {

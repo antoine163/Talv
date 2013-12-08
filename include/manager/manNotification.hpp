@@ -19,7 +19,7 @@
 // Class ManNotification
 // *****************************************************************************
 
-//! \ingroup managers
+//! \ingroup manager
 //! \brief ManNotification
 class ManNotification : public Manager
 {

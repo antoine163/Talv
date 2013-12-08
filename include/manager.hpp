@@ -12,14 +12,12 @@
 #ifndef MANAGER_H
 #define MANAGER_H
 
-//! \defgroup managers Liste des managers
+//! \defgroup manager Managers
+//! \brief Liste des managers
 //!
-//! \brief Les classes dans cette section sont des gestionnaires de données ou
-//!  se sont des utilitaires. 
-//!
-//! Ces classe sont touts basée sur la classe \ref Manager.
-//! Elles sont aussi touts basée sur la classe \ref Singleton pour un accès 
-//! globale.
+//! Les classes dans cette section sont des gestionnaires de données ou des
+//! utilitaires.
+//! Les classes préfixer par \b Man sont touts basée sur la classe \ref Manager.
 
 //Stl
 #include <vector>
@@ -68,7 +66,7 @@
 // Class Manager
 // *****************************************************************************
 
-//! \ingroup managers
+//! \ingroup manager
 //! \brief Classe de base pour crées des managers.
 class Manager
 {	

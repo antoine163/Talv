@@ -15,6 +15,7 @@
 //WxWidgets
 #include <wx/stdpaths.h>
 #include <wx/clipbrd.h>
+#include <wx/sizer.h>
 
 //Os
 #if defined(__WXMSW__)

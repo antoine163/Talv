@@ -30,6 +30,8 @@
 //Test
 #include <iostream>
 
+
+//! \bug relance le dialog préférence
 //Récupération du signale USER1.
 static wxEvtHandler* evtHandlerMain = nullptr;
 void signal_user1(int)

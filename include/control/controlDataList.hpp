@@ -1,93 +1,68 @@
-//! \file **************************************************************
-//! \brief Header panel widgets avec une liste des boutons et un menu.
+//! \file **********************************************************************
+//! \brief Header
 //! 
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.0
+//! \version 2.0
 //! \date 26.09.2013
 //!
-//! ********************************************************************
+//! ****************************************************************************
 
-/*
-*	Copyright © 2013 - Antoine Maleyrie.
-*/
+#ifndef CONTROL_DATA_LIST_H
+#define CONTROL_DATA_LIST_H
 
-#ifndef PANEL_LIST_H
-#define PANEL_LIST_H
-
-#include "guiPanelDataList.h"
-#include <wx/menu.h>
-
+//Stl
 #include <vector>
 
-// *********************************************************************
-// Class PanelDataList
-// *********************************************************************
+//WxWidgets
+#include <wx/dataview.h>
+#include <wx/button.h>
+#include <wx/menu.h>
+#include <wx/window.h>
 
-//! \brief Panel de base pour les listes.
-class PanelDataList : public GuiPanelDataList
+// *****************************************************************************
+// Enum Enable_e
+// *****************************************************************************
+enum Enable_e
+{
+	ENABLE_ANYTIME,
+	ENABLE_SELECTING_ITEMS,
+	ENABLE_SELECTING_ONE_ITEM
+};
+
+// *****************************************************************************
+// Class ControlDataList
+// *****************************************************************************
+
+class ControlDataList : public wxDataViewListCtrl
 {
 	public:
 		//! \brief Constructeur.
 		//! \param parent fenêtre parent.
-		//! \param name non de la liste (tous en minuscule).
-		PanelDataList(wxWindow* parent, wxString name);
+		ControlDataList(wxWindow* parent);
 		//! \brief Destructeur.
-		virtual ~PanelDataList();
-		
-	protected:
-		//! \brief Ajout un item a la liste.
-		//! \param item a ajouter. Si il est vide il ne sera pas ajouter.
-		//! Chaque wxString correspond à une colonne.
-		//! \param select true pour sélectionner l'item ajouter.
-		void addItem(wxArrayString const& item, bool select = true);
-		
-		//! \brief Suppression d'item.
-		//!
-		//! Quand l'utilisateur clique sue le bouton "delete" cette méthode est appeler.
-		//! \param l'item à supprimer.
-		//! \return doit retourner true pour supprimer l'item de la liste.
-		virtual bool OnDeleteItem(wxString const& item)=0;
-		
-		//! \brief Préférence d'un item.
-		//!
-		//! Quand l'utilisateur clique sue le bouton "preference" cette méthode est appeler.
-		//! \param l'item à modifier.
-		//! \return l'item modifier. Chaque wxString correspond à une colonne.
-		virtual wxArrayString OnPreferencesItem(wxString const& item)=0;
-		
-		//! \brief ajouter d'un item.
-		//!
-		//! Quand l'utilisateur clique sue le bouton "add" cette méthode est appeler.
-		//! \return le nouveau item. Si le wxArrayString est vide l'item ne sera pas ajouter.
-		//! Chaque wxString correspond à une colonne.
-		virtual wxArrayString OnAddItem()=0;
-		
-		//! \brief Supprimer tout les items de la liste.
-		void clear();
-		
+		virtual ~ControlDataList();
+
+		void addWindowEnable(	wxWindow* Window,
+								Enable_e eanble);
+		wxMenuItem* addMenuItem(	wxWindowID id,
+									wxString const& label=wxEmptyString,
+									Enable_e eanble = ENABLE_ANYTIME);
+		void addMenuItemSeparator();
+
 	private:
-		//! \brief Supprimer un item.
-		void OnButtonClickDelete(wxCommandEvent&);
-		//! \brief Préférence d'un item.
-		void OnButtonClickPreferences(wxCommandEvent&);
-		//! \brief Ajouter un item
-		void OnButtonClickAdd(wxCommandEvent&);
+		void onItemContextMenu(wxDataViewEvent& event);
+		void onSelectionChanger(wxDataViewEvent& event);
+		void updateEnableElements();
 		
-		//! \brief l'osque que la sélection change dans la liste.
-		void OnListSelectionChanged(wxDataViewEvent&);
-		
-		void OnListItemContextMenu(wxDataViewEvent&);
-		
-		//! \brief Nom de la liste
-		wxString _name;
-		
-		//menu
 		wxMenu* _menu;
-		wxMenuItem* _menuItemListAdd;
-		wxMenuItem* _menuItemListPreferences;
-		wxMenuItem* _menuItemListDelete;
+		
+		std::vector<wxMenuItem*> _menuItemsEnableItems;
+		std::vector<wxMenuItem*> _menuItemsEnableOneItem;
+		
+		std::vector<wxWindow*> _windowsEnableItems;
+		std::vector<wxWindow*> _windowsEnableOneItem;
 };
 
-#endif //PANEL_LIST_H
+#endif //CONTROL_DATA_LIST_H
