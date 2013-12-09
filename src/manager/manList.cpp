@@ -46,8 +46,8 @@ void ManList::manSave(wxFileConfig&)const
 // Class WinManList
 // *****************************************************************************
 
-WinManList::WinManList(wxWindow* parent) :
-wxWindow(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, _("Lists"))
+WinManList::WinManList(wxWindow* parent)
+: wxWindow(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, _("Lists"))
 {
 	//Creation de la liste.
 	_controlDataList = new ControlDataList(this);

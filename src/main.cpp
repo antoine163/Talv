@@ -69,11 +69,12 @@ bool App::OnInit()
 		file.Read(&pid, sizeof pid);
 		file.Close();
 		
-		wxLogMessage(PROJECT_NAME" is running ...");
-		
 		//Et on luis envois le signale USER1.
 		if(wxKill(pid, (wxSignal)SIGUSR1) == 0)
+		{
+			wxLogMessage(PROJECT_NAME" is already running ...");
 			return false;
+		}
 	}
 	
 	//Si le fichier n'existe pas, alors on le crée avec le pid de
@@ -198,7 +199,7 @@ void App::onPreferences(wxCommandEvent&)
 {	
 	if(_dlgPrefPtr != nullptr)
 	{
-		wxLogMessage("The preferences dialog is running ...");
+		wxLogWarning("The preferences dialog is already running ...");
 		_dlgPrefPtr->SetFocus();
 		return;
 	}

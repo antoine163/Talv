@@ -33,4 +33,18 @@ class ManNetwork : public Manager
 		virtual void manSave(wxFileConfig& fileConfig)const;
 };
 
+// *****************************************************************************
+// Class WinManNetwork
+// *****************************************************************************
+
+//! \brief WinManNetwork
+class WinManNetwork : public wxWindow
+{
+	public:
+		WinManNetwork(wxWindow* parent);
+		~WinManNetwork();
+	
+	private:
+};
+
 #endif //MAN_NETWORK_H
