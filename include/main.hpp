@@ -4,13 +4,16 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.16
+//! \version 1.17
 //! \date 12.12.12
 //!
 //! ****************************************************************************
 
 #ifndef MAIN_H
 #define MAIN_H
+
+//App
+#include "dialog/dialogPreferences.hpp"
 
 //WxWidgets
 #include <wx/app.h>
@@ -29,23 +32,24 @@ class App : public wxApp
 		//! \brief Quitte l'application, libère les ressources.
 		int OnExit();
 		
-		//! \brief Méthode pour récupérer l'évènement pour quitter
-		//! l'application.
-		void onQuit(wxCommandEvent&);
+		//! \brief CallBack pour quitter l'application.
+		void onQuit(wxCommandEvent& event);
 		
-		//! \brief Méthode pour récupérer l'évènement pour lancer le dialogue
-		//! des préférences.
-		void onPreferences(wxCommandEvent&);
+		//! \brief CallBack pour lancer le dialogue préférences.
+		void onPreferences(wxCommandEvent& event);
+		//! \brief CallBack appeler lorsque le dialogue préférences et fermer.
+		void onPreferencesColse(wxCloseEvent& event);
 		
-		//! \brief Méthode pour récupérer l'évènement pour lancer activer ou
-		//! désactiver les actions.
+		//! \brief //! \brief CallBack pour activer/désactiver les raccourcis.
 		void onEnableShortcuts(wxCommandEvent& event);
 		
-		//! \brief Méthode pour récupérer l'évènement pour lancer le dialogue
-		//! a propos.
-		void onAbout(wxCommandEvent&);
+		//! \brief CallBack pour lancer le dialogue a propos.
+		void onAbout(wxCommandEvent& event);
 	
 	private:		
+		//! \brief Pointeur sur le dialogue des préférence.
+		DialogPreferences* _dlgPrefPtr;
+		
 		//! \brief Pour la traduction de l'application.
 		wxLocale* _locale;
 };

@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.16
+//! \version 1.17
 //! \date 12.12.12
 //!
 //! ****************************************************************************
@@ -12,12 +12,12 @@
 //App
 #include "main.hpp"
 #include "defs.hpp"
-#include "dialog/dialogPreferences.hpp"
 #include "manager.hpp"
 #include "manager/manGeneral.hpp"
 
 //Stl
 #include <csignal>
+#include <iostream>
 
 //WxWidgets
 #include <wx/image.h> 
@@ -26,16 +26,12 @@
 #include <wx/event.h>
 #include <wx/file.h>
 #include <wx/filefn.h>
+#include <wx/log.h> 
 
-//Test
-#include <iostream>
-
-
-//! \bug relance le dialog préférence
 //Récupération du signale USER1.
 static wxEvtHandler* evtHandlerMain = nullptr;
 void signal_user1(int)
-{
+{	
 	//Envoi d'un évènement pour afficher les preferences.
 	wxCommandEvent *event =
 		new wxCommandEvent(wxEVT_COMMAND_MENU_SELECTED, ID_PREFERENCES);
@@ -50,11 +46,15 @@ wxIMPLEMENT_APP(App);
 
 bool App::OnInit()
 {  	
-	wxStandardPaths& standardPaths = wxStandardPaths::Get();
+	_dlgPrefPtr = nullptr;
 	
+	//Re direction des logs ver la sorti standard.
+	wxLog* logger = new wxLogStream(&std::cout);
+	wxLog::SetActiveTarget(logger);
+		
 	//Changement du préfixe seulement sous unix
 	#if defined(__UNIX__)
-	standardPaths.SetInstallPrefix("/usr");
+	wxStandardPaths::Get().SetInstallPrefix("/usr");
 	#endif
 	
 	//Chemin vair le fichier d'instance du programme.
@@ -68,6 +68,8 @@ bool App::OnInit()
 		wxFile file(fileSingleInstance);
 		file.Read(&pid, sizeof pid);
 		file.Close();
+		
+		wxLogMessage(PROJECT_NAME" is running ...");
 		
 		//Et on luis envois le signale USER1.
 		if(wxKill(pid, (wxSignal)SIGUSR1) == 0)
@@ -194,16 +196,33 @@ void App::onAbout(wxCommandEvent&)
 
 void App::onPreferences(wxCommandEvent&)
 {	
+	if(_dlgPrefPtr != nullptr)
+	{
+		wxLogMessage("The preferences dialog is running ...");
+		_dlgPrefPtr->SetFocus();
+		return;
+	}
+		
 	//Création du dialog.
-	DialogPreferences* dlg = new DialogPreferences();
+	_dlgPrefPtr = new DialogPreferences();
+
+	//Bind close
+	_dlgPrefPtr->Bind(wxEVT_CLOSE_WINDOW, &App::onPreferencesColse, this);
 
 	//Affichage du dialog.
-	dlg->Show();
+	_dlgPrefPtr->Show();
 }
 
-void App::onEnableShortcuts(wxCommandEvent& event)
+void App::onEnableShortcuts(wxCommandEvent&)
 {
-	std::cout << "OnEnableShortcuts : " << event.IsChecked() << std::endl;
 	//_enableShortcuts = event.IsChecked();
 	//ManagerAction::getInstance()->enableShortcuts(_enableShortcuts);
+}
+
+void App::onPreferencesColse(wxCloseEvent&)
+{
+	_dlgPrefPtr->Unbind(wxEVT_CLOSE_WINDOW, &App::onPreferencesColse, this);
+	
+	delete _dlgPrefPtr;
+	_dlgPrefPtr = nullptr;
 }

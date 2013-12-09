@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 4.0
+//! \version 4.1
 //! \date 02.01.2013
 //!
 //! ****************************************************************************
@@ -107,10 +107,10 @@ DialogPreferences::~DialogPreferences()
 	ManGeneral::get().enableTaskIcon();
 }
 
-void DialogPreferences::onClose(wxCloseEvent&)
+void DialogPreferences::onClose(wxCloseEvent& event)
 {
 	Manager::loadManagers();
-	Destroy();
+	event.Skip();
 }
 
 void DialogPreferences::onButtonClickApply(wxCommandEvent&)
@@ -120,13 +120,12 @@ void DialogPreferences::onButtonClickApply(wxCommandEvent&)
 
 void DialogPreferences::onButtonClickCancel(wxCommandEvent&)
 {
-	Manager::loadManagers();
-	Destroy();
+	Close();
 }
 
 void DialogPreferences::onButtonClickOK(wxCommandEvent&)
 {
 	Manager::saveManagers();
-	Destroy();
+	Close();
 }
 		

@@ -50,6 +50,7 @@ class ControlDataList : public wxDataViewListCtrl
 									wxString const& label=wxEmptyString,
 									Enable_e eanble = ENABLE_ANYTIME);
 		void addMenuItemSeparator();
+		wxMenu* getMenu();
 
 	private:
 		void onItemContextMenu(wxDataViewEvent& event);

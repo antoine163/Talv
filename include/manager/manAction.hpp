@@ -27,6 +27,9 @@ class ManAction : public Manager
 	DECLARE_MANAGER(ManAction);
 	
 	public:
+		//! \brief newEditWindow
+		//! \return  \ref WinManAction
+		//! \see WinManAction
 		virtual wxWindow* newEditWindow(wxWindow* parent);
 	
 	private:
@@ -46,6 +49,8 @@ class WinManAction : public wxWindow
 		~WinManAction();
 	
 	private:
+		void onPreferences(wxCommandEvent& event);
+		
 		ControlDataList* _controlDataList;
 };
 

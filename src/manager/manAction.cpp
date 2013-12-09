@@ -16,6 +16,9 @@
 #include <wx/sizer.h>
 #include <wx/button.h>
 
+//! \test std::cout
+#include <iostream>
+
 // *****************************************************************************
 // Class ManAction
 // *****************************************************************************
@@ -167,8 +170,24 @@ WinManAction::WinManAction(wxWindow* parent)
 	mainSizer->Add(_controlDataList, 1, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 4);
 	mainSizer->Add(buttonsSizer, 	 0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 4);	
 	SetSizer(mainSizer);
+	
+	
+	//bind
+	_controlDataList->getMenu()->Bind(wxEVT_COMMAND_MENU_SELECTED,
+							&WinManAction::onPreferences,
+							this,
+							wxID_PREFERENCES);
+	buttonPreferences->Bind(wxEVT_BUTTON,
+							&WinManAction::onPreferences,
+							this,
+							wxID_PREFERENCES);
 }
 
 WinManAction::~WinManAction()
 {
+}
+
+void WinManAction::onPreferences(wxCommandEvent&)
+{	
+	std::cout << "WinManAction::onPreferences" << std::endl;
 }

@@ -91,6 +91,11 @@ void ControlDataList::addMenuItemSeparator()
 	_menu->AppendSeparator();
 }
 
+wxMenu* ControlDataList::getMenu()
+{
+	return _menu;
+}
+
 void ControlDataList::onItemContextMenu(wxDataViewEvent&)
 {
 	PopupMenu(_menu);
