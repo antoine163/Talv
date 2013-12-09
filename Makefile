@@ -3,7 +3,7 @@
 #	Makfile.
 #
 # - author 	:	Antoine Maleyrie : antoine.maleyrie@gmail.com
-# - version	:	1.6
+# - version	:	1.7
 # - date 	:	24/11/2012
 #
 ################################################################################
@@ -40,12 +40,22 @@ CXX_FLAGS_RELESE=-s -O2
 CXX_FLAGS_DEBUG=-g
 
 ################################################################################
-# Define à ajouter.
+# Define à propos de l'application.
 ################################################################################
 # Non du projet
 DEFINE=PROJECT_NAME=\"$(PROJECT_NAME)\"
 # Numéro de version
 DEFINE+=PROJECT_VERSION=\"$(PROJECT_VERSION)\"
+
+################################################################################
+# Define pour faciliter le développement
+################################################################################
+# Vous pouvez passer DEV_RUN_START_PREFERENCES à DEV_DEFINE avec comme valeur le
+# non du Window (qui édit un manager). Se qui aura pour éfer d'afficher ce
+# Window au d'émarger de l'application.
+# ex: make DEV_DEFINE=DEV_RUN_START_PREFERENCES=\\\"Network\\\"
+DEV_DEFINE=
+DEFINE+=$(DEV_DEFINE)
 # Ajout du -D
 DEFINES = $(patsubst %,-D%, $(DEFINE))
 

@@ -62,7 +62,15 @@ DialogPreferences::DialogPreferences()
 	{
 		wxWindow* tmpWindow = it->newEditWindow(notebook);
 		if(tmpWindow != nullptr)
+		{
+			#ifdef DEV_RUN_START_PREFERENCES
+			if(tmpWindow->GetName() == DEV_RUN_START_PREFERENCES)
+				notebook->AddPage(tmpWindow, tmpWindow->GetName(), true);
+			else
+			#endif
 			notebook->AddPage(tmpWindow, tmpWindow->GetName());
+			
+		}
 	}
 	
 	//Création de la statice line.

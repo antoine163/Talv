@@ -32,7 +32,7 @@
 static wxEvtHandler* evtHandlerMain = nullptr;
 void signal_user1(int)
 {	
-	//Envoi d'un évènement pour afficher les preferences.
+	//Envoi d'un évènement pour afficher les préférences.
 	wxCommandEvent *event =
 		new wxCommandEvent(wxEVT_COMMAND_MENU_SELECTED, ID_PREFERENCES);
 	wxQueueEvent(evtHandlerMain, event);
@@ -104,6 +104,13 @@ bool App::OnInit()
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &App::onAbout, this, ID_ABOUT);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &App::onPreferences, this, ID_PREFERENCES);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &App::onEnableShortcuts, this, ID_ENABLE_SHORTKUT);
+	
+	#ifdef DEV_RUN_START_PREFERENCES
+	//Envoi d'un évènement pour afficher les préférences.
+	wxCommandEvent *event =
+		new wxCommandEvent(wxEVT_COMMAND_MENU_SELECTED, ID_PREFERENCES);
+	wxQueueEvent(this, event);
+	#endif
 	
 	return true;
 }

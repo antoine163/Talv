@@ -3,7 +3,8 @@ doc/html/
 
 #Ignorer les fichiers de compilation
 unix/obj/
-unix/flydocs
 msw/obj/
-msw/flydocs.exe
 msw/resource.o
+talv
+talv.exe
+
