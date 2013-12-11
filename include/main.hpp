@@ -13,7 +13,7 @@
 #define MAIN_H
 
 //App
-#include "dialog/dialogPreferences.hpp"
+#include "dialog/dlgPreferences.hpp"
 
 //WxWidgets
 #include <wx/app.h>
@@ -48,7 +48,7 @@ class App : public wxApp
 	
 	private:		
 		//! \brief Pointeur sur le dialogue des préférence.
-		DialogPreferences* _dlgPrefPtr;
+		DlgPreferences* _dlgPrefPtr;
 		
 		//! \brief Pour la traduction de l'application.
 		wxLocale* _locale;

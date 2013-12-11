@@ -9,8 +9,8 @@
 //!
 //! ****************************************************************************
 
-#ifndef DIALOG_PREFERENCES_H
-#define DIALOG_PREFERENCES_H
+#ifndef DLG_PREFERENCES_H
+#define DLG_PREFERENCES_H
 
 //WxWidgets
 #include <wx/dialog.h>
@@ -23,14 +23,14 @@
 //!
 //! Se dialogue va appeler  \ref Manager::newEditWindow() de touts les managers
 //! et les insérais dans un \b wxNotebook.
-class DialogPreferences : public wxDialog 
+class DlgPreferences : public wxDialog 
 {
 	public:
 		
 		//! \brief Constructeur.
-		DialogPreferences();
+		DlgPreferences();
 		//! \brief Destructeur.
-		~DialogPreferences();
+		~DlgPreferences();
 		
 	private:
 		//! \brief CallBack lorsque le dialogue est fermer.
@@ -45,4 +45,4 @@ class DialogPreferences : public wxDialog
 		
 };
 
-#endif //DIALOG_PREFERENCES_H
+#endif //DLG_PREFERENCES_H

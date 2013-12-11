@@ -59,10 +59,11 @@ SRC+=../src/taskIcon.cpp
 #SRC+=../src/list.cpp
 
 #Controls
-SRC+=../src/control/controlDataList.cpp
+SRC+=../src/control/ctrlDataList.cpp
+SRC+=../src/control/ctrlAuthentication.cpp
 
 #Dialogs
-SRC+=../src/dialog/dialogPreferences.cpp
+SRC+=../src/dialog/dlgPreferences.cpp
 
 #wxJSON
 SRC+=../src/wxJSON/jsonval.cpp

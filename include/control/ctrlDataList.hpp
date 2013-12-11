@@ -9,8 +9,8 @@
 //!
 //! ****************************************************************************
 
-#ifndef CONTROL_DATA_LIST_H
-#define CONTROL_DATA_LIST_H
+#ifndef CTRL_DATA_LIST_H
+#define CTRL_DATA_LIST_H
 
 //Stl
 #include <vector>
@@ -32,25 +32,23 @@ enum Enable_e
 };
 
 // *****************************************************************************
-// Class ControlDataList
+// Class CtrlDataList
 // *****************************************************************************
 
-class ControlDataList : public wxDataViewListCtrl
+class CtrlDataList : public wxDataViewListCtrl
 {
 	public:
 		//! \brief Constructeur.
 		//! \param parent fenêtre parent.
-		ControlDataList(wxWindow* parent);
+		CtrlDataList(wxWindow* parent);
 		//! \brief Destructeur.
-		virtual ~ControlDataList();
+		virtual ~CtrlDataList();
 
-		void addWindowEnable(	wxWindow* Window,
-								Enable_e eanble);
+		void addWindowEnable(wxWindow* Window, Enable_e eanble);
 		wxMenuItem* addMenuItem(	wxWindowID id,
 									wxString const& label=wxEmptyString,
 									Enable_e eanble = ENABLE_ANYTIME);
 		void addMenuItemSeparator();
-		wxMenu* getMenu();
 
 	private:
 		void onItemContextMenu(wxDataViewEvent& event);
@@ -66,4 +64,4 @@ class ControlDataList : public wxDataViewListCtrl
 		std::vector<wxWindow*> _windowsEnableOneItem;
 };
 
-#endif //CONTROL_DATA_LIST_H
+#endif //CTRL_DATA_LIST_H

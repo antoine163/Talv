@@ -10,43 +10,35 @@
 //! ****************************************************************************
 
 //App
-#include "control/controlDataList.hpp"
+#include "control/ctrlDataList.hpp"
 
 // *****************************************************************************
-// Class ControlDataList
+// Class CtrlDataList
 // *****************************************************************************
 
-ControlDataList::ControlDataList(wxWindow* parent)
-: wxDataViewListCtrl(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-					wxDV_ROW_LINES|wxDV_MULTIPLE)
+CtrlDataList::CtrlDataList(wxWindow* parent)
+: 	wxDataViewListCtrl(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+	wxDV_ROW_LINES|wxDV_MULTIPLE)
 {
 	//Construction du menu
 	_menu = new wxMenu();
 	
 	//Bind
-	Bind(	wxEVT_DATAVIEW_ITEM_CONTEXT_MENU,
-			&ControlDataList::onItemContextMenu,
-			this);
-	Bind(	wxEVT_DATAVIEW_SELECTION_CHANGED,
-			&ControlDataList::onSelectionChanger,
-			this);
+	Bind(wxEVT_DATAVIEW_ITEM_CONTEXT_MENU, &CtrlDataList::onItemContextMenu, this);
+	Bind(wxEVT_DATAVIEW_SELECTION_CHANGED, &CtrlDataList::onSelectionChanger, this);
 }
 
-ControlDataList::~ControlDataList()
+CtrlDataList::~CtrlDataList()
 {
 	//Unbind
-	Unbind(	wxEVT_DATAVIEW_ITEM_CONTEXT_MENU,
-			&ControlDataList::onItemContextMenu,
-			this);
-	Unbind(	wxEVT_DATAVIEW_SELECTION_CHANGED,
-			&ControlDataList::onSelectionChanger,
-			this);
+	Unbind(wxEVT_DATAVIEW_ITEM_CONTEXT_MENU, &CtrlDataList::onItemContextMenu, this);
+	Unbind(wxEVT_DATAVIEW_SELECTION_CHANGED, &CtrlDataList::onSelectionChanger, this);
 	
 	//Destruction du menu.
 	delete _menu;
 }	
 
-void ControlDataList::addWindowEnable(wxWindow* Window, Enable_e eanble)
+void CtrlDataList::addWindowEnable(wxWindow* Window, Enable_e eanble)
 {
 	switch(eanble)
 	{
@@ -63,7 +55,7 @@ void ControlDataList::addWindowEnable(wxWindow* Window, Enable_e eanble)
 	updateEnableElements();
 }
 
-wxMenuItem* ControlDataList::addMenuItem(	wxWindowID id,
+wxMenuItem* CtrlDataList::addMenuItem(	wxWindowID id,
 											wxString const& label,
 											Enable_e eanble)
 {
@@ -86,27 +78,22 @@ wxMenuItem* ControlDataList::addMenuItem(	wxWindowID id,
 	return menuItem;
 }
 
-void ControlDataList::addMenuItemSeparator()
+void CtrlDataList::addMenuItemSeparator()
 {
 	_menu->AppendSeparator();
 }
 
-wxMenu* ControlDataList::getMenu()
-{
-	return _menu;
-}
-
-void ControlDataList::onItemContextMenu(wxDataViewEvent&)
+void CtrlDataList::onItemContextMenu(wxDataViewEvent&)
 {
 	PopupMenu(_menu);
 }
 
-void ControlDataList::onSelectionChanger(wxDataViewEvent&)
+void CtrlDataList::onSelectionChanger(wxDataViewEvent&)
 {
 	updateEnableElements();
 }
 
-void ControlDataList::updateEnableElements()
+void CtrlDataList::updateEnableElements()
 {
 	//On désactive tous les itères et windows
 	for(auto it: _menuItemsEnableOneItem)

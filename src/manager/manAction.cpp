@@ -11,13 +11,11 @@
 
 //App
 #include "manager/manAction.hpp"
+#include "defs.hpp"
 
 //WxWidgets
 #include <wx/sizer.h>
 #include <wx/button.h>
-
-//! \test std::cout
-#include <iostream>
 
 // *****************************************************************************
 // Class ManAction
@@ -51,98 +49,75 @@ void ManAction::manSave(wxFileConfig&)const
 // *****************************************************************************
 
 WinManAction::WinManAction(wxWindow* parent)
-: wxWindow(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNO_BORDER, _("Actions"))
+: wxWindow(	parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNO_BORDER, _("Actions"))
 {
 	//Creation de la liste.
-	_controlDataList = new ControlDataList(this);
+	_ctrlDataList = new CtrlDataList(this);
 	
 	//Ajout des colonnes.
-	_controlDataList->AppendTextColumn(
-							_("Shortcut"),
-							wxDATAVIEW_CELL_EDITABLE,
-							100,
-							wxALIGN_LEFT,
-							wxDATAVIEW_COL_RESIZABLE|wxDATAVIEW_COL_SORTABLE);
-										
-	_controlDataList->AppendTextColumn(
-							_("Action name"),
-							wxDATAVIEW_CELL_INERT,
-							120,
-							wxALIGN_LEFT,
-							wxDATAVIEW_COL_RESIZABLE|wxDATAVIEW_COL_SORTABLE);
-							
-	_controlDataList->AppendTextColumn(
-							_("Short description"),
-							wxDATAVIEW_CELL_INERT,
-							-1,
-							wxALIGN_LEFT,
-							wxDATAVIEW_COL_RESIZABLE);
+	_ctrlDataList->AppendTextColumn(_("Shortcut"), 			wxDATAVIEW_CELL_EDITABLE, 	100, 	wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE|wxDATAVIEW_COL_SORTABLE);
+	_ctrlDataList->AppendTextColumn(_("Action name"), 		wxDATAVIEW_CELL_INERT, 		120, 	wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE|wxDATAVIEW_COL_SORTABLE);
+	_ctrlDataList->AppendTextColumn(_("Short description"), wxDATAVIEW_CELL_INERT, 		-1, 	wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE);
 							
 	//Remplissage de la liste.(TMP)
 	wxVector<wxVariant> data;
 	data.push_back( wxVariant("ctrl+c") );
 	data.push_back( wxVariant("Translate") );
 	data.push_back( wxVariant("Translate a text") );
-	_controlDataList->AppendItem( data );
+	_ctrlDataList->AppendItem( data );
 	data.clear();
 	data.push_back( wxVariant("ctrl+v") );
 	data.push_back( wxVariant("Translate") );
 	data.push_back( wxVariant("Translate a text") );
-	_controlDataList->AppendItem( data );
+	_ctrlDataList->AppendItem( data );
 	data.clear();
 	data.push_back( wxVariant("ctrl+m") );
 	data.push_back( wxVariant("Translate") );
 	data.push_back( wxVariant("Translate a text") );
-	_controlDataList->AppendItem( data );
+	_ctrlDataList->AppendItem( data );
 	data.clear();
 	data.push_back( wxVariant("ctrl+p") );
 	data.push_back( wxVariant("Translate") );
 	data.push_back( wxVariant("Translate a text") );
-	_controlDataList->AppendItem( data );
+	_ctrlDataList->AppendItem( data );
 	data.clear();
 	data.push_back( wxVariant("ctrl+v") );
 	data.push_back( wxVariant("Translate") );
 	data.push_back( wxVariant("Translate a text") );
-	_controlDataList->AppendItem( data );
+	_ctrlDataList->AppendItem( data );
 	data.clear();
 	data.push_back( wxVariant("ctrl+m") );
 	data.push_back( wxVariant("Translate") );
 	data.push_back( wxVariant("Translate a text") );
-	_controlDataList->AppendItem( data );
+	_ctrlDataList->AppendItem( data );
 	data.clear();
 	data.push_back( wxVariant("ctrl+p") );
 	data.push_back( wxVariant("Translate") );
 	data.push_back( wxVariant("Translate a text") );
-	_controlDataList->AppendItem( data );
+	_ctrlDataList->AppendItem( data );
 	data.clear();
 	data.push_back( wxVariant("ctrl+v") );
 	data.push_back( wxVariant("Translate") );
 	data.push_back( wxVariant("Translate a text") );
-	_controlDataList->AppendItem( data );
+	_ctrlDataList->AppendItem( data );
 	data.clear();
 	data.push_back( wxVariant("ctrl+m") );
 	data.push_back( wxVariant("Translate") );
 	data.push_back( wxVariant("Translate a text") );
-	_controlDataList->AppendItem( data );
+	_ctrlDataList->AppendItem( data );
 	data.clear();
 	data.push_back( wxVariant("ctrl+p") );
 	data.push_back( wxVariant("Translate") );
 	data.push_back( wxVariant("Translate a text") );
-	_controlDataList->AppendItem( data );
+	_ctrlDataList->AppendItem( data );
 	
 	//Créations du menu.
-	_controlDataList->addMenuItem(	wxID_ADD);
-	_controlDataList->addMenuItem(	wxID_PREFERENCES,	
-									wxEmptyString,
-									ENABLE_SELECTING_ONE_ITEM);
-	_controlDataList->addMenuItem(	wxID_FIND);
-	_controlDataList->addMenuItem(	wxID_DELETE,
-									wxEmptyString,
-									ENABLE_SELECTING_ITEMS);
-	_controlDataList->addMenuItemSeparator();
-	_controlDataList->addMenuItem(	wxID_ANY,
-									_("Change the shortcut"),
-									ENABLE_SELECTING_ONE_ITEM);
+	_ctrlDataList->addMenuItem(wxID_ADD, 			wxEmptyString, 				ENABLE_ANYTIME);
+	_ctrlDataList->addMenuItem(wxID_PREFERENCES, 	wxEmptyString, 				ENABLE_SELECTING_ONE_ITEM);
+	_ctrlDataList->addMenuItem(wxID_FIND, 			wxEmptyString, 				ENABLE_ANYTIME);
+	_ctrlDataList->addMenuItem(wxID_DELETE, 		wxEmptyString, 				ENABLE_SELECTING_ITEMS);
+	_ctrlDataList->addMenuItemSeparator();
+	_ctrlDataList->addMenuItem(ID_CHANGE_SHORTCUT, _("Change the shortcut"), 	ENABLE_SELECTING_ONE_ITEM);
 	
 	//Créations des boutons.
 	wxButton* buttonDelete = 		new wxButton(this, wxID_DELETE);
@@ -151,36 +126,27 @@ WinManAction::WinManAction(wxWindow* parent)
 	
 	//Ajout des bouton au ControlDataList pour qu'il s'occupe d'activer ou pas
 	//les boutons en fonction de la sélection.
-	_controlDataList->addWindowEnable(	buttonDelete,
-										ENABLE_SELECTING_ITEMS);
-	_controlDataList->addWindowEnable(	buttonPreferences,
-										ENABLE_SELECTING_ONE_ITEM);
-	//_controlDataList->addWindowEnable(	buttonAdd,
-	//										ENABLE_ANYTIME);
+	_ctrlDataList->addWindowEnable(		buttonDelete, 		ENABLE_SELECTING_ITEMS);
+	_ctrlDataList->addWindowEnable(		buttonPreferences, 	ENABLE_SELECTING_ONE_ITEM);
+	_ctrlDataList->addWindowEnable(		buttonAdd, 			ENABLE_ANYTIME);
 
 	//Mise en forme des boutons avec un sizer.
 	wxSizer* buttonsSizer = new wxBoxSizer(wxHORIZONTAL);
 	buttonsSizer->Add(buttonDelete,	 		0, wxEXPAND);
 	buttonsSizer->AddStretchSpacer(1);
-	buttonsSizer->Add(buttonPreferences, 	0, wxEXPAND);
+	buttonsSizer->Add(buttonPreferences, 	0, wxEXPAND|wxRIGHT, SIZE_BORDER);
 	buttonsSizer->Add(buttonAdd, 			0, wxEXPAND);
 	
 	//Mise en forme du GUI avec des sizer.
 	wxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
-	mainSizer->Add(_controlDataList, 1, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 4);
-	mainSizer->Add(buttonsSizer, 	 0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 4);	
+	mainSizer->Add(_ctrlDataList, 	1, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM|wxTOP, 	SIZE_BORDER);
+	mainSizer->Add(buttonsSizer, 	0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);	
 	SetSizer(mainSizer);
 	
 	
 	//bind
-	_controlDataList->getMenu()->Bind(wxEVT_COMMAND_MENU_SELECTED,
-							&WinManAction::onPreferences,
-							this,
-							wxID_PREFERENCES);
-	buttonPreferences->Bind(wxEVT_BUTTON,
-							&WinManAction::onPreferences,
-							this,
-							wxID_PREFERENCES);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, 	&WinManAction::onPreferences, this, wxID_PREFERENCES);
+	Bind(wxEVT_BUTTON, 					&WinManAction::onPreferences, this, wxID_PREFERENCES);
 }
 
 WinManAction::~WinManAction()

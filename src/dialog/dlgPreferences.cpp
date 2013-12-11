@@ -10,7 +10,8 @@
 //! ****************************************************************************
 
 //App
-#include "dialog/dialogPreferences.hpp"
+#include "dialog/dlgPreferences.hpp"
+#include "defs.hpp"
 #include "manager.hpp"
 #include "manager/manGeneral.hpp"
 
@@ -22,15 +23,12 @@
 #include <wx/statbmp.h>
 
 // *****************************************************************************
-// Class DialogPreferences
+// Class DlgPreferences
 // *****************************************************************************
 
-DialogPreferences::DialogPreferences()
-: wxDialog(nullptr, wxID_ANY, _("Preferences"),
-			wxDefaultPosition, wxDefaultSize,		wxDEFAULT_DIALOG_STYLE|
-													wxRESIZE_BORDER|
-													wxSTAY_ON_TOP|
-													wxDIALOG_NO_PARENT)
+DlgPreferences::DlgPreferences()
+: 	wxDialog(nullptr, wxID_ANY, _("Preferences"), wxDefaultPosition, wxDefaultSize,
+	wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxSTAY_ON_TOP|wxDIALOG_NO_PARENT)
 {	
 	//Désactivassions du menue dans la bar de notification.
 	ManGeneral::get().enableTaskIcon(false);
@@ -41,23 +39,18 @@ DialogPreferences::DialogPreferences()
 	//Création de la bannière.
 	wxBannerWindow* banner = new wxBannerWindow(this, wxTOP);
 	banner->SetText(PROJECT_NAME, _("Translation on the fly."));
-	banner->SetGradient(wxColour(127, 127, 127, 127),
-						wxColour(127, 127, 127, 0));	
+	banner->SetGradient(wxColour(127, 127, 127, 127), wxColour(127, 127, 127, 0));	
 	wxStaticBitmap* bitmapApp = new wxStaticBitmap(this, wxID_ANY, wxBitmap());
 	bitmapApp->SetIcon(ManGeneral::get().getIconApp(ICON_SIZE_32X32));
 	
 	//Ajout de l'icône
 	wxSizer* bannerSizer = new wxBoxSizer(wxHORIZONTAL);
 	bannerSizer->AddStretchSpacer(1);
-	bannerSizer->Add(bitmapApp, 0, wxALIGN_CENTER_VERTICAL);
+	bannerSizer->Add(bitmapApp, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT, SIZE_BORDER);
 	banner->SetSizer(bannerSizer);
 	
 	//Création du notebook.
-	wxNotebook* notebook = new wxNotebook(	this,
-											wxID_ANY, 
-											wxDefaultPosition,
-											wxDefaultSize,
-											wxNB_LEFT);
+	wxNotebook* notebook = new wxNotebook(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNB_LEFT);
 	for(auto it : Manager::getManagers())
 	{
 		wxWindow* tmpWindow = it->newEditWindow(notebook);
@@ -68,8 +61,7 @@ DialogPreferences::DialogPreferences()
 				notebook->AddPage(tmpWindow, tmpWindow->GetName(), true);
 			else
 			#endif
-			notebook->AddPage(tmpWindow, tmpWindow->GetName());
-			
+			notebook->AddPage(tmpWindow, tmpWindow->GetName());			
 		}
 	}
 	
@@ -81,10 +73,10 @@ DialogPreferences::DialogPreferences()
 	
 	//Mise en forme du GUI avec un sizer.
 	wxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
-	mainSizer->Add(banner, 		0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM|wxTOP, 	4);
-	mainSizer->Add(notebook, 	1, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		4);
-	mainSizer->Add(staticLine, 	0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM,		4);
-	mainSizer->Add(buttons, 	0, wxEXPAND|wxBOTTOM, 						4);
+	mainSizer->Add(banner, 		0, 	wxEXPAND);
+	mainSizer->Add(notebook, 	1, 	wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);
+	mainSizer->Add(staticLine, 	0, 	wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);
+	mainSizer->Add(buttons, 	0, 	wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);
 	
 	SetMinSize(wxSize(600, 350));
 	SetSize(wxSize(600, 350));
@@ -93,45 +85,45 @@ DialogPreferences::DialogPreferences()
 	
 	
 	//Bind des boutons
-	Bind(wxEVT_BUTTON, &DialogPreferences::onButtonClickApply, this, wxID_APPLY);
-	Bind(wxEVT_BUTTON, &DialogPreferences::onButtonClickCancel, this, wxID_CANCEL);
-	Bind(wxEVT_BUTTON, &DialogPreferences::onButtonClickOK, this, wxID_OK);
+	Bind(wxEVT_BUTTON, &DlgPreferences::onButtonClickApply,		this, wxID_APPLY);
+	Bind(wxEVT_BUTTON, &DlgPreferences::onButtonClickCancel, 	this, wxID_CANCEL);
+	Bind(wxEVT_BUTTON, &DlgPreferences::onButtonClickOK, 		this, wxID_OK);
 	
-	Bind(wxEVT_CLOSE_WINDOW, &DialogPreferences::onClose, this);
+	Bind(wxEVT_CLOSE_WINDOW, &DlgPreferences::onClose, this);
 
 	Centre();
 }
 
-DialogPreferences::~DialogPreferences()
+DlgPreferences::~DlgPreferences()
 {
 	//Unbind des boutons
-	Unbind(wxEVT_BUTTON, &DialogPreferences::onButtonClickApply, this, wxID_APPLY);
-	Unbind(wxEVT_BUTTON, &DialogPreferences::onButtonClickCancel, this, wxID_CANCEL);
-	Unbind(wxEVT_BUTTON, &DialogPreferences::onButtonClickOK, this, wxID_OK);
+	Unbind(wxEVT_BUTTON, &DlgPreferences::onButtonClickApply, 	this, wxID_APPLY);
+	Unbind(wxEVT_BUTTON, &DlgPreferences::onButtonClickCancel, 	this, wxID_CANCEL);
+	Unbind(wxEVT_BUTTON, &DlgPreferences::onButtonClickOK, 		this, wxID_OK);
 	
-	Unbind(wxEVT_CLOSE_WINDOW, &DialogPreferences::onClose, this);
+	Unbind(wxEVT_CLOSE_WINDOW, &DlgPreferences::onClose, this);
 	
 	//Activation du menue dans la bar de notification.
 	ManGeneral::get().enableTaskIcon();
 }
 
-void DialogPreferences::onClose(wxCloseEvent& event)
+void DlgPreferences::onClose(wxCloseEvent& event)
 {
 	Manager::loadManagers();
 	event.Skip();
 }
 
-void DialogPreferences::onButtonClickApply(wxCommandEvent&)
+void DlgPreferences::onButtonClickApply(wxCommandEvent&)
 {
 	Manager::saveManagers();
 }
 
-void DialogPreferences::onButtonClickCancel(wxCommandEvent&)
+void DlgPreferences::onButtonClickCancel(wxCommandEvent&)
 {
 	Close();
 }
 
-void DialogPreferences::onButtonClickOK(wxCommandEvent&)
+void DlgPreferences::onButtonClickOK(wxCommandEvent&)
 {
 	Manager::saveManagers();
 	Close();

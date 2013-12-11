@@ -14,7 +14,7 @@
 
 //App
 #include "manager.hpp"
-#include "control/controlDataList.hpp"
+#include "control/ctrlDataList.hpp"
 
 // *****************************************************************************
 // Class ManList
@@ -46,7 +46,7 @@ class WinManList : public wxWindow
 		~WinManList();
 	
 	private:
-		ControlDataList* _controlDataList;
+		CtrlDataList* _ctrlDataList;
 };
 
 #endif //MAN_LIST_H

@@ -14,7 +14,7 @@
 
 //App
 #include "manager.hpp"
-#include "control/controlDataList.hpp"
+#include "control/ctrlDataList.hpp"
 
 // *****************************************************************************
 // Class ManAction
@@ -51,7 +51,7 @@ class WinManAction : public wxWindow
 	private:
 		void onPreferences(wxCommandEvent& event);
 		
-		ControlDataList* _controlDataList;
+		CtrlDataList* _ctrlDataList;
 };
 
 

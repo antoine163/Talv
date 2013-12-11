@@ -212,7 +212,7 @@ void App::onPreferences(wxCommandEvent&)
 	}
 		
 	//Création du dialog.
-	_dlgPrefPtr = new DialogPreferences();
+	_dlgPrefPtr = new DlgPreferences();
 
 	//Bind close
 	_dlgPrefPtr->Bind(wxEVT_CLOSE_WINDOW, &App::onPreferencesColse, this);

@@ -14,6 +14,15 @@
 
 //App
 #include "manager.hpp"
+#include "control/ctrlAuthentication.hpp"
+
+
+//WxWidgets
+#include <wx/string.h>
+#include <wx/radiobut.h>
+#include <wx/checkbox.h>
+#include <wx/textctrl.h>
+#include <wx/spinctrl.h>
 
 // *****************************************************************************
 // Class ManList
@@ -45,6 +54,20 @@ class WinManNetwork : public wxWindow
 		~WinManNetwork();
 	
 	private:
+		void onButtonManualProxy(wxCommandEvent& event);
+		void onCheckBoxUseAuthentication(wxCommandEvent& event);
+		
+		wxRadioButton* _radioButtonNoProxy;
+		wxRadioButton* _radioButtonSystemProxy; 
+		wxRadioButton* _radioButtonAutoDetectProxy;
+		wxRadioButton* _radioButtonManualProxy;
+		
+		wxTextCtrl* _textCtrlProxy;
+		wxSpinCtrl* _spinCtrlProxyPort;
+		wxCheckBox* _checkBoxUseAuthentication;
+
+		wxWindow* _windowManualProxy;
+		CtrlAuthentication* _ctrlAuthentication;
 };
 
 #endif //MAN_NETWORK_H
