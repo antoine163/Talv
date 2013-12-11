@@ -75,16 +75,16 @@ DlgPreferences::DlgPreferences()
 	wxSizer* buttons = CreateButtonSizer(wxAPPLY|wxCANCEL|wxOK);
 	
 	//Mise en forme du GUI avec un sizer.
-	wxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
-	mainSizer->Add(banner, 		0, 	wxEXPAND);
-	mainSizer->Add(_notebook, 	1, 	wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);
-	mainSizer->Add(staticLine, 	0, 	wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);
-	mainSizer->Add(buttons, 	0, 	wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);
+	wxSizer* sizerMain = new wxBoxSizer(wxVERTICAL);
+	sizerMain->Add(banner, 		0, 	wxEXPAND);
+	sizerMain->Add(_notebook, 	1, 	wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);
+	sizerMain->Add(staticLine, 	0, 	wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);
+	sizerMain->Add(buttons, 	0, 	wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);
 	
 	SetMinSize(wxSize(600, 350));
 	SetSize(wxSize(600, 350));
-	SetSizer(mainSizer);
-	//SetSizerAndFit(mainSizer);
+	SetSizer(sizerMain);
+	//SetSizerAndFit(sizerMain);
 	
 	
 	//Bind des boutons

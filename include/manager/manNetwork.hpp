@@ -14,14 +14,11 @@
 
 //App
 #include "manager.hpp"
-#include "control/ctrlAuthentication.hpp"
+#include "control/ctrlProxyInfo.hpp"
 
 //WxWidgets
 #include <wx/string.h>
 #include <wx/radiobut.h>
-#include <wx/checkbox.h>
-#include <wx/textctrl.h>
-#include <wx/spinctrl.h>
 #include <wx/url.h>
 
 // *****************************************************************************
@@ -36,38 +33,7 @@ enum UseProxy_e
 };
 
 // *****************************************************************************
-// Class ProxyInfo
-// *****************************************************************************
-
-//! \brief ProxyInfo
-class ProxyInfo
-{	
-	public:
-		ProxyInfo(	wxString const& proxy = wxEmptyString,
-					int port = 80,
-					wxString const& username = wxEmptyString,
-					wxString const& password = wxEmptyString);
-		~ProxyInfo();
-		
-		wxString getProxy()const;
-		void setProxy(wxString const& proxy);
-		int getPort()const;
-		void setPort(int port);
-		
-		wxString getUsername()const;
-		void setUsername(wxString const& username);
-		wxString getPassword()const;
-		void setPassword(wxString const& password);
-	
-	private:
-		wxString _proxy;
-		int _port;
-		wxString _username;
-		wxString _password;
-};
-
-// *****************************************************************************
-// Class ManList
+// Class ManNetwork
 // *****************************************************************************
 
 //! \ingroup manager
@@ -82,7 +48,7 @@ class ManNetwork : public Manager
 		void setUseProxy(UseProxy_e useProxy);
 		
 		//Proxy
-		//ProxyInfo getProxyInfoManual();
+		ProxyInfo getProxyInfoManual();
 		//void setProxyInfoManual(ProxyInfo const& proxy);
 		//ProxyInfo getProxyInfoCourent();
 		//void setProxyInfoCurrent(ProxyInfo const& proxy);
@@ -116,19 +82,13 @@ class WinManNetwork : public WinManager
 	
 	private:
 		void onButtonManualProxy(wxCommandEvent& event);
-		void onCheckBoxUseAuthentication(wxCommandEvent& event);
 		
-		wxRadioButton* _radioButtonNoProxy;
-		wxRadioButton* _radioButtonSystemProxy; 
-		wxRadioButton* _radioButtonAutoDetectProxy;
-		wxRadioButton* _radioButtonManualProxy;
+		wxRadioButton* _radioButtonProxyNo;
+		wxRadioButton* _radioButtonProxySystem; 
+		//wxRadioButton* _radioButtonProxyAutoDetect;
+		wxRadioButton* _radioButtonProxyManual;
 		
-		wxTextCtrl* _textCtrlProxy;
-		wxSpinCtrl* _spinCtrlProxyPort;
-		wxCheckBox* _checkBoxUseAuthentication;
-
-		wxWindow* _windowManualProxy;
-		CtrlAuthentication* _ctrlAuthentication;
+		CtrlProxyInfo* _ctrlProxyInfoProxyManual;
 };
 
 #endif //MAN_NETWORK_H

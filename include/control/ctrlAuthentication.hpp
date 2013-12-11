@@ -29,7 +29,8 @@ class CtrlAuthentication : public wxWindow
 		//! \param parent fenêtre parent.
 		CtrlAuthentication(	wxWindow* parent,
 							wxString const& username = wxEmptyString,
-							wxString const& password = wxEmptyString);
+							wxString const& password = wxEmptyString,
+							long style = 0);
 		//! \brief Destructeur.
 		virtual ~CtrlAuthentication();
 		

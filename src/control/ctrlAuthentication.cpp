@@ -23,8 +23,9 @@
 
 CtrlAuthentication::CtrlAuthentication(	wxWindow* parent,
 										wxString const& username,
-										wxString const& password)
-: wxWindow(parent, wxID_ANY)
+										wxString const& password,
+										long style)
+: wxWindow(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, style)
 {
 	//Créations du chant username.
 	wxStaticText* staticTextUsername = new wxStaticText(this, wxID_ANY, _("Username:"));
@@ -42,15 +43,15 @@ CtrlAuthentication::CtrlAuthentication(	wxWindow* parent,
 		
 	//Mise en forme avec un sizer.
 	wxSizer* sizerPassword = new wxBoxSizer(wxHORIZONTAL);
-	sizerPassword->Add(staticTextPassword, 	0, wxALIGN_CENTER_VERTICAL|wxRIGHT, 2*SIZE_BORDER);	
-	sizerPassword->Add(_textCtrlPassword, 	1, wxEXPAND|wxALIGN_CENTER_VERTICAL|wxRIGHT, 2*SIZE_BORDER);	
+	sizerPassword->Add(staticTextPassword, 	0, wxALIGN_CENTER_VERTICAL|wxRIGHT, 			2*SIZE_BORDER);	
+	sizerPassword->Add(_textCtrlPassword, 	1, wxEXPAND|wxALIGN_CENTER_VERTICAL|wxRIGHT, 	2*SIZE_BORDER);	
 	sizerPassword->Add(toggleButtonShow, 	0, wxEXPAND|wxALIGN_CENTER_VERTICAL);	
 	
 	//Mise en forme du GUI avec un sizer.
-	wxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
-	mainSizer->Add(sizerUsername, 0, wxEXPAND|wxBOTTOM, SIZE_BORDER);	
-	mainSizer->Add(sizerPassword, 0, wxEXPAND);	
-	SetSizer(mainSizer);
+	wxSizer* sizerMain = new wxBoxSizer(wxVERTICAL);
+	sizerMain->Add(sizerUsername, 0, wxEXPAND|wxBOTTOM|wxLEFT|wxRIGHT|wxTOP, 	SIZE_BORDER);	
+	sizerMain->Add(sizerPassword, 0, wxEXPAND|wxBOTTOM|wxLEFT|wxRIGHT, 			SIZE_BORDER);	
+	SetSizerAndFit(sizerMain);
 	
 	//Bind
 	Bind(wxEVT_TOGGLEBUTTON, &CtrlAuthentication::onToggleButtonShow, this);

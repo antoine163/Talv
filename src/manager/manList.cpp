@@ -100,18 +100,18 @@ WinManList::WinManList(wxWindow* parent)
 	_ctrlDataList->addWindowEnable(buttonNew, 		ENABLE_ANYTIME);
 
 	//Mise en forme des boutons avec un sizer.
-	wxSizer* buttonsSizer = new wxBoxSizer(wxHORIZONTAL);
-	buttonsSizer->Add(buttonDelete,	 	0, wxEXPAND);
-	buttonsSizer->AddStretchSpacer(1);
-	buttonsSizer->Add(buttonImport, 	0, wxEXPAND|wxRIGHT, SIZE_BORDER);//ajouter bordure
-	buttonsSizer->Add(buttonEdit, 		0, wxEXPAND|wxRIGHT, SIZE_BORDER);
-	buttonsSizer->Add(buttonNew, 		0, wxEXPAND);
+	wxSizer* sizeButtons = new wxBoxSizer(wxHORIZONTAL);
+	sizeButtons->Add(buttonDelete,	 	0, wxEXPAND);
+	sizeButtons->AddStretchSpacer(1);
+	sizeButtons->Add(buttonImport, 		0, wxEXPAND|wxRIGHT, SIZE_BORDER);//ajouter bordure
+	sizeButtons->Add(buttonEdit, 		0, wxEXPAND|wxRIGHT, SIZE_BORDER);
+	sizeButtons->Add(buttonNew, 		0, wxEXPAND);
 	
 	//Mise en forme du GUI avec des sizer.
-	wxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
-	mainSizer->Add(_ctrlDataList, 	1, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM|wxTOP, 	SIZE_BORDER);
-	mainSizer->Add(buttonsSizer,	0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);	
-	SetSizer(mainSizer);
+	wxSizer* sizerMain = new wxBoxSizer(wxVERTICAL);
+	sizerMain->Add(_ctrlDataList, 	1, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM|wxTOP, 	SIZE_BORDER);
+	sizerMain->Add(sizeButtons,		0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);	
+	SetSizerAndFit(sizerMain);
 }
 
 WinManList::~WinManList()

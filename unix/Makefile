@@ -52,14 +52,11 @@ SRC=../src/main.cpp
 
 #Divers
 SRC+=../src/taskIcon.cpp
-#SRC+=../src/shortcut.cpp
-#SRC+=../src/dataText.cpp
-#SRC+=../src/fileText.cpp
-#SRC+=../src/cache.cpp
-#SRC+=../src/list.cpp
+SRC+=../src/proxyInfo.cpp
 
 #Controls
 SRC+=../src/control/ctrlDataList.cpp
+SRC+=../src/control/ctrlProxyInfo.cpp
 SRC+=../src/control/ctrlAuthentication.cpp
 
 #Dialogs
