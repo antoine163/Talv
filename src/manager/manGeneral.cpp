@@ -311,15 +311,16 @@ wxString ManGeneral::getPathIcons(IconSize_e size)const
 	return path;
 }
 
-wxWindow* ManGeneral::newEditWindow(wxWindow* parent)
+WinManager* ManGeneral::newEditWindow(wxWindow* parent)
 {
-	wxWindow* tmp = new wxWindow(	parent,
-									wxID_ANY,
-									wxDefaultPosition,
-									wxDefaultSize,
-									0,
-									_("General"));
-	return tmp;
+	//wxWindow* tmp = new WinManager(	parent,
+									//wxID_ANY,
+									//wxDefaultPosition,
+									//wxDefaultSize,
+									//0,
+									//_("General"));
+	//return tmp;
+	return nullptr;
 }
 
 void ManGeneral::manLoad(wxFileConfig&)

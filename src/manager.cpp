@@ -31,6 +31,19 @@
 #include "managerDefs.hpp"
 
 // *****************************************************************************
+// Class WinManager
+// *****************************************************************************
+
+WinManager::WinManager(wxWindow *parent, const wxString &name)
+: wxWindow(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, name)
+{
+}
+
+WinManager::~WinManager()
+{
+}
+
+// *****************************************************************************
 // Class Manager
 // *****************************************************************************
 
@@ -42,7 +55,7 @@ Manager::~Manager()
 {
 }
 
-wxWindow* Manager::newEditWindow(wxWindow*)
+WinManager* Manager::newEditWindow(wxWindow*)
 {
 	return nullptr;
 }

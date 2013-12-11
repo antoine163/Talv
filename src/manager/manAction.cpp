@@ -31,7 +31,7 @@ ManAction::~ManAction()
 
 IMPLEMENT_MANAGER(ManAction);
 
-wxWindow* ManAction::newEditWindow(wxWindow* parent)
+WinManager* ManAction::newEditWindow(wxWindow* parent)
 {
 	return new WinManAction(parent);
 }
@@ -49,7 +49,7 @@ void ManAction::manSave(wxFileConfig&)const
 // *****************************************************************************
 
 WinManAction::WinManAction(wxWindow* parent)
-: wxWindow(	parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNO_BORDER, _("Actions"))
+: WinManager(parent, _("Actions"))
 {
 	//Creation de la liste.
 	_ctrlDataList = new CtrlDataList(this);
@@ -150,6 +150,14 @@ WinManAction::WinManAction(wxWindow* parent)
 }
 
 WinManAction::~WinManAction()
+{
+}
+
+void WinManAction::refreshGuiFromManager()
+{
+}
+
+void WinManAction::refreshManagerFromGui()const
 {
 }
 

@@ -26,15 +26,12 @@ ManTts::~ManTts()
 
 IMPLEMENT_MANAGER(ManTts);
 
-wxWindow* ManTts::newEditWindow(wxWindow* parent)
+WinManager* ManTts::newEditWindow(wxWindow* parent)
 {
-	wxWindow* tmp = new wxWindow(	parent,
-									wxID_ANY,
-									wxDefaultPosition,
-									wxDefaultSize,
-									0,
-									_("Text to speech"));
-	return tmp;
+	//wxWindow* tmp = new wxWindow(parent, _("Text to speech"));
+	//return tmp;
+	
+	return nullptr;
 }
 
 void ManTts::manLoad(wxFileConfig&)

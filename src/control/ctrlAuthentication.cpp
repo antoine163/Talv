@@ -21,12 +21,14 @@
 // Class CtrlAuthentication
 // *****************************************************************************
 
-CtrlAuthentication::CtrlAuthentication(wxWindow* parent)
+CtrlAuthentication::CtrlAuthentication(	wxWindow* parent,
+										wxString const& username,
+										wxString const& password)
 : wxWindow(parent, wxID_ANY)
 {
 	//Créations du chant username.
 	wxStaticText* staticTextUsername = new wxStaticText(this, wxID_ANY, _("Username:"));
-	_textCtrlUsername = new wxTextCtrl(this, wxID_ANY);
+	_textCtrlUsername = new wxTextCtrl(this, wxID_ANY, username);
 		
 	//Mise en forme avec un sizer.
 	wxSizer* sizerUsername = new wxBoxSizer(wxHORIZONTAL);
@@ -35,14 +37,14 @@ CtrlAuthentication::CtrlAuthentication(wxWindow* parent)
 	
 	//Créations du chant password.
 	wxStaticText* staticTextPassword = new wxStaticText(this, wxID_ANY, _("Password:"));
-	_textCtrlPassword = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD);
-	_toggleButtonShow = new wxToggleButton(this, wxID_ANY, _("Show"));
+	_textCtrlPassword = new wxTextCtrl(this, wxID_ANY, password, wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD);
+	wxToggleButton* toggleButtonShow = new wxToggleButton(this, wxID_ANY, _("Show"));
 		
 	//Mise en forme avec un sizer.
 	wxSizer* sizerPassword = new wxBoxSizer(wxHORIZONTAL);
 	sizerPassword->Add(staticTextPassword, 	0, wxALIGN_CENTER_VERTICAL|wxRIGHT, 2*SIZE_BORDER);	
 	sizerPassword->Add(_textCtrlPassword, 	1, wxEXPAND|wxALIGN_CENTER_VERTICAL|wxRIGHT, 2*SIZE_BORDER);	
-	sizerPassword->Add(_toggleButtonShow, 	0, wxEXPAND|wxALIGN_CENTER_VERTICAL);	
+	sizerPassword->Add(toggleButtonShow, 	0, wxEXPAND|wxALIGN_CENTER_VERTICAL);	
 	
 	//Mise en forme du GUI avec un sizer.
 	wxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
@@ -51,18 +53,38 @@ CtrlAuthentication::CtrlAuthentication(wxWindow* parent)
 	SetSizer(mainSizer);
 	
 	//Bind
-	_toggleButtonShow->Bind(wxEVT_TOGGLEBUTTON, &CtrlAuthentication::onToggleButtonShow, this);
+	Bind(wxEVT_TOGGLEBUTTON, &CtrlAuthentication::onToggleButtonShow, this);
 }
 
 CtrlAuthentication::~CtrlAuthentication()
 {
 	//Unbind
-	_toggleButtonShow->Unbind(wxEVT_TOGGLEBUTTON, &CtrlAuthentication::onToggleButtonShow, this);
+	Unbind(wxEVT_TOGGLEBUTTON, &CtrlAuthentication::onToggleButtonShow, this);
 }
 
-void CtrlAuthentication::onToggleButtonShow(wxCommandEvent&)
+wxString CtrlAuthentication::getUsername()const
 {
-	if(_toggleButtonShow->GetValue())
+	return _textCtrlUsername->GetValue();
+}
+
+void CtrlAuthentication::setUsername(wxString const& username)
+{
+	_textCtrlUsername->SetValue(username);
+}
+		
+wxString CtrlAuthentication::getPassword()const
+{
+	return _textCtrlPassword->GetValue();
+}
+
+void CtrlAuthentication::setPassword(wxString const& password)
+{
+	_textCtrlPassword->SetValue(password);
+}
+
+void CtrlAuthentication::onToggleButtonShow(wxCommandEvent& event)
+{
+	if(event.IsChecked())
 		_textCtrlPassword->SetWindowStyleFlag(0);
 	else
 		_textCtrlPassword->SetWindowStyleFlag(wxTE_PASSWORD);

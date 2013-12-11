@@ -30,7 +30,7 @@ class ManAction : public Manager
 		//! \brief newEditWindow
 		//! \return  \ref WinManAction
 		//! \see WinManAction
-		virtual wxWindow* newEditWindow(wxWindow* parent);
+		virtual WinManager* newEditWindow(wxWindow* parent);
 	
 	private:
 		virtual void manLoad(wxFileConfig& fileConfig);
@@ -42,11 +42,14 @@ class ManAction : public Manager
 // *****************************************************************************
 
 //! \brief WinManAction
-class WinManAction : public wxWindow
+class WinManAction : public WinManager
 {
 	public:
 		WinManAction(wxWindow* parent);
 		~WinManAction();
+		
+		virtual void refreshGuiFromManager();
+		virtual void refreshManagerFromGui()const;
 	
 	private:
 		void onPreferences(wxCommandEvent& event);

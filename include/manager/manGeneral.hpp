@@ -67,7 +67,7 @@ class ManGeneral : public Manager
 		
 		
 	
-		virtual wxWindow* newEditWindow(wxWindow* parent);
+		virtual WinManager* newEditWindow(wxWindow* parent);
 	
 	private:
 		virtual void manLoad(wxFileConfig& fileConfig);

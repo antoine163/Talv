@@ -27,7 +27,7 @@ class ManList : public Manager
 	DECLARE_MANAGER(ManList);
 	
 	public:
-		virtual wxWindow* newEditWindow(wxWindow* parent);
+		virtual WinManager* newEditWindow(wxWindow* parent);
 	
 	private:
 		virtual void manLoad(wxFileConfig& fileConfig);
@@ -39,11 +39,14 @@ class ManList : public Manager
 // *****************************************************************************
 
 //! \brief WinManList
-class WinManList : public wxWindow
+class WinManList : public WinManager
 {
 	public:
 		WinManList(wxWindow* parent);
 		~WinManList();
+		
+		virtual void refreshGuiFromManager();
+		virtual void refreshManagerFromGui()const;
 	
 	private:
 		CtrlDataList* _ctrlDataList;

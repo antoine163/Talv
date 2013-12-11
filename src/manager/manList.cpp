@@ -30,7 +30,7 @@ ManList::~ManList()
 
 IMPLEMENT_MANAGER(ManList);
 
-wxWindow* ManList::newEditWindow(wxWindow* parent)
+WinManager* ManList::newEditWindow(wxWindow* parent)
 {
 	return new WinManList(parent);
 }
@@ -48,7 +48,7 @@ void ManList::manSave(wxFileConfig&)const
 // *****************************************************************************
 
 WinManList::WinManList(wxWindow* parent)
-: wxWindow(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, _("Lists"))
+: WinManager(parent, _("Lists"))
 {
 	//Creation de la liste.
 	_ctrlDataList = new CtrlDataList(this);
@@ -81,8 +81,10 @@ WinManList::WinManList(wxWindow* parent)
 	_ctrlDataList->addMenuItem(wxID_FIND, 	wxEmptyString, ENABLE_ANYTIME);
 	_ctrlDataList->addMenuItem(wxID_DELETE, wxEmptyString, ENABLE_SELECTING_ITEMS);
 	_ctrlDataList->addMenuItemSeparator();
-	_ctrlDataList->addMenuItem(ID_EXPORT, _("Export"), ENABLE_SELECTING_ITEMS);
-	_ctrlDataList->addMenuItem(ID_IMPORT, _("Import"));
+	_ctrlDataList->addMenuItem(ID_LEARN, 	_("Learn"), ENABLE_SELECTING_ITEMS);
+	_ctrlDataList->addMenuItemSeparator();
+	_ctrlDataList->addMenuItem(ID_EXPORT, 	_("Export"), ENABLE_SELECTING_ITEMS);
+	_ctrlDataList->addMenuItem(ID_IMPORT, 	_("Import"));
 	
 	//Créations des boutons.
 	wxButton* buttonDelete =	new wxButton(this, wxID_DELETE);
@@ -113,5 +115,13 @@ WinManList::WinManList(wxWindow* parent)
 }
 
 WinManList::~WinManList()
+{
+}
+
+void WinManList::refreshGuiFromManager()
+{
+}
+
+void WinManList::refreshManagerFromGui()const
 {
 }

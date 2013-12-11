@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 4.1
+//! \version 4.2
 //! \date 02.01.2013
 //!
 //! ****************************************************************************
@@ -18,7 +18,6 @@
 //WxWidgets
 #include <wx/sizer.h>
 #include <wx/statline.h>
-#include <wx/notebook.h>
 #include <wx/bannerwindow.h>
 #include <wx/statbmp.h>
 
@@ -28,7 +27,8 @@
 
 DlgPreferences::DlgPreferences()
 : 	wxDialog(nullptr, wxID_ANY, _("Preferences"), wxDefaultPosition, wxDefaultSize,
-	wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxSTAY_ON_TOP|wxDIALOG_NO_PARENT)
+	wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxSTAY_ON_TOP|wxDIALOG_NO_PARENT),
+	_windowActive(nullptr)
 {	
 	//Désactivassions du menue dans la bar de notification.
 	ManGeneral::get().enableTaskIcon(false);
@@ -50,20 +50,23 @@ DlgPreferences::DlgPreferences()
 	banner->SetSizer(bannerSizer);
 	
 	//Création du notebook.
-	wxNotebook* notebook = new wxNotebook(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNB_LEFT);
+	_notebook = new wxNotebook(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNB_LEFT);
 	for(auto it : Manager::getManagers())
 	{
-		wxWindow* tmpWindow = it->newEditWindow(notebook);
+		wxWindow* tmpWindow = it->newEditWindow(_notebook);
 		if(tmpWindow != nullptr)
 		{
 			#ifdef DEV_RUN_START_PREFERENCES
 			if(tmpWindow->GetName() == DEV_RUN_START_PREFERENCES)
-				notebook->AddPage(tmpWindow, tmpWindow->GetName(), true);
+				_notebook->AddPage(tmpWindow, tmpWindow->GetName(), true);
 			else
 			#endif
-			notebook->AddPage(tmpWindow, tmpWindow->GetName());			
+			_notebook->AddPage(tmpWindow, tmpWindow->GetName());			
 		}
 	}
+	
+	_windowActive = _notebook->GetCurrentPage();
+	static_cast<WinManager*>(_windowActive)->refreshGuiFromManager();
 	
 	//Création de la statice line.
 	wxStaticLine* staticLine = new wxStaticLine(this);
@@ -74,7 +77,7 @@ DlgPreferences::DlgPreferences()
 	//Mise en forme du GUI avec un sizer.
 	wxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 	mainSizer->Add(banner, 		0, 	wxEXPAND);
-	mainSizer->Add(notebook, 	1, 	wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);
+	mainSizer->Add(_notebook, 	1, 	wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);
 	mainSizer->Add(staticLine, 	0, 	wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);
 	mainSizer->Add(buttons, 	0, 	wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);
 	
@@ -89,6 +92,7 @@ DlgPreferences::DlgPreferences()
 	Bind(wxEVT_BUTTON, &DlgPreferences::onButtonClickCancel, 	this, wxID_CANCEL);
 	Bind(wxEVT_BUTTON, &DlgPreferences::onButtonClickOK, 		this, wxID_OK);
 	
+	_notebook->Bind(wxEVT_NOTEBOOK_PAGE_CHANGED, &DlgPreferences::onNotebookChanged, this);
 	Bind(wxEVT_CLOSE_WINDOW, &DlgPreferences::onClose, this);
 
 	Centre();
@@ -101,10 +105,20 @@ DlgPreferences::~DlgPreferences()
 	Unbind(wxEVT_BUTTON, &DlgPreferences::onButtonClickCancel, 	this, wxID_CANCEL);
 	Unbind(wxEVT_BUTTON, &DlgPreferences::onButtonClickOK, 		this, wxID_OK);
 	
+	_notebook->Unbind(wxEVT_NOTEBOOK_PAGE_CHANGED, &DlgPreferences::onNotebookChanged, this);
 	Unbind(wxEVT_CLOSE_WINDOW, &DlgPreferences::onClose, this);
 	
 	//Activation du menue dans la bar de notification.
 	ManGeneral::get().enableTaskIcon();
+}
+
+void DlgPreferences::onNotebookChanged(wxBookCtrlEvent&)
+{
+	if(_windowActive != nullptr)
+		static_cast<WinManager*>(_windowActive)->refreshManagerFromGui();
+	
+	_windowActive = _notebook->GetCurrentPage();
+	static_cast<WinManager*>(_windowActive)->refreshGuiFromManager();
 }
 
 void DlgPreferences::onClose(wxCloseEvent& event)
@@ -115,6 +129,7 @@ void DlgPreferences::onClose(wxCloseEvent& event)
 
 void DlgPreferences::onButtonClickApply(wxCommandEvent&)
 {
+	static_cast<WinManager*>(_windowActive)->refreshManagerFromGui();
 	Manager::saveManagers();
 }
 
@@ -125,6 +140,7 @@ void DlgPreferences::onButtonClickCancel(wxCommandEvent&)
 
 void DlgPreferences::onButtonClickOK(wxCommandEvent&)
 {
+	static_cast<WinManager*>(_windowActive)->refreshManagerFromGui();
 	Manager::saveManagers();
 	Close();
 }

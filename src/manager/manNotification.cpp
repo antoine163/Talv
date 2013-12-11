@@ -26,15 +26,16 @@ ManNotification::~ManNotification()
 
 IMPLEMENT_MANAGER(ManNotification);
 
-wxWindow* ManNotification::newEditWindow(wxWindow* parent)
+WinManager* ManNotification::newEditWindow(wxWindow* parent)
 {
-	wxWindow* tmp = new wxWindow(	parent,
-									wxID_ANY,
-									wxDefaultPosition,
-									wxDefaultSize,
-									0,
-									_("Notification"));
-	return tmp;
+	//wxWindow* tmp = new wxWindow(	parent,
+									//wxID_ANY,
+									//wxDefaultPosition,
+									//wxDefaultSize,
+									//0,
+									//_("Notification"));
+	//return tmp;
+	return nullptr;
 }
 
 void ManNotification::manLoad(wxFileConfig&)

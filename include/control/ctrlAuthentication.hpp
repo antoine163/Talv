@@ -27,19 +27,23 @@ class CtrlAuthentication : public wxWindow
 	public:
 		//! \brief Constructeur.
 		//! \param parent fenêtre parent.
-		CtrlAuthentication(wxWindow* parent);
+		CtrlAuthentication(	wxWindow* parent,
+							wxString const& username = wxEmptyString,
+							wxString const& password = wxEmptyString);
 		//! \brief Destructeur.
 		virtual ~CtrlAuthentication();
 		
-		//wxString getUserName();
-		//wxString getPassword();
+		wxString getUsername()const;
+		void setUsername(wxString const& username);
+		
+		wxString getPassword()const;
+		void setPassword(wxString const& password);
 
 	private:
 		void onToggleButtonShow(wxCommandEvent& event);
 		
 		wxTextCtrl* _textCtrlUsername;
 		wxTextCtrl* _textCtrlPassword;
-		wxToggleButton* _toggleButtonShow;
 };
 
 #endif //CTRL_AUTHENTICATION_H

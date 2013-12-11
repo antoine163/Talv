@@ -26,7 +26,7 @@ class ManTts : public Manager
 	DECLARE_MANAGER(ManTts);
 	
 	public:
-		virtual wxWindow* newEditWindow(wxWindow* parent);
+		virtual WinManager* newEditWindow(wxWindow* parent);
 	
 	private:
 		virtual void manLoad(wxFileConfig& fileConfig);

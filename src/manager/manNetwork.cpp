@@ -19,10 +19,64 @@
 #include <wx/stattext.h>
 
 // *****************************************************************************
+// Class ProxyInfo
+// *****************************************************************************
+
+ProxyInfo::ProxyInfo(wxString const& proxy, int port, wxString const& username, wxString const& password)
+: _proxy(proxy), _port(port), _username(username), _password(password)
+{
+}
+
+ProxyInfo::~ProxyInfo()
+{
+}
+
+wxString ProxyInfo::getProxy()const
+{
+	return _proxy;
+}
+
+void ProxyInfo::setProxy(wxString const& proxy)
+{
+	_proxy = proxy;
+}
+
+int ProxyInfo::getPort()const
+{
+	return _port;
+}
+
+void ProxyInfo::setPort(int port)
+{
+	_port = port;
+}
+
+wxString ProxyInfo::getUsername()const
+{
+	return _username;
+}
+
+void ProxyInfo::setUsername(wxString const& username)
+{
+	_username = username;
+}
+
+wxString ProxyInfo::getPassword()const
+{
+	return _password;
+}
+
+void ProxyInfo::setPassword(wxString const& password)
+{
+	_password = password;
+}
+
+// *****************************************************************************
 // Class ManNetwork
 // *****************************************************************************
 
 ManNetwork::ManNetwork()
+: _useProxy(USE_PROXY_NO)
 {
 }
 
@@ -32,7 +86,28 @@ ManNetwork::~ManNetwork()
 
 IMPLEMENT_MANAGER(ManNetwork);
 
-wxWindow* ManNetwork::newEditWindow(wxWindow* parent)
+UseProxy_e ManNetwork::getUseProxy()
+{
+	return _useProxy;
+}
+
+void ManNetwork::setUseProxy(UseProxy_e useProxy)
+{
+	_useProxy = useProxy;
+	switch(_useProxy)
+	{
+		case USE_PROXY_NO:
+		break;
+		case USE_PROXY_SYSTEM:
+		break;
+		case USE_PROXY_AUTO_DETECT:
+		break;
+		case USE_PROXY_MANUAL:
+		break;
+	}
+}
+
+WinManager* ManNetwork::newEditWindow(wxWindow* parent)
 {
 	return new WinManNetwork(parent);
 }
@@ -50,14 +125,31 @@ void ManNetwork::manSave(wxFileConfig&)const
 // *****************************************************************************
 
 WinManNetwork::WinManNetwork(wxWindow* parent)
-: wxWindow(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, _("Network"))
+: WinManager(parent, _("Network"))
 {
 	//Créations des buttons radios.
 	wxStaticBox* staticBoxProxySetting = new wxStaticBox(this, wxID_ANY, _("Proxy setting"));
 	_radioButtonNoProxy = 			new wxRadioButton(staticBoxProxySetting, wxID_ANY, _("No proxy (direct internet)"));
 	_radioButtonSystemProxy = 		new wxRadioButton(staticBoxProxySetting, wxID_ANY, _("Use system proxy setting"));
-	_radioButtonAutoDetectProxy = 	new wxRadioButton(staticBoxProxySetting, wxID_ANY, _("Auto-detect proxy setting"));
+	//_radioButtonAutoDetectProxy = 	new wxRadioButton(staticBoxProxySetting, wxID_ANY, _("Auto-detect proxy setting"));
 	_radioButtonManualProxy = 		new wxRadioButton(staticBoxProxySetting, wxID_ANY, _("Use manual proxy setting:"));
+	
+	//Sélection du radioButton
+	switch(ManNetwork::get().getUseProxy())
+	{
+		case USE_PROXY_NO:
+			_radioButtonNoProxy->SetValue(true);
+		break;
+		case USE_PROXY_SYSTEM:
+			_radioButtonSystemProxy->SetValue(true);
+		break;
+		case USE_PROXY_AUTO_DETECT:
+			//_radioButtonAutoDetectProxy->SetValue(true);
+		break;
+		case USE_PROXY_MANUAL:
+			_radioButtonManualProxy->SetValue(true);
+		break;
+	}
 							
 	//Créations du wxWindow pour la configuration manuel du proxy.
 	_windowManualProxy = new wxWindow(staticBoxProxySetting, wxID_ANY);
@@ -65,9 +157,9 @@ WinManNetwork::WinManNetwork(wxWindow* parent)
 	wxStaticText* staticTextProxy = new wxStaticText(	_windowManualProxy, wxID_ANY, _("Proxy:"));
 	_textCtrlProxy =				new wxTextCtrl(		_windowManualProxy, wxID_ANY);
 	wxStaticText* staticTextPort = 	new wxStaticText(	_windowManualProxy, wxID_ANY, _("Port:"));
-	_spinCtrlProxyPort = 			new wxSpinCtrl(		_windowManualProxy, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 9999, 80);
+	_spinCtrlProxyPort = 			new wxSpinCtrl(		_windowManualProxy, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 9999);
 	_checkBoxUseAuthentication = 	new wxCheckBox(		_windowManualProxy, wxID_ANY, _("Use authentication:"));
-	_ctrlAuthentication = new CtrlAuthentication(				_windowManualProxy);
+	_ctrlAuthentication = new CtrlAuthentication(		_windowManualProxy);
 	_ctrlAuthentication->Enable(false);
 
 	//Mise en forme du _windowManualProxy avec des sizers.
@@ -95,7 +187,7 @@ WinManNetwork::WinManNetwork(wxWindow* parent)
 	wxSizer* proxySizer = new wxBoxSizer(wxVERTICAL);
 	proxySizer->Add(_radioButtonNoProxy,			0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM|wxTOP,	SIZE_BORDER);	
 	proxySizer->Add(_radioButtonSystemProxy, 		0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);	
-	proxySizer->Add(_radioButtonAutoDetectProxy, 	0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);	
+	//proxySizer->Add(_radioButtonAutoDetectProxy, 	0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);	
 	proxySizer->Add(_radioButtonManualProxy, 		0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);	
 	proxySizer->Add(_windowManualProxy, 	0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);	
 	staticBoxProxySetting->SetSizer(proxySizer);
@@ -106,23 +198,23 @@ WinManNetwork::WinManNetwork(wxWindow* parent)
 	SetSizer(sizerMain);
 	
 	//Bind
-	_radioButtonNoProxy->			Bind(wxEVT_RADIOBUTTON, &WinManNetwork::onButtonManualProxy, this);
-	_radioButtonSystemProxy->		Bind(wxEVT_RADIOBUTTON, &WinManNetwork::onButtonManualProxy, this);
-	_radioButtonAutoDetectProxy->	Bind(wxEVT_RADIOBUTTON, &WinManNetwork::onButtonManualProxy, this);
-	_radioButtonManualProxy->		Bind(wxEVT_RADIOBUTTON, &WinManNetwork::onButtonManualProxy, this);
-	
-	_checkBoxUseAuthentication->	Bind(wxEVT_CHECKBOX, &WinManNetwork::onCheckBoxUseAuthentication, this);
+	Bind(wxEVT_RADIOBUTTON, &WinManNetwork::onButtonManualProxy, this);
+	Bind(wxEVT_CHECKBOX, &WinManNetwork::onCheckBoxUseAuthentication, this);
+}
+
+void WinManNetwork::refreshGuiFromManager()
+{
+}
+
+void WinManNetwork::refreshManagerFromGui()const
+{
 }
 
 WinManNetwork::~WinManNetwork()
 {
 	//Unbind
-	_radioButtonNoProxy->			Unbind(wxEVT_RADIOBUTTON, &WinManNetwork::onButtonManualProxy, this);
-	_radioButtonSystemProxy->		Unbind(wxEVT_RADIOBUTTON, &WinManNetwork::onButtonManualProxy, this);
-	_radioButtonAutoDetectProxy->	Unbind(wxEVT_RADIOBUTTON, &WinManNetwork::onButtonManualProxy, this);
-	_radioButtonManualProxy->		Unbind(wxEVT_RADIOBUTTON, &WinManNetwork::onButtonManualProxy, this);
-	
-	_checkBoxUseAuthentication->	Unbind(wxEVT_CHECKBOX, &WinManNetwork::onCheckBoxUseAuthentication, this);
+	Unbind(wxEVT_RADIOBUTTON, &WinManNetwork::onButtonManualProxy, this);	
+	Unbind(wxEVT_CHECKBOX, &WinManNetwork::onCheckBoxUseAuthentication, this);
 }
 
 void WinManNetwork::onButtonManualProxy(wxCommandEvent&)

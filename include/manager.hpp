@@ -19,6 +19,9 @@
 //! utilitaires.
 //! Les classes préfixer par \b Man sont touts basée sur la classe \ref Manager.
 
+//! \defgroup winmanager Window manager
+//! \brief Liste des windows managers
+
 //Stl
 #include <vector>
 
@@ -63,6 +66,24 @@
 		}
 
 // *****************************************************************************
+// Class WinManager
+// *****************************************************************************
+
+//! \ingroup winmanager
+//! \brief Classe de base pour crées des GUIs pour managers.
+class WinManager : public wxWindow 
+{	
+	public:
+		WinManager(wxWindow *parent, const wxString &name);
+		virtual ~WinManager();
+		
+		virtual void refreshGuiFromManager(){};
+		virtual void refreshManagerFromGui()const{};
+	
+	protected:
+}; 
+
+// *****************************************************************************
 // Class Manager
 // *****************************************************************************
 
@@ -81,7 +102,7 @@ class Manager
 		//! Implémenter dans IMPLEMENT_MANAGER.
 		virtual void save(wxFileConfig& fileConfig)const=0;
 		
-		virtual wxWindow* newEditWindow(wxWindow* parent);
+		virtual WinManager* newEditWindow(wxWindow* parent);
 		
 		
 		static void createManagers();

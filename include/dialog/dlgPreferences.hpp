@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 4.1
+//! \version 4.2
 //! \date 02.01.2013
 //!
 //! ****************************************************************************
@@ -14,6 +14,8 @@
 
 //WxWidgets
 #include <wx/dialog.h>
+#include <wx/notebook.h>
+#include <wx/window.h>
 
 // *****************************************************************************
 // Class DialogPreferences
@@ -33,6 +35,9 @@ class DlgPreferences : public wxDialog
 		~DlgPreferences();
 		
 	private:
+		//! \brief CallBack lorsque le notebook a changer de page.
+		void onNotebookChanged(wxBookCtrlEvent& event);
+		
 		//! \brief CallBack lorsque le dialogue est fermer.
 		void onClose(wxCloseEvent& event);
 		
@@ -42,7 +47,11 @@ class DlgPreferences : public wxDialog
 		void onButtonClickCancel(wxCommandEvent& event);
 		//! \brief CallBack lorsque le bouton \b OK à été cliquet.
 		void onButtonClickOK(wxCommandEvent& event);
-		
+	
+		//! \brief notebook du dialogue.
+		wxNotebook* _notebook;
+		//! \brief Page actuelle sélection dans le notebook.
+		wxWindow* _windowActive;
 };
 
 #endif //DLG_PREFERENCES_H
