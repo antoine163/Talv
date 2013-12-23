@@ -32,9 +32,9 @@ FrameNotification::FrameNotification(	wxString const& title,
 : wxFrame(nullptr, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSTAY_ON_TOP|wxFRAME_NO_TASKBAR), _timeout(this) 
 {
 	if(icon == wxICON_NONE)
-		Create(title, message, wxBitmap());
+		create(title, message, wxBitmap());
 	else
-		Create(title, message, wxArtProvider::GetBitmap(wxArtProvider::GetMessageBoxIconId(icon), wxART_MESSAGE_BOX));
+		create(title, message, wxArtProvider::GetBitmap(wxArtProvider::GetMessageBoxIconId(icon), wxART_MESSAGE_BOX));
 }
 
 FrameNotification::FrameNotification(	wxString const& title,
@@ -42,10 +42,10 @@ FrameNotification::FrameNotification(	wxString const& title,
 										wxBitmap const& bitmap)
 : wxFrame(nullptr, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSTAY_ON_TOP|wxFRAME_NO_TASKBAR), _timeout(this) 
 {
-	Create(title, message, bitmap);
+	create(title, message, bitmap);
 }
 
-void FrameNotification::Create(	wxString const& title,
+void FrameNotification::create(	wxString const& title,
 								wxString const& message,
 								wxBitmap const& bitmap)
 {
@@ -84,23 +84,23 @@ void FrameNotification::Create(	wxString const& title,
 	SetForegroundColour(ManNotification::get().getColourText());
 	
 	//Bind
-	Bind(wxEVT_TIMER, &FrameNotification::OnTimeout, this);
-	_staticTextTitle->Bind(wxEVT_LEFT_DOWN, &FrameNotification::OnLeftDown, this);
-	_staticLine->Bind(wxEVT_LEFT_DOWN, &FrameNotification::OnLeftDown, this);
-	_staticTextMessage->Bind(wxEVT_LEFT_DOWN, &FrameNotification::OnLeftDown, this);
-	_staticBitmap->Bind(wxEVT_LEFT_DOWN, &FrameNotification::OnLeftDown, this);
-	Bind(wxEVT_LEFT_DOWN, &FrameNotification::OnLeftDown, this);
+	Bind(wxEVT_TIMER, &FrameNotification::onTimeout, this);
+	_staticTextTitle->Bind(wxEVT_LEFT_DOWN, &FrameNotification::onLeftDown, this);
+	_staticLine->Bind(wxEVT_LEFT_DOWN, &FrameNotification::onLeftDown, this);
+	_staticTextMessage->Bind(wxEVT_LEFT_DOWN, &FrameNotification::onLeftDown, this);
+	_staticBitmap->Bind(wxEVT_LEFT_DOWN, &FrameNotification::onLeftDown, this);
+	Bind(wxEVT_LEFT_DOWN, &FrameNotification::onLeftDown, this);
 }
 				
 FrameNotification::~FrameNotification()
 {
 	//Unbind
-	Unbind(wxEVT_TIMER, &FrameNotification::OnTimeout, this);
-	_staticTextTitle->Unbind(wxEVT_LEFT_DOWN, &FrameNotification::OnLeftDown, this);
-	_staticLine->Unbind(wxEVT_LEFT_DOWN, &FrameNotification::OnLeftDown, this);
-	_staticTextMessage->Unbind(wxEVT_LEFT_DOWN, &FrameNotification::OnLeftDown, this);
-	_staticBitmap->Unbind(wxEVT_LEFT_DOWN, &FrameNotification::OnLeftDown, this);
-	Unbind(wxEVT_LEFT_DOWN, &FrameNotification::OnLeftDown, this);
+	Unbind(wxEVT_TIMER, &FrameNotification::onTimeout, this);
+	_staticTextTitle->Unbind(wxEVT_LEFT_DOWN, &FrameNotification::onLeftDown, this);
+	_staticLine->Unbind(wxEVT_LEFT_DOWN, &FrameNotification::onLeftDown, this);
+	_staticTextMessage->Unbind(wxEVT_LEFT_DOWN, &FrameNotification::onLeftDown, this);
+	_staticBitmap->Unbind(wxEVT_LEFT_DOWN, &FrameNotification::onLeftDown, this);
+	Unbind(wxEVT_LEFT_DOWN, &FrameNotification::onLeftDown, this);
 }
 
 void FrameNotification::show(int timeout)
@@ -114,12 +114,12 @@ void FrameNotification::show()
 	ShowWithoutActivating();
 }
 
-void FrameNotification::OnLeftDown(wxMouseEvent&)
+void FrameNotification::onLeftDown(wxMouseEvent&)
 {
 	Close();
 }
 
-void FrameNotification::OnTimeout(wxTimerEvent&)
+void FrameNotification::onTimeout(wxTimerEvent&)
 {
 	Close();
 }
