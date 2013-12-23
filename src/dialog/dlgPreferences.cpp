@@ -20,6 +20,7 @@
 #include <wx/statline.h>
 #include <wx/bannerwindow.h>
 #include <wx/statbmp.h>
+#include <wx/settings.h>
 
 // *****************************************************************************
 // Class DlgPreferences
@@ -39,7 +40,7 @@ DlgPreferences::DlgPreferences()
 	//Création de la bannière.
 	wxBannerWindow* banner = new wxBannerWindow(this, wxTOP);
 	banner->SetText(PROJECT_NAME, _("Translation on the fly."));
-	banner->SetGradient(wxColour(127, 127, 127, 127), wxColour(127, 127, 127, 0));	
+	banner->SetGradient(wxSystemSettings::GetColour(wxSYS_COLOUR_HIGHLIGHT), wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWFRAME));	
 	wxStaticBitmap* bitmapApp = new wxStaticBitmap(this, wxID_ANY, wxBitmap());
 	bitmapApp->SetIcon(ManGeneral::get().getIconApp(ICON_SIZE_32X32));
 	
@@ -61,7 +62,7 @@ DlgPreferences::DlgPreferences()
 				_notebook->AddPage(tmpWindow, tmpWindow->GetName(), true);
 			else
 			#endif
-			_notebook->AddPage(tmpWindow, tmpWindow->GetName());			
+			_notebook->AddPage(tmpWindow, tmpWindow->GetName());	
 		}
 	}
 	
@@ -81,11 +82,7 @@ DlgPreferences::DlgPreferences()
 	sizerMain->Add(staticLine, 	0, 	wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);
 	sizerMain->Add(buttons, 	0, 	wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);
 	
-	SetMinSize(wxSize(600, 350));
-	SetSize(wxSize(600, 350));
-	SetSizer(sizerMain);
-	//SetSizerAndFit(sizerMain);
-	
+	SetSizerAndFit(sizerMain);
 	
 	//Bind des boutons
 	Bind(wxEVT_BUTTON, &DlgPreferences::onButtonClickApply,		this, wxID_APPLY);

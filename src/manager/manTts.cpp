@@ -18,6 +18,7 @@
 
 ManTts::ManTts()
 {
+	//pour lire les mp3 utiliser la bibliotheque mpg123 (pet étre lame)
 }
 
 ManTts::~ManTts()

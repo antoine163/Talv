@@ -46,12 +46,14 @@
 		{														\
 			fileConfig.SetPath(#manager "/");					\
 			manLoad(fileConfig);								\
+			fileConfig.SetPath("..");							\
 		}														\
 																\
 		void manager::save(wxFileConfig& fileConfig)const		\
 		{														\
 			fileConfig.SetPath(#manager "/");					\
 			manSave(fileConfig);								\
+			fileConfig.SetPath("..");							\
 		}														\
 																\
 		manager& manager::get()									\

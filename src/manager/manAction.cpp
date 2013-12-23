@@ -141,7 +141,7 @@ WinManAction::WinManAction(wxWindow* parent)
 	wxSizer* sizerMain = new wxBoxSizer(wxVERTICAL);
 	sizerMain->Add(_ctrlDataList, 	1, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM|wxTOP, 	SIZE_BORDER);
 	sizerMain->Add(sizerButtons, 	0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);	
-	SetSizerAndFit(sizerMain);
+	SetSizer(sizerMain);
 	
 	
 	//bind

@@ -19,6 +19,7 @@
 //WxWidgets
 #include <wx/string.h>
 #include <wx/radiobut.h>
+#include <wx/statbox.h>
 #include <wx/url.h>
 
 // *****************************************************************************
@@ -44,25 +45,26 @@ class ManNetwork : public Manager
 	
 	public:
 		//use Proxy
-		UseProxy_e getUseProxy();
+		UseProxy_e getUseProxy()const;
 		void setUseProxy(UseProxy_e useProxy);
 		
 		//Proxy
-		ProxyInfo getProxyInfoManual();
-		//void setProxyInfoManual(ProxyInfo const& proxy);
-		//ProxyInfo getProxyInfoCourent();
-		//void setProxyInfoCurrent(ProxyInfo const& proxy);
+		ProxyInfo getProxyInfoManual()const;
+		void setProxyInfoManual(ProxyInfo const& proxy);
 
-		
-		//wxURLError download(wxMemoryBuffer* buffer, wxString const& url);
-		
+		//Le contenue de l'url doit être coder en utf-8
+		wxURLError downloadFromUrlToStringl(wxString const& url, wxString* pString);
+				
 		virtual WinManager* newEditWindow(wxWindow* parent);
 	
 	private:	
+		wxString getProxyInfoSystem()const;
+	
 		virtual void manLoad(wxFileConfig& fileConfig);
 		virtual void manSave(wxFileConfig& fileConfig)const;
 		
 		UseProxy_e _useProxy;
+		ProxyInfo _proxyInfoManual;
 		wxURL _url;
 };
 
@@ -81,13 +83,18 @@ class WinManNetwork : public WinManager
 		virtual void refreshManagerFromGui()const;
 	
 	private:
-		void onButtonManualProxy(wxCommandEvent& event);
+		void onRadioButtonProxy(wxCommandEvent& event);
 		
 		wxRadioButton* _radioButtonProxyNo;
 		wxRadioButton* _radioButtonProxySystem; 
 		//wxRadioButton* _radioButtonProxyAutoDetect;
 		wxRadioButton* _radioButtonProxyManual;
 		
+		wxRadioButton* _radioButtonShowErrorNo;
+		wxRadioButton* _radioButtonShowErrorInNotification; 
+		wxRadioButton* _radioButtonShowErrorInDialog;
+		
+		wxStaticBox* _staticBoxProxyManual;
 		CtrlProxyInfo* _ctrlProxyInfoProxyManual;
 };
 

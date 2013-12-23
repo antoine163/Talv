@@ -76,8 +76,11 @@ void Manager::loadManagers()
 	//Préparation du wxFileConfig
 	wxFileConfig fileConfig(	PROJECT_NAME,
 								wxEmptyString,
-								wxStandardPaths::Get().GetUserDataDir()+'/'+PROJECT_NAME);
+								wxStandardPaths::Get().GetUserDataDir()+"/config");
 		
+	//On placé la path a la racine.
+	fileConfig.SetPath("/");
+	
 	//Appelle de la méthode load de touts les managers avec le fichier de
 	//configuration	.					
 	auto _iManagers = getManagers();
@@ -90,8 +93,11 @@ void Manager::saveManagers()
 	//Préparation du wxFileConfig
 	wxFileConfig fileConfig(	PROJECT_NAME,
 								wxEmptyString,
-								wxStandardPaths::Get().GetUserDataDir()+'/'+PROJECT_NAME);
+								wxStandardPaths::Get().GetUserDataDir()+"/config");
 	fileConfig.DeleteAll();
+	
+	//On placé la path a la racine.
+	fileConfig.SetPath("/");
 		
 	//Appelle de la méthode save de touts les managers avec le fichier de
 	//configuration	.					

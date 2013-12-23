@@ -111,7 +111,7 @@ WinManList::WinManList(wxWindow* parent)
 	wxSizer* sizerMain = new wxBoxSizer(wxVERTICAL);
 	sizerMain->Add(_ctrlDataList, 	1, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM|wxTOP, 	SIZE_BORDER);
 	sizerMain->Add(sizeButtons,		0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);	
-	SetSizerAndFit(sizerMain);
+	SetSizer(sizerMain);
 }
 
 WinManList::~WinManList()
