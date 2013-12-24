@@ -22,6 +22,15 @@
 #include <wx/display.h>
 #include <wx/utils.h> 
 
+#if defined(__UNIX__)
+#include <libnotify/notify.h>
+#include <wx/log.h> 
+#include <wx/msgdlg.h>
+#include <wx/rawbmp.h>
+#else
+#include <wx/notifmsg.h>
+#endif
+
 // *********************************************************************
 // Class FrameNotification
 // *********************************************************************
@@ -60,9 +69,9 @@ void FrameNotification::create(	wxString const& title,
 	
 	//Mise en forme titre et du message avec un sizer.
 	wxSizer* sizerNotification = new wxBoxSizer(wxVERTICAL);
-	sizerNotification->Add(_staticTextTitle, 	0, wxEXPAND|wxBOTTOM, 	SIZE_BORDER);	
-	sizerNotification->Add(_staticLine, 		0, wxEXPAND|wxBOTTOM, 	SIZE_BORDER);	
-	sizerNotification->Add(_staticTextMessage, 	0, wxEXPAND|wxLEFT, 	2*SIZE_BORDER);
+	sizerNotification->Add(_staticTextTitle, 	0, wxEXPAND|wxLEFT, 		2*SIZE_BORDER);	
+	sizerNotification->Add(_staticLine, 		0, wxEXPAND|wxTOP|wxBOTTOM,	SIZE_BORDER);	
+	sizerNotification->Add(_staticTextMessage, 	0, wxEXPAND|wxLEFT, 		4*SIZE_BORDER);
 	
 	//Créations du wxStaticBitmap
 	_staticBitmap = nullptr;
@@ -73,8 +82,8 @@ void FrameNotification::create(	wxString const& title,
 	//Mise en forme du GUI avec un sizer.
 	wxSizer* sizerMain = new wxBoxSizer(wxHORIZONTAL);
 	if(_staticBitmap != nullptr)
-		sizerMain->Add(_staticBitmap, 	0, wxALIGN_CENTER|	wxLEFT|wxRIGHT|wxBOTTOM|wxTOP, 	SIZE_BORDER);	
-	sizerMain->Add(sizerNotification, 	0, 					wxLEFT|wxRIGHT|wxBOTTOM|wxTOP,	SIZE_BORDER);
+		sizerMain->Add(_staticBitmap, 	0, wxALIGN_CENTER|	wxLEFT|wxBOTTOM|wxTOP, 	SIZE_BORDER);	
+	sizerMain->Add(sizerNotification, 	0, 					wxRIGHT|wxBOTTOM|wxTOP,	SIZE_BORDER);
 	SetSizerAndFit(sizerMain);
 	
 	SetMaxClientSize(GetSize());
@@ -88,7 +97,8 @@ void FrameNotification::create(	wxString const& title,
 	_staticTextTitle->Bind(wxEVT_LEFT_DOWN, &FrameNotification::onLeftDown, this);
 	_staticLine->Bind(wxEVT_LEFT_DOWN, &FrameNotification::onLeftDown, this);
 	_staticTextMessage->Bind(wxEVT_LEFT_DOWN, &FrameNotification::onLeftDown, this);
-	_staticBitmap->Bind(wxEVT_LEFT_DOWN, &FrameNotification::onLeftDown, this);
+	if(_staticBitmap)
+		_staticBitmap->Bind(wxEVT_LEFT_DOWN, &FrameNotification::onLeftDown, this);
 	Bind(wxEVT_LEFT_DOWN, &FrameNotification::onLeftDown, this);
 }
 				
@@ -99,7 +109,8 @@ FrameNotification::~FrameNotification()
 	_staticTextTitle->Unbind(wxEVT_LEFT_DOWN, &FrameNotification::onLeftDown, this);
 	_staticLine->Unbind(wxEVT_LEFT_DOWN, &FrameNotification::onLeftDown, this);
 	_staticTextMessage->Unbind(wxEVT_LEFT_DOWN, &FrameNotification::onLeftDown, this);
-	_staticBitmap->Unbind(wxEVT_LEFT_DOWN, &FrameNotification::onLeftDown, this);
+	if(_staticBitmap)
+		_staticBitmap->Unbind(wxEVT_LEFT_DOWN, &FrameNotification::onLeftDown, this);
 	Unbind(wxEVT_LEFT_DOWN, &FrameNotification::onLeftDown, this);
 }
 
@@ -257,11 +268,22 @@ ManNotification::ManNotification()
 	_nearCursor(true), _multipleNotifications(true), _border(SIZE_BORDER),
 	_colourBackground((unsigned long)0x000000), _colourText((unsigned long)0xd2d2d2)
 {
+	#ifdef __UNIX__
+	//Initialisation de la lib Libnotify.
+	if(!notify_init(PROJECT_NAME))
+		wxLogError(_("Libnotify could not be initialized."));
+	#endif
+		
 	_workarea = wxDisplay().GetGeometry();
 }
 
 ManNotification::~ManNotification()
 {
+	#ifdef __UNIX__
+		//dé-initialisation de la lib Libnotify.
+		notify_uninit();
+	#endif
+		
 	//On détruis les fenêtres de notification.
 	deleteAllFramesNotify();
 }
@@ -495,50 +517,118 @@ void ManNotification::notify(	wxString const& title,
 	//3s par défaut + 1s de plus tout les 10 caractères.
 	int timeout = 3+message.Length()/10;
 	
-	//Création de la fenêtre de notification.
-	FrameNotification *newFrameNotify = new FrameNotification(title, message, icon);
-		
-	//On doit afficher la position près du curseur ?
-	if(_nearCursor && nearCursor)
+	switch(_useNotification)
 	{
-		//Place la nouvelle notification au bonne endroit sur l'écran.
-		placeFrameNotification(newFrameNotify, true);
+		case USE_NOTIFICATION_NATIVE:
+		{
+			#ifdef __UNIX__				
+				//Préparation de la notification.
+				NotifyNotification * notify = notify_notification_new(title.mb_str(wxConvUTF8), message.fn_str(), nullptr);
+				notify_notification_set_timeout(notify, timeout*1000);
+				
+				if(icon != wxICON_NONE)
+				{
+					//Récupération de l'icon
+					wxBitmap bmpIcon(wxArtProvider::GetBitmap(wxArtProvider::GetMessageBoxIconId(icon), wxART_MESSAGE_BOX));
+					wxAlphaPixelData alphaPixelDatadataIcon(bmpIcon);
+					
+					//Créassions du GdkPixbuf					
+					GdkPixbuf* pixbuf = gdk_pixbuf_new(	GDK_COLORSPACE_RGB,
+														TRUE,
+														8,
+														alphaPixelDatadataIcon.GetWidth(),
+														alphaPixelDatadataIcon.GetHeight());
+					guchar* pixels = gdk_pixbuf_get_pixels(pixbuf);
+  				
+					int i = 0;
+					wxAlphaPixelData::Iterator it = alphaPixelDatadataIcon.GetPixels();
+					while(i < alphaPixelDatadataIcon.GetWidth()*alphaPixelDatadataIcon.GetHeight()*4)
+					{  
+						pixels[i++] = it.Red();
+						pixels[i++] = it.Green();
+						pixels[i++] = it.Blue();
+						pixels[i++] = it.Alpha();
+						
+						it++;
+					}
+					
+					//Ajout de l'icône a la notification.
+					notify_notification_set_icon_from_pixbuf(notify, pixbuf);
+				}
+				
+				
+				//Affichage de la notification
+				if(!notify_notification_show(notify, nullptr))
+				{
+					//Si problème
+					wxLogError(_("The notify with libnotify could not be show."));
+					wxLogMessage(_("The richs notifications go to use now."));
+					wxMessageDialog dlg(nullptr, _("The notify with libnotify could not be show.\nThe richs notifications go to use now."),
+										wxMessageBoxCaptionStr, wxOK|wxCENTRE|wxICON_INFORMATION);
+					dlg.ShowModal();
+									
+					setUseNotification(USE_NOTIFICATION_RICH);
+				}
+				
+				g_object_unref(G_OBJECT(notify));
+			#else
+				//Préparation de la notification.
+				wxNotificationMessage notify(title, message);
+				if(icon != wxICON_NONE)
+					notify.SetFlags(icon);
+				//Affichage de la notification
+				notify.Show(timeout);
+			#endif
+		}break;
 		
-		//On supprime au préalable l'ancienne notification.
-		if(_frameNotifyNearCursor != nullptr)
-			delete _frameNotifyNearCursor;
-		//Et on y met la nouvelle.
-		_frameNotifyNearCursor = newFrameNotify;
+		case USE_NOTIFICATION_RICH:
+		{
+			//Création de la fenêtre de notification.
+			FrameNotification *newFrameNotify = new FrameNotification(title, message, icon);
+				
+			//On doit afficher la position près du curseur ?
+			if(_nearCursor && nearCursor)
+			{
+				//Place la nouvelle notification au bonne endroit sur l'écran.
+				placeFrameNotification(newFrameNotify, true);
+				
+				//On supprime au préalable l'ancienne notification.
+				if(_frameNotifyNearCursor != nullptr)
+					delete _frameNotifyNearCursor;
+				//Et on y met la nouvelle.
+				_frameNotifyNearCursor = newFrameNotify;
+			}
+			//A la suit de celle déjà existante ?
+			else if(_multipleNotifications)
+			{
+				//Faire de la place.
+				makeSpaceFrameMultipleNotification(newFrameNotify->GetSize().y);
+				
+				//Place la nouvelle notification au bonne endroit sur l'écran.
+				placeFrameNotification(newFrameNotify, false);
+			
+				//Ajout de la notification à la pile.
+				_framesNotifyMultiple.push_back(newFrameNotify);
+			}
+			//On doit afficher qu'une notification ?
+			else
+			{
+				//Place la nouvelle notification au bonne endroit sur l'écran.
+				placeFrameNotification(newFrameNotify, false);
+			
+				//On supprime au préalable l'ancienne notification.
+				if(_frameNotify != nullptr)
+					delete _frameNotify;
+				//Et on y met la nouvelle.
+				_frameNotify = newFrameNotify;
+			}
+				
+			//Lier l'évènement de fermeture de la notification.
+			newFrameNotify->Bind(wxEVT_CLOSE_WINDOW, &ManNotification::onCloseFrameNotification, this);
+			//Enfin, affiche la notification.
+			newFrameNotify->show(timeout);
+		}break;
 	}
-	//A la suit de celle déjà existante ?
-	else if(_multipleNotifications)
-	{
-		//Faire de la place.
-		makeSpaceFrameMultipleNotification(newFrameNotify->GetSize().y);
-		
-		//Place la nouvelle notification au bonne endroit sur l'écran.
-		placeFrameNotification(newFrameNotify, false);
-	
-		//Ajout de la notification à la pile.
-		_framesNotifyMultiple.push_back(newFrameNotify);
-	}
-	//On doit afficher qu'une notification ?
-	else
-	{
-		//Place la nouvelle notification au bonne endroit sur l'écran.
-		placeFrameNotification(newFrameNotify, false);
-	
-		//On supprime au préalable l'ancienne notification.
-		if(_frameNotify != nullptr)
-			delete _frameNotify;
-		//Et on y met la nouvelle.
-		_frameNotify = newFrameNotify;
-	}
-		
-	//Lier l'évènement de fermeture de la notification.
-	newFrameNotify->Bind(wxEVT_CLOSE_WINDOW, &ManNotification::onCloseFrameNotification, this);
-	//Enfin, affiche la notification.
-	newFrameNotify->show(timeout);
 }
 
 void ManNotification::onCloseFrameNotification(wxCloseEvent& event)

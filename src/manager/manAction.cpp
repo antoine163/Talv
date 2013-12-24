@@ -160,8 +160,12 @@ void WinManAction::refreshGuiFromManager()
 void WinManAction::refreshManagerFromGui()const
 {
 }
-
+#include "manager/manNotification.hpp"
 void WinManAction::onPreferences(wxCommandEvent&)
 {	
+	ManNotification::get().notify("test", "Le message");
+	ManNotification::get().notify("test", "Le message", wxICON_ERROR);
+	ManNotification::get().notify("test", "Le message", wxICON_INFORMATION);
+	ManNotification::get().notify("test", "Le message", wxICON_WARNING);
 	std::cout << "WinManAction::onPreferences" << std::endl;
 }

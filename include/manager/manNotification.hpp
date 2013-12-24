@@ -187,7 +187,6 @@ class ManNotification : public Manager
 						long icon = wxICON_NONE,
 						bool nearCursor = false);
 
-		//Configuration
 		//! @name Configuration
 		//! @{
 		
