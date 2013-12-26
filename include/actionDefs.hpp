@@ -14,8 +14,10 @@
 #define ACTION_DEF_H
 
 #include "action/actTranslationToNotification.hpp"
+#include "action/actTranslationToList.hpp"
 
-#define MAKE_CREATE_ACTION()	CREATE_ACTION(actTranslationToNotification)
+#define MAKE_CREATE_ACTION()	CREATE_ACTION(ActTranslationToNotification)	\
+								CREATE_ACTION(ActTranslationToList)
 
 
 #endif //ACTION_DEF_H

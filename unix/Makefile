@@ -79,6 +79,7 @@ SRC+=../src/manager/manNetwork.cpp
 #Actions
 SRC+=../src/action.cpp
 SRC+=../src/action/actTranslationToNotification.cpp
+SRC+=../src/action/actTranslationToList.cpp
 
 #Translates
 #SRC+=../src/translate.cpp

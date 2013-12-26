@@ -11,7 +11,6 @@
 
 //App
 #include "manager/manAction.hpp"
-#include "manager/manNotification.hpp"
 #include "defs.hpp"
 
 //WxWidgets
@@ -28,7 +27,8 @@ ManAction::ManAction()
 {
 	Bind(EVT_SHORTCUT, &ManAction::onShortcut, this);
 	
-	add(ShortcutKey::stringToShortcutKey("shift+super+a"), Action::createAction("actTranslationToNotification"));
+	add(ShortcutKey::stringToShortcutKey("shift+super+a"), Action::createAction("ActTranslationToNotification"));
+	add(ShortcutKey::stringToShortcutKey("shift+super+b"), Action::createAction("ActTranslationToList"));
 }
 
 ManAction::~ManAction()
@@ -44,7 +44,7 @@ WinManager* ManAction::newEditWindow(wxWindow* parent)
 {
 	return new WinManAction(parent);
 }
-#include <iostream>
+
 bool ManAction::add(ShortcutKey const &shortcut, Action* act)
 {
 	if(exist(shortcut))
@@ -52,8 +52,6 @@ bool ManAction::add(ShortcutKey const &shortcut, Action* act)
 		
 	_shortcutKeyAction[shortcut] = act;
 	_shortcut.creat(shortcut);
-	
-	std::cout << "ManAction::add -- " << ShortcutKey::shortcutKeyToString(shortcut) << std::endl;
 	
 	return true;
 }
@@ -106,8 +104,7 @@ void ManAction::manSave(wxFileConfig&)const
 
 void ManAction::onShortcut(ShortcutEvent& event)
 {
-	ManNotification::get().notify("ManAction::onShortcut", ShortcutKey::shortcutKeyToString(event.getShortcutKey()), wxICON_INFORMATION);
-	//getData().at(event.getShortcutKey())->execute();
+	_shortcutKeyAction.at(event.getShortcutKey())->execute();
 }								
 									
 // *****************************************************************************

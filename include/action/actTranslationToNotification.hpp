@@ -18,21 +18,21 @@
 //WxWidgets
 #include <wx/language.h>
 
-// *********************************************************************
-// Class actTranslationToNotification
-// *********************************************************************
+// *****************************************************************************
+// Class ActTranslationToNotification
+// *****************************************************************************
 
 //! \brief Action de traduction.
-class actTranslationToNotification : public Action
+class ActTranslationToNotification : public Action
 {	
 	DECLARE_ACTION();
 	
 	public:
 		//! \brief Constructeur par défaut.
-		actTranslationToNotification();
+		ActTranslationToNotification();
 						
 		//! \brief Destructeur.
-		~actTranslationToNotification();
+		~ActTranslationToNotification();
 		
 		//! \brief Obtenir le window gui pour éditer l'action.
 		//! \param parent est le parent du window.
@@ -61,9 +61,9 @@ class actTranslationToNotification : public Action
 		wxLanguage _lgto;
 };
 
-// *********************************************************************
+// *****************************************************************************
 // Class WinActTranslationToNotification
-// *********************************************************************
+// *****************************************************************************
 
 //class ActTranslation;
 

@@ -18,49 +18,64 @@
 
 
 // *****************************************************************************
-// Class actTranslationToNotification
+// Class ActTranslationToNotification
 // *****************************************************************************
 
-actTranslationToNotification::actTranslationToNotification()
+ActTranslationToNotification::ActTranslationToNotification()
 {
-	_lgto = (wxLanguage)wxLocale::GetSystemLanguage();
-	if(_lgto == wxLANGUAGE_ENGLISH)
+	_lgto = (wxLanguage)wxLocale::GetSystemLanguage();                                  
+	if(	_lgto == wxLANGUAGE_ENGLISH 				||
+		_lgto == wxLANGUAGE_ENGLISH_UK 		        ||
+		_lgto == wxLANGUAGE_ENGLISH_US 		        ||
+		_lgto == wxLANGUAGE_ENGLISH_AUSTRALIA 		||
+		_lgto == wxLANGUAGE_ENGLISH_BELIZE 		    ||
+		_lgto == wxLANGUAGE_ENGLISH_BOTSWANA 		||
+		_lgto == wxLANGUAGE_ENGLISH_CANADA 		    ||
+		_lgto == wxLANGUAGE_ENGLISH_CARIBBEAN 		||
+		_lgto == wxLANGUAGE_ENGLISH_DENMARK 		||
+		_lgto == wxLANGUAGE_ENGLISH_EIRE 		    ||
+		_lgto == wxLANGUAGE_ENGLISH_JAMAICA 		||
+		_lgto == wxLANGUAGE_ENGLISH_NEW_ZEALAND 	||
+		_lgto == wxLANGUAGE_ENGLISH_PHILIPPINES 	||
+		_lgto == wxLANGUAGE_ENGLISH_SOUTH_AFRICA	||
+		_lgto == wxLANGUAGE_ENGLISH_TRINIDAD 		||
+		_lgto == wxLANGUAGE_ENGLISH_ZIMBABWE)
 		_lgsrc = wxLANGUAGE_FRENCH;
 	else
 		_lgsrc = wxLANGUAGE_ENGLISH;
 }
 
-actTranslationToNotification::~actTranslationToNotification()
+ActTranslationToNotification::~ActTranslationToNotification()
 {
 }
 
-IMPLEMENT_ACTION(actTranslationToNotification, _("Translation To Notification"), _("Translation a text from clipboard into notification."));
+IMPLEMENT_ACTION(ActTranslationToNotification, _("Translation to Notification"), _("Translation a text from clipboard into notification."));
 
-wxWindow* actTranslationToNotification::newEditWindow(wxWindow*)
+wxWindow* ActTranslationToNotification::newEditWindow(wxWindow*)
 {
 	return nullptr;
 }
 
-wxString actTranslationToNotification::getStringPreferences()const
+wxString ActTranslationToNotification::getStringPreferences()const
 {
 	return 	wxLocale::GetLanguageName(_lgsrc) +
 			' ' + _("to") + ' ' +
 			wxLocale::GetLanguageName(_lgto);
 }
 
-void actTranslationToNotification::execute()
+void ActTranslationToNotification::execute()
 {
-	ManNotification::get().notify("actTranslationToNotification::execute", getStringPreferences(), wxICON_INFORMATION, true);
+	ManNotification::get().notify("ActTranslationToNotification::execute", getStringPreferences(), wxICON_INFORMATION, true);
 }
 
-void actTranslationToNotification::actLoad(wxFileConfig&)
+void ActTranslationToNotification::actLoad(wxFileConfig&)
 {
 	//On récupère les préférence.
 	//fileConfig.Read("lgsrc", &_lgsrc);
 	//fileConfig.Read("lgto", &_lgto);
 }
 		
-void actTranslationToNotification::actSave(wxFileConfig&)const
+void ActTranslationToNotification::actSave(wxFileConfig&)const
 {
 	//fileConfig.Write("lgsrc", _lgsrc);
 	//fileConfig.Write("lgto", _lgto);

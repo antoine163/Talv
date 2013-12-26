@@ -108,6 +108,8 @@ class Action
 		
 		//! \brief Crée une action a partir de son non de classe.
 		//! \param actTypeName le non de la classes de l'actions que vous voulez crées.
+		//! Si nullptr est retourner il est probable que \p actTypeName que vous avez spécifier 
+		//! n'existe pas.
 		static Action* createAction(wxString const& actTypeName);
 	
 	protected:
