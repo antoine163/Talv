@@ -14,8 +14,12 @@
 
 //App
 #include "manager.hpp"
+#include "action.hpp"
 #include "shortcut.hpp"
 #include "control/ctrlDataList.hpp"
+
+//Stl
+#include <map>
 
 // *****************************************************************************
 // Class ManAction
@@ -32,12 +36,39 @@ class ManAction : public Manager, public wxEvtHandler
 		//! \return  \ref WinManAction
 		//! \see WinManAction
 		virtual WinManager* newEditWindow(wxWindow* parent);
+		
+		//! \brief Ajout d'une action.
+		//! Le paramètre \b act devra étre allouer dynamiquement au préalable, \ref ManagerAction se charge de libérer la mémoire après utilisation.
+		//! \param shortcut c'est le raccourci associer à l'action.
+		//! \param act c'est l'action à ajouter.
+		//! \return true si réussite, false si le raccourcie de l'action et déjà connue.
+		bool add(ShortcutKey const &shortcut, Action* act);
+		
+		//! \brief Pour savoir si une action existe.
+		//! \return true si le raccourcis de l'action existe.
+		bool exist(ShortcutKey const& shortcut);
+		
+		//! \brief Supprimer d'une action.
+		//! \return true si réussite, false si le raccourcis de l'action n'a pas été trouver.
+		bool remove(ShortcutKey const& shortcut);
+		
+		//! \brief Supprimer tout les actions.
+		void removeAll();
+		
+		//! \brief Active ou désactive les raccourcis.
+		//! \param val si false auqu'une action sera exécuter.
+		void enableShortcuts(bool val=true);
 	
 	private:
 		virtual void manLoad(wxFileConfig& fileConfig);
 		virtual void manSave(wxFileConfig& fileConfig)const;
 		
 		void onShortcut(ShortcutEvent& event);
+		
+		//! \brief Les action qui on été ajouter.
+		//! Ceci permet aussi de faire un lien entre les raccourcis et les actions.
+		//! \see add()
+		std::map<ShortcutKey, Action*> _shortcutKeyAction;
 		
 		//! \brief Gestion des raccourcis.
 		Shortcut _shortcut;

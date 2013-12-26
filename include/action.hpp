@@ -1,48 +1,38 @@
-//! \file **************************************************************
+//! \file **********************************************************************
 //! \brief Header Interface Action
 //! 
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.16
+//! \version 1.0
 //! \date 04.01.2013
 //!
-//! ********************************************************************
-
-/*
-*	Copyright © 2013 - Antoine Maleyrie.
-*/
+//! ****************************************************************************
 
 #ifndef ACTION_H
 #define ACTION_H
 
+//WxWidgets
 #include <wx/string.h>
 #include <wx/fileconf.h>
-#include <wx/button.h>
+#include <wx/window.h>
+#include <wx/arrstr.h>	
 
-//
-#define SHOW_ACTION(action)
-		_actions[action::action.getName()] = #action;
-#define NEW_ACTION(action)\
-		if(actTypeName == #action)return new action();
-#include "actionDef.hpp"		
-//
+//Stl
+#include <vector>	
 
-//! \brief permet de déclarer 
-//! A appeler dans las classes fille de \ref Action 
-#define DECLARE_ACTION()\
-	public:\
-	virtual wxString const& getName()const;\
-	virtual wxString const& getDescription()const;\
-	virtual wxString const& getActTypeName()const;\
-	virtual Action* newClone()const
+#define DECLARE_ACTION()								\
+		public:											\
+		virtual wxString const& getName()const;			\
+		virtual wxString const& getDescription()const;	\
+		virtual wxString const& getActTypeName()const;	\
+		virtual Action* newClone()const
 	
-//! \brief Obtenir 
-#define IMPLEMENT_ACTION(action, name, description)\
-	wxString const& action::getName()const{static wxString r=name; return r;}\
-	wxString const& action::getDescription()const{static wxString r=description; return r;}\
-	wxString const& action::getActTypeName()const{static wxString r=#action; return r;}\
-	Action* action::newClone()const{return new action(*this);}
+#define IMPLEMENT_ACTION(action, name, description)														\
+		wxString const& action::getName()const{static wxString r=name; return r;}						\
+		wxString const& action::getDescription()const{static wxString r=description; return r;}			\
+		wxString const& action::getActTypeName()const{static wxString r=#action; return r;}				\
+		Action* action::newClone()const{return new action(*this);}
 	
 //! \defgroup action Actions
 //! \brief Liste des actions
@@ -51,9 +41,9 @@
 //! Les classes préfixer par \b Act sont touts basée sur la classe \ref Action.
 
 
-// *********************************************************************
+// *****************************************************************************
 // Class Action
-// *********************************************************************
+// *****************************************************************************
 
 //! \brief Class de base pour les actions.
 //! \see \ref pageCreateAction
@@ -70,7 +60,7 @@ class Action
 		//! Pour les classes filles, le but est d'éditer directement les paramètre (attribut) de l'action via le panel.
 		//! \note Cette méthode crées un panel et retourne le pointeur sur se panel il faudra prévoir de libérai la mémoire.
 		//! \param parent le wxWindow parent.
-		virtual window* getWindowPreferences(wxWindow* parent)=0;
+		virtual wxWindow* newEditWindow(wxWindow* parent)=0;
 		
 		//! \brief Permet d'extraire les préférences de l'action au format string,
 		//! dans le but des les affichées à l'utilisateur.
@@ -78,11 +68,6 @@ class Action
 		
 		//! \brief Permet d'exécuter l'action.
 		virtual void execute()=0;
-		
-		//! \brief Obtenir le nom de la liste utiliser.
-		//! \return wxEmptyString si l'action n'utilise pas de liste.
-		virtual wxString getListNameUsed()const;
-	
 	
 		//! @name Auto implémenter
 		//!
@@ -118,12 +103,12 @@ class Action
 		//! \param fileConfig fichier où l'action doit être sauvegarder.
 		void save(wxFileConfig& fileConfig)const;
 		
+		//! \brief Créées des actions pour tout les type d'actions connue.
+		static std::vector<Action*> createActions();
 		
-		//! \brief Crée une nouvelle action à partir de son nom de class.
-		//! \param actTypeName le non de la class de l'action.
-		//! \return nullptr si l'action n'a pas pu être créé.
-		//! \see getActTypeName()
-		static Action* newAction(wxString const& actTypeName);
+		//! \brief Crée une action a partir de son non de classe.
+		//! \param actTypeName le non de la classes de l'actions que vous voulez crées.
+		static Action* createAction(wxString const& actTypeName);
 	
 	protected:
 		//! \brief Permet de charger les préférences de l'action à partir du wxFileConfig (appelé par \ref load()).

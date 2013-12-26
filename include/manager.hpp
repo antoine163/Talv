@@ -38,7 +38,7 @@
 		private:												\
 			manager();											\
 			virtual ~manager();									\
-			static manager** getPtr();
+			static manager** getPtr()
 	
 
 #define IMPLEMENT_MANAGER(manager)								\

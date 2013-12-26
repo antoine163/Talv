@@ -243,33 +243,24 @@ class ShortcutThread : protected wxThread
 //! 	_shortcut = new Shortcut(this);	
 //! 	
 //! 	//Création d'un raccourci, touche super+a 
-//! 	int id = _shortcut->creat(KEY_MODIFIER_SUPER, 'a');
-//! 	//lie l'événement à la méthode de callBack.
-//! 	Bind(EVT_SHORTCUT, &App::OnShortcut, this, id);
+//! 	_shortcut->creat(KEY_MODIFIER_SUPER, 'a');
 //! 	
 //! 	//Création d'un raccourci, touche super+b
-//! 	id = _shortcut->creat(KEY_MODIFIER_SUPER, 'b');
-//! 	//lie l'événement à la méthode de callBack.
-//! 	Bind(EVT_SHORTCUT, &App::OnShortcut, this, id);
+//! 	_shortcut->creat(KEY_MODIFIER_SUPER, 'b');
 //!
 //! 	//Création d'un raccourci, touche shift+super+a
 //! 	ShortcutKey shortcutKey(ShortcutKey::stringToShortcutKey("shift+super+a"));
-//! 	id = _shortcut->creat(shortcutKey);
-//! 	//lie l'événement à la méthode de callBack.
-//! 	Bind(EVT_SHORTCUT, &App::OnShortcut, this, id);
+//! 	_shortcut->creat(shortcutKey);
 //! 	
 //! 	//Création d'un raccourci, touche super+ctrl+a 
-//! 	id = _shortcut->creat(KEY_MODIFIER_SUPER|KEY_MODIFIER_CONTROL, 'a');
-//! 	//lie l'événement à la méthode de callBack.
-//! 	Bind(EVT_SHORTCUT, &App::OnShortcut, this, id);
+//! 	_shortcut->creat(KEY_MODIFIER_SUPER|KEY_MODIFIER_CONTROL, 'a');
 //! 
 //! 	return true;
 //! }
 //! 
 //! void App::OnShortcut(ShortcutEvent& event)
 //! {
-//! 	std::cout << "OnShortcut -> " << event.GetId() << " : ";
-//! 						std::cout << event.getCharKey() << " : ";
+//! 	std::cout << "OnShortcut -> " << event.getCharKey() << " : ";
 //! 						std::cout << event.getModifiers() << std::endl;		
 //! }
 //! \endcode

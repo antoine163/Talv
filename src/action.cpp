@@ -1,30 +1,29 @@
-//! \file **************************************************************
+//! \file **********************************************************************
 //! \brief Source Interface Action
 //! 
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.16
+//! \version 1.0
 //! \date 04.01.2013
 //!
-//! ********************************************************************
+//! ****************************************************************************
 
-/*
-*	Copyright © 2013 - Antoine Maleyrie.
-*/
-
+//App
 #include "action.hpp"
 
-#include "action/actTranslation.hpp"
-//#include "action/actTranslationToList.hpp"
-//#include "action/actLearn.hpp"
+#define CREATE_ACTION(action)					\
+		if(actTypeName == #action || all)		\
+		{										\
+			ptrActions.push_back(new action());	\
+		}
+#include "actionDefs.hpp"
 
-// *********************************************************************
+// *****************************************************************************
 // Class Action
-// *********************************************************************
+// *****************************************************************************
 
-Action::Action(wxString const& name, wxString const& actTypeName, wxString const& actDescription)
-:_name(name), _actTypeName(actTypeName), _actDescription(actDescription)
+Action::Action()
 {
 }
 
@@ -32,33 +31,31 @@ Action::~Action()
 {
 }
 
-void Action::load(wxFileConfig & fileConfig)
+void Action::load(wxFileConfig&)
 {
-	actLoad(fileConfig);
 }
 	
-void Action::save(wxFileConfig & fileConfig)const
+void Action::save(wxFileConfig&)const
 {
-	fileConfig.Write("ActTypeName", _actTypeName);
-	actSave(fileConfig);
 }
 
-wxString const& Action::getDescription()const
+std::vector<Action*> Action::createActions()
 {
-	return _actDescription;
+	wxString actTypeName;
+	std::vector<Action*> ptrActions;
+	bool all = true;
+	MAKE_CREATE_ACTION();
+	return ptrActions;
 }
 
-wxString Action::getListNameUsed()const
+Action* Action::createAction(wxString const& actTypeName)
 {
-	return wxEmptyString;
-}
-
-wxString const& Action::getName()const
-{
-	return _name;
-}
-
-wxString const& Action::getActTypeName()const
-{
-	return _actTypeName;
+	std::vector<Action*> ptrActions;
+	bool all = false;
+	MAKE_CREATE_ACTION();
+	
+	if(ptrActions.size() == 1)
+		return ptrActions[0];
+	
+	return nullptr;
 }

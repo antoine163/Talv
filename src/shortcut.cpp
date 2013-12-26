@@ -151,7 +151,7 @@ wxString ShortcutKey::shortcutKeyToString(ShortcutKey const& shortcut)
 ShortcutKey ShortcutKey::stringToShortcutKey(wxString const& shortcut)
 {
 	KeyModifier_e modifiers = KEY_MODIFIER_NONE;
-	char charKey = '\0';
+	//char charKey = '\0';
 	
 	//Avent ou après le premier '+'.
 	wxString before;
@@ -161,15 +161,12 @@ ShortcutKey ShortcutKey::stringToShortcutKey(wxString const& shortcut)
 	wxString tmp = shortcut;
 	tmp.MakeLower();
 	
-	
 	//Obtenir avent ou après le premier '+'.
 	before = tmp.BeforeFirst('+', &after);
 	
 	//Conversion du modificateur.
 	while(!before.IsEmpty())
-	{
-		charKey = *before.fn_str();
-		
+	{		
 		if(before == "ctrl")
 			modifiers = modifiers|KEY_MODIFIER_CONTROL;
 		else if(before == "alt")
@@ -182,15 +179,20 @@ ShortcutKey ShortcutKey::stringToShortcutKey(wxString const& shortcut)
 			modifiers = modifiers|KEY_MODIFIER_SHIFT;
 		else if(before == "super")
 		modifiers = modifiers|KEY_MODIFIER_SUPER;
-		else //Raccourci erronée.
+		else//Raccourci erronée.
 			return ShortcutKey(KEY_MODIFIER_NONE, '\0');
+		
+		if(after.Len() == 1)
+			return ShortcutKey(modifiers, *after.fn_str());
+			
 		
 		//Obtenir le nouveau avent ou après le premier '+'
 		tmp = after;
 		before = tmp.BeforeFirst('+', &after);
 	}
 	
-	return ShortcutKey(modifiers, charKey);
+	//Raccourci erronée.
+	return ShortcutKey(KEY_MODIFIER_NONE, '\0');
 }
 
 // *****************************************************************************

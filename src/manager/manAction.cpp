@@ -11,11 +11,13 @@
 
 //App
 #include "manager/manAction.hpp"
+#include "manager/manNotification.hpp"
 #include "defs.hpp"
 
 //WxWidgets
 #include <wx/sizer.h>
 #include <wx/button.h>
+#include <wx/intl.h>
 
 // *****************************************************************************
 // Class ManAction
@@ -24,14 +26,16 @@
 ManAction::ManAction()
 : _shortcut(this)
 {
-	_shortcut.creat(KEY_MODIFIER_SUPER|KEY_MODIFIER_CONTROL, 'a');
-	_shortcut.creat(KEY_MODIFIER_SUPER|KEY_MODIFIER_CONTROL, 'b');
 	Bind(EVT_SHORTCUT, &ManAction::onShortcut, this);
+	
+	add(ShortcutKey::stringToShortcutKey("shift+super+a"), Action::createAction("actTranslationToNotification"));
 }
 
 ManAction::~ManAction()
 {
 	Unbind(EVT_SHORTCUT, &ManAction::onShortcut, this);
+	
+	removeAll();
 }
 
 IMPLEMENT_MANAGER(ManAction);
@@ -39,6 +43,57 @@ IMPLEMENT_MANAGER(ManAction);
 WinManager* ManAction::newEditWindow(wxWindow* parent)
 {
 	return new WinManAction(parent);
+}
+#include <iostream>
+bool ManAction::add(ShortcutKey const &shortcut, Action* act)
+{
+	if(exist(shortcut))
+		return false;
+		
+	_shortcutKeyAction[shortcut] = act;
+	_shortcut.creat(shortcut);
+	
+	std::cout << "ManAction::add -- " << ShortcutKey::shortcutKeyToString(shortcut) << std::endl;
+	
+	return true;
+}
+
+bool ManAction::exist(ShortcutKey const& shortcut)
+{
+	for(auto it: _shortcutKeyAction)
+	{
+		if(it.first == shortcut)
+			return true;
+	}
+	
+	return false;
+}
+
+bool ManAction::remove(ShortcutKey const& shortcut)
+{
+	if(!exist(shortcut))
+		return false;
+		
+	delete _shortcutKeyAction[shortcut];
+	_shortcutKeyAction.erase(shortcut);
+	
+	_shortcut.remove(shortcut);
+	
+	return true;
+}
+
+void ManAction::removeAll()
+{
+	for(auto it: _shortcutKeyAction)
+		delete it.second;
+		
+	_shortcutKeyAction.clear();
+	_shortcut.removeAll();
+}
+
+void ManAction::enableShortcuts(bool val)
+{
+	_shortcut.enable(val);
 }
 
 void ManAction::manLoad(wxFileConfig&)
@@ -49,7 +104,6 @@ void ManAction::manSave(wxFileConfig&)const
 {
 }	
 
-#include "manager/manNotification.hpp"
 void ManAction::onShortcut(ShortcutEvent& event)
 {
 	ManNotification::get().notify("ManAction::onShortcut", ShortcutKey::shortcutKeyToString(event.getShortcutKey()), wxICON_INFORMATION);
@@ -171,17 +225,7 @@ void WinManAction::refreshGuiFromManager()
 void WinManAction::refreshManagerFromGui()const
 {
 }
-#include "manager/manNetwork.hpp"
-//#include "manager/manNotification.hpp"
-#include <X11/XKBlib.h>
-#include <iostream>
+
 void WinManAction::onPreferences(wxCommandEvent&)
 {	
-	//ManNotification::get().notify("test", "Le message");
-	//ManNotification::get().notify("test", "Le message", wxICON_ERROR);
-	ManNotification::get().notify("test", "Le message", wxICON_INFORMATION);
-	std::cout << wxMOD_WIN << std::endl;
-	std::cout << Mod4Mask << std::endl;
-	//ManNotification::get().notify("test", "Le message", wxICON_WARNING);
-	//std::cout << "WinManAction::onPreferences" << std::endl;
 }
