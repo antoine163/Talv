@@ -319,15 +319,23 @@ void ManNotification::manLoad(wxFileConfig& fileConfig)
 		readVal = fileConfig.Read("x", -1);
 		if(readVal != -1)
 			_workarea.x = readVal;
+			
 		readVal = fileConfig.Read("y", -1);
 		if(readVal != -1)
 			_workarea.y = readVal;
+			
+			
 		readVal = fileConfig.Read("height", -1);
 		if(readVal != -1)
 			_workarea.height = readVal;
+		else
+			_workarea.height -= _workarea.y;
+			
 		readVal = fileConfig.Read("width", -1);
 		if(readVal != -1)
 			_workarea.width = readVal;
+		else
+			_workarea.width -= _workarea.x;
 	
 	fileConfig.SetPath("..");
 }

@@ -1,29 +1,24 @@
-//! \file **************************************************************
+//! \file **********************************************************************
 //! \brief Source Gestion des raccourcis globaux.
 //!
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie.
-//! \version 1.4
+//! \version 1.5
 //! \date 13.12.12
 //!
-//! ********************************************************************
+//! ****************************************************************************
 
-/*
-*	Copyright © 2012-2013 - Antoine Maleyrie.
-*/
-
+//App
 #include "shortcut.hpp"
 
 #if defined(__UNIX__)
 #include <X11/XKBlib.h>
 #endif
 
-#include <iostream>
-
-// *********************************************************************
+// *****************************************************************************
 // Class ShortcutKey
-// *********************************************************************
+// *****************************************************************************
 
 ShortcutKey::ShortcutKey(KeyModifier_e modifiers, char charKey)
 : _modifiers(modifiers), _charKey(charKey)
@@ -74,68 +69,68 @@ wxString ShortcutKey::shortcutKeyToString(ShortcutKey const& shortcut)
 	wxString ret;
 	
 	// ShortcutKey valide ?
-	if(!(shortcut._modifiers&KeyModifier_e::ALT ||
-		shortcut._modifiers&KeyModifier_e::CONTROL ||
-		#if defined(__UNIX__)
-		shortcut._modifiers&KeyModifier_e::ALTGR ||
-		#endif
-		shortcut._modifiers&KeyModifier_e::SHIFT ||
-		shortcut._modifiers&KeyModifier_e::SUPER) &&
-		shortcut._charKey == '\0')
+	if(!(	shortcut._modifiers  &KEY_MODIFIER_ALT ||
+			shortcut._modifiers & KEY_MODIFIER_CONTROL ||
+			#if defined(__UNIX__)
+			shortcut._modifiers & KEY_MODIFIER_ALTGR ||
+			#endif
+			shortcut._modifiers & KEY_MODIFIER_SHIFT ||
+			shortcut._modifiers & KEY_MODIFIER_SUPER) &&
+			shortcut._charKey == '\0')
 	{
 		return wxEmptyString;
 	}
 	
 	//Conversion du modificateur.
-	KeyModifier_e statut = KeyModifier_e::CONTROL;
+	KeyModifier_e statut = KEY_MODIFIER_CONTROL;
 	for(unsigned int i = 0; i < NB_KEY_MODIFIER; i++)
 	{
 		switch(statut)
 		{
-			case KeyModifier_e::CONTROL:
+			case KEY_MODIFIER_CONTROL:
 			{
-				if(shortcut._modifiers&KeyModifier_e::CONTROL)
+				if(shortcut._modifiers & KEY_MODIFIER_CONTROL)
 					ret << "ctrl+";
 				
-				statut = KeyModifier_e::ALT;
+				statut = KEY_MODIFIER_ALT;
 			}break;
 			
-			case KeyModifier_e::ALT:
+			case KEY_MODIFIER_ALT:
 			{
-				if(shortcut._modifiers&KeyModifier_e::ALT)
+				if(shortcut._modifiers & KEY_MODIFIER_ALT)
 					ret << "alt+";
 				
 				#if defined(__UNIX__)
-				statut = KeyModifier_e::ALTGR;
+				statut = KEY_MODIFIER_ALTGR;
 				#elif defined(__WXMSW__)
-				statut = KeyModifier_e::SHIFT;
+				statut = KEY_MODIFIER_SHIFT;
 				#endif
 			}break;
 			
 			#if defined(__UNIX__)
-			case KeyModifier_e::ALTGR:
+			case KEY_MODIFIER_ALTGR:
 			{
-				if(shortcut._modifiers&KeyModifier_e::ALTGR)
+				if(shortcut._modifiers & KEY_MODIFIER_ALTGR)
 					ret << "altgr+";
 				
-				statut = KeyModifier_e::SHIFT;
+				statut = KEY_MODIFIER_SHIFT;
 			}break;
 			#endif
 			
-			case KeyModifier_e::SHIFT:
+			case KEY_MODIFIER_SHIFT:
 			{
-				if(shortcut._modifiers&KeyModifier_e::SHIFT)
+				if(shortcut._modifiers & KEY_MODIFIER_SHIFT)
 					ret << "shift+";
 				
-				statut = KeyModifier_e::SUPER;
+				statut = KEY_MODIFIER_SUPER;
 			}break;
 			
-			case KeyModifier_e::SUPER:
+			case KEY_MODIFIER_SUPER:
 			{
-				if(shortcut._modifiers&KeyModifier_e::SUPER)
+				if(shortcut._modifiers & KEY_MODIFIER_SUPER)
 					ret << "super+";
 				
-				statut = KeyModifier_e::NONE;
+				statut = KEY_MODIFIER_NONE;
 			}break;
 			
 			default:
@@ -155,7 +150,7 @@ wxString ShortcutKey::shortcutKeyToString(ShortcutKey const& shortcut)
 
 ShortcutKey ShortcutKey::stringToShortcutKey(wxString const& shortcut)
 {
-	KeyModifier_e modifiers = KeyModifier_e::NONE;
+	KeyModifier_e modifiers = KEY_MODIFIER_NONE;
 	char charKey = '\0';
 	
 	//Avent ou après le premier '+'.
@@ -169,23 +164,26 @@ ShortcutKey ShortcutKey::stringToShortcutKey(wxString const& shortcut)
 	
 	//Obtenir avent ou après le premier '+'.
 	before = tmp.BeforeFirst('+', &after);
+	
 	//Conversion du modificateur.
 	while(!before.IsEmpty())
 	{
 		charKey = *before.fn_str();
 		
 		if(before == "ctrl")
-			modifiers = (KeyModifier_e)(modifiers|KeyModifier_e::CONTROL);
+			modifiers = modifiers|KEY_MODIFIER_CONTROL;
 		else if(before == "alt")
-			modifiers = (KeyModifier_e)(modifiers|KeyModifier_e::ALT);
+			modifiers = modifiers|KEY_MODIFIER_ALT;
 		#if defined(__UNIX__)
 		else if(before == "altgr")
-			modifiers = (KeyModifier_e)(modifiers|KeyModifier_e::ALTGR);
+			modifiers = modifiers|KEY_MODIFIER_ALTGR;
 		#endif
 		else if(before == "shift")
-			modifiers = (KeyModifier_e)(modifiers|KeyModifier_e::SHIFT);
+			modifiers = modifiers|KEY_MODIFIER_SHIFT;
 		else if(before == "super")
-		modifiers = (KeyModifier_e)(modifiers|KeyModifier_e::SUPER);
+		modifiers = modifiers|KEY_MODIFIER_SUPER;
+		else //Raccourci erronée.
+			return ShortcutKey(KEY_MODIFIER_NONE, '\0');
 		
 		//Obtenir le nouveau avent ou après le premier '+'
 		tmp = after;
@@ -195,17 +193,17 @@ ShortcutKey ShortcutKey::stringToShortcutKey(wxString const& shortcut)
 	return ShortcutKey(modifiers, charKey);
 }
 
-// *********************************************************************
+// *****************************************************************************
 // Class ShortcutEvent
-// *********************************************************************
+// *****************************************************************************
 		
-ShortcutEvent::ShortcutEvent(int id, wxEventType eventType, KeyModifier_e modifiers, char charKey)
-    : wxEvent(id, eventType), _shortcutKey(modifiers, charKey)
+ShortcutEvent::ShortcutEvent(wxEventType eventType, KeyModifier_e modifiers, char charKey)
+    : wxEvent(wxID_ANY, eventType), _shortcutKey(modifiers, charKey)
 {
 }
 
-ShortcutEvent::ShortcutEvent(int id, wxEventType eventType, ShortcutKey const& shortcutKey)
-	: wxEvent(id, eventType), _shortcutKey(shortcutKey)
+ShortcutEvent::ShortcutEvent(wxEventType eventType, ShortcutKey const& shortcutKey)
+	: wxEvent(wxID_ANY, eventType), _shortcutKey(shortcutKey)
 {
 }
 
@@ -231,12 +229,22 @@ ShortcutKey const& ShortcutEvent::getShortcutKey()const
 
 wxDEFINE_EVENT(EVT_SHORTCUT, ShortcutEvent);
 
-// *********************************************************************
+// *****************************************************************************
 // Class ShortcutThread
-// *********************************************************************
+// *****************************************************************************
 
-ShortcutThread::ShortcutThread(wxEvtHandler *owner, std::map<ShortcutKey, int> & bind)
-: wxThread(wxTHREAD_JOINABLE), _owner(owner), _bind(bind), _mutexCommunicationThread(false), _shortcutKeyCommunicationThread(nullptr), _communicationThread(NONE)
+#ifdef __WXMSW__
+ShortcutThread::ShortcutThread(wxEvtHandler *owner, std::vector<ShortcutKey>const& shortcutKeys)
+: 	wxThread(wxTHREAD_JOINABLE), _owner(owner),
+	_mutexCommunicationThread(false), _shortcutKeyCommunicationThread(nullptr),
+	_communicationThread(CUMMUNICATION_THREAD_NONE),
+	_shortcutKeys(shortcutKeys)
+#else
+ShortcutThread::ShortcutThread(wxEvtHandler *owner)
+: 	wxThread(wxTHREAD_JOINABLE), _owner(owner),
+	_mutexCommunicationThread(false), _shortcutKeyCommunicationThread(nullptr),
+	_communicationThread(CUMMUNICATION_THREAD_NONE)
+#endif
 {
     #if defined(__UNIX__)
     static bool isXInitThreads = false;
@@ -275,7 +283,7 @@ void ShortcutThread::registerShortcut(ShortcutKey const& shortcutKey)
 	_mutexCommunicationThread=true;
 	
 	//Indique les valeurs à communiquer au thread.
-	_communicationThread=REGISTER;
+	_communicationThread=CUMMUNICATION_THREAD_REGISTER;
 	_shortcutKeyCommunicationThread=&shortcutKey;
 	
 	#if defined(__UNIX__)
@@ -304,7 +312,7 @@ void ShortcutThread::unregisterShortcut(ShortcutKey const& shortcutKey)
 	_mutexCommunicationThread=true;
 	
 	//Indique les valeurs à communiquer au thread.
-	_communicationThread=UNREGISTER;
+	_communicationThread=CUMMUNICATION_THREAD_UNREGISTER;
 	_shortcutKeyCommunicationThread=&shortcutKey;
 	
 	#if defined(__UNIX__)
@@ -325,24 +333,15 @@ void ShortcutThread::unregisterShortcut(ShortcutKey const& shortcutKey)
 	while(_mutexCommunicationThread);
 }
 
-void ShortcutThread::unregisterAllShortcut()
-{
-	for(auto &it: _bind)
-		unregisterShortcut(it.first);
-}
-
 void ShortcutThread::halt()
-{
-	//Désactive touts les raccourcis.
-	unregisterAllShortcut();
-	
+{	
 	//Si les données de communication avec le thread sont utiliser,
 	//alors on attente.
 	while(_mutexCommunicationThread);
 	_mutexCommunicationThread=true;
 	
 	//Indique les valeurs à communiquer au thread.
-	_communicationThread=QUIT;
+	_communicationThread=CUMMUNICATION_THREAD_QUIT;
 	_shortcutKeyCommunicationThread=nullptr;
 	
 	#if defined(__UNIX__)
@@ -378,10 +377,8 @@ wxThread::ExitCode ShortcutThread::Entry()
 			const char charKey = *(XKeysymToString(XkbKeycodeToKeysym(_display, _event.xkey.keycode, 0, 0)));
 			//Mise en forme du raccourci.
 			ShortcutKey shortcutKey((KeyModifier_e)_event.xkey.state, charKey);
-			//Recherche de l'id.
-			int id = _bind[shortcutKey];
 			//Envoi de l'événement.
-			ShortcutEvent *event = new ShortcutEvent(id, EVT_SHORTCUT, shortcutKey);
+			ShortcutEvent *event = new ShortcutEvent(EVT_SHORTCUT, shortcutKey);
 			wxQueueEvent(_owner, event);
 		}
 		else if(_event.type == ClientMessage)
@@ -391,25 +388,25 @@ wxThread::ExitCode ShortcutThread::Entry()
 			switch(_communicationThread)
 			{
 				//Enregistre le raccourci.
-				case CommunicationThread::REGISTER:
+				case CUMMUNICATION_THREAD_REGISTER:
 					charKey[0]=_shortcutKeyCommunicationThread->getCharKey();
 					key = XKeysymToKeycode(_display, XStringToKeysym(charKey));
 					XGrabKey(_display, key, (unsigned int)_shortcutKeyCommunicationThread->getModifiers(), _root, True, GrabModeAsync, GrabModeAsync);
 				break;
 				
 				//Désenregistrer le raccourci.
-				case CommunicationThread::UNREGISTER:
+				case CUMMUNICATION_THREAD_UNREGISTER:
 					charKey[0]=_shortcutKeyCommunicationThread->getCharKey();
 					key = XKeysymToKeycode(_display, XStringToKeysym(charKey));
 					XUngrabKey(_display, key, (unsigned int)_shortcutKeyCommunicationThread->getModifiers(), _root);
 				break;
 				
 				//Quit le thread.
-				case CommunicationThread::QUIT:
+				case CUMMUNICATION_THREAD_QUIT:
 					run = false;
 				break;
 				
-				case CommunicationThread::NONE:
+				case CUMMUNICATION_THREAD_NONE:
 				default:
 				break;
 			}
@@ -427,18 +424,9 @@ wxThread::ExitCode ShortcutThread::Entry()
 		//On le récupère.
 		if(_msgEvent.message == WM_HOTKEY)
 		{
-			//Recherche du modifiers et du charKey.
-			for(auto &it: _bind)
-			{
-				//Compare des id.
-				if(it.second == (int)_msgEvent.wParam)
-				{
-					//Envoi de l'événement.
-					ShortcutEvent *event = new ShortcutEvent(it.second, EVT_SHORTCUT, it.first);
-					wxQueueEvent(_owner, event);
-					break;
-				}
-			}
+			//Envoi de l'événement.
+			ShortcutEvent *event = new ShortcutEvent(EVT_SHORTCUT, _shortcutKeys[(int)_msgEvent.wParam];);
+			wxQueueEvent(_owner, event);
 		}
 		else if(_msgEvent.message == WM_APP)
 		{
@@ -447,27 +435,41 @@ wxThread::ExitCode ShortcutThread::Entry()
 			switch(_communicationThread)
 			{
 				//Enregistre le raccourci.
-				case CommunicationThread::REGISTER:
+				case CUMMUNICATION_THREAD_REGISTER:
 					charKey[0]=_shortcutKeyCommunicationThread->getCharKey();
 					
 					//Capitalise le charKey
 					charKeyCapital = charKey;
 					charKeyCapital.MakeCapitalized();
-			
-					RegisterHotKey(nullptr, _bind[*_shortcutKeyCommunicationThread], (UINT)_shortcutKeyCommunicationThread->getModifiers(), *charKeyCapital.fn_str());
+					
+					for(unsigned int i = 0; i < _shortcutKeys.size(); i++)
+					{
+						if(_shortcutKeys[i] == *_shortcutKeyCommunicationThread)
+						{
+							RegisterHotKey(nullptr, i, (UINT)_shortcutKeyCommunicationThread->getModifiers(), *charKeyCapital.fn_str());
+							break;
+						}
+					}
 				break;
 				
 				//Désenregistrer le raccourci.
-				case CommunicationThread::UNREGISTER:
-					UnregisterHotKey(nullptr, _bind[*_shortcutKeyCommunicationThread]);
+				case CUMMUNICATION_THREAD_UNREGISTER:
+					for(unsigned int i = 0; i < _shortcutKeys.size(); i++)
+					{
+						if(_shortcutKeys[i] == *_shortcutKeyCommunicationThread)
+						{
+							UnregisterHotKey(nullptr, i);
+							break;
+						}
+					}
 				break;
 				
 				//Quit le thread.
-				case CommunicationThread::QUIT:
+				case CUMMUNICATION_THREAD_QUIT:
 					run = false;
 				break;
 				
-				case CommunicationThread::NONE:
+				case CUMMUNICATION_THREAD_NONE:
 				default:
 				break;
 			}
@@ -482,40 +484,40 @@ wxThread::ExitCode ShortcutThread::Entry()
 	return (wxThread::ExitCode)0;
 }
 
-// *********************************************************************
+// *****************************************************************************
 // Class Shortcut
-// *********************************************************************
+// *****************************************************************************
 
 Shortcut::Shortcut(wxEvtHandler *owner)
 : _thread(nullptr), _owner(owner), _enable(true)
 {
-	_thread = new ShortcutThread(_owner, _bind);
+	#ifdef __WXMSW__
+	_thread = new ShortcutThread(_owner, _shortcutKeys);
+	#else
+	_thread = new ShortcutThread(_owner);
+	#endif
 }
 
 Shortcut::~Shortcut()
 {
+	removeAll();
 	if(_thread != nullptr)
 		delete _thread;
 }
 
-int Shortcut::creat(KeyModifier_e modifiers, char charKey)
+void Shortcut::creat(KeyModifier_e modifiers, char charKey)
 {
-    return creat(ShortcutKey(modifiers, charKey));
+    creat(ShortcutKey(modifiers, charKey));
 }
 
-int Shortcut::creat(ShortcutKey const& shortcutKey)
-{
-	//Création d'un nouveau id.
-    int id = wxNewId();
-    
-    //Création d'un lien et ajout de l'id.
-    _bind[shortcutKey] = id;
+void Shortcut::creat(ShortcutKey const& shortcutKey)
+{   
+    //Mémorise le raccourcie.
+    _shortcutKeys.push_back(shortcutKey);
     
     //Si les raccourcis sont activés, on active le raccourci au prés du thread.
     if(_enable)
 		_thread->registerShortcut(shortcutKey);
-		
-    return id;
 }
 
 void Shortcut::remove(KeyModifier_e modifiers, char charKey)
@@ -530,22 +532,27 @@ void Shortcut::remove(ShortcutKey const& shortcutKey)
 		_thread->unregisterShortcut(shortcutKey);
 		
     //Supprime le lien.
-    _bind.erase(shortcutKey);
+    for(unsigned int i = 0; i < _shortcutKeys.size(); i++)
+    {
+		if(_shortcutKeys[i] == shortcutKey)
+		{
+			_shortcutKeys.erase(_shortcutKeys.begin()+i);
+			break;
+		}
+	}
 }
 
 void Shortcut::removeAll()
 {
 	//Si les raccourcis sont activés, on désactive tout les raccourcis au prés du thread.
     if(_enable)
-		_thread->unregisterAllShortcut();
+    {
+		for(auto it: _shortcutKeys)
+			_thread->unregisterShortcut(it);
+	}
 		
-	//Supprime les liens.
-	_bind.clear();
-}
-
-int Shortcut::getId(ShortcutKey const& shortcutKey)const
-{
-    return _bind.at(shortcutKey);
+	//Supprime raccourcis.
+	_shortcutKeys.clear();
 }
 
 void Shortcut::enable(bool val)
@@ -554,6 +561,7 @@ void Shortcut::enable(bool val)
 	if(_enable == true && val == false)
 	{
 		//Désactive tout les raccourcis au prés du thread.
+		removeAll();
 		delete _thread;
 		_thread = nullptr;
 	}
@@ -561,11 +569,15 @@ void Shortcut::enable(bool val)
 	else if(_enable == false && val == true)
 	{	
 		//On relance le thread.
-		_thread = new ShortcutThread(_owner, _bind);
+		#ifdef __WXMSW__
+		_thread = new ShortcutThread(_owner, _shortcutKeys);
+		#else
+		_thread = new ShortcutThread(_owner);
+		#endif
 		
 		//Active les raccourcis au prés du thread.
-		for(auto &it: _bind)			
-			_thread->registerShortcut(it.first);
+		for(auto &it: _shortcutKeys)			
+			_thread->registerShortcut(it);
 	}
 	
 	_enable = val;

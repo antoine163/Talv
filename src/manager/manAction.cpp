@@ -22,11 +22,16 @@
 // *****************************************************************************
 
 ManAction::ManAction()
+: _shortcut(this)
 {
+	_shortcut.creat(KEY_MODIFIER_SUPER|KEY_MODIFIER_CONTROL, 'a');
+	_shortcut.creat(KEY_MODIFIER_SUPER|KEY_MODIFIER_CONTROL, 'b');
+	Bind(EVT_SHORTCUT, &ManAction::onShortcut, this);
 }
 
 ManAction::~ManAction()
 {
+	Unbind(EVT_SHORTCUT, &ManAction::onShortcut, this);
 }
 
 IMPLEMENT_MANAGER(ManAction);
@@ -42,7 +47,14 @@ void ManAction::manLoad(wxFileConfig&)
 
 void ManAction::manSave(wxFileConfig&)const
 {
-}									
+}	
+
+#include "manager/manNotification.hpp"
+void ManAction::onShortcut(ShortcutEvent& event)
+{
+	ManNotification::get().notify("ManAction::onShortcut", ShortcutKey::shortcutKeyToString(event.getShortcutKey()), wxICON_INFORMATION);
+	//getData().at(event.getShortcutKey())->execute();
+}								
 									
 // *****************************************************************************
 // Class WinManAction
@@ -143,7 +155,6 @@ WinManAction::WinManAction(wxWindow* parent)
 	sizerMain->Add(sizerButtons, 	0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);	
 	SetSizer(sizerMain);
 	
-	
 	//bind
 	Bind(wxEVT_COMMAND_MENU_SELECTED, 	&WinManAction::onPreferences, this, wxID_PREFERENCES);
 	Bind(wxEVT_BUTTON, 					&WinManAction::onPreferences, this, wxID_PREFERENCES);
@@ -160,12 +171,17 @@ void WinManAction::refreshGuiFromManager()
 void WinManAction::refreshManagerFromGui()const
 {
 }
-#include "manager/manNotification.hpp"
+#include "manager/manNetwork.hpp"
+//#include "manager/manNotification.hpp"
+#include <X11/XKBlib.h>
+#include <iostream>
 void WinManAction::onPreferences(wxCommandEvent&)
 {	
-	ManNotification::get().notify("test", "Le message");
-	ManNotification::get().notify("test", "Le message", wxICON_ERROR);
+	//ManNotification::get().notify("test", "Le message");
+	//ManNotification::get().notify("test", "Le message", wxICON_ERROR);
 	ManNotification::get().notify("test", "Le message", wxICON_INFORMATION);
-	ManNotification::get().notify("test", "Le message", wxICON_WARNING);
-	std::cout << "WinManAction::onPreferences" << std::endl;
+	std::cout << wxMOD_WIN << std::endl;
+	std::cout << Mod4Mask << std::endl;
+	//ManNotification::get().notify("test", "Le message", wxICON_WARNING);
+	//std::cout << "WinManAction::onPreferences" << std::endl;
 }

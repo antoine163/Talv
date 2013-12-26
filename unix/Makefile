@@ -53,6 +53,11 @@ SRC=../src/main.cpp
 #Divers
 SRC+=../src/taskIcon.cpp
 SRC+=../src/proxyInfo.cpp
+SRC+=../src/shortcut.cpp
+
+#wxJSON
+SRC+=../src/wxJSON/jsonval.cpp
+SRC+=../src/wxJSON/jsonreader.cpp
 
 #Controls
 SRC+=../src/control/ctrlDataList.cpp
@@ -61,10 +66,6 @@ SRC+=../src/control/ctrlAuthentication.cpp
 
 #Dialogs
 SRC+=../src/dialog/dlgPreferences.cpp
-
-#wxJSON
-SRC+=../src/wxJSON/jsonval.cpp
-SRC+=../src/wxJSON/jsonreader.cpp
 
 #Managers
 SRC+=../src/manager.cpp	

@@ -14,6 +14,7 @@
 
 //App
 #include "manager.hpp"
+#include "shortcut.hpp"
 #include "control/ctrlDataList.hpp"
 
 // *****************************************************************************
@@ -22,7 +23,7 @@
 
 //! \ingroup manager, action
 //! \brief ManAction
-class ManAction : public Manager
+class ManAction : public Manager, public wxEvtHandler
 {
 	DECLARE_MANAGER(ManAction);
 	
@@ -35,6 +36,11 @@ class ManAction : public Manager
 	private:
 		virtual void manLoad(wxFileConfig& fileConfig);
 		virtual void manSave(wxFileConfig& fileConfig)const;
+		
+		void onShortcut(ShortcutEvent& event);
+		
+		//! \brief Gestion des raccourcis.
+		Shortcut _shortcut;
 };
 
 // *****************************************************************************
