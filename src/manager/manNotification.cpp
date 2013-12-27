@@ -271,7 +271,9 @@ ManNotification::ManNotification()
 	#ifdef __UNIX__
 	//Initialisation de la lib Libnotify.
 	if(!notify_init(PROJECT_NAME))
+	{
 		wxLogError(_("Libnotify could not be initialized."));
+	}
 	#endif
 		
 	_workarea = wxDisplay().GetGeometry();

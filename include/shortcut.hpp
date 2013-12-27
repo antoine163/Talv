@@ -92,6 +92,9 @@ class ShortcutKey
 		//! \return C'est une valeur combiner de \ref KeyModifier_e.
 		KeyModifier_e getModifiers()const;
 		
+		//! \brief Vérifie la validité du raccourcie.
+		bool isOk()const;
+		
 		//! \brief Converti un \ref ShortcutKey en string.
 		//! \param shortcut le raccourci en version \ref ShortcutKey.
 		//! \return Le raccourci en version string.
@@ -102,8 +105,8 @@ class ShortcutKey
 		//! Le raccourci doit être de la forme modificateur+caractère (ex:"alt+shift+f").
 		//! \param shortcut le raccourci en version string.
 		//! \return Le raccourci en version \ref ShortcutKey. Vous pouver verifier la validiter du racoursen
-		//! en appeler \ref getCharKey() et \ref getModifiers(). Si  getCharKey() retourne '\n' ou/et si \ref getModifiers() retourne \bKEY_MODIFIER_NONE
-		//! votre raccourcis n'est pas valide.
+		//! en appeler \ref getCharKey() et \ref getModifiers(). Si  getCharKey() retourne '\n' ou/et si \ref getModifiers() retourne \b KEY_MODIFIER_NONE
+		//! votre raccourcis n'est pas valide. Sinon vous pouver appeler \ref isOk() qui fais sa pour vous.
 		//! \see KeyModifier_e
 		static ShortcutKey stringToShortcutKey(wxString const& shortcut);
 		

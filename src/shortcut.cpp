@@ -64,6 +64,14 @@ KeyModifier_e ShortcutKey::getModifiers()const
 	return _modifiers;
 }
 
+bool ShortcutKey::isOk()const
+{
+	if(_modifiers == KEY_MODIFIER_NONE || _charKey == '\0')
+		return false;
+		
+	return true;
+}
+
 wxString ShortcutKey::shortcutKeyToString(ShortcutKey const& shortcut)
 {
 	wxString ret;

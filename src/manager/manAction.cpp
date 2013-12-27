@@ -17,6 +17,7 @@
 #include <wx/sizer.h>
 #include <wx/button.h>
 #include <wx/intl.h>
+#include <wx/msgdlg.h>
 
 // *****************************************************************************
 // Class ManAction
@@ -27,8 +28,12 @@ ManAction::ManAction()
 {
 	Bind(EVT_SHORTCUT, &ManAction::onShortcut, this);
 	
-	add(ShortcutKey::stringToShortcutKey("shift+super+a"), Action::createAction("ActTranslationToNotification"));
-	add(ShortcutKey::stringToShortcutKey("shift+super+b"), Action::createAction("ActTranslationToList"));
+	add(ShortcutKey::stringToShortcutKey("shift+a"), Action::createAction("ActTranslationToNotification"));
+	add(ShortcutKey::stringToShortcutKey("shift+b"), Action::createAction("ActTranslationToList"));
+	add(ShortcutKey::stringToShortcutKey("shift+c"), Action::createAction("ActTranslationToNotification"));
+	add(ShortcutKey::stringToShortcutKey("shift+d"), Action::createAction("ActTranslationToList"));
+	add(ShortcutKey::stringToShortcutKey("shift+e"), Action::createAction("ActTranslationToNotification"));
+	add(ShortcutKey::stringToShortcutKey("shift+f"), Action::createAction("ActTranslationToList"));
 }
 
 ManAction::~ManAction()
@@ -50,15 +55,26 @@ bool ManAction::add(ShortcutKey const &shortcut, Action* act)
 	if(exist(shortcut))
 		return false;
 		
-	_shortcutKeyAction[shortcut] = act;
+	_shortcutKeysActions[shortcut] = act;
 	_shortcut.creat(shortcut);
 	
 	return true;
 }
 
+Action const* ManAction::getAction(ShortcutKey const &shortcut)const
+{
+	for(auto it: _shortcutKeysActions)
+	{
+		if(it.first == shortcut)
+			return it.second;
+	}
+	
+	return nullptr;
+}
+
 bool ManAction::exist(ShortcutKey const& shortcut)
 {
-	for(auto it: _shortcutKeyAction)
+	for(auto it: _shortcutKeysActions)
 	{
 		if(it.first == shortcut)
 			return true;
@@ -72,8 +88,8 @@ bool ManAction::remove(ShortcutKey const& shortcut)
 	if(!exist(shortcut))
 		return false;
 		
-	delete _shortcutKeyAction[shortcut];
-	_shortcutKeyAction.erase(shortcut);
+	delete _shortcutKeysActions[shortcut];
+	_shortcutKeysActions.erase(shortcut);
 	
 	_shortcut.remove(shortcut);
 	
@@ -82,16 +98,21 @@ bool ManAction::remove(ShortcutKey const& shortcut)
 
 void ManAction::removeAll()
 {
-	for(auto it: _shortcutKeyAction)
+	for(auto it: _shortcutKeysActions)
 		delete it.second;
 		
-	_shortcutKeyAction.clear();
+	_shortcutKeysActions.clear();
 	_shortcut.removeAll();
 }
 
 void ManAction::enableShortcuts(bool val)
 {
 	_shortcut.enable(val);
+}
+
+std::map<ShortcutKey, Action*>const& ManAction::getShortcutKeysActions()const
+{
+	return _shortcutKeysActions;
 }
 
 void ManAction::manLoad(wxFileConfig&)
@@ -104,7 +125,7 @@ void ManAction::manSave(wxFileConfig&)const
 
 void ManAction::onShortcut(ShortcutEvent& event)
 {
-	_shortcutKeyAction.at(event.getShortcutKey())->execute();
+	_shortcutKeysActions.at(event.getShortcutKey())->execute();
 }								
 									
 // *****************************************************************************
@@ -121,59 +142,7 @@ WinManAction::WinManAction(wxWindow* parent)
 	_ctrlDataList->AppendTextColumn(_("Shortcut"), 			wxDATAVIEW_CELL_EDITABLE, 	100, 	wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE|wxDATAVIEW_COL_SORTABLE);
 	_ctrlDataList->AppendTextColumn(_("Action name"), 		wxDATAVIEW_CELL_INERT, 		120, 	wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE|wxDATAVIEW_COL_SORTABLE);
 	_ctrlDataList->AppendTextColumn(_("Short description"), wxDATAVIEW_CELL_INERT, 		-1, 	wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE);
-							
-	//Remplissage de la liste.(TMP)
-	wxVector<wxVariant> data;
-	data.push_back( wxVariant("ctrl+c") );
-	data.push_back( wxVariant("Translate") );
-	data.push_back( wxVariant("Translate a text") );
-	_ctrlDataList->AppendItem( data );
-	data.clear();
-	data.push_back( wxVariant("ctrl+v") );
-	data.push_back( wxVariant("Translate") );
-	data.push_back( wxVariant("Translate a text") );
-	_ctrlDataList->AppendItem( data );
-	data.clear();
-	data.push_back( wxVariant("ctrl+m") );
-	data.push_back( wxVariant("Translate") );
-	data.push_back( wxVariant("Translate a text") );
-	_ctrlDataList->AppendItem( data );
-	data.clear();
-	data.push_back( wxVariant("ctrl+p") );
-	data.push_back( wxVariant("Translate") );
-	data.push_back( wxVariant("Translate a text") );
-	_ctrlDataList->AppendItem( data );
-	data.clear();
-	data.push_back( wxVariant("ctrl+v") );
-	data.push_back( wxVariant("Translate") );
-	data.push_back( wxVariant("Translate a text") );
-	_ctrlDataList->AppendItem( data );
-	data.clear();
-	data.push_back( wxVariant("ctrl+m") );
-	data.push_back( wxVariant("Translate") );
-	data.push_back( wxVariant("Translate a text") );
-	_ctrlDataList->AppendItem( data );
-	data.clear();
-	data.push_back( wxVariant("ctrl+p") );
-	data.push_back( wxVariant("Translate") );
-	data.push_back( wxVariant("Translate a text") );
-	_ctrlDataList->AppendItem( data );
-	data.clear();
-	data.push_back( wxVariant("ctrl+v") );
-	data.push_back( wxVariant("Translate") );
-	data.push_back( wxVariant("Translate a text") );
-	_ctrlDataList->AppendItem( data );
-	data.clear();
-	data.push_back( wxVariant("ctrl+m") );
-	data.push_back( wxVariant("Translate") );
-	data.push_back( wxVariant("Translate a text") );
-	_ctrlDataList->AppendItem( data );
-	data.clear();
-	data.push_back( wxVariant("ctrl+p") );
-	data.push_back( wxVariant("Translate") );
-	data.push_back( wxVariant("Translate a text") );
-	_ctrlDataList->AppendItem( data );
-	
+								
 	//Créations du menu.
 	_ctrlDataList->addMenuItem(wxID_ADD, 			wxEmptyString, 				ENABLE_ANYTIME);
 	_ctrlDataList->addMenuItem(wxID_PREFERENCES, 	wxEmptyString, 				ENABLE_SELECTING_ONE_ITEM);
@@ -207,22 +176,171 @@ WinManAction::WinManAction(wxWindow* parent)
 	SetSizer(sizerMain);
 	
 	//bind
-	Bind(wxEVT_COMMAND_MENU_SELECTED, 	&WinManAction::onPreferences, this, wxID_PREFERENCES);
-	Bind(wxEVT_BUTTON, 					&WinManAction::onPreferences, this, wxID_PREFERENCES);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, 	&WinManAction::onAdd, 				this, wxID_ADD);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, 	&WinManAction::onPreferences, 		this, wxID_PREFERENCES);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, 	&WinManAction::onFind, 				this, wxID_FIND);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, 	&WinManAction::onDelete, 			this, wxID_DELETE);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, 	&WinManAction::onChangeShortcut, 	this, ID_CHANGE_SHORTCUT);
+	
+	Bind(wxEVT_BUTTON, 					&WinManAction::onDelete, 			this, wxID_DELETE);
+	Bind(wxEVT_BUTTON, 					&WinManAction::onPreferences, 		this, wxID_PREFERENCES);
+	Bind(wxEVT_BUTTON, 					&WinManAction::onAdd, 				this, wxID_ADD);
+	
+	
+	Bind(wxEVT_DATAVIEW_ITEM_EDITING_STARTED,	&WinManAction::onItemEditingStarted, 	this);
+	Bind(wxEVT_DATAVIEW_ITEM_EDITING_DONE,		&WinManAction::onItemEditingDone, 		this);
 }
 
 WinManAction::~WinManAction()
 {
+	Unbind(wxEVT_COMMAND_MENU_SELECTED, 	&WinManAction::onAdd, 				this, wxID_ADD);
+	Unbind(wxEVT_COMMAND_MENU_SELECTED, 	&WinManAction::onPreferences, 		this, wxID_PREFERENCES);
+	Unbind(wxEVT_COMMAND_MENU_SELECTED, 	&WinManAction::onFind, 				this, wxID_FIND);
+	Unbind(wxEVT_COMMAND_MENU_SELECTED, 	&WinManAction::onDelete, 			this, wxID_DELETE);
+	Unbind(wxEVT_COMMAND_MENU_SELECTED, 	&WinManAction::onChangeShortcut, 	this, ID_CHANGE_SHORTCUT);
+
+	Unbind(wxEVT_BUTTON, 					&WinManAction::onDelete, 			this, wxID_DELETE);
+	Unbind(wxEVT_BUTTON, 					&WinManAction::onPreferences, 		this, wxID_PREFERENCES);
+	Unbind(wxEVT_BUTTON, 					&WinManAction::onAdd, 				this, wxID_ADD);
+	
+	Unbind(wxEVT_DATAVIEW_ITEM_EDITING_STARTED,	&WinManAction::onItemEditingStarted, 	this);
+	Unbind(wxEVT_DATAVIEW_ITEM_EDITING_DONE,	&WinManAction::onItemEditingDone, 		this);
 }
 
 void WinManAction::refreshGuiFromManager()
 {
+	//On commence par tout effacer.
+	_ctrlDataList->DeleteAllItems();
+	
+	//
+	std::map<ShortcutKey, Action*>const& shortcutKeysActions = ManAction::get().getShortcutKeysActions();
+	
+	wxVector<wxVariant> data;
+	for(auto it: shortcutKeysActions)
+	{
+		data.clear();
+		data.push_back(wxVariant(ShortcutKey::shortcutKeyToString(it.first)));
+		data.push_back(wxVariant(it.second->getName()));
+		data.push_back(wxVariant(it.second->getStringPreferences()));
+		_ctrlDataList->AppendItem(data);
+	}
 }
 
 void WinManAction::refreshManagerFromGui()const
 {
+	//Pas utile ici puis que le manager et mise a jour en même temps que le gui.
+}
+#include <iostream>
+void WinManAction::onAdd(wxCommandEvent&)
+{
+	std::cout << "WinManAction::onAdd" << std::endl;
 }
 
 void WinManAction::onPreferences(wxCommandEvent&)
-{	
+{
+	std::cout << "WinManAction::onPreferences" << std::endl;
 }
+
+void WinManAction::onFind(wxCommandEvent&)
+{
+	std::cout << "WinManAction::onFind" << std::endl;
+}
+
+void WinManAction::onDelete(wxCommandEvent&)
+{
+	wxMessageDialog dlg(this, _("Is you sure to want delete the actions selected?"), _("Delete actions"), wxYES_NO|wxICON_QUESTION|wxCENTRE);
+			
+	//On doit supprimer Les actions?
+	if(dlg.ShowModal() == wxID_YES)//Oui
+	{	
+		wxDataViewItemArray itemsSelected;
+		_ctrlDataList->GetSelections(itemsSelected);
+		
+		for(auto it: itemsSelected)
+		{
+			int row = _ctrlDataList->ItemToRow(it);
+			ManAction::get().remove(ShortcutKey::stringToShortcutKey(_ctrlDataList->GetTextValue(row, 0)));
+			_ctrlDataList->DeleteItem(row);
+		}
+	}
+}
+
+void WinManAction::onChangeShortcut(wxCommandEvent&)
+{
+	std::cout << "WinManAction::onChangeShortcut" << std::endl;
+}
+
+void WinManAction::onItemEditingStarted(wxDataViewEvent&)
+{
+	_itemOldShortcut = _ctrlDataList->GetTextValue(_ctrlDataList->GetSelectedRow(), 0);
+}
+
+void WinManAction::onItemEditingDone(wxDataViewEvent&)
+{
+	//On récupère le nouveau raccourcie.
+	ShortcutKey newShortcut = ShortcutKey::stringToShortcutKey(_ctrlDataList->GetTextValue(_ctrlDataList->GetSelectedRow(), 0));
+	
+	//L'ancien raccourcie.
+	ShortcutKey oldShortcut = ShortcutKey::stringToShortcutKey(_itemOldShortcut);
+	
+	//Vérifie si le raccourci est le même que l'ancien, dans se cas on ne fais rien.
+	if(newShortcut == oldShortcut)
+	{
+		_ctrlDataList->SetTextValue(_itemOldShortcut, _ctrlDataList->GetSelectedRow(), 0);
+		return;
+	}
+	
+	//Le raccourci n'est pas valide.
+	if(!newShortcut.isOk())
+	{
+		wxMessageDialog dlg(this,
+			_("Your shortcut is not valide.\n The shortcut must is a forme: \"mod+key\".\n'mod' can tack the follow value:\n\t\"ctrl\"\n\t\"alt\"\n\t\"shift\"\n\t\"super\".\n eg: \"shift+super+f\""),
+			_("Shortcut no valid"),
+			wxOK|wxICON_INFORMATION|wxCENTRE);
+		dlg.ShowModal();
+		
+		//On remet l'ancien raccourcie.
+		_ctrlDataList->SetTextValue(_itemOldShortcut, _ctrlDataList->GetSelectedRow(), 0);
+		
+		return;
+	}
+	
+	//Le raccourci est déjà existante ?
+	if(ManAction::get().exist(newShortcut))
+	{
+		wxMessageDialog dlg(this,
+			_("Your shortcut is already used.\nYou want delete the other shortcut and the associate actions ?"),
+			_("Shortcut already used"),
+			wxYES_NO|wxICON_QUESTION|wxCENTRE);
+			
+		//On doit supprimer l'autre raccourcie ?
+		if(dlg.ShowModal() == wxID_YES)//Oui
+		{
+			ManAction::get().remove(newShortcut);
+			
+			//On cherche la ligne a supprimer.
+			for(int i = 0; i<_ctrlDataList->GetItemCount(); i++)
+			{
+				//Si on n'a trouver on la supprime.
+				if(ShortcutKey::stringToShortcutKey(_ctrlDataList->GetTextValue(i, 0)) == newShortcut && i != _ctrlDataList->GetSelectedRow())		
+				{			
+					_ctrlDataList->DeleteItem(i);
+					break;
+				}	
+			}
+		}
+		else //non
+		{
+			//On remet l'ancien raccourcie.
+			_ctrlDataList->SetTextValue(_itemOldShortcut, _ctrlDataList->GetSelectedRow(), 0);
+			return;
+		}
+	}
+	
+	//Enfin on modifie le raccourcie.
+	Action* tmpAct = ManAction::get().getAction(oldShortcut)->newClone();
+	ManAction::get().remove(oldShortcut);
+	ManAction::get().add(newShortcut, tmpAct);
+	_ctrlDataList->SetTextValue(ShortcutKey::shortcutKeyToString(newShortcut), _ctrlDataList->GetSelectedRow(), 0);
+}
+

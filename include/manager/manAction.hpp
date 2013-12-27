@@ -44,6 +44,11 @@ class ManAction : public Manager, public wxEvtHandler
 		//! \return true si réussite, false si le raccourcie de l'action et déjà connue.
 		bool add(ShortcutKey const &shortcut, Action* act);
 		
+		//! \brief Obtenir l'action associer a un raccourci.
+		//! \param shortcut c'est le raccourci associer à l'action.
+		//! \return nullptr si le raccourci n'a pas été trouver.
+		Action const* getAction(ShortcutKey const &shortcut)const;
+		
 		//! \brief Pour savoir si une action existe.
 		//! \return true si le raccourcis de l'action existe.
 		bool exist(ShortcutKey const& shortcut);
@@ -58,6 +63,9 @@ class ManAction : public Manager, public wxEvtHandler
 		//! \brief Active ou désactive les raccourcis.
 		//! \param val si false auqu'une action sera exécuter.
 		void enableShortcuts(bool val=true);
+		
+		//! \brief Obtenir la liste des raccourcis actions.
+		std::map<ShortcutKey, Action*>const& getShortcutKeysActions()const;
 	
 	private:
 		virtual void manLoad(wxFileConfig& fileConfig);
@@ -68,7 +76,7 @@ class ManAction : public Manager, public wxEvtHandler
 		//! \brief Les action qui on été ajouter.
 		//! Ceci permet aussi de faire un lien entre les raccourcis et les actions.
 		//! \see add()
-		std::map<ShortcutKey, Action*> _shortcutKeyAction;
+		std::map<ShortcutKey, Action*> _shortcutKeysActions;
 		
 		//! \brief Gestion des raccourcis.
 		Shortcut _shortcut;
@@ -89,9 +97,19 @@ class WinManAction : public WinManager
 		virtual void refreshManagerFromGui()const;
 	
 	private:
+		void onAdd(wxCommandEvent& event);
 		void onPreferences(wxCommandEvent& event);
+		void onFind(wxCommandEvent& event);
+		void onDelete(wxCommandEvent& event);
+		void onChangeShortcut(wxCommandEvent& event);
 		
+		void onItemEditingStarted(wxDataViewEvent& event);
+		void onItemEditingDone(wxDataViewEvent& event);
+		
+		//Élément du gui.
 		CtrlDataList* _ctrlDataList;
+		
+		wxString _itemOldShortcut;
 };
 
 
