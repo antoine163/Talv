@@ -10,7 +10,7 @@
 //! ****************************************************************************
 
 #ifndef CTRL_PROXY_INFO_H
-#define CTRL_PROXY_SETTING_H
+#define CTRL_PROXY_INFO_H
 
 //App
 #include "proxyInfo.hpp"
@@ -52,4 +52,4 @@ class CtrlProxyInfo : public wxWindow
 		CtrlAuthentication* _ctrlAuthentication;
 };
 
-#endif //CTRL_PROXY_SETTING_H
+#endif //CTRL_PROXY_INFO_H

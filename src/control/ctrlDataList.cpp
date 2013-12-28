@@ -56,8 +56,8 @@ void CtrlDataList::addWindowEnable(wxWindow* Window, Enable_e eanble)
 }
 
 wxMenuItem* CtrlDataList::addMenuItem(	wxWindowID id,
-											wxString const& label,
-											Enable_e eanble)
+										wxString const& label,
+										Enable_e eanble)
 {
 	wxMenuItem* menuItem = new wxMenuItem(_menu, id, label);
 	_menu->Append(menuItem);

@@ -14,6 +14,7 @@
 #include "defs.hpp"
 #include "manager.hpp"
 #include "manager/manGeneral.hpp"
+#include "manager/manAction.hpp"
 
 //Stl
 #include <csignal>
@@ -221,10 +222,9 @@ void App::onPreferences(wxCommandEvent&)
 	_dlgPrefPtr->Show();
 }
 
-void App::onEnableShortcuts(wxCommandEvent&)
+void App::onEnableShortcuts(wxCommandEvent& event)
 {
-	//_enableShortcuts = event.IsChecked();
-	//ManagerAction::getInstance()->enableShortcuts(_enableShortcuts);
+	ManAction::get().shortcutsEnable(event.IsChecked());
 }
 
 void App::onPreferencesColse(wxCloseEvent&)

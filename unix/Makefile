@@ -63,9 +63,11 @@ SRC+=../src/wxJSON/jsonreader.cpp
 SRC+=../src/control/ctrlDataList.cpp
 SRC+=../src/control/ctrlProxyInfo.cpp
 SRC+=../src/control/ctrlAuthentication.cpp
+SRC+=../src/control/ctrlPickShortcutKey.cpp
 
 #Dialogs
 SRC+=../src/dialog/dlgPreferences.cpp
+SRC+=../src/dialog/dlgPickShortcutKey.cpp
 
 #Managers
 SRC+=../src/manager.cpp	

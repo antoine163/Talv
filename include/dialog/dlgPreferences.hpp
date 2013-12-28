@@ -18,7 +18,7 @@
 #include <wx/window.h>
 
 // *****************************************************************************
-// Class DialogPreferences
+// Class DlgPreferences
 // *****************************************************************************
 
 //! \brief Dialogue générale des préférences.
@@ -52,6 +52,9 @@ class DlgPreferences : public wxDialog
 		wxNotebook* _notebook;
 		//! \brief Page actuelle sélection dans le notebook.
 		wxWindow* _windowActive;
+		
+		//! \brief Pour savoir si les raccourcis été activer au lancement de ce dialog.
+		bool _previouslyshortcutsIsEnable;
 };
 
 #endif //DLG_PREFERENCES_H

@@ -13,6 +13,7 @@
 #include "taskIcon.hpp"
 #include "defs.hpp"
 #include "manager/manGeneral.hpp"
+#include "manager/manAction.hpp"
 
 //WxWidgets
 #include <wx/menu.h>
@@ -63,8 +64,7 @@ wxMenu* TaskIcon::CreatePopupMenu()
 													_("Activate Shortcuts"),
 													wxITEM_CHECK);
 	menu->Append(itemEnableShortcuts);
-	//!\todo a modifier avec le manager d'action
-	itemEnableShortcuts->Check(true);
+	itemEnableShortcuts->Check(ManAction::get().shortcutsIsEnable());
 	itemEnableShortcuts->Enable(_enableMenu);
 	
 	//Item About

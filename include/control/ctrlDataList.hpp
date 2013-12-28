@@ -49,11 +49,12 @@ class CtrlDataList : public wxDataViewListCtrl
 									wxString const& label=wxEmptyString,
 									Enable_e eanble = ENABLE_ANYTIME);
 		void addMenuItemSeparator();
+		
+		void updateEnableElements();
 
 	private:
 		void onItemContextMenu(wxDataViewEvent& event);
 		void onSelectionChanger(wxDataViewEvent& event);
-		void updateEnableElements();
 		
 		wxMenu* _menu;
 		

@@ -62,7 +62,10 @@ class ManAction : public Manager, public wxEvtHandler
 		
 		//! \brief Active ou désactive les raccourcis.
 		//! \param val si false auqu'une action sera exécuter.
-		void enableShortcuts(bool val=true);
+		void shortcutsEnable(bool val=true);
+		
+		//! \brief Pour savoir si les raccourcis sont activer.
+		bool shortcutsIsEnable();
 		
 		//! \brief Obtenir la liste des raccourcis actions.
 		std::map<ShortcutKey, Action*>const& getShortcutKeysActions()const;
@@ -105,6 +108,9 @@ class WinManAction : public WinManager
 		
 		void onItemEditingStarted(wxDataViewEvent& event);
 		void onItemEditingDone(wxDataViewEvent& event);
+		
+		//Cette méthode pose la question si l'utilisateur veux supprimer le newShortcut si il existe.
+		void changeSelectedShortcut(ShortcutKey newShortcut);
 		
 		//Élément du gui.
 		CtrlDataList* _ctrlDataList;

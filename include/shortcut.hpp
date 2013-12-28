@@ -76,6 +76,10 @@ class ShortcutKey
 {
 	public:
 		//! \brief Constructeur.
+		//! Ce Constructeur ne construis pas un raccourcis valide. \ref isOk() renverra false.
+		ShortcutKey();
+		
+		//! \brief Constructeur.
 		//! \param modifiers peut être combiner avec tout les valeurs de \ref KeyModifier_e ex:KEY_MODIFIER_SUPER|KEY_MODIFIER_CONTROL)
 		//! \param charKey le caractère, c'est une valeur ASCII.
 		ShortcutKey(KeyModifier_e modifiers, char charKey);
@@ -184,9 +188,6 @@ class ShortcutThread : protected wxThread
 		
 		//! \brief Destructeur.
 		~ShortcutThread();
-		
-		
-		
 		
 		//! \brief Active un raccourci.
 		//! \param shortcutKey est le raccourci à activer.
@@ -309,6 +310,9 @@ class Shortcut
 		//! Par défaut les raccourcis sont activés.
 		//! \param val true pour activer et false pour désactiver.
 		void enable(bool val = true);
+		
+		//! \brief Pour savoir si les raccourcis son activer ou pas.
+		bool isEnable();
 		
 	private:
 		//! \brief Les raccourcis qui on été crée.

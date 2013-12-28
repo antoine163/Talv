@@ -20,6 +20,11 @@
 // Class ShortcutKey
 // *****************************************************************************
 
+ShortcutKey::ShortcutKey()
+: _modifiers(KEY_MODIFIER_NONE), _charKey('\0')
+{
+}
+
 ShortcutKey::ShortcutKey(KeyModifier_e modifiers, char charKey)
 : _modifiers(modifiers), _charKey(charKey)
 {
@@ -564,14 +569,16 @@ void Shortcut::removeAll()
 	//Supprime raccourcis.
 	_shortcutKeys.clear();
 }
-
+#include <iostream>
 void Shortcut::enable(bool val)
 {		
 	//Si on doit désactiver.
 	if(_enable == true && val == false)
 	{
 		//Désactive tout les raccourcis au prés du thread.
-		removeAll();
+		for(auto it: _shortcutKeys)
+			_thread->unregisterShortcut(it);
+			
 		delete _thread;
 		_thread = nullptr;
 	}
@@ -584,11 +591,16 @@ void Shortcut::enable(bool val)
 		#else
 		_thread = new ShortcutThread(_owner);
 		#endif
-		
+
 		//Active les raccourcis au prés du thread.
 		for(auto &it: _shortcutKeys)			
 			_thread->registerShortcut(it);
 	}
 	
 	_enable = val;
+}
+
+bool Shortcut::isEnable()
+{
+	return _enable;
 }

@@ -14,6 +14,7 @@
 #include "defs.hpp"
 #include "manager.hpp"
 #include "manager/manGeneral.hpp"
+#include "manager/manAction.hpp"
 
 //WxWidgets
 #include <wx/sizer.h>
@@ -93,6 +94,10 @@ DlgPreferences::DlgPreferences()
 	Bind(wxEVT_CLOSE_WINDOW, &DlgPreferences::onClose, this);
 
 	Centre();
+	
+	//On désactive les raccourcies.
+	_previouslyshortcutsIsEnable = ManAction::get().shortcutsIsEnable();
+	ManAction::get().shortcutsEnable(false);
 }
 
 DlgPreferences::~DlgPreferences()
@@ -107,6 +112,9 @@ DlgPreferences::~DlgPreferences()
 	
 	//Activation du menue dans la bar de notification.
 	ManGeneral::get().enableTaskIcon();
+	
+	//On réactive les raccourcis (ou pas).
+	ManAction::get().shortcutsEnable(_previouslyshortcutsIsEnable);
 }
 
 void DlgPreferences::onNotebookChanged(wxBookCtrlEvent&)
