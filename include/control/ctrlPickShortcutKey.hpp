@@ -36,11 +36,13 @@ class CtrlPickShortcutKey : public wxWindow
 		
 		void setShortcutKey(ShortcutKey const& shortcutKey);
 		ShortcutKey getShortcutKey();
+		
+		void SetFocus();
 
 	private:
 		void onKeyDown(wxKeyEvent& event);
 		void onKeyUp(wxKeyEvent& event);
-		void onLeftDown(wxMouseEvent& event);
+		void onSetFocus(wxFocusEvent& event);
 		void onKillFocus(wxFocusEvent& event);
 		
 		void updateTextCtrl(wxChar key);
@@ -50,6 +52,7 @@ class CtrlPickShortcutKey : public wxWindow
 		bool _keyShiftIsPressed;
 		bool _keySuperIsPressed;
 		bool _shortKeyIsValide;
+		bool _isFocused;
 		
 		wxTextCtrl* _textCtrlShortcutKey;
 };

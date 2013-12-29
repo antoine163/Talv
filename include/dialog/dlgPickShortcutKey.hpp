@@ -37,6 +37,8 @@ class DlgPickShortcutKey : public wxDialog
 		void setShortcutKey(ShortcutKey const& shortcutKey);
 		ShortcutKey getShortcutKey();
 		
+		void SetFocus();
+		
 	private:
 		CtrlPickShortcutKey* _ctrlPickShortcutKey;
 };

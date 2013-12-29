@@ -540,30 +540,9 @@ void ManNotification::notify(	wxString const& title,
 				{
 					//Récupération de l'icon
 					wxBitmap bmpIcon(wxArtProvider::GetBitmap(wxArtProvider::GetMessageBoxIconId(icon), wxART_MESSAGE_BOX));
-					wxAlphaPixelData alphaPixelDatadataIcon(bmpIcon);
-					
-					//Créassions du GdkPixbuf					
-					GdkPixbuf* pixbuf = gdk_pixbuf_new(	GDK_COLORSPACE_RGB,
-														TRUE,
-														8,
-														alphaPixelDatadataIcon.GetWidth(),
-														alphaPixelDatadataIcon.GetHeight());
-					guchar* pixels = gdk_pixbuf_get_pixels(pixbuf);
-  				
-					int i = 0;
-					wxAlphaPixelData::Iterator it = alphaPixelDatadataIcon.GetPixels();
-					while(i < alphaPixelDatadataIcon.GetWidth()*alphaPixelDatadataIcon.GetHeight()*4)
-					{  
-						pixels[i++] = it.Red();
-						pixels[i++] = it.Green();
-						pixels[i++] = it.Blue();
-						pixels[i++] = it.Alpha();
-						
-						it++;
-					}
 					
 					//Ajout de l'icône a la notification.
-					notify_notification_set_icon_from_pixbuf(notify, pixbuf);
+					notify_notification_set_icon_from_pixbuf(notify, bmpIcon.GetPixbuf());
 				}
 				
 				

@@ -30,6 +30,7 @@ CtrlPickShortcutKey::CtrlPickShortcutKey(wxWindow* parent, ShortcutKey const& sh
 	_keyShiftIsPressed = false;
 	_keySuperIsPressed = false;
 	_shortKeyIsValide = false;
+	_isFocused = false;
 	
 	//Créations du wxTextCtrl
 	_textCtrlShortcutKey = new wxTextCtrl(this, wxID_ANY, _("Click here!"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE|wxTE_READONLY);
@@ -46,7 +47,7 @@ CtrlPickShortcutKey::CtrlPickShortcutKey(wxWindow* parent, ShortcutKey const& sh
 	//Bind
 	_textCtrlShortcutKey->Bind(wxEVT_KEY_DOWN, 		&CtrlPickShortcutKey::onKeyDown, 	this);
 	_textCtrlShortcutKey->Bind(wxEVT_KEY_UP, 		&CtrlPickShortcutKey::onKeyUp, 		this);
-	_textCtrlShortcutKey->Bind(wxEVT_LEFT_DOWN, 	&CtrlPickShortcutKey::onLeftDown, 	this);
+	_textCtrlShortcutKey->Bind(wxEVT_SET_FOCUS, 	&CtrlPickShortcutKey::onSetFocus, 	this);
 	_textCtrlShortcutKey->Bind(wxEVT_KILL_FOCUS, 	&CtrlPickShortcutKey::onKillFocus, 	this);
 }
 
@@ -55,7 +56,7 @@ CtrlPickShortcutKey::~CtrlPickShortcutKey()
 	//Unbind
 	_textCtrlShortcutKey->Unbind(wxEVT_KEY_DOWN, 	&CtrlPickShortcutKey::onKeyDown, 	this);
 	_textCtrlShortcutKey->Unbind(wxEVT_KEY_UP, 		&CtrlPickShortcutKey::onKeyUp, 		this);
-	_textCtrlShortcutKey->Unbind(wxEVT_LEFT_DOWN, 	&CtrlPickShortcutKey::onLeftDown, 	this);
+	_textCtrlShortcutKey->Unbind(wxEVT_SET_FOCUS, 	&CtrlPickShortcutKey::onSetFocus, 	this);
 	_textCtrlShortcutKey->Unbind(wxEVT_KILL_FOCUS, 	&CtrlPickShortcutKey::onKillFocus, 	this);
 }
 
@@ -77,6 +78,16 @@ ShortcutKey CtrlPickShortcutKey::getShortcutKey()
 
 void CtrlPickShortcutKey::onKeyDown(wxKeyEvent& event)
 {
+	if(!_isFocused)
+		return;
+		
+	//On passe si c'est WXK_RETURN
+	if(event.GetKeyCode() == WXK_RETURN)
+	{
+		event.Skip();
+		return;
+	}
+	
 	//Mise a jour des touches modifier
 	#if defined(__UNIX__)
 	switch(event.GetRawKeyFlags())
@@ -105,7 +116,10 @@ void CtrlPickShortcutKey::onKeyDown(wxKeyEvent& event)
 }
 
 void CtrlPickShortcutKey::onKeyUp(wxKeyEvent& event)
-{
+{	
+	if(!_isFocused)
+		return;
+		
 	//Mise à jour des touches modifier
 	#if defined(__UNIX__)
 	switch(event.GetRawKeyFlags())
@@ -131,22 +145,27 @@ void CtrlPickShortcutKey::onKeyUp(wxKeyEvent& event)
 	updateTextCtrl(event.GetUnicodeKey());
 }
 
-void CtrlPickShortcutKey::onLeftDown(wxMouseEvent&)
+void CtrlPickShortcutKey::onSetFocus(wxFocusEvent&)
 {
-	_shortKeyIsValide = false;
-	_textCtrlShortcutKey->SetForegroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_GRAYTEXT));
-	_textCtrlShortcutKey->SetValue(_("Press your shortcut."));
-	_textCtrlShortcutKey->SetFocus();
+	if(!_shortKeyIsValide)
+	{
+		_textCtrlShortcutKey->SetForegroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_GRAYTEXT));
+		_textCtrlShortcutKey->SetValue(_("Press your shortcut."));
+		_textCtrlShortcutKey->SetFocus();
+	}
+		
+	_isFocused = true;
 }
 
 void CtrlPickShortcutKey::onKillFocus(wxFocusEvent&)
 {
+	_isFocused = false;;
 	if(!_shortKeyIsValide)
 		_textCtrlShortcutKey->SetValue(_("Click here!"));
 }
 
 void CtrlPickShortcutKey::updateTextCtrl(wxChar key)
-{
+{		
 	//Temps que le raccourci n'est pas valide, on met à jour le texte.
 	if(!_shortKeyIsValide)
 	{
@@ -193,5 +212,10 @@ void CtrlPickShortcutKey::updateTextCtrl(wxChar key)
 			_textCtrlShortcutKey->SetValue(strShortcut);
 		}
 	}
+}
+
+void CtrlPickShortcutKey::SetFocus()
+{
+	_textCtrlShortcutKey->SetFocus();
 }
 		

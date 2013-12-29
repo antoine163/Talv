@@ -47,6 +47,8 @@ DlgPickShortcutKey::DlgPickShortcutKey(wxWindow* parent, wxString const& title, 
 	SetSizerAndFit(sizerMain);
 	
 	Center();
+	
+	SetFocus();
 }
 
 DlgPickShortcutKey::~DlgPickShortcutKey()
@@ -61,4 +63,9 @@ void DlgPickShortcutKey::setShortcutKey(ShortcutKey const& shortcutKey)
 ShortcutKey DlgPickShortcutKey::getShortcutKey()
 {
 	return _ctrlPickShortcutKey->getShortcutKey();
+}
+
+void DlgPickShortcutKey::SetFocus()
+{
+	_ctrlPickShortcutKey->SetFocus();
 }
