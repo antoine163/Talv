@@ -201,7 +201,7 @@ WinManAction::WinManAction(wxWindow* parent)
 	sizerMain->Add(sizerButtons, 	0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);	
 	SetSizer(sizerMain);
 	
-	//bind
+	//Bind
 	Bind(wxEVT_COMMAND_MENU_SELECTED, 	&WinManAction::onAdd, 				this, wxID_ADD);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, 	&WinManAction::onPreferences, 		this, wxID_PREFERENCES);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, 	&WinManAction::onFind, 				this, wxID_FIND);
@@ -215,6 +215,13 @@ WinManAction::WinManAction(wxWindow* parent)
 	
 	Bind(wxEVT_DATAVIEW_ITEM_EDITING_STARTED,	&WinManAction::onItemEditingStarted, 	this);
 	Bind(wxEVT_DATAVIEW_ITEM_EDITING_DONE,		&WinManAction::onItemEditingDone, 		this);
+	
+	//Accélérateurs
+	wxAcceleratorEntry entries[2];
+    entries[0].Set(wxACCEL_CTRL, 	(int) 'F', 		wxID_FIND);
+    entries[1].Set(wxACCEL_NORMAL,	 WXK_DELETE, 	wxID_DELETE);
+    wxAcceleratorTable accel(2, entries);
+    SetAcceleratorTable(accel);
 }
 
 WinManAction::~WinManAction()
@@ -238,7 +245,7 @@ void WinManAction::refreshGuiFromManager()
 	//On commence par tout effacer.
 	_ctrlDataList->DeleteAllItems();
 	
-	//
+	//Récupération des raccourcis et actions.
 	std::map<ShortcutKey, Action*>const& shortcutKeysActions = ManAction::get().getShortcutKeysActions();
 	
 	wxVector<wxVariant> data;

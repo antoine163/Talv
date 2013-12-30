@@ -88,7 +88,7 @@ void CtrlPickShortcutKey::onKeyDown(wxKeyEvent& event)
 		return;
 	}
 	
-	//Mise a jour des touches modifier
+	//Mise a jour des touches modifier (ne pas utiliser GetModifiers() qui pose problème quand il y a plusieurs Modifiers presser (win et atl))
 	#if defined(__UNIX__)
 	switch(event.GetRawKeyFlags())
 	#elif defined(__WXMSW__)
