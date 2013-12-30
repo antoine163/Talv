@@ -11,6 +11,7 @@
 
 //App
 #include "control/ctrlPickShortcutKey.hpp"
+#include "manager/manAction.hpp"
 
 //WxWidgets
 #include <wx/sizer.h>
@@ -42,6 +43,7 @@ CtrlPickShortcutKey::CtrlPickShortcutKey(wxWindow* parent, ShortcutKey const& sh
 	SetSizerAndFit(sizerMain);
 	
 	//Installation du raccourcie.
+	_shortcutKeyFault = shortcutKey;
 	setShortcutKey(shortcutKey);
 	
 	//Bind
@@ -68,6 +70,8 @@ void CtrlPickShortcutKey::setShortcutKey(ShortcutKey const& shortcutKey)
 		_textCtrlShortcutKey->SetValue(ShortcutKey::shortcutKeyToString(shortcutKey));
 		_shortKeyIsValide = true;
 		_textCtrlShortcutKey->SetForegroundColour(wxNullColour);
+		
+		checkInManAction();
 	}
 }
 
@@ -203,6 +207,8 @@ void CtrlPickShortcutKey::updateTextCtrl(wxChar key)
 			
 			strShortcut.MakeLower();
 			_textCtrlShortcutKey->SetValue(strShortcut);
+			
+			checkInManAction();
 		}
 		else if(strShortcut.IsEmpty())
 			_textCtrlShortcutKey->SetValue(_("Press your shortcut."));
@@ -210,6 +216,24 @@ void CtrlPickShortcutKey::updateTextCtrl(wxChar key)
 		{
 			strShortcut.MakeLower();
 			_textCtrlShortcutKey->SetValue(strShortcut);
+		}
+	}
+}
+
+void CtrlPickShortcutKey::checkInManAction()
+{
+	ShortcutKey shortcutKey = getShortcutKey();
+	
+	if(_shortcutKeyFault == shortcutKey || !_shortcutKeyFault.isOk())
+			return;
+		
+	//Si le raccourcis est connue par manAction on l'affiche en rouge.
+	for(auto it: ManAction::get().getShortcutKeysActions())
+	{
+		if(shortcutKey == it.first)
+		{
+			_textCtrlShortcutKey->SetForegroundColour(*wxRED);
+			return;
 		}
 	}
 }

@@ -14,6 +14,9 @@
 #include "dialog/dlgPickShortcutKey.hpp"
 #include "defs.hpp"
 
+//Stl
+#include <array>
+
 //WxWidgets
 #include <wx/sizer.h>
 #include <wx/button.h>
@@ -275,7 +278,7 @@ void WinManAction::onPreferences(wxCommandEvent&)
 }
 
 void WinManAction::onFind(wxCommandEvent&)
-{
+{	
 	DlgPickShortcutKey dlg(this, _("Find a shortcut"));
 	
 	if(dlg.ShowModal() == wxID_OK)

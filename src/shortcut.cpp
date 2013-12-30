@@ -569,7 +569,7 @@ void Shortcut::removeAll()
 	//Supprime raccourcis.
 	_shortcutKeys.clear();
 }
-#include <iostream>
+
 void Shortcut::enable(bool val)
 {		
 	//Si on doit désactiver.

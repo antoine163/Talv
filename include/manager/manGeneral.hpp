@@ -74,6 +74,7 @@ class ManGeneral : public Manager
 		virtual void manSave(wxFileConfig& fileConfig)const;
 		
 		//! \brief Liste des acronymes et des langues <acronyme, langue>.
+		//! \todo faire autrement
 		std::map<wxString, wxString> _langues;
 		
 		TaskIcon* _taskIcon;

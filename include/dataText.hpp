@@ -99,7 +99,7 @@ class DataText
 		
 	private:
 		wxString _mainTranslation;
-		std::map<wxString, wxArrayString> _translations;
+		std::map<wxString, wxArrayString> _translations;revoire le conténére ?
 		
 		Knowledge_e _knowledge;
 		unsigned int _nbTranslation;

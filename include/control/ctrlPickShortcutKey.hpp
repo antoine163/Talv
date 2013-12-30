@@ -29,7 +29,8 @@ class CtrlPickShortcutKey : public wxWindow
 	public:
 		//! \brief Constructeur.
 		//! \param parent fenêtre parent.
-		//! \param shortcutKey le raccourci par défaut.
+		//! \param shortcutKey le raccourci par défaut. Si le raccourcis est valides 
+		//! le raccourci sélectionner par l'utilisateur changera de couleur si le raccourci est connue par \ref manAction (en excluent le raccourci par défaut).
 		CtrlPickShortcutKey(wxWindow* parent, ShortcutKey const& shortcutKey = ShortcutKey());
 		//! \brief Destructeur.
 		virtual ~CtrlPickShortcutKey();
@@ -46,6 +47,7 @@ class CtrlPickShortcutKey : public wxWindow
 		void onKillFocus(wxFocusEvent& event);
 		
 		void updateTextCtrl(wxChar key);
+		void checkInManAction();
 		
 		bool _keyCtrlIsPressed;
 		bool _keyAltIsPressed;
@@ -53,6 +55,7 @@ class CtrlPickShortcutKey : public wxWindow
 		bool _keySuperIsPressed;
 		bool _shortKeyIsValide;
 		bool _isFocused;
+		ShortcutKey _shortcutKeyFault;
 		
 		wxTextCtrl* _textCtrlShortcutKey;
 };
