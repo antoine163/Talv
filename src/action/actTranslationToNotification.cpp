@@ -51,9 +51,9 @@ ActTranslationToNotification::~ActTranslationToNotification()
 
 IMPLEMENT_ACTION(ActTranslationToNotification, _("Translation to Notification"), _("Translation a text from clipboard into notification."));
 
-wxWindow* ActTranslationToNotification::newEditWindow(wxWindow*)
+WinAction* ActTranslationToNotification::newEditWindow(wxWindow* parent)
 {
-	return nullptr;
+	return new WinAction(parent, this);
 }
 
 wxString ActTranslationToNotification::getStringPreferences()const

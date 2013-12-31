@@ -21,6 +21,8 @@
 //Stl
 #include <vector>	
 
+class WinAction;
+
 #define DECLARE_ACTION()								\
 		public:											\
 		virtual wxString const& getName()const;			\
@@ -47,6 +49,7 @@
 
 //! \brief Class de base pour les actions.
 //! \see \ref pageCreateAction
+
 class Action
 {
 	public:
@@ -60,7 +63,7 @@ class Action
 		//! Pour les classes filles, le but est d'éditer directement les paramètre (attribut) de l'action via le panel.
 		//! \note Cette méthode crées un panel et retourne le pointeur sur se panel il faudra prévoir de libérai la mémoire.
 		//! \param parent le wxWindow parent.
-		virtual wxWindow* newEditWindow(wxWindow* parent)=0;
+		virtual WinAction* newEditWindow(wxWindow* parent)=0;
 		
 		//! \brief Permet d'extraire les préférences de l'action au format string,
 		//! dans le but des les affichées à l'utilisateur.
@@ -104,7 +107,7 @@ class Action
 		void save(wxFileConfig& fileConfig)const;
 		
 		//! \brief Créées des actions pour tout les type d'actions connue.
-		static std::vector<Action*> createActions();
+		static std::vector<Action*> createAllActions();
 		
 		//! \brief Crée une action a partir de son non de classe.
 		//! \param actTypeName le non de la classes de l'actions que vous voulez crées.
@@ -124,5 +127,25 @@ class Action
 	private:
 		
 };
+
+// *****************************************************************************
+// Class WinAction
+// *****************************************************************************
+
+//! \ingroup winaction
+//! \brief Classe de base pour crées des GUIs pour les préférences des actions.
+class WinAction : public wxWindow 
+{	
+	public:
+		WinAction(wxWindow *parent, Action const* act);
+		virtual ~WinAction();
+		
+		//virtual void refreshActionFromGui()=0;
+		virtual void refreshActionFromGui(){};
+		Action* newCloneAction();
+	
+	protected:
+		Action* _act;
+}; 
 
 #endif //ACTION_H

@@ -12,6 +12,7 @@
 //App
 #include "manager/manAction.hpp"
 #include "dialog/dlgPickShortcutKey.hpp"
+#include "dialog/dlgPreferencesAction.hpp"
 #include "defs.hpp"
 
 //Stl
@@ -169,7 +170,7 @@ WinManAction::WinManAction(wxWindow* parent)
 	
 	//Ajout des colonnes.
 	_ctrlDataList->AppendTextColumn(_("Shortcut"), 			wxDATAVIEW_CELL_EDITABLE, 	100, 	wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE|wxDATAVIEW_COL_SORTABLE);
-	_ctrlDataList->AppendTextColumn(_("Action name"), 		wxDATAVIEW_CELL_INERT, 		120, 	wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE|wxDATAVIEW_COL_SORTABLE);
+	_ctrlDataList->AppendTextColumn(_("Action name"), 		wxDATAVIEW_CELL_INERT, 		160, 	wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE|wxDATAVIEW_COL_SORTABLE);
 	_ctrlDataList->AppendTextColumn(_("Short description"), wxDATAVIEW_CELL_INERT, 		-1, 	wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE);
 								
 	//Créations du menu.
@@ -266,15 +267,17 @@ void WinManAction::refreshManagerFromGui()const
 {
 	//Pas utile ici puis que le manager et mise a jour en même temps que le gui.
 }
-#include <iostream>
+
 void WinManAction::onAdd(wxCommandEvent&)
 {
-	std::cout << "WinManAction::onAdd" << std::endl;
+	DlgPreferencesAction dlg(this);
+	dlg.ShowModal();
 }
 
 void WinManAction::onPreferences(wxCommandEvent&)
 {
-	std::cout << "WinManAction::onPreferences" << std::endl;
+	DlgPreferencesAction dlg(this);
+	dlg.ShowModal();
 }
 
 void WinManAction::onFind(wxCommandEvent&)

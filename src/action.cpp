@@ -11,6 +11,12 @@
 
 //App
 #include "action.hpp"
+#include "defs.hpp"
+
+//WxWidgets
+#include <wx/stattext.h>
+#include <wx/statline.h>
+#include <wx/sizer.h>
 
 #define CREATE_ACTION(action)					\
 		if(actTypeName == #action || all)		\
@@ -39,7 +45,7 @@ void Action::save(wxFileConfig&)const
 {
 }
 
-std::vector<Action*> Action::createActions()
+std::vector<Action*> Action::createAllActions()
 {
 	wxString actTypeName;
 	std::vector<Action*> ptrActions;
@@ -58,4 +64,37 @@ Action* Action::createAction(wxString const& actTypeName)
 		return ptrActions[0];
 	
 	return nullptr;
+}
+
+// *****************************************************************************
+// Class WinAction
+// *****************************************************************************
+
+WinAction::WinAction(wxWindow *parent, Action const* act)
+: wxWindow(parent, wxID_ANY)
+{
+	_act = act->newClone();
+	
+	//Création de la description.
+	wxStaticText* staticTextDescription = new wxStaticText(this, wxID_ANY, _act->getDescription());
+	
+	//Création de la statice line.
+	wxStaticLine* staticLine = new wxStaticLine(this);
+	
+	//Mise en forme du GUI avec un sizer.
+	wxSizer* sizerMain = new wxBoxSizer(wxVERTICAL);
+	sizerMain->Add(staticTextDescription, 	0, 	wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM|wxTOP,	SIZE_BORDER);
+	sizerMain->Add(staticLine, 				0, 	wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);
+	
+	SetSizer(sizerMain);
+}
+
+WinAction::~WinAction()
+{
+}
+
+Action* WinAction::newCloneAction()
+{
+	refreshActionFromGui();
+	return _act->newClone();
 }

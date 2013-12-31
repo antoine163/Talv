@@ -67,6 +67,7 @@ SRC+=../src/control/ctrlPickShortcutKey.cpp
 
 #Dialogs
 SRC+=../src/dialog/dlgPreferences.cpp
+SRC+=../src/dialog/dlgPreferencesAction.cpp
 SRC+=../src/dialog/dlgPickShortcutKey.cpp
 
 #Managers

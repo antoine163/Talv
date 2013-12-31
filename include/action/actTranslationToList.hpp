@@ -37,7 +37,7 @@ class ActTranslationToList : public Action
 		//! \brief Obtenir le window gui pour éditer l'action.
 		//! \param parent est le parent du window.
 		//! \note Cette méthode crées un window et retourne le pointeur sur se window il faudra prévoir de libérai la mémoire.
-		wxWindow* newEditWindow(wxWindow* parent);
+		WinAction* newEditWindow(wxWindow* parent);
 		
 		//! \brief Préférences de l'action au format string.
 		wxString getStringPreferences()const;

@@ -29,7 +29,7 @@ DlgPickShortcutKey::DlgPickShortcutKey(wxWindow* parent, wxString const& title, 
 	//Icônes
 	SetIcon(ManGeneral::get().getIconApp(ICON_SIZE_16X16));
 	
-	//Création du 
+	//Création du CtrlPickShortcutKey
 	_ctrlPickShortcutKey = new CtrlPickShortcutKey(this, shortcutKey);
 	
 	//Création de la statice line.

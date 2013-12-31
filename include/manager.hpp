@@ -72,7 +72,7 @@
 // *****************************************************************************
 
 //! \ingroup winmanager
-//! \brief Classe de base pour crées des GUIs pour managers.
+//! \brief Classe de base pour crées des GUIs pour les préférences des managers.
 class WinManager : public wxWindow 
 {	
 	public:

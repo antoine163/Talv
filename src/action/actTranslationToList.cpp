@@ -49,9 +49,9 @@ ActTranslationToList::~ActTranslationToList()
 
 IMPLEMENT_ACTION(ActTranslationToList, _("Translation to list"), _("Translation a text from clipboard into a list."));
 
-wxWindow* ActTranslationToList::newEditWindow(wxWindow*)
+WinAction* ActTranslationToList::newEditWindow(wxWindow* parent)
 {
-	return nullptr;
+	return new WinAction(parent, this);
 }
 
 wxString ActTranslationToList::getStringPreferences()const
