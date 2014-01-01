@@ -118,7 +118,7 @@ void CtrlPickShortcutKey::onKeyDown(wxKeyEvent& event)
 	//Mise à jour du texte.
 	_shortKeyIsValide = false;
 	_textCtrlShortcutKey->SetForegroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_GRAYTEXT));
-	updateTextCtrl(event.GetUnicodeKey());
+	updateTextCtrl(event);
 }
 
 void CtrlPickShortcutKey::onKeyUp(wxKeyEvent& event)
@@ -148,7 +148,7 @@ void CtrlPickShortcutKey::onKeyUp(wxKeyEvent& event)
 	}
 	
 	//Mise à jour du texte.
-	updateTextCtrl(event.GetUnicodeKey());
+	updateTextCtrl(event);
 }
 
 void CtrlPickShortcutKey::onSetFocus(wxFocusEvent&)
@@ -170,11 +170,222 @@ void CtrlPickShortcutKey::onKillFocus(wxFocusEvent&)
 		_textCtrlShortcutKey->SetValue(_("Click here!"));
 }
 
-void CtrlPickShortcutKey::updateTextCtrl(wxChar key)
+void CtrlPickShortcutKey::updateTextCtrl(wxKeyEvent& event)
 {		
 	//Temps que le raccourci n'est pas valide, on met à jour le texte.
 	if(!_shortKeyIsValide)
 	{
+		char key[4] = {'\0', '\0', '\0', '\0'};
+		wxChar unicodeKey = event.GetUnicodeKey();
+		wxKeyCode keyCode = (wxKeyCode)event.GetKeyCode();
+		 
+		if(unicodeKey != WXK_NONE)
+		{
+			switch(unicodeKey)
+			{
+				case 'A':
+					key[0] = 'a';
+				break;
+				case 'B':
+					key[0] = 'b';
+				break;	
+				case 'C':
+					key[0] = 'c';
+				break;	
+				case 'D':
+					key[0] = 'd';
+				break;	
+				case 'E':
+					key[0] = 'e';
+				break;	
+				case 'F':
+					key[0] = 'f';
+				break;	
+				case 'G':
+					key[0] = 'g';
+				break;	
+				case 'H':
+					key[0] = 'h';
+				break;	
+				case 'I':
+					key[0] = 'i';
+				break;	
+				case 'J':
+					key[0] = 'j';
+				break;	
+				case 'K':
+					key[0] = 'k';
+				break;	
+				case 'L':
+					key[0] = 'l';
+				break;	
+				case 'M':
+					key[0] = 'm';
+				break;	
+				case 'N':
+					key[0] = 'n';
+				break;	
+				case 'O':
+					key[0] = 'o';
+				break;	
+				case 'P':
+					key[0] = 'p';
+				break;	
+				case 'Q':
+					key[0] = 'q';
+				break;	
+				case 'R':
+					key[0] = 'r';
+				break;	
+				case 'S':
+					key[0] = 's';
+				break;	
+				case 'T':
+					key[0] = 't';
+				break;	
+				case 'U':
+					key[0] = 'u';
+				break;	
+				case 'V':
+					key[0] = 'v';
+				break;	
+				case 'W':
+					key[0] = 'w';
+				break;
+				case 'X':
+					key[0] = 'x';
+				break;
+				case 'Y':
+					key[0] = 'y';
+				break;
+				case 'Z':
+					key[0] = 'z';
+				break;
+				default:
+				break;
+			}
+		}
+		else if(keyCode != WXK_NONE)
+		{
+			switch(keyCode)
+			{
+				case WXK_F1:
+					key[0] = 'f';
+					key[1] = '1';
+				break;	
+				case WXK_F2:
+					key[0] = 'f';
+					key[1] = '2';
+				break;	
+				case WXK_F3:
+					key[0] = 'f';
+					key[1] = '3';
+				break;	
+				case WXK_F4:
+					key[0] = 'f';
+					key[1] = '4';
+				break;	
+				case WXK_F5:
+					key[0] = 'f';
+					key[1] = '5';
+				break;	
+				case WXK_F6:
+					key[0] = 'f';
+					key[1] = '6';
+				break;	
+				case WXK_F7:
+					key[0] = 'f';
+					key[1] = '7';
+				break;	
+				case WXK_F8:
+					key[0] = 'f';
+					key[1] = '8';
+				break;	
+				case WXK_F9:
+					key[0] = 'f';
+					key[1] = '9';
+				break;	
+				case WXK_F10:
+					key[0] = 'f';
+					key[1] = '1';
+					key[2] = '0';
+				break; 	
+				case WXK_F11:
+					key[0] = 'f';
+					key[1] = '1';
+					key[2] = '1';
+				break; 	
+				case WXK_F12:
+					key[0] = 'f';
+					key[1] = '1';
+					key[2] = '2';
+				break; 	
+				case WXK_F13:
+					key[0] = 'f';
+					key[1] = '1';
+					key[2] = '3';
+				break; 	
+				case WXK_F14:
+					key[0] = 'f';
+					key[1] = '1';
+					key[2] = '4';
+				break; 	
+				case WXK_F15:
+					key[0] = 'f';
+					key[1] = '1';
+					key[2] = '5';
+				break; 	
+				case WXK_F16:
+					key[0] = 'f';
+					key[1] = '1';
+					key[2] = '6';
+				break; 	
+				case WXK_F17:
+					key[0] = 'f';
+					key[1] = '1';
+					key[2] = '7';
+				break; 	
+				case WXK_F18:
+					key[0] = 'f';
+					key[1] = '1';
+					key[2] = '8';
+				break; 	
+				case WXK_F19:
+					key[0] = 'f';
+					key[1] = '1';
+					key[2] = '9';
+				break; 	
+				case WXK_F20:
+					key[0] = 'f';
+					key[1] = '2';
+					key[2] = '0';
+				break;
+				case WXK_F21:
+					key[0] = 'f';
+					key[1] = '2';
+					key[2] = '1';
+				break;
+				case WXK_F22:
+					key[0] = 'f';
+					key[1] = '2';
+					key[2] = '2';
+				break;
+				case WXK_F23:
+					key[0] = 'f';
+					key[1] = '2';
+					key[2] = '3';
+				break; 
+				case WXK_F24:
+					key[0] = 'f';
+					key[1] = '2';
+					key[2] = '4';
+				break;
+				
+				default:
+				break;
+			}
+		}
+			
 		wxString strShortcut;
 
 		if(_keyCtrlIsPressed)
@@ -201,7 +412,7 @@ void CtrlPickShortcutKey::updateTextCtrl(wxChar key)
 			strShortcut << "super";
 		}
 			
-		if(!strShortcut.IsEmpty() && key)
+		if(!strShortcut.IsEmpty() && key[0] != '\0')
 		{
 			strShortcut << "+" << key;
 			_shortKeyIsValide = true;

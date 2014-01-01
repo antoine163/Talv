@@ -47,7 +47,7 @@ class CtrlPickShortcutKey : public wxWindow
 		void onSetFocus(wxFocusEvent& event);
 		void onKillFocus(wxFocusEvent& event);
 		
-		void updateTextCtrl(wxChar key);
+		void updateTextCtrl(wxKeyEvent& event);
 		void checkInManAction();
 		
 		bool _keyCtrlIsPressed;
