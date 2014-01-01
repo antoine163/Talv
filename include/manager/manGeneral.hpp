@@ -16,12 +16,10 @@
 #include "manager.hpp"
 #include "taskIcon.hpp"
 
-//Std
-#include <map>
-
 //WxWidgets
 #include <wx/icon.h>
 #include <wx/string.h>
+#include <wx/arrstr.h>
 
 // *****************************************************************************
 // Enum SizeIcon_e
@@ -44,9 +42,7 @@ class ManGeneral : public Manager
 	
 	public:
 		//Langage
-		wxArrayString getLgs()const;
-		wxString acrToLg(wxString const& acr)const;
-		wxString lgToAcr(wxString const& lg)const;
+		wxArrayString GetLanguages()const;
 		
 		//Presse papier
 		wxString getClipboard()const;
@@ -72,10 +68,6 @@ class ManGeneral : public Manager
 	private:
 		virtual void manLoad(wxFileConfig& fileConfig);
 		virtual void manSave(wxFileConfig& fileConfig)const;
-		
-		//! \brief Liste des acronymes et des langues <acronyme, langue>.
-		//! \todo faire autrement
-		std::map<wxString, wxString> _langues;
 		
 		TaskIcon* _taskIcon;
 };

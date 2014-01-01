@@ -16,6 +16,7 @@
 #include <wx/stdpaths.h>
 #include <wx/clipbrd.h>
 #include <wx/sizer.h>
+#include <wx/intl.h>
 
 //Os
 #if defined(__WXMSW__)
@@ -28,72 +29,6 @@
 
 ManGeneral::ManGeneral() : _taskIcon(nullptr)
 {
-	//creation de la liste des langues.
-	_langues["af"] = _("Afrikaans");
-	_langues["sq"] = _("Albanian");
-	_langues["ar"] = _("Arabic");
-	_langues["hy"] = _("Armenian");
-	_langues["az"] = _("Azerbaijani");
-	_langues["eu"] = _("Basque");
-	_langues["be"] = _("Belarusian");
-	_langues["bn"] = _("Bengali");
-	_langues["bg"] = _("Bulgarian");
-	_langues["ca"] = _("Catalan");
-	_langues["zh-CN"] = _("Chinese");
-	_langues["hr"] = _("Croatian");
-	_langues["sr"] = _("Czech");
-	_langues["da"] = _("Danish");
-	_langues["nl"] = _("Dutch");
-	_langues["en"] = _("English");
-	_langues["eo"] = _("Esperanto");
-	_langues["et"] = _("Estonian");
-	_langues["tl"] = _("Filipino");
-	_langues["fi"] = _("Finnish");
-	_langues["fr"] = _("French");
-	_langues["gl"] = _("Galician");
-	_langues["ka"] = _("Georgian");
-	_langues["de"] = _("German");
-	_langues["el"] = _("Greek");
-	_langues["gu"] = _("Gujarati");
-	_langues["ht"] = _("Haitian Creole");
-	_langues["iw"] = _("Hebrew");
-	_langues["hi"] = _("Hindi");
-	_langues["hu"] = _("Hungarian");
-	_langues["is"] = _("Icelandic");
-	_langues["id"] = _("Indonesian");
-	_langues["ga"] = _("Irish");
-	_langues["it"] = _("Italian");
-	_langues["ja"] = _("Japanese");
-	_langues["kn"] = _("Kannada");
-	_langues["ko"] = _("Korean");
-	_langues["lo"] = _("Lao");
-	_langues["la"] = _("Latin");
-	_langues["lv"] = _("Latvian");
-	_langues["it"] = _("Lithuanian");
-	_langues["mk"] = _("Macedonian");
-	_langues["ms"] = _("Malay");
-	_langues["mt"] = _("Maltese");
-	_langues["no"] = _("Norwegian");
-	_langues["fa"] = _("Persian");
-	_langues["pl"] = _("Polish");
-	_langues["pt"] = _("Portuguese");
-	_langues["ro"] = _("Romanian");
-	_langues["ru"] = _("Russian");
-	_langues["sr"] = _("Serbian");
-	_langues["sk"] = _("Slovak");
-	_langues["sl"] = _("Slovenian");
-	_langues["es"] = _("Spanish");
-	_langues["sw"] = _("Swahili");
-	_langues["sv"] = _("Swedish");
-	_langues["ta"] = _("Tamil");
-	_langues["te"] = _("Telugu");
-	_langues["th"] = _("Thai");
-	_langues["tr"] = _("Turkish");
-	_langues["uk"] = _("Ukrainian");
-	_langues["ur"] = _("Urdu");
-	_langues["vi"] = _("Vietnamese");
-	_langues["cy"] = _("Welsh");
-	_langues["yi"] = _("Yiddish");
 }
 
 ManGeneral::~ManGeneral()
@@ -104,30 +39,156 @@ ManGeneral::~ManGeneral()
 
 IMPLEMENT_MANAGER(ManGeneral);
 
-wxArrayString ManGeneral::getLgs()const
+wxArrayString ManGeneral::GetLanguages()const
 {
-	wxArrayString tmpArray;
-	
-	for(auto it: _langues)
-		tmpArray.Add(it.second);
-	
-	return tmpArray;
-}
+	wxArrayString languages;
+	languages.Alloc(143);
 
-wxString ManGeneral::acrToLg(wxString const& acr)const
-{
-	return _langues.at(acr);
-}
+	languages.Add(_("Abkhazian"));
+	languages.Add(_("Afar"));
+	languages.Add(_("Afrikaans"));
+	languages.Add(_("Albanian"));
+	languages.Add(_("Amharic"));
+	languages.Add(_("Arabic"));
+	languages.Add(_("Armenian"));
+	languages.Add(_("Assamese"));
+	languages.Add(_("Asturian"));
+	languages.Add(_("Aymara"));
+	languages.Add(_("Azeri"));
+	languages.Add(_("Bashkir"));
+	languages.Add(_("Basque"));
+	languages.Add(_("Belarusian"));
+	languages.Add(_("Bengali"));
+	languages.Add(_("Bhutani"));
+	languages.Add(_("Bihari"));
+	languages.Add(_("Bislama"));
+	languages.Add(_("Bosnian"));
+	languages.Add(_("Breton"));
+	languages.Add(_("Bulgarian"));
+	languages.Add(_("Burmese"));
+	languages.Add(_("Cambodian"));
+	languages.Add(_("Catalan"));
+	languages.Add(_("Chinese"));
+	languages.Add(_("Corsican"));
+	languages.Add(_("Croatian"));
+	languages.Add(_("Czech"));
+	languages.Add(_("Danish"));
+	languages.Add(_("Dutch"));
+	languages.Add(_("English"));
+	languages.Add(_("Esperanto"));
+	languages.Add(_("Estonian"));
+	languages.Add(_("Faeroese"));
+	languages.Add(_("Farsi"));
+	languages.Add(_("Fiji"));
+	languages.Add(_("Finnish"));
+	languages.Add(_("French"));
+	languages.Add(_("Frisian"));
+	languages.Add(_("Galician"));
+	languages.Add(_("Georgian"));
+	languages.Add(_("German"));
+	languages.Add(_("Greek"));
+	languages.Add(_("Greenlandic"));
+	languages.Add(_("Guarani"));
+	languages.Add(_("Gujarati"));
+	languages.Add(_("Hausa"));
+	languages.Add(_("Hebrew"));
+	languages.Add(_("Hindi"));
+	languages.Add(_("Hungarian"));
+	languages.Add(_("Icelandic"));
+	languages.Add(_("Indonesian"));
+	languages.Add(_("Interlingua"));
+	languages.Add(_("Interlingue"));
+	languages.Add(_("Inuktitut"));
+	languages.Add(_("Inupiak"));
+	languages.Add(_("Irish"));
+	languages.Add(_("Italian"));
+	languages.Add(_("Japanese"));
+	languages.Add(_("Javanese"));
+	languages.Add(_("Kannada"));
+	languages.Add(_("Kashmiri"));
+	languages.Add(_("Kazakh"));
+	languages.Add(_("Kernewek"));
+	languages.Add(_("Kinyarwanda"));
+	languages.Add(_("Kirghiz"));
+	languages.Add(_("Kirundi"));
+	languages.Add(_("Konkani"));
+	languages.Add(_("Korean"));
+	languages.Add(_("Kurdish"));
+	languages.Add(_("Laothian"));
+	languages.Add(_("Latin"));
+	languages.Add(_("Latvian"));
+	languages.Add(_("Lingala"));
+	languages.Add(_("Lithuanian"));
+	languages.Add(_("Macedonian"));
+	languages.Add(_("Malagasy"));
+	languages.Add(_("Malay"));
+	languages.Add(_("Malayalam"));
+	languages.Add(_("Maltese"));
+	languages.Add(_("Manipuri"));
+	languages.Add(_("Maori"));
+	languages.Add(_("Marathi"));
+	languages.Add(_("Moldavian"));
+	languages.Add(_("Mongolian"));
+	languages.Add(_("Nauru"));
+	languages.Add(_("Nepali"));
+	languages.Add(_("Occitan"));
+	languages.Add(_("Oriya"));
+	languages.Add(_("Pashto, Pushto"));
+	languages.Add(_("Polish"));
+	languages.Add(_("Portuguese"));
+	languages.Add(_("Punjabi"));
+	languages.Add(_("Quechua"));
+	languages.Add(_("Rhaeto-Romance"));
+	languages.Add(_("Romanian"));
+	languages.Add(_("Russian"));
+	languages.Add(_("Northern Sami"));
+	languages.Add(_("Samoan"));
+	languages.Add(_("Sangho"));
+	languages.Add(_("Sanskrit"));
+	languages.Add(_("Scots Gaelic"));
+	languages.Add(_("Serbian"));
+	languages.Add(_("Serbo-Croatian"));
+	languages.Add(_("Sesotho"));
+	languages.Add(_("Setswana"));
+	languages.Add(_("Shona"));
+	languages.Add(_("Sindhi"));
+	languages.Add(_("Sinhalese"));
+	languages.Add(_("Siswati"));
+	languages.Add(_("Slovak"));
+	languages.Add(_("Slovenian"));
+	languages.Add(_("Somali"));
+	languages.Add(_("Spanish"));
+	languages.Add(_("Sundanese"));
+	languages.Add(_("Swahili"));
+	languages.Add(_("Swedish"));
+	languages.Add(_("Tagalog"));
+	languages.Add(_("Tajik"));
+	languages.Add(_("Tamil"));
+	languages.Add(_("Tatar"));
+	languages.Add(_("Telugu"));
+	languages.Add(_("Thai"));
+	languages.Add(_("Tibetan"));
+	languages.Add(_("Tigrinya"));
+	languages.Add(_("Tonga"));
+	languages.Add(_("Tsonga"));
+	languages.Add(_("Turkish"));
+	languages.Add(_("Turkmen"));
+	languages.Add(_("Twi"));
+	languages.Add(_("Uighur"));
+	languages.Add(_("Ukrainian"));
+	languages.Add(_("Urdu"));
+	languages.Add(_("Uzbek"));
+	languages.Add(_("Vietnamese"));
+	languages.Add(_("Volapuk"));
+	languages.Add(_("Welsh"));
+	languages.Add(_("Wolof"));
+	languages.Add(_("Xhosa"));
+	languages.Add(_("Yiddish"));
+	languages.Add(_("Yoruba"));
+	languages.Add(_("Zhuang"));
+	languages.Add(_("Zulu"));
 
-wxString ManGeneral::lgToAcr(wxString const& lg)const
-{
-	for(auto it: _langues)
-	{
-		if(it.second == lg)
-			return it.first;
-	}
-	
-	return wxEmptyString;
+	return languages;
 }
 
 wxString ManGeneral::getClipboard()const

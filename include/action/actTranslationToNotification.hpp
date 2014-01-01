@@ -14,6 +14,7 @@
 
 //App
 #include "action.hpp"
+#include "control/ctrlPickLanguages.hpp"
 
 //WxWidgets
 #include <wx/language.h>
@@ -65,30 +66,19 @@ class ActTranslationToNotification : public Action
 // Class WinActTranslationToNotification
 // *****************************************************************************
 
-//class ActTranslation;
-
-////! \brief GUI pour la modification des préférences des actions de traductions \ref ActTranslation.
-//class PanelActTranslation : public GuiPanelActTranslation
-//{
-	//public:
-		////! \brief Constructeur.
-		////! \param parent wxWindow parent.
-		////! \param buttonOK bouton "OK" du dialogue parent.
-		////! \param act action de traduction a modifier.
-		//PanelActTranslation(wxWindow* parent, wxButton* buttonOK, ActTranslation* act);
-		////! \brief Destructeur.
-		//~PanelActTranslation();
+//! \brief GUI pour la modification des préférences des actions de traductions \ref ActTranslation.
+class WinActTranslationToNotification : public WinAction
+{
+	public:
+		//! \brief Constructeur.
+		WinActTranslationToNotification(wxWindow* parent, ActTranslationToNotification const* act);
+		//! \brief Destructeur.
+		~WinActTranslationToNotification();
 		
-		////! \brief Méthode appeler si appuis sur bouton "ok" du parent.
-		////! Elle valide les modifications et les installe dans l'action
-		//void OnOKButtonClick(wxCommandEvent& event);
+		virtual void refreshActionFromGui();
 	
-	//private:
-		////! \brief ActTranslation à modifier.
-		//ActTranslation * _act;
-		
-		////! \brief bouton "OK" du dialogue parent.
-		//wxButton* _buttonOK;
-//};
+	private:
+		CtrlPickLanguages* _ctrlPickLanguages;
+};
 
 #endif //ACTION_TRANSLATION_TO_NOTIFICATION_H

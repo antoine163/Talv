@@ -64,6 +64,7 @@ SRC+=../src/control/ctrlDataList.cpp
 SRC+=../src/control/ctrlProxyInfo.cpp
 SRC+=../src/control/ctrlAuthentication.cpp
 SRC+=../src/control/ctrlPickShortcutKey.cpp
+SRC+=../src/control/ctrlPickLanguages.cpp
 
 #Dialogs
 SRC+=../src/dialog/dlgPreferences.cpp

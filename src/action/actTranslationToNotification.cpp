@@ -12,9 +12,11 @@
 //App
 #include "action/actTranslationToNotification.hpp"
 #include "manager/manNotification.hpp"
+#include "defs.hpp"
 
 //WxWidgets
 #include <wx/intl.h>
+#include <wx/sizer.h>
 
 
 // *****************************************************************************
@@ -53,7 +55,7 @@ IMPLEMENT_ACTION(ActTranslationToNotification, _("Translation to Notification"),
 
 WinAction* ActTranslationToNotification::newEditWindow(wxWindow* parent)
 {
-	return new WinAction(parent, this);
+	return new WinActTranslationToNotification(parent, this);
 }
 
 wxString ActTranslationToNotification::getStringPreferences()const
@@ -81,49 +83,24 @@ void ActTranslationToNotification::actSave(wxFileConfig&)const
 	//fileConfig.Write("lgto", _lgto);
 }
 
-//// *****************************************************************************
-//// Class PanelActTranslation
-//// *****************************************************************************
+// *****************************************************************************
+// Class WinActTranslationToNotification
+// *****************************************************************************
 
-//PanelActTranslation::PanelActTranslation(wxWindow* parent, wxButton* buttonOK, ActTranslation * act)
-//: GuiPanelActTranslation(parent), _act(act), _buttonOK(buttonOK)
-//{
-	//std::map<wxString, wxString> const& languages = Resource::getInstance()->getLanguages();	
+WinActTranslationToNotification::WinActTranslationToNotification(wxWindow* parent, ActTranslationToNotification const* act)
+: WinAction(parent, act)
+{
+	//Créations du CtrlPickLanguages.
+	_ctrlPickLanguages = new CtrlPickLanguages(this);
 	
-	////Ajout des langues.
-	//for(auto &it: languages)
-	//{
-		//_choiceLanguageSource->Append(it.second);
-		//_choiceLanguageOfTranslation->Append(it.second);
-	//}
+	GetSizer()->Add(_ctrlPickLanguages, 0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 	SIZE_BORDER);
+}
 
-	////Sélectionne les bonnes langues.
-	//int n = _choiceLanguageSource->FindString(languages.at(_act->_lgsrc));
-	//_choiceLanguageSource->SetSelection(n);
-	//n = _choiceLanguageOfTranslation->FindString(languages.at(_act->_lgto));
-	//_choiceLanguageOfTranslation->SetSelection(n);
-	
-	////Lier l'événement du bouton OK du wxWindow parent.
-	//_buttonOK->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &PanelActTranslation::OnOKButtonClick, this, _buttonOK->GetId());
-//}
+WinActTranslationToNotification::~WinActTranslationToNotification()
+{
+}
 
-//PanelActTranslation::~PanelActTranslation()
-//{
-	//_buttonOK->Unbind(wxEVT_COMMAND_BUTTON_CLICKED, &PanelActTranslation::OnOKButtonClick, this, _buttonOK->GetId());
-//}
+void WinActTranslationToNotification::refreshActionFromGui()
+{
+}
 
-//void PanelActTranslation::OnOKButtonClick(wxCommandEvent& event)
-//{
-	////Affect le langage source.
-	//int n = _choiceLanguageSource->GetSelection();
-	//wxString s = _choiceLanguageSource->GetString(n);
-	//_act->_lgsrc = Resource::getInstance()->languageToAbbreviation(s);
-	
-	////Affect le langage de destination.
-	//n = _choiceLanguageOfTranslation->GetSelection();
-	//s = _choiceLanguageOfTranslation->GetString(n);
-	//_act->_lgto = Resource::getInstance()->languageToAbbreviation(s);
-	
-	////Propage l'événement.
-	//event.Skip();
-//}
