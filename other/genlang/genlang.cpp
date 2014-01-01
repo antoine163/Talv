@@ -2,7 +2,7 @@
 //! \brief Source pour génère la methode ManGeneral::GetLanguages() à partir
 //! du fichier misc/languages/langtabl.txt des source de WxWidgets.
 //! 
-//! \note Écrit a la rache.
+//! \note Écrit à la rache.
 //! 
 //! - Compilateur : GCC,MinGW
 //!

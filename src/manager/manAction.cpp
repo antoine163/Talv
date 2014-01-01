@@ -346,7 +346,7 @@ void WinManAction::onChangeShortcut(wxCommandEvent&)
 	wxString shortcut = _ctrlDataList->GetTextValue(_ctrlDataList->GetSelectedRow(), 0);
 	ShortcutKey oldShortcut = ShortcutKey::stringToShortcutKey(shortcut);
 	
-	DlgPickShortcutKey dlg(this, _("Pick a new shortcut"), oldShortcut);
+	DlgPickShortcutKey dlg(this, _("Pick a new shortcut"), oldShortcut, true);
 	
 	if(dlg.ShowModal() == wxID_OK)
 	{

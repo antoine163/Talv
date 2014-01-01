@@ -1,6 +1,6 @@
 ################################################################################
 #
-#	Makfile.
+#	Makfile pour compiler genlang.
 #
 # - author 	:	Maleyrie Antoine : antoine.maleyrie@gmail.com
 # - version	:	0.1

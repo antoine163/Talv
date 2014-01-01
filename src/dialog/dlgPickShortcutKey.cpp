@@ -23,14 +23,14 @@
 // *****************************************************************************
 
 //! \todo vérifier l'utilité de SetIcon
-DlgPickShortcutKey::DlgPickShortcutKey(wxWindow* parent, wxString const& title, ShortcutKey const& shortcutKey)
+DlgPickShortcutKey::DlgPickShortcutKey(wxWindow* parent, wxString const& title, ShortcutKey const& shortcutKey, bool check)
 : 	wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE)
 {		
 	//Icônes
 	SetIcon(ManGeneral::get().getIconApp(ICON_SIZE_16X16));
 	
 	//Création du CtrlPickShortcutKey
-	_ctrlPickShortcutKey = new CtrlPickShortcutKey(this, shortcutKey);
+	_ctrlPickShortcutKey = new CtrlPickShortcutKey(this, shortcutKey, check);
 	
 	//Création de la statice line.
 	wxStaticLine* staticLine = new wxStaticLine(this);

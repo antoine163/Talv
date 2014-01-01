@@ -22,7 +22,7 @@
 // Class CtrlPickShortcutKey
 // *****************************************************************************
 
-CtrlPickShortcutKey::CtrlPickShortcutKey(wxWindow* parent, ShortcutKey const& shortcutKey)
+CtrlPickShortcutKey::CtrlPickShortcutKey(wxWindow* parent, ShortcutKey const& shortcutKey, bool check)
 : wxWindow(parent, wxID_ANY)
 {	
 	//Initialisation des variable
@@ -32,6 +32,7 @@ CtrlPickShortcutKey::CtrlPickShortcutKey(wxWindow* parent, ShortcutKey const& sh
 	_keySuperIsPressed = false;
 	_shortKeyIsValide = false;
 	_isFocused = false;
+	_check = check;
 	
 	//Créations du wxTextCtrl
 	_textCtrlShortcutKey = new wxTextCtrl(this, wxID_ANY, _("Click here!"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE|wxTE_READONLY);
@@ -71,7 +72,8 @@ void CtrlPickShortcutKey::setShortcutKey(ShortcutKey const& shortcutKey)
 		_shortKeyIsValide = true;
 		_textCtrlShortcutKey->SetForegroundColour(wxNullColour);
 		
-		checkInManAction();
+		if(_check)
+			checkInManAction();
 	}
 }
 
@@ -208,7 +210,8 @@ void CtrlPickShortcutKey::updateTextCtrl(wxChar key)
 			strShortcut.MakeLower();
 			_textCtrlShortcutKey->SetValue(strShortcut);
 			
-			checkInManAction();
+			if(_check)
+				checkInManAction();
 		}
 		else if(strShortcut.IsEmpty())
 			_textCtrlShortcutKey->SetValue(_("Press your shortcut."));
@@ -224,7 +227,7 @@ void CtrlPickShortcutKey::checkInManAction()
 {
 	ShortcutKey shortcutKey = getShortcutKey();
 	
-	if(_shortcutKeyFault == shortcutKey || !_shortcutKeyFault.isOk())
+	if(_shortcutKeyFault == shortcutKey)
 			return;
 		
 	//Si le raccourcis est connue par manAction on l'affiche en rouge.

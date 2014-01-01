@@ -30,7 +30,7 @@ class DlgPickShortcutKey : public wxDialog
 	public:
 		
 		//! \brief Constructeur.
-		DlgPickShortcutKey(wxWindow* parent, wxString const& title, ShortcutKey const& shortcutKey = ShortcutKey());
+		DlgPickShortcutKey(wxWindow* parent, wxString const& title, ShortcutKey const& shortcutKey = ShortcutKey(), bool check = false);
 		//! \brief Destructeur.
 		~DlgPickShortcutKey();
 		

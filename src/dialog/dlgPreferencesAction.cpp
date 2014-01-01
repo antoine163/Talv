@@ -44,7 +44,7 @@ DlgPreferencesAction::DlgPreferencesAction(wxWindow* parent)
 	//Création du wxStaticText.
 	wxStaticText* staticTextShortcut = new wxStaticText(this, wxID_ANY, _("Pick your shortcut:"));
 	//Création du CtrlPickShortcutKey
-	_ctrlPickShortcutKey = new CtrlPickShortcutKey(this);
+	_ctrlPickShortcutKey = new CtrlPickShortcutKey(this, ShortcutKey(), true);
 	
 	//Mise en forme dans un sizer.
 	wxSizer* sizerShortcut = new wxBoxSizer(wxHORIZONTAL);
