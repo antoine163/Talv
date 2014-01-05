@@ -23,17 +23,17 @@
 
 class WinAction;
 
-#define DECLARE_ACTION()								\
-		public:											\
-		virtual wxString const& getName()const;			\
-		virtual wxString const& getDescription()const;	\
-		virtual wxString const& getActTypeName()const;	\
+#define DECLARE_ACTION()						\
+		public:									\
+		virtual wxString getName()const;		\
+		virtual wxString getDescription()const;	\
+		virtual wxString getActTypeName()const;	\
 		virtual Action* newClone()const
 	
-#define IMPLEMENT_ACTION(action, name, description)														\
-		wxString const& action::getName()const{static wxString r=name; return r;}						\
-		wxString const& action::getDescription()const{static wxString r=description; return r;}			\
-		wxString const& action::getActTypeName()const{static wxString r=#action; return r;}				\
+#define IMPLEMENT_ACTION(action, name, description)					\
+		wxString action::getName()const{return name;}				\
+		wxString action::getDescription()const{return description;}	\
+		wxString action::getActTypeName()const{ return #action;}	\
 		Action* action::newClone()const{return new action(*this);}
 	
 //! \defgroup action Actions
@@ -80,15 +80,15 @@ class Action
 
 		//! \brief Obtenir le non de l'action.
 		//! \return Le non de l'action.
-		virtual wxString const& getName()const=0;
+		virtual wxString getName()const=0;
 		
 		//! \brief Obtenir la description de l'action.
 		//! \return La description.
-		virtual wxString const& getDescription()const=0;
+		virtual wxString getDescription()const=0;
 		
 		//! \brief Obtenir le non de la class de l'action.
 		//! \return Le non de la classe.
-		virtual wxString const& getActTypeName()const=0;
+		virtual wxString getActTypeName()const=0;
 		
 		//! \brief Crée un clone de la classe
 		//! \param act est l'action a copier

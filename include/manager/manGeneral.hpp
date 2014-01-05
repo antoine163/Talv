@@ -42,7 +42,7 @@ class ManGeneral : public Manager
 	
 	public:
 		//Langage
-		wxArrayString GetLanguages()const;
+		wxArrayString getLanguages()const;
 		
 		//Presse papier
 		wxString getClipboard()const;

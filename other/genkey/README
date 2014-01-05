@@ -1,0 +1,17 @@
+-- Description:
+Mini programma pour générer:
+l'enum Key_e,
+la méthode wxString ShortcutKey::keyToString(Key_e key),
+la méthode Key_e ShortcutKey::stringToKey(wxString key),
+la méthode wxArrayString ShortcutKey::getKeysStrings().
+
+-- Compilation:
+Juste appeler 'make' dans ce répertoire suffi.
+
+-- Utilization:
+- Comme premier paramètre vous devez spécifier le répertoire (X11) ou se trouve
+les fichiers "keysymdef.h" et "XF86keysym.h". C'est fichiers se trouve typiquement
+dans le dossier "/usr/include/X11" dans votre Installation linux.
+- Comme deuxièmes paramètre vous devez spécifier le répertoire ou se trouve
+le fichier "winuser.h". C'est fichiers se trouve typiquement dans
+dans le dossier "include" de vautre installation mingw.

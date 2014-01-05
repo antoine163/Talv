@@ -1,0 +1,11 @@
+-- Description:
+Mini programma pour générer la méthode wxArrayString ManGeneral::getLanguages()
+à partir du fichier "misc/languages/langtabl.txt" des sources de WxWidgets.
+
+-- Compilation:
+Juste appeler 'make' dans ce répertoire suffi.
+
+-- Utilization:
+Comme premier paramètre vous devez spécifier le répertoire ou se trouve le
+fichier "langtabl.txt". Ce fichier se trouve dans "misc/languages/" à partir des 
+sources de WxWidgets.

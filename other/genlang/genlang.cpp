@@ -1,6 +1,6 @@
 //! \file **********************************************************************
-//! \brief Source pour génère la methode ManGeneral::GetLanguages() à partir
-//! du fichier misc/languages/langtabl.txt des source de WxWidgets.
+//! \brief Source pour générer la méthode
+//! wxArrayString ManGeneral::getLanguages().
 //! 
 //! \note Écrit à la rache.
 //! 
@@ -21,11 +21,18 @@ int main(int argc, char **argv)
 {
 	if(argc != 2)
 	{
-		std::cout << "You must specify a file input!" << std::endl;
+		std::cout << "You must specify the folder location of file langtabl.txt!" << std::endl;
 		return EXIT_FAILURE;
 	}
 	
-	std::ifstream file(argv[1]);
+	std::string filename = argv[1];
+	filename += "/langtabl.txt";
+	std::ifstream file(filename);
+	if(!file.is_open())
+	{
+		std::cout << "Error opening file: " << filename << std::endl;
+		return EXIT_FAILURE;
+	}
 	
 	char c;
 	bool valReading = false;
@@ -61,7 +68,7 @@ int main(int argc, char **argv)
 	
 	file.close();
 	
-	std::cout << "wxArrayString ManGeneral::GetLanguages()const" << std::endl;
+	std::cout << "wxArrayString ManGeneral::getLanguages()const" << std::endl;
 	std::cout << "{" << std::endl;
 	std::cout << "\twxArrayString languages;" << std::endl;
 	std::cout << "\tlanguages.Alloc(" << languages.size() << ");" << std::endl;

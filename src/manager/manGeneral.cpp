@@ -39,7 +39,7 @@ ManGeneral::~ManGeneral()
 
 IMPLEMENT_MANAGER(ManGeneral);
 
-wxArrayString ManGeneral::GetLanguages()const
+wxArrayString ManGeneral::getLanguages()const
 {
 	wxArrayString languages;
 	languages.Alloc(143);

@@ -28,7 +28,7 @@ CtrlPickLanguages::CtrlPickLanguages(wxWindow* parent)
 : wxWindow(parent, wxID_ANY)
 {		
 	//Créations des chois pour les wxChoice.
-	wxArrayString languages = ManGeneral::get().GetLanguages();
+	wxArrayString languages = ManGeneral::get().getLanguages();
 	
 	//Créations du wxStaticBox
 	wxStaticBox* staticBoxPickLanguages = new wxStaticBox(this, wxID_ANY, _("Pick languages:"));
