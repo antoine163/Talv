@@ -34,33 +34,34 @@ ManAction::ManAction()
 	Bind(EVT_SHORTCUT, &ManAction::onShortcut, this);
 	
 	
-	add(ShortcutKey::stringToShortcutKey("shift+a"), Action::createAction("ActTranslationToNotification"));
-	//add(ShortcutKey::stringToShortcutKey("shift+b"), Action::createAction("ActTranslationToList"));
-	//add(ShortcutKey::stringToShortcutKey("shift+c"), Action::createAction("ActTranslationToNotification"));
-	//add(ShortcutKey::stringToShortcutKey("shift+d"), Action::createAction("ActTranslationToList"));
-	//add(ShortcutKey::stringToShortcutKey("shift+e"), Action::createAction("ActTranslationToNotification"));
-	//add(ShortcutKey::stringToShortcutKey("shift+f"), Action::createAction("ActTranslationToList"));
-	//add(ShortcutKey::stringToShortcutKey("shift+g"), Action::createAction("ActTranslationToList"));
-	//add(ShortcutKey::stringToShortcutKey("shift+h"), Action::createAction("ActTranslationToList"));
-	//add(ShortcutKey::stringToShortcutKey("shift+i"), Action::createAction("ActTranslationToList"));
-	//add(ShortcutKey::stringToShortcutKey("shift+j"), Action::createAction("ActTranslationToList"));
-	//add(ShortcutKey::stringToShortcutKey("shift+k"), Action::createAction("ActTranslationToList"));
-	//add(ShortcutKey::stringToShortcutKey("shift+l"), Action::createAction("ActTranslationToList"));
-	//add(ShortcutKey::stringToShortcutKey("shift+m"), Action::createAction("ActTranslationToList"));
-	//add(ShortcutKey::stringToShortcutKey("shift+n"), Action::createAction("ActTranslationToList"));
-	//add(ShortcutKey::stringToShortcutKey("shift+o"), Action::createAction("ActTranslationToList"));
-	//add(ShortcutKey::stringToShortcutKey("shift+p"), Action::createAction("ActTranslationToList"));
-	//add(ShortcutKey::stringToShortcutKey("shift+q"), Action::createAction("ActTranslationToList"));
-	//add(ShortcutKey::stringToShortcutKey("shift+r"), Action::createAction("ActTranslationToList"));
-	//add(ShortcutKey::stringToShortcutKey("shift+s"), Action::createAction("ActTranslationToList"));
-	//add(ShortcutKey::stringToShortcutKey("shift+t"), Action::createAction("ActTranslationToList"));
-	//add(ShortcutKey::stringToShortcutKey("shift+u"), Action::createAction("ActTranslationToList"));
-	//add(ShortcutKey::stringToShortcutKey("shift+v"), Action::createAction("ActTranslationToList"));
-	//add(ShortcutKey::stringToShortcutKey("shift+w"), Action::createAction("ActTranslationToList"));
-	//add(ShortcutKey::stringToShortcutKey("shift+x"), Action::createAction("ActTranslationToList"));
-	//add(ShortcutKey::stringToShortcutKey("shift+y"), Action::createAction("ActTranslationToList"));
-	//add(ShortcutKey::stringToShortcutKey("shift+z"), Action::createAction("ActTranslationToList"));
-	//add(ShortcutKey::stringToShortcutKey("shift+ctrl+f2"), Action::createAction("ActTranslationToNotification"));
+	add(ShortcutKey(MODIFIER_CONTROL|MODIFIER_SUPER, KEY_A), Action::createAction("ActTranslationToNotification"));
+	add(ShortcutKey::stringToShortcutKey("shift+ctrl+b"), Action::createAction("ActTranslationToList"));
+	add(ShortcutKey::stringToShortcutKey("shift+ctrl+e"), Action::createAction("ActTranslationToNotification"));
+	add(ShortcutKey::stringToShortcutKey("ctrl+d"), Action::createAction("ActTranslationToList"));
+	add(ShortcutKey::stringToShortcutKey("shift+e"), Action::createAction("ActTranslationToNotification"));
+	add(ShortcutKey::stringToShortcutKey("shift+f"), Action::createAction("ActTranslationToList"));
+	add(ShortcutKey::stringToShortcutKey("shift+g"), Action::createAction("ActTranslationToList"));
+	add(ShortcutKey::stringToShortcutKey("shift+h"), Action::createAction("ActTranslationToList"));
+	add(ShortcutKey::stringToShortcutKey("shift+I"), Action::createAction("ActTranslationToList"));
+	add(ShortcutKey::stringToShortcutKey("shift+J"), Action::createAction("ActTranslationToList"));
+	add(ShortcutKey::stringToShortcutKey("shift+k"), Action::createAction("ActTranslationToList"));
+	add(ShortcutKey::stringToShortcutKey("shift+l"), Action::createAction("ActTranslationToList"));
+	add(ShortcutKey::stringToShortcutKey("shift+m"), Action::createAction("ActTranslationToList"));
+	add(ShortcutKey::stringToShortcutKey("shift+n"), Action::createAction("ActTranslationToList"));
+	add(ShortcutKey::stringToShortcutKey("shift+o"), Action::createAction("ActTranslationToList"));
+	add(ShortcutKey::stringToShortcutKey("shift+p"), Action::createAction("ActTranslationToList"));
+	add(ShortcutKey::stringToShortcutKey("shift+q"), Action::createAction("ActTranslationToList"));
+	add(ShortcutKey::stringToShortcutKey("shift+r"), Action::createAction("ActTranslationToList"));
+	add(ShortcutKey::stringToShortcutKey("shift+s"), Action::createAction("ActTranslationToList"));
+	add(ShortcutKey::stringToShortcutKey("shift+t"), Action::createAction("ActTranslationToList"));
+	add(ShortcutKey::stringToShortcutKey("shift+u"), Action::createAction("ActTranslationToList"));
+	add(ShortcutKey::stringToShortcutKey("shift+v"), Action::createAction("ActTranslationToList"));
+	add(ShortcutKey::stringToShortcutKey("shift+w"), Action::createAction("ActTranslationToList"));
+	add(ShortcutKey::stringToShortcutKey("shift+x"), Action::createAction("ActTranslationToList"));
+	add(ShortcutKey::stringToShortcutKey("shift+y"), Action::createAction("ActTranslationToList"));
+	add(ShortcutKey::stringToShortcutKey("shift+z"), Action::createAction("ActTranslationToList"));
+	add(ShortcutKey::stringToShortcutKey("shift+ctrl+f2"), Action::createAction("ActTranslationToNotification"));
+	add(ShortcutKey(MODIFIER_CONTROL|MODIFIER_SUPER, KEY_B), Action::createAction("ActTranslationToNotification"));
 }
 
 ManAction::~ManAction()
@@ -79,7 +80,7 @@ WinManager* ManAction::newEditWindow(wxWindow* parent)
 
 bool ManAction::add(ShortcutKey const &shortcut, Action* act)
 {
-	if(exist(shortcut))
+	if(!shortcut.isOk() || exist(shortcut))
 		return false;
 		
 	_shortcutKeysActions[shortcut] = act;
@@ -154,11 +155,10 @@ void ManAction::manLoad(wxFileConfig&)
 void ManAction::manSave(wxFileConfig&)const
 {
 }	
-#include <iostream>
+
 void ManAction::onShortcut(ShortcutEvent& event)
 {
-	std::cout << "test" << std::endl;
-	//_shortcutKeysActions.at(event.getShortcutKey())->execute();
+	_shortcutKeysActions.at(event.getShortcutKey())->execute();
 }								
 									
 // *****************************************************************************

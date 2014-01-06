@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.1
+//! \version 0.2
 //! \date 27.12.2013
 //!
 //! ****************************************************************************
@@ -47,36 +47,17 @@ class CtrlPickShortcutKey : public wxWindow
 		void onSetFocus(wxFocusEvent& event);
 		void onKillFocus(wxFocusEvent& event);
 		
-		void updateTextCtrl(wxKeyEvent& event);
+		//void updateTextCtrl(wxKeyEvent& event);
 		void checkInManAction();
 		
-		bool _keyCtrlIsPressed;
-		bool _keyAltIsPressed;
-		bool _keyShiftIsPressed;
-		bool _keySuperIsPressed;
 		bool _shortKeyIsValide;
 		bool _isFocused;
 		bool _check;
 		ShortcutKey _shortcutKeyFault;
+		ShortcutKey _shortcutKey;
+		Modifier_e _modPressed;
 		
 		wxTextCtrl* _textCtrlShortcutKey;
 };
-
-#ifndef __DOXYGEN__
-enum RawKeyCodeModifier_e
-{
-	#if defined(__UNIX__)
-	RAW_KEY_CODE_MODIFIER_CONTROL 	= 37,
-	RAW_KEY_CODE_MODIFIER_ALT 		= 64,
-	RAW_KEY_CODE_MODIFIER_SHIFT 	= 50,
-	RAW_KEY_CODE_MODIFIER_SUPER		= 133,
-	#elif defined(__WXMSW__)
-	RAW_KEY_CODE_MODIFIER_CONTROL 	= 17,
-	RAW_KEY_CODE_MODIFIER_ALT 		= 18,
-	RAW_KEY_CODE_MODIFIER_SHIFT 	= 16,
-	RAW_KEY_CODE_MODIFIER_SUPER		= 91,
-	#endif
-};
-#endif
 
 #endif //CTRL_PICK_SHORTCUT_KEY_H

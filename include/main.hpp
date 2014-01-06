@@ -40,7 +40,7 @@ class App : public wxApp
 		//! \brief CallBack appeler lorsque le dialogue préférences et fermer.
 		void onPreferencesColse(wxCloseEvent& event);
 		
-		//! \brief //! \brief CallBack pour activer/désactiver les raccourcis.
+		//! \brief CallBack pour activer/désactiver les raccourcis.
 		void onEnableShortcuts(wxCommandEvent& event);
 		
 		//! \brief CallBack pour lancer le dialogue a propos.

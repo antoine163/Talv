@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie.
-//! \version 1.5
+//! \version 2.0
 //! \date 13.12.12
 //!
 //! ****************************************************************************
@@ -21,13 +21,15 @@
 // *****************************************************************************
 
 ShortcutKey::ShortcutKey()
-: _modifiers(MODIFIER_NONE), _key(KEY_NONE)
 {
+	setModifiers(MODIFIER_NONE);
+	setKey(KEY_NONE);
 }
 
 ShortcutKey::ShortcutKey(Modifier_e modifiers, Key_e key)
-: _modifiers(modifiers), _key(key)
 {
+	setModifiers(modifiers);
+	setKey(key);
 }
 
 bool ShortcutKey::operator<(ShortcutKey const& ins)const
@@ -64,176 +66,118 @@ Key_e ShortcutKey::getKey()const
 	return _key;
 }
 
+void ShortcutKey::setKey(Key_e key)
+{
+	#ifdef __UNIX__
+	Display* display = (Display*)wxGetDisplay();
+	KeyCode keyCode = XKeysymToKeycode(display, (KeySym)key);
+	KeySym keySym = XkbKeycodeToKeysym(display, keyCode, 0, 0);
+	_key = (Key_e)keySym;
+	#elif __WXMSW__
+	_key = key;
+	#endif
+}
+
 Modifier_e ShortcutKey::getModifiers()const
 {
 	return _modifiers;
 }
+void ShortcutKey::setModifiers(Modifier_e mod)
+{
+	_modifiers = mod;
+}
+
+void ShortcutKey::addModifiers(Modifier_e mod)
+{
+	_modifiers |= mod;
+}
+
+void ShortcutKey::removeModifiers(Modifier_e mod)
+{
+	_modifiers &= ~mod;
+}
 
 bool ShortcutKey::isOk()const
 {
-	if(_modifiers == MODIFIER_NONE && _key == KEY_NONE)
+	if(_key == KEY_NONE)
 		return false;
 		
 	return true;
 }
 
 wxString ShortcutKey::shortcutKeyToString(ShortcutKey const& shortcut)
-{
-	wxString ret;
+{	
+	wxString r;
 	
-	//// ShortcutKey valide ?
-	//if(!shortcut.isOk())
-		//return wxEmptyString;
+	// ShortcutKey valide ?
+	if(!shortcut.isOk())
+		return wxEmptyString;
 	
-	////Conversion du modificateur.
-	//Modifier_e statut = KEY_MODIFIER_CONTROL;
-	//for(unsigned int i = 0; i < NB_KEY_MODIFIER; i++)
-	//{
-		//switch(statut)
-		//{
-			//case KEY_MODIFIER_CONTROL:
-			//{
-				//if(shortcut._modifiers & KEY_MODIFIER_CONTROL)
-					//ret << "ctrl+";
-				
-				//statut = KEY_MODIFIER_ALT;
-			//}break;
-			
-			//case KEY_MODIFIER_ALT:
-			//{
-				//if(shortcut._modifiers & KEY_MODIFIER_ALT)
-					//ret << "alt+";
-				
-				//#if defined(__UNIX__)
-				//statut = KEY_MODIFIER_ALTGR;
-				//#elif defined(__WXMSW__)
-				//statut = KEY_MODIFIER_SHIFT;
-				//#endif
-			//}break;
-			
-			//#if defined(__UNIX__)
-			//case KEY_MODIFIER_ALTGR:
-			//{
-				//if(shortcut._modifiers & KEY_MODIFIER_ALTGR)
-					//ret << "altgr+";
-				
-				//statut = KEY_MODIFIER_SHIFT;
-			//}break;
-			//#endif
-			
-			//case KEY_MODIFIER_SHIFT:
-			//{
-				//if(shortcut._modifiers & KEY_MODIFIER_SHIFT)
-					//ret << "shift+";
-				
-				//statut = KEY_MODIFIER_SUPER;
-			//}break;
-			
-			//case KEY_MODIFIER_SUPER:
-			//{
-				//if(shortcut._modifiers & KEY_MODIFIER_SUPER)
-					//ret << "super+";
-				
-				//statut = KEY_MODIFIER_NONE;
-			//}break;
-			
-			//default:
-			//return wxEmptyString;
-			//break;
-		//}
-	//}
+	//Conversion du modificateur.	
+	wxString strModifier;
+	strModifier = modifierToString(shortcut._modifiers&MODIFIER_CONTROL);
+	r << strModifier;
 	
-	////Ajout de la touche.
-	//char fKey = shortcut._key>>16;
-	//if(fKey)
-		//ret << fKey;
-	//fKey = shortcut._key>>8;
-	//if(fKey)
-		//ret << fKey;
-	//fKey = shortcut._key;
-	//if(fKey)
-		//ret << fKey;
+	strModifier = modifierToString(shortcut._modifiers&MODIFIER_ALT);
+	if(!r.IsEmpty() && !strModifier.IsEmpty())
+		r << '+';
+	r << strModifier;
+		
+	strModifier = modifierToString(shortcut._modifiers&MODIFIER_ALTGR);
+	if(!r.IsEmpty() && !strModifier.IsEmpty())
+		r << '+';
+	r << strModifier;
 	
-	////Minimalise
-	//ret.MakeLower();
+	strModifier = modifierToString(shortcut._modifiers&MODIFIER_SHIFT);
+	if(!r.IsEmpty() && !strModifier.IsEmpty())
+		r << '+';
+	r << strModifier;
 	
-	return ret;
+	strModifier = modifierToString(shortcut._modifiers&MODIFIER_SUPER);
+	if(!r.IsEmpty() && !strModifier.IsEmpty())
+		r << '+';
+	r << strModifier;
+	
+	//Conversion de la touche.
+	if(!r.IsEmpty())
+		r << '+';
+	r << keyToString(shortcut._key);
+	
+	return r;
 }
 
 ShortcutKey ShortcutKey::stringToShortcutKey(wxString const& shortcut)
 {
-	//Modifier_e modifiers = KEY_MODIFIER_NONE;
 	
-	////Avent ou après le premier '+'.
-	//wxString before;
-	//wxString after;
+	Modifier_e modifiers = MODIFIER_NONE;
+	Key_e key = KEY_NONE;
 	
-	////Minimalise
-	//wxString tmp = shortcut;
-	//tmp.MakeLower();
+	//Avent ou après le premier '+'.
+	wxString before;
+	wxString after;
 	
-	////Obtenir avent ou après le premier '+'.
-	//before = tmp.BeforeFirst('+', &after);
+	//Obtenir avant ou après le premier '+'.
+	before = shortcut.BeforeFirst('+', &after);
 	
-	////Conversion du modificateur.
-	//while(!before.IsEmpty())
-	//{		
-		//if(before == "ctrl")
-			//modifiers = modifiers|KEY_MODIFIER_CONTROL;
-		//else if(before == "alt")
-			//modifiers = modifiers|KEY_MODIFIER_ALT;
-		//#if defined(__UNIX__)
-		//else if(before == "altgr")
-			//modifiers = modifiers|KEY_MODIFIER_ALTGR;
-		//#endif
-		//else if(before == "shift")
-			//modifiers = modifiers|KEY_MODIFIER_SHIFT;
-		//else if(before == "super")
-		//modifiers = modifiers|KEY_MODIFIER_SUPER;
-		//else//Raccourci erronée.
-			//return ShortcutKey(KEY_MODIFIER_NONE, KEY_NONE);
-		
-		////Extraction de la touche.
-		//if(after.Len() <= 3)
-		//{
-			//const char* tmpKey = after.fn_str();
-			////Il reste plus que un caractère ?
-			//if(	after.Len() == 1 &&
-				//tmpKey[0] >= 'a' && tmpKey[0] <= 'z')
-			//{
-				//return ShortcutKey(modifiers, (Key_e)tmpKey[0]);
-			//}
-			////Si il y a plus d'un caractère alors on traite les touches F*.
-			//else if(tmpKey[0] == 'f' && tmpKey[1] != '0')
-			//{
-				//int tmpFKey = (int)'f';
-				//unsigned int i;
-				//for(i = 1; i <= after.Len(); i++)
-				//{
-					//if(tmpKey[i] >= '0' && tmpKey[i] >= '9')//Vérifie si c'est bien un chiffre.
-					//{
-						//tmpFKey <<= 8;
-						//tmpFKey |= tmpKey[i];
-					//}
-					//else
-						//break;
-				//}
-				
-				//return ShortcutKey(modifiers, (Key_e)tmpFKey);
-			//}
+	//Conversion du modificateur.
+	while(!after.IsEmpty())
+	{				
+		Modifier_e mtmp = stringToModifier(before);
+		if(mtmp == MODIFIER_NONE)//Raccourci erronée.
+			return ShortcutKey(MODIFIER_NONE, KEY_NONE);
 			
-			////Raccourci erronée.
-			//return ShortcutKey(KEY_MODIFIER_NONE, KEY_NONE);
-		//}
-			
+		modifiers |= mtmp;
 		
-		////Obtenir le nouveau avent ou après le premier '+'
-		//tmp = after;
-		//before = tmp.BeforeFirst('+', &after);
-	//}
+		//Obtenir le nouveau avent ou après le premier '+'
+		wxString stmp = after;
+		before = stmp.BeforeFirst('+', &after);
+	}
 	
-	//Raccourci erronée.
-	return ShortcutKey(MODIFIER_NONE, KEY_NONE);
+	key = stringToKey(before);
+	if(key == KEY_NONE)//Raccourci erronée.
+		return ShortcutKey(MODIFIER_NONE, KEY_NONE);
+	
+	return ShortcutKey(modifiers, key);
 }
 
 wxString ShortcutKey::modifierToString(Modifier_e modifier)
@@ -256,17 +200,19 @@ wxString ShortcutKey::modifierToString(Modifier_e modifier)
 
 Modifier_e ShortcutKey::stringToModifier(wxString modifier)
 {
-	if(modifier == "Ctrl")
+	modifier.MakeLower();
+	
+	if(modifier == "ctrl")
 		return MODIFIER_CONTROL;
-	if(modifier == "Alt")
+	if(modifier == "alt")
 		return MODIFIER_ALT;
 	#ifdef __UNIX__
-	if(modifier == "Altgr")
+	if(modifier == "altgr")
 		return MODIFIER_ALTGR;
 	#endif
-	if(modifier == "Shift")
+	if(modifier == "shift")
 		return MODIFIER_SHIFT;
-	if(modifier == "Super")
+	if(modifier == "super")
 		return MODIFIER_SUPER;
 		
 	return MODIFIER_NONE;
@@ -288,7 +234,10 @@ wxArrayString ShortcutKey::getModifiersStrings()
 wxString ShortcutKey::keyToString(Key_e key)
 {
 	#ifdef __UNIX__
-	return XKeysymToString(key);
+	Display* display = (Display*)wxGetDisplay();
+	KeyCode keyCode = XKeysymToKeycode(display, (KeySym)key);
+	KeySym keySym = XkbKeycodeToKeysym(display, keyCode, 0, 0);
+	return XKeysymToString(keySym);
 	#elif __WXMSW__
 	if(KEY_CANCEL)
 		return "Cancel";
@@ -660,14 +609,19 @@ wxString ShortcutKey::keyToString(Key_e key)
 
 Key_e ShortcutKey::stringToKey(wxString key)
 {
+	key.MakeUpper();
 	#ifdef __UNIX__
-	KeyCode keyCode = XStringToKeysym(key.c_str());
-	if(keyCode == NoSymbol)
+	KeySym keySym = XStringToKeysym(key.c_str());
+	if(keySym == NoSymbol)
 		return KEY_NONE;
 	else
-		return (Key_e)keyCode;
+	{
+		Display* display = (Display*)wxGetDisplay();
+		KeyCode keyCode = XKeysymToKeycode(display, keySym);
+		keySym = XkbKeycodeToKeysym(display, keyCode, 0, 0);
+		return (Key_e)keySym;
+	}
 	#elif __WXMSW__
-	key.MakeUpper();
 	if(key == "CANCEL")
 		return KEY_CANCEL;
 	if(key == "BACK")
@@ -3147,7 +3101,7 @@ void ShortcutThread::halt()
 	//Attend la fin du thread.
 	while(IsRunning());
 }
-#include <iostream>
+
 wxThread::ExitCode ShortcutThread::Entry()
 {
 	bool run = true;
@@ -3159,43 +3113,26 @@ wxThread::ExitCode ShortcutThread::Entry()
 		XNextEvent(_display, &_event);
 		if(_event.type == KeyPress)
 		{ 
-			std::cout 	<< "keycode: " << _event.xkey.keycode << std::endl
-						<< "Keysym: " << XkbKeycodeToKeysym(_display, _event.xkey.keycode, 0, 0) << std::endl
-						<< "String: " << (XKeysymToString(XkbKeycodeToKeysym(_display, _event.xkey.keycode, 0, 0))) << std::endl;
-			//Convertie le KeyCode en char.
-			//const char charKey = *(XKeysymToString(XkbKeycodeToKeysym(_display, _event.xkey.keycode, 0, 0)));
-			////Mise en forme du raccourci.
-			//ShortcutKey shortcutKey((Modifier_e)_event.xkey.state, charKey);
-			////Envoi de l'événement.
-			//ShortcutEvent *event = new ShortcutEvent(EVT_SHORTCUT, shortcutKey);
-			//wxQueueEvent(_owner, event);
+			//Convertie le KeyCode en Key_e.
+			Key_e key = (Key_e)XkbKeycodeToKeysym(_display, _event.xkey.keycode, 0, 0);
+			//Mise en forme du raccourci.
+			ShortcutKey shortcutKey((Modifier_e)_event.xkey.state, key);
+			//Envoi de l'événement.
+			ShortcutEvent *event = new ShortcutEvent(EVT_SHORTCUT, shortcutKey);
+			wxQueueEvent(_owner, event);
 		}
 		else if(_event.type == ClientMessage)
 		{
-			//char charKey[2] = {'\0', '\0'};
-			//KeyCode key;
 			switch(_communicationThread)
 			{
 				//Enregistre le raccourci.
 				case CUMMUNICATION_THREAD_REGISTER:
-					std::cout << "CUMMUNICATION_THREAD_REGISTER" << std::endl;
-					//charKey[0]=_shortcutKeyCommunicationThread->getCharKey();
-					//key = XKeysymToKeycode(_display, XStringToKeysym(charKey));
-					//XGrabKey(_display, key, (unsigned int)_shortcutKeyCommunicationThread->getModifiers(), _root, True, GrabModeAsync, GrabModeAsync);
-					
-					
-					XGrabKey(_display, XKeysymToKeycode(_display, XK_a), 0, _root, True, GrabModeAsync, GrabModeAsync);
-					
-					//std::cout 	<< "keycode: " << XK_Greek_rho << std::endl
-						//<< "Keysym: " << XkbKeycodeToKeysym(_display, XK_Greek_rho, 0, 0) << std::endl
-						std::cout << "String: " << XKeysymToString(XK_Greek_rho) << std::endl;
+					XGrabKey(_display, XKeysymToKeycode(_display, _shortcutKeyCommunicationThread->getKey()), _shortcutKeyCommunicationThread->getModifiers(), _root, True, GrabModeAsync, GrabModeAsync);
 				break;
 				
 				//Désenregistrer le raccourci.
 				case CUMMUNICATION_THREAD_UNREGISTER:
-					//charKey[0]=_shortcutKeyCommunicationThread->getCharKey();
-					//key = XKeysymToKeycode(_display, XStringToKeysym(charKey));
-					//XUngrabKey(_display, key, (unsigned int)_shortcutKeyCommunicationThread->getModifiers(), _root);
+					XUngrabKey(_display, _shortcutKeyCommunicationThread->getKey(), _shortcutKeyCommunicationThread->getModifiers(), _root);
 				break;
 				
 				//Quit le thread.
@@ -3227,23 +3164,15 @@ wxThread::ExitCode ShortcutThread::Entry()
 		}
 		else if(_msgEvent.message == WM_APP)
 		{
-			char charKey[2] = {'\0', '\0'};
-			wxString charKeyCapital;
 			switch(_communicationThread)
 			{
 				//Enregistre le raccourci.
-				case CUMMUNICATION_THREAD_REGISTER:
-					charKey[0]=_shortcutKeyCommunicationThread->getCharKey();
-					
-					//Capitalise le charKey
-					charKeyCapital = charKey;
-					charKeyCapital.MakeCapitalized();
-					
+				case CUMMUNICATION_THREAD_REGISTER:					
 					for(unsigned int i = 0; i < _shortcutKeys.size(); i++)
 					{
 						if(_shortcutKeys[i] == *_shortcutKeyCommunicationThread)
 						{
-							RegisterHotKey(nullptr, i, (UINT)_shortcutKeyCommunicationThread->getModifiers(), *charKeyCapital.fn_str());
+							RegisterHotKey(nullptr, i, _shortcutKeyCommunicationThread->getModifiers(), _shortcutKeyCommunicationThread->getKey());
 							break;
 						}
 					}

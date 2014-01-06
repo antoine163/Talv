@@ -9,7 +9,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.1
+//! \version 0.3
 //! \date 05.01.2014
 //!
 //! ****************************************************************************
@@ -117,15 +117,7 @@ void parseFileFromX11(std::ifstream& file, std::map<std::string, std::vector<std
 					(word[3] >= 0x61 && word[3] <= 0x7a) ||
 					(word[3] >= 0x30 && word[3] <= 0x39))) &&
 					word != "XK_VoidSymbol")
-			{
-				//if(!vals.empty() && !vals[def].empty())
-				//{
-					//if(upper(word) != upper(vals[def].back()))
-						//vals[def].push_back(word);
-				//}
-				//else
-					//vals[def].push_back(word);
-					
+			{					
 				bool add = true;
 				for(auto it: vals)
 				{
@@ -214,7 +206,7 @@ void genKey_e(std::map<std::string, std::vector<std::string>>& valsX11, std::vec
 	{
 		std::cout << "\tKEY_" << c << "=\t\t'" << c << "'" << "," << std::endl;
 	}
-	std::cout << "\tKEY_NONE=\t\t" << -1 << std::endl;
+	std::cout << "\tKEY_NONE=\t\t" << 0 << std::endl;
 	
 	std::cout << "};" << std::endl;
 }
@@ -225,7 +217,10 @@ void genKeyToString(std::map<std::string, std::vector<std::string>>&, std::vecto
 	std::cout << "{" << std::endl;
 	
 	std::cout << "\t#ifdef __UNIX__" << std::endl;
-	std::cout << "\treturn XKeysymToString(key);" << std::endl;
+	std::cout << "\tDisplay* display = (Display*)wxGetDisplay();" << std::endl;
+	std::cout << "\tKeyCode keyCode = XKeysymToKeycode(display, (KeySym)key);" << std::endl;
+	std::cout << "\tKeySym keySym = XkbKeycodeToKeysym(display, keyCode, 0, 0);" << std::endl;
+	std::cout << "\treturn XKeysymToString(keySym);" << std::endl;
 	
 	std::cout << "\t#elif __WXMSW__" << std::endl;
 	for(auto it: valsWin)
@@ -257,16 +252,20 @@ void genStringToKey(std::map<std::string, std::vector<std::string>>&, std::vecto
 	std::cout << "Key_e ShortcutKey::stringToKey(wxString key)" << std::endl;
 	std::cout << "{" << std::endl;
 	
+	std::cout << "\tkey.MakeUpper();" << std::endl;
 	std::cout << "\t#ifdef __UNIX__" << std::endl;
-	std::cout << "\tKeyCode keyCode = XStringToKeysym(key.c_str());" << std::endl;
-	std::cout << "\tif(keyCode == NoSymbol)" << std::endl;
+	std::cout << "\tKeySym keySym = XStringToKeysym(key.c_str());" << std::endl;
+	std::cout << "\tif(keySym == NoSymbol)" << std::endl;
 	std::cout << "\t\treturn KEY_NONE;" << std::endl;
 	std::cout << "\telse" << std::endl;
-	std::cout << "\t\treturn (Key_e)keyCode;" << std::endl;
+	std::cout << "\t{" << std::endl;
+	std::cout << "\t\tDisplay* display = (Display*)wxGetDisplay();" << std::endl;
+	std::cout << "\t\tKeyCode keyCode = XKeysymToKeycode(display, keySym);" << std::endl;
+	std::cout << "\t\tkeySym = XkbKeycodeToKeysym(display, keyCode, 0, 0);" << std::endl;
+	std::cout << "\t\treturn (Key_e)keySym;" << std::endl;
+	std::cout << "\t}" << std::endl;
 	
 	std::cout << "\t#elif __WXMSW__" << std::endl;
-	std::cout << "\tkey.MakeUpper();" << std::endl;
-	
 	for(auto it: valsWin)
 	{
 		size_t pos = it.find('_')+1;

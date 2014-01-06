@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie.
-//! \version 1.5
+//! \version 2.0
 //! \date 13.12.12
 //!
 //! ****************************************************************************
@@ -40,28 +40,57 @@
 //! \brief Les modificateurs de touche.
 enum Modifier_e
 {
-	#if defined(__DOXYGEN__)
+	#ifdef __DOXYGEN__
 	MODIFIER_CONTROL,	//!< Touche Ctrl, (version string : "Ctrl").
 	MODIFIER_ALT,		//!< Touche Alt, (version string : "Alt").
 	MODIFIER_ALTGR,		//!< Touche Alt Gr, (version string : "Altgr"). \note Seulement sous unix.
 	MODIFIER_SHIFT,		//!< Touche Shift, (version string : "Shift").
 	MODIFIER_SUPER,		//!< Touche Super(Win), (version string : "Super").
 	MODIFIER_NONE  		//!< Le raccourci est probablement no valide.
-	#elif defined(__UNIX__)
+	#endif
+	#ifdef __UNIX__
 	MODIFIER_CONTROL = ControlMask,
 	MODIFIER_ALT 	= Mod1Mask,
 	MODIFIER_ALTGR 	= Mod5Mask,
 	MODIFIER_SHIFT 	= ShiftMask,
 	MODIFIER_SUPER 	= Mod4Mask,
-	MODIFIER_NONE 	= -1 
-	#elif defined(__WXMSW__)
+	#endif
+	#ifdef __WXMSW__
 	MODIFIER_CONTROL = MOD_CONTROL,
 	MODIFIER_ALT 	= MOD_ALT,
 	MODIFIER_SHIFT 	= MOD_SHIFT,
 	MODIFIER_SUPER 	= MOD_WIN,
-	MODIFIER_NONE 	= -1
 	#endif
+	MODIFIER_NONE 	= 0
 };
+
+inline Modifier_e operator|(Modifier_e val1, Modifier_e val2)
+{
+	unsigned int val = (unsigned int)val1|(unsigned int)val2;
+	return static_cast<Modifier_e>(val);
+}
+
+inline Modifier_e operator&(Modifier_e val1, Modifier_e val2)
+{
+	unsigned int val = (unsigned int)val1&(unsigned int)val2;
+	return static_cast<Modifier_e>(val);
+}
+
+inline Modifier_e operator~(Modifier_e val1)
+{
+	unsigned int val = ~((unsigned int)val1);
+	return static_cast<Modifier_e>(val);
+}
+
+inline Modifier_e& operator|=(Modifier_e& val1, Modifier_e val2)
+{
+	return val1 = val1|val2;
+}
+
+inline Modifier_e& operator&=(Modifier_e& val1, Modifier_e val2)
+{
+	return val1 = val1&val2;
+}
 
 // *****************************************************************************
 // Enum Key_e
@@ -2003,14 +2032,9 @@ enum Key_e
 	KEY_X=		'X',
 	KEY_Y=		'Y',
 	KEY_Z=		'Z',
-	KEY_NONE=		-1
+	KEY_NONE=		0
 };
                              
-inline Modifier_e operator|(Modifier_e val1, Modifier_e val2)
-{
-	unsigned int val = (unsigned int)val1|(unsigned int)val2;
-	return static_cast<Modifier_e>(val);
-}
 
 // *****************************************************************************
 // Class ShortcutKey
@@ -2021,11 +2045,13 @@ class ShortcutKey
 {
 	public:
 		//! \brief Constructeur.
-		//! Ce Constructeur ne construis pas un raccourcis valide. \ref isOk() renverra false.
+		//! Ce Constructeur ne construis pas de raccourcis valide. \ref isOk()
+		//! renverra false.
 		ShortcutKey();
 		
 		//! \brief Constructeur.
-		//! \param modifiers peut être combiner avec tout les valeurs de \ref Modifier_e ex:KEY_MODIFIER_SUPER|KEY_MODIFIER_CONTROL)
+		//! \param modifiers peut être combiner avec tout les valeurs de
+		//! \ref Modifier_e ex:MODIFIER_SUPER|MODIFIER_CONTROL)
 		//! \param key c'est la touche du raccourci.
 		ShortcutKey(Modifier_e modifiers, Key_e key);
 		
@@ -2036,9 +2062,21 @@ class ShortcutKey
 		//! \brief Obtenir la touche.
 		Key_e getKey()const;
 		
+		//! \brief modifier la touche.
+		void setKey(Key_e key);
+		
 		//! \brief Obtenir le modificateur.
 		//! \return C'est une valeur combiner de \ref Modifier_e.
 		Modifier_e getModifiers()const;
+		//! \brief modifier le modificateur.
+		//! \param mod est une valeur combiner de \ref Modifier_e.
+		void setModifiers(Modifier_e mod);
+		//! \brief modifier le modificateurs en ajoutent un modificateurs.
+		//! \param mod est une valeur combiner de \ref Modifier_e.
+		void addModifiers(Modifier_e mod);
+		//! \brief modifier le modificateurs en ajoutent un modificateurs.
+		//! \param mod est une valeur combiner de \ref Modifier_e.
+		void removeModifiers(Modifier_e mod);
 		
 		//! \brief Vérifie la validité du raccourcie.
 		bool isOk()const;
@@ -2050,20 +2088,27 @@ class ShortcutKey
 		
 		//! \brief Converti un raccourci, de sa version string en \ref ShortcutKey.
 		//!
-		//! Le raccourci doit être de la forme modificateur+caractère (ex:"alt+shift+f").
-		//! \param shortcut le raccourci en version string.
-		//! \return Le raccourci en version \ref ShortcutKey. Vous pouver verifier la validiter du racoursen
-		//! en appeler \ref getCharKey() et \ref getModifiers(). Si  getCharKey() retourne '\n' ou/et si \ref getModifiers() retourne \b KEY_MODIFIER_NONE
-		//! votre raccourcis n'est pas valide. Sinon vous pouver appeler \ref isOk() qui fais sa pour vous.
-		//! \see Modifier_e
+		//! Le raccourci doit être de la forme modificateur+touche (ex:"alt+shift+f").
+		//! \param shortcut le raccourci en version string (insensible à la case).
+		//! \return Le raccourci en version \ref ShortcutKey. Vous pouvez vérifier la validité du raccourci
+		//! en appeler raccourci \ref isOk() qui fais sa pour vous.
+		//! \see isOk()
 		static ShortcutKey stringToShortcutKey(wxString const& shortcut);
 		
+		//! \brief Converti un modifier dans sa version string.
 		static wxString modifierToString(Modifier_e modifier);
+		//! \brief Converti un modifier de type string dans sa version
+		//! \ref Modifier_e.
 		static Modifier_e stringToModifier(wxString modifier);
+		//! \brief Obtenir tout les modifiers dans leur version string.
 		static wxArrayString getModifiersStrings();
 		
+		//! \brief Converti une touche dans sa version string.
 		static wxString keyToString(Key_e key);
+		//! \brief Converti une touche de type string dans sa version
+		//! \ref Key_e.
 		static Key_e stringToKey(wxString key);
+		//! \brief Obtenir tout les touche dans leur version string.
 		static wxArrayString getKeysStrings();
 		
 	private:
@@ -2161,6 +2206,7 @@ class ShortcutThread : protected wxThread
 		
 		//! \brief Comunique le ShortcutKey au thread.
 		ShortcutKey const* _shortcutKeyCommunicationThread;
+		
 		enum CommunicationThread
 		{
 			CUMMUNICATION_THREAD_REGISTER,
@@ -2189,34 +2235,35 @@ class ShortcutThread : protected wxThread
 
 //! \brief Interface utilisateur pour les gestions des raccourci clavier globaux.
 //!
-//! Voici un exemple d'utilisation. Dans cette exemple la classe App hérite de
-//! la class wxApp.
+//! Voici un exemple d'utilisation. (Dans cette exemple la classe App hérite de
+//! la class wxApp.)
 //! \code
 //! bool App::OnInit()
 //! {
 //! 	//Création d'un objet Shortcut.
 //! 	_shortcut = new Shortcut(this);	
 //! 	
-//! 	//Création d'un raccourci, touche super+a 
-//! 	_shortcut->creat(KEY_MODIFIER_SUPER, 'a');
+//! 	//Création d'un raccourci, touches super+a 
+//! 	_shortcut->creat(MODIFIER_SUPER, KEY_A);
 //! 	
-//! 	//Création d'un raccourci, touche super+b
-//! 	_shortcut->creat(KEY_MODIFIER_SUPER, 'b');
+//! 	//Création d'un raccourci, touches super+b
+//! 	_shortcut->creat(MODIFIER_SUPER, KEY_B);
 //!
-//! 	//Création d'un raccourci, touche shift+super+a
+//! 	//Création d'un raccourci, touches shift+super+a
 //! 	ShortcutKey shortcutKey(ShortcutKey::stringToShortcutKey("shift+super+a"));
 //! 	_shortcut->creat(shortcutKey);
 //! 	
-//! 	//Création d'un raccourci, touche super+ctrl+a 
-//! 	_shortcut->creat(KEY_MODIFIER_SUPER|KEY_MODIFIER_CONTROL, 'a');
+//! 	//Création d'un raccourci, touche super+ctrl+F9
+//! 	_shortcut->creat(MODIFIER_SUPER|MODIFIER_CONTROL, KEY_F9);
 //! 
+//!		//On crées une liaison entre n'aux évènement EVT_SHORTCUT et notre méthode de callback.
+//!		Bind(EVT_SHORTCUT, &App::OnShortcut, this);
 //! 	return true;
 //! }
 //! 
 //! void App::OnShortcut(ShortcutEvent& event)
 //! {
-//! 	std::cout << "OnShortcut -> " << event.getCharKey() << " : ";
-//! 						std::cout << event.getModifiers() << std::endl;		
+//! 	std::cout << "OnShortcut -> " << ShortcutKey::shortcutKeyToString(event.getShortcutKey()) << std::endl;		
 //! }
 //! \endcode
 class Shortcut
