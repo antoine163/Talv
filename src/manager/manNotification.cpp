@@ -187,11 +187,11 @@ WinManNotification::WinManNotification(wxWindow* parent)
 
 	//Mise en forme du wxStaticBox "Rich notification setting:" avec un sizer.
 	wxSizer* sizerNotificationSetting = new wxStaticBoxSizer(_staticBoxNotificationSetting, wxVERTICAL);
-	sizerNotificationSetting->Add(_choicePosition,					0, wxEXPAND|wxLEFT|wxTOP,		SIZE_BORDER);	
-	sizerNotificationSetting->Add(_checkBoxShowNearCursor, 			0, wxEXPAND|wxLEFT,				SIZE_BORDER);
-	sizerNotificationSetting->Add(_checkBoxMultipleNotifications, 	0, wxEXPAND|wxLEFT|wxBOTTOM,	SIZE_BORDER);
-	sizerNotificationSetting->Add(sizerBorder, 						0, wxEXPAND|wxLEFT|wxBOTTOM,	SIZE_BORDER);
-	sizerNotificationSetting->Add(sizerPickColors, 					0, wxEXPAND|wxLEFT|wxBOTTOM,	SIZE_BORDER);
+	sizerNotificationSetting->Add(_choicePosition,					0, wxEXPAND|wxLEFT|wxTOP|wxRIGHT,	SIZE_BORDER);	
+	sizerNotificationSetting->Add(_checkBoxShowNearCursor, 			0, wxEXPAND|wxLEFT,					SIZE_BORDER);
+	sizerNotificationSetting->Add(_checkBoxMultipleNotifications, 	0, wxEXPAND|wxLEFT|wxBOTTOM,		SIZE_BORDER);
+	sizerNotificationSetting->Add(sizerBorder, 						0, wxEXPAND|wxLEFT|wxBOTTOM,		SIZE_BORDER);
+	sizerNotificationSetting->Add(sizerPickColors, 					0, wxEXPAND|wxLEFT|wxBOTTOM,		SIZE_BORDER);
 	
 	
 	//Mise en forme du GUI avec un sizer.

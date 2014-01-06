@@ -34,34 +34,34 @@ ManAction::ManAction()
 	Bind(EVT_SHORTCUT, &ManAction::onShortcut, this);
 	
 	
-	add(ShortcutKey(MODIFIER_CONTROL|MODIFIER_SUPER, KEY_A), Action::createAction("ActTranslationToNotification"));
-	add(ShortcutKey::stringToShortcutKey("shift+ctrl+b"), Action::createAction("ActTranslationToList"));
-	add(ShortcutKey::stringToShortcutKey("shift+ctrl+e"), Action::createAction("ActTranslationToNotification"));
-	add(ShortcutKey::stringToShortcutKey("ctrl+d"), Action::createAction("ActTranslationToList"));
+	//add(ShortcutKey(MODIFIER_CONTROL|MODIFIER_SUPER, KEY_A), Action::createAction("ActTranslationToNotification"));
+	//add(ShortcutKey::stringToShortcutKey("shift+ctrl+b"), Action::createAction("ActTranslationToList"));
+	//add(ShortcutKey::stringToShortcutKey("shift+ctrl+e"), Action::createAction("ActTranslationToNotification"));
+	//add(ShortcutKey::stringToShortcutKey("ctrl+d"), Action::createAction("ActTranslationToList"));
 	add(ShortcutKey::stringToShortcutKey("shift+e"), Action::createAction("ActTranslationToNotification"));
 	add(ShortcutKey::stringToShortcutKey("shift+f"), Action::createAction("ActTranslationToList"));
 	add(ShortcutKey::stringToShortcutKey("shift+g"), Action::createAction("ActTranslationToList"));
-	add(ShortcutKey::stringToShortcutKey("shift+h"), Action::createAction("ActTranslationToList"));
-	add(ShortcutKey::stringToShortcutKey("shift+I"), Action::createAction("ActTranslationToList"));
-	add(ShortcutKey::stringToShortcutKey("shift+J"), Action::createAction("ActTranslationToList"));
-	add(ShortcutKey::stringToShortcutKey("shift+k"), Action::createAction("ActTranslationToList"));
-	add(ShortcutKey::stringToShortcutKey("shift+l"), Action::createAction("ActTranslationToList"));
-	add(ShortcutKey::stringToShortcutKey("shift+m"), Action::createAction("ActTranslationToList"));
-	add(ShortcutKey::stringToShortcutKey("shift+n"), Action::createAction("ActTranslationToList"));
-	add(ShortcutKey::stringToShortcutKey("shift+o"), Action::createAction("ActTranslationToList"));
-	add(ShortcutKey::stringToShortcutKey("shift+p"), Action::createAction("ActTranslationToList"));
-	add(ShortcutKey::stringToShortcutKey("shift+q"), Action::createAction("ActTranslationToList"));
-	add(ShortcutKey::stringToShortcutKey("shift+r"), Action::createAction("ActTranslationToList"));
-	add(ShortcutKey::stringToShortcutKey("shift+s"), Action::createAction("ActTranslationToList"));
-	add(ShortcutKey::stringToShortcutKey("shift+t"), Action::createAction("ActTranslationToList"));
-	add(ShortcutKey::stringToShortcutKey("shift+u"), Action::createAction("ActTranslationToList"));
-	add(ShortcutKey::stringToShortcutKey("shift+v"), Action::createAction("ActTranslationToList"));
-	add(ShortcutKey::stringToShortcutKey("shift+w"), Action::createAction("ActTranslationToList"));
-	add(ShortcutKey::stringToShortcutKey("shift+x"), Action::createAction("ActTranslationToList"));
-	add(ShortcutKey::stringToShortcutKey("shift+y"), Action::createAction("ActTranslationToList"));
-	add(ShortcutKey::stringToShortcutKey("shift+z"), Action::createAction("ActTranslationToList"));
-	add(ShortcutKey::stringToShortcutKey("shift+ctrl+f2"), Action::createAction("ActTranslationToNotification"));
-	add(ShortcutKey(MODIFIER_CONTROL|MODIFIER_SUPER, KEY_B), Action::createAction("ActTranslationToNotification"));
+	//add(ShortcutKey::stringToShortcutKey("shift+h"), Action::createAction("ActTranslationToList"));
+	//add(ShortcutKey::stringToShortcutKey("shift+I"), Action::createAction("ActTranslationToList"));
+	//add(ShortcutKey::stringToShortcutKey("shift+J"), Action::createAction("ActTranslationToList"));
+	//add(ShortcutKey::stringToShortcutKey("shift+k"), Action::createAction("ActTranslationToList"));
+	//add(ShortcutKey::stringToShortcutKey("shift+l"), Action::createAction("ActTranslationToList"));
+	//add(ShortcutKey::stringToShortcutKey("shift+m"), Action::createAction("ActTranslationToList"));
+	//add(ShortcutKey::stringToShortcutKey("shift+n"), Action::createAction("ActTranslationToList"));
+	//add(ShortcutKey::stringToShortcutKey("shift+o"), Action::createAction("ActTranslationToList"));
+	//add(ShortcutKey::stringToShortcutKey("shift+p"), Action::createAction("ActTranslationToList"));
+	//add(ShortcutKey::stringToShortcutKey("shift+q"), Action::createAction("ActTranslationToList"));
+	//add(ShortcutKey::stringToShortcutKey("shift+r"), Action::createAction("ActTranslationToList"));
+	//add(ShortcutKey::stringToShortcutKey("shift+s"), Action::createAction("ActTranslationToList"));
+	//add(ShortcutKey::stringToShortcutKey("shift+t"), Action::createAction("ActTranslationToList"));
+	//add(ShortcutKey::stringToShortcutKey("shift+u"), Action::createAction("ActTranslationToList"));
+	//add(ShortcutKey::stringToShortcutKey("shift+v"), Action::createAction("ActTranslationToList"));
+	//add(ShortcutKey::stringToShortcutKey("shift+w"), Action::createAction("ActTranslationToList"));
+	//add(ShortcutKey::stringToShortcutKey("shift+x"), Action::createAction("ActTranslationToList"));
+	//add(ShortcutKey::stringToShortcutKey("shift+y"), Action::createAction("ActTranslationToList"));
+	//add(ShortcutKey::stringToShortcutKey("shift+z"), Action::createAction("ActTranslationToList"));
+	//add(ShortcutKey::stringToShortcutKey("shift+ctrl+f2"), Action::createAction("ActTranslationToNotification"));
+	//add(ShortcutKey(MODIFIER_CONTROL|MODIFIER_SUPER, KEY_B), Action::createAction("ActTranslationToNotification"));
 }
 
 ManAction::~ManAction()
@@ -274,15 +274,90 @@ void WinManAction::refreshManagerFromGui()const
 void WinManAction::onAdd(wxCommandEvent&)
 {
 	DlgPreferencesAction dlg(this);
-	dlg.ShowModal();
+	while(dlg.ShowModal() == wxID_OK)
+	{
+		//On récupère le nouveau raccourcie.
+		ShortcutKey newShortcut = dlg.getShortcutKey();
+		
+		//Le raccourci n'est pas valide?
+		if(!newShortcut.isOk())
+		{
+			wxMessageDialog dlg(this,
+				_("You didn't pick a shortcut."),
+				_("Shortcut no valid"),
+				wxOK|wxICON_INFORMATION|wxCENTRE);
+			dlg.ShowModal();
+			
+			continue;
+		}
+		
+		//On ne doit pas ajouter le raccourci ?
+		if(!checkAndDeleteShortcut(newShortcut))
+			continue;
+			
+		//On ajouter le raccourci et l'action. 
+		Action* newAction = dlg.newCloneAction();
+		ManAction::get().add(newShortcut, newAction);
+		wxVector<wxVariant> data;
+		data.clear();
+		data.push_back(wxVariant(ShortcutKey::shortcutKeyToString(newShortcut)));
+		data.push_back(wxVariant(newAction->getName()));
+		data.push_back(wxVariant(newAction->getStringPreferences()));
+		_ctrlDataList->AppendItem(data);
+		
+		//On rend visible l'item
+		ensureVisible(newShortcut);
+		break;
+	}
 }
 
 void WinManAction::onPreferences(wxCommandEvent&)
 {
-	DlgPreferencesAction dlg(this);
-	dlg.ShowModal();
+	//On récupère le raccourcis sélectionner.
+	wxString shortcutStr = _ctrlDataList->GetTextValue(_ctrlDataList->GetSelectedRow(), 0);
+	ShortcutKey oldShortcut = ShortcutKey::stringToShortcutKey(shortcutStr);
+	
+	//On récupère l'action depuis le manager.
+	Action const* action = ManAction::get().getAction(oldShortcut);
+	
+	DlgPreferencesAction dlg(this, oldShortcut, action);
+	while(dlg.ShowModal() == wxID_OK)
+	{
+		//On récupère le nouveau raccourcie.
+		ShortcutKey newShortcut = dlg.getShortcutKey();
+		
+		//Le raccourci est le même que l'ancien ?
+		if(newShortcut != oldShortcut)
+		{
+			//Le raccourci n'est pas valide?
+			if(!newShortcut.isOk())
+			{
+				wxMessageDialog dlg(this,
+					_("You didn't pick a shortcut."),
+					_("Shortcut no valid"),
+					wxOK|wxICON_INFORMATION|wxCENTRE);
+				dlg.ShowModal();
+				
+				continue;
+			}
+			
+			//On ne doit pas changer de raccourci ?
+			if(!checkAndDeleteShortcut(newShortcut, _ctrlDataList->GetSelectedRow()))
+				continue;
+		}
+			
+		//On change le raccourcie.
+		Action* newAction = dlg.newCloneAction();
+		ManAction::get().remove(oldShortcut);
+		ManAction::get().add(newShortcut, newAction);
+		_ctrlDataList->SetTextValue(ShortcutKey::shortcutKeyToString(newShortcut), _ctrlDataList->GetSelectedRow(), 0);
+		_ctrlDataList->SetTextValue(newAction->getName(), _ctrlDataList->GetSelectedRow(), 1);
+		_ctrlDataList->SetTextValue(newAction->getStringPreferences(), _ctrlDataList->GetSelectedRow(), 2);
+		
+		break;
+	}
 }
-//! \todo a compléter
+
 void WinManAction::onFind(wxCommandEvent&)
 {	
 	DlgPickShortcutKey dlg(this, _("Find a shortcut"));
@@ -304,19 +379,9 @@ void WinManAction::onFind(wxCommandEvent&)
 			return;
 		}
 		
-		//On cherche le raccourcie dans le _ctrlDataList
-		for(int i = 0; i<_ctrlDataList->GetItemCount(); i++)
-		{
-			////Si on n'a trouver, on le ren visible.
-			//if(ShortcutKey::stringToShortcutKey(_ctrlDataList->GetTextValue(i, 0)) == shortcut)		
-			//{			
-				//_ctrlDataList->EnsureVisible(_ctrlDataList->RowToItem(i));
-				//_ctrlDataList->UnselectAll();
-				//_ctrlDataList->SelectRow(i);
-				//_ctrlDataList->updateEnableElements();
-				//return ;
-			//}	
-		}
+		//On le rend visible
+		if(ensureVisible(shortcut))
+			return;
 		
 		//On n'a pas trouver le raccourcis.
 		wxMessageDialog dlg(this, _("The shortcut didn't find."), _("Shortcut no valid"), wxOK|wxICON_INFORMATION|wxCENTRE);
@@ -350,7 +415,6 @@ void WinManAction::onChangeShortcut(wxCommandEvent&)
 	ShortcutKey oldShortcut = ShortcutKey::stringToShortcutKey(shortcut);
 	
 	DlgPickShortcutKey dlg(this, _("Pick a new shortcut"), oldShortcut, true);
-	
 	if(dlg.ShowModal() == wxID_OK)
 	{
 		//On récupère le nouveau raccourcie.
@@ -360,7 +424,7 @@ void WinManAction::onChangeShortcut(wxCommandEvent&)
 		if(newShortcut == oldShortcut)
 			return;
 		
-		//Le raccourci n'est pas valide.
+		//Le raccourci n'est pas valide?
 		if(!newShortcut.isOk())
 		{
 			wxMessageDialog dlg(this,
@@ -378,7 +442,7 @@ void WinManAction::onChangeShortcut(wxCommandEvent&)
 
 void WinManAction::onItemEditingStarted(wxDataViewEvent&)
 {
-	_itemOldShortcut = _ctrlDataList->GetTextValue(_ctrlDataList->GetSelectedRow(), 0);
+	_itemOldShortcutEditing = _ctrlDataList->GetTextValue(_ctrlDataList->GetSelectedRow(), 0);
 }
 
 void WinManAction::onItemEditingDone(wxDataViewEvent&)
@@ -387,32 +451,27 @@ void WinManAction::onItemEditingDone(wxDataViewEvent&)
 	ShortcutKey newShortcut = ShortcutKey::stringToShortcutKey(_ctrlDataList->GetTextValue(_ctrlDataList->GetSelectedRow(), 0));
 	
 	//L'ancien raccourcie.
-	ShortcutKey oldShortcut = ShortcutKey::stringToShortcutKey(_itemOldShortcut);
+	ShortcutKey oldShortcut = ShortcutKey::stringToShortcutKey(_itemOldShortcutEditing);
+	
+	//On remet l'ancien raccourcie.
+	_ctrlDataList->SetTextValue(_itemOldShortcutEditing, _ctrlDataList->GetSelectedRow(), 0);
 	
 	//Vérifie si le raccourci est le même que l'ancien, dans se cas on ne fais rien.
 	if(newShortcut == oldShortcut)
-	{
-		_ctrlDataList->SetTextValue(_itemOldShortcut, _ctrlDataList->GetSelectedRow(), 0);
 		return;
-	}
 	
 	//Le raccourci n'est pas valide.
 	if(!newShortcut.isOk())
 	{
 		wxMessageDialog dlg(this,
-			_("Your shortcut is not valide.\n The shortcut must is a forme: \"mod+key\".\n'mod' can tack the follow value:\n\t\"ctrl\"\n\t\"alt\"\n\t\"shift\"\n\t\"super\"\n\t\"altgr\" (only on unix).\n eg: \"shift+super+f\""),
+			_("Your shortcut is not valide."),
 			_("Shortcut no valid"),
 			wxOK|wxICON_INFORMATION|wxCENTRE);
 		dlg.ShowModal();
-		
-		//On remet l'ancien raccourcie.
-		_ctrlDataList->SetTextValue(_itemOldShortcut, _ctrlDataList->GetSelectedRow(), 0);
-		
 		return;
 	}
 	
 	//On change le raccourcie.
-	_ctrlDataList->SetTextValue(_itemOldShortcut, _ctrlDataList->GetSelectedRow(), 0);
 	changeSelectedShortcut(newShortcut);
 }
 
@@ -421,8 +480,21 @@ void WinManAction::changeSelectedShortcut(ShortcutKey newShortcut)
 	//L'ancien raccourcie.
 	ShortcutKey oldShortcut = ShortcutKey::stringToShortcutKey(_ctrlDataList->GetTextValue(_ctrlDataList->GetSelectedRow(), 0));
 	
+	//On ne doit pas changer de raccourci ?
+	if(!checkAndDeleteShortcut(newShortcut, _ctrlDataList->GetSelectedRow()))
+		return;
+	
+	//Enfin on modifie le raccourcie.
+	Action* tmpAct = ManAction::get().getAction(oldShortcut)->newClone();
+	ManAction::get().remove(oldShortcut);
+	ManAction::get().add(newShortcut, tmpAct);
+	_ctrlDataList->SetTextValue(ShortcutKey::shortcutKeyToString(newShortcut), _ctrlDataList->GetSelectedRow(), 0);
+}
+
+bool WinManAction::checkAndDeleteShortcut(ShortcutKey shortcut, int ignoreRow)
+{
 	//Le raccourci est déjà existante ?
-	if(ManAction::get().exist(newShortcut))
+	if(ManAction::get().exist(shortcut))
 	{
 		wxMessageDialog dlg(this,
 			_("Your shortcut is already used.\nYou want delete the other shortcut and the associate actions ?"),
@@ -432,27 +504,42 @@ void WinManAction::changeSelectedShortcut(ShortcutKey newShortcut)
 		//On doit supprimer l'autre raccourcie ?
 		if(dlg.ShowModal() == wxID_YES)//Oui
 		{
-			ManAction::get().remove(newShortcut);
+			ManAction::get().remove(shortcut);
 			
 			//On cherche la ligne a supprimer.
 			for(int i = 0; i<_ctrlDataList->GetItemCount(); i++)
 			{
-				//Si on n'a trouver on la supprime.
-				if(ShortcutKey::stringToShortcutKey(_ctrlDataList->GetTextValue(i, 0)) == newShortcut && i != _ctrlDataList->GetSelectedRow())		
+				//Si on la trouver, on la supprime.
+				if(ShortcutKey::stringToShortcutKey(_ctrlDataList->GetTextValue(i, 0)) == shortcut && i != ignoreRow)
 				{			
 					_ctrlDataList->DeleteItem(i);
 					break;
 				}	
 			}
 		}
-		else //non
-			return;
+		else
+			return false;
 	}
 	
-	//Enfin on modifie le raccourcie.
-	Action* tmpAct = ManAction::get().getAction(oldShortcut)->newClone();
-	ManAction::get().remove(oldShortcut);
-	ManAction::get().add(newShortcut, tmpAct);
-	_ctrlDataList->SetTextValue(ShortcutKey::shortcutKeyToString(newShortcut), _ctrlDataList->GetSelectedRow(), 0);
+	return true;
 }
 
+bool WinManAction::ensureVisible(ShortcutKey shortcut)
+{
+	_ctrlDataList->UnselectAll();
+	
+	//On cherche le raccourcie dans le _ctrlDataList
+	for(int i = 0; i<_ctrlDataList->GetItemCount(); i++)
+	{
+		//Si on n'a trouver, on le rend visible.
+		if(ShortcutKey::stringToShortcutKey(_ctrlDataList->GetTextValue(i, 0)) == shortcut)		
+		{			
+			_ctrlDataList->EnsureVisible(_ctrlDataList->RowToItem(i));
+			_ctrlDataList->SelectRow(i);
+			_ctrlDataList->updateEnableElements();
+			return true;
+		}	
+	}
+	
+	return false;
+}

@@ -149,6 +149,22 @@ WinManNetwork::WinManNetwork(wxWindow* parent)
 	//sizerProxy->Add(_radioButtonProxyAutoDetect, 	0, wxEXPAND|wxRIGHT|wxLEFT, 			SIZE_BORDER);	
 	sizerProxy->Add(_radioButtonProxyManual, 		0, wxEXPAND|wxRIGHT|wxLEFT|wxBOTTOM, 	SIZE_BORDER);	
 	
+	//Créations des buttons radios pour afficher les erreurs.
+	wxStaticBox* staticBoxShowError = 		new wxStaticBox(this, wxID_ANY, _("Show error in:"));
+	_radioButtonShowErrorNo = 				new wxRadioButton(staticBoxShowError, 	wxID_ANY, _("Nothing"));
+	_radioButtonShowErrorInNotification = 	new wxRadioButton(staticBoxShowError, 	wxID_ANY, _("Notification"));
+	_radioButtonShowErrorInDialog = 		new wxRadioButton(staticBoxShowError, 	wxID_ANY, _("Dialog"));
+	
+	//Mise en forme dans un sizer
+	wxSizer* sizerShowError = new wxStaticBoxSizer(staticBoxShowError, wxVERTICAL);
+	sizerShowError->Add(_radioButtonShowErrorNo,			0, wxEXPAND|wxRIGHT|wxLEFT|wxTOP,		SIZE_BORDER);	
+	sizerShowError->Add(_radioButtonShowErrorInNotification,0, wxEXPAND|wxRIGHT|wxLEFT, 			SIZE_BORDER);	
+	sizerShowError->Add(_radioButtonShowErrorInDialog, 		0, wxEXPAND|wxRIGHT|wxLEFT|wxBOTTOM, 	SIZE_BORDER);
+	
+	//Mise en forme des wxStaticBox dans un sizer.
+	wxBoxSizer* sizerProxyAndShowError = new wxBoxSizer(wxHORIZONTAL);
+	sizerProxyAndShowError->Add(sizerProxy, 1, wxRIGHT, SIZE_BORDER);
+	sizerProxyAndShowError->Add(sizerShowError, 1);
 	
 	//Créations du contrôle ProxyInfo
 	_staticBoxProxyManual = new wxStaticBox(this, wxID_ANY, _("Manual proxy setting:"));
@@ -157,26 +173,12 @@ WinManNetwork::WinManNetwork(wxWindow* parent)
 	
 	//Mise en forme dans un sizer
 	wxSizer* sizerCtrlProxyInfoProxyManual = new wxStaticBoxSizer(_staticBoxProxyManual, wxVERTICAL);
-	sizerCtrlProxyInfoProxyManual->Add(_ctrlProxyInfoProxyManual, 0, wxEXPAND|wxRIGHT|wxLEFT|wxTOP|wxBOTTOM);	
-	
-	
-	//Créations des buttons radios pour afficher les erreurs.
-	wxStaticBox* staticBoxShowError = 		new wxStaticBox(this, wxID_ANY, _("Show error in:"));
-	_radioButtonShowErrorNo = 				new wxRadioButton(staticBoxShowError, 	wxID_ANY, _("Nothing"));
-	_radioButtonShowErrorInNotification = 	new wxRadioButton(staticBoxShowError, 	wxID_ANY, _("Notification"));
-	_radioButtonShowErrorInDialog = 		new wxRadioButton(staticBoxShowError, 	wxID_ANY, _("Dialog"));
-	
-	//Mise en forme dans un sizer
-	wxSizer* sizerShowError = new wxStaticBoxSizer(staticBoxShowError, wxHORIZONTAL);
-	sizerShowError->Add(_radioButtonShowErrorNo,			0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT,	2*SIZE_BORDER);	
-	sizerShowError->Add(_radioButtonShowErrorInNotification,0, wxALIGN_CENTER_VERTICAL|wxRIGHT, 		2*SIZE_BORDER);	
-	sizerShowError->Add(_radioButtonShowErrorInDialog, 		0, wxALIGN_CENTER_VERTICAL);	
+	sizerCtrlProxyInfoProxyManual->Add(_ctrlProxyInfoProxyManual, 0, wxEXPAND|wxRIGHT|wxLEFT|wxTOP|wxBOTTOM);		
 	
 	//Mise en forme du GUI avec un sizer.
 	wxSizer* sizerMain = new wxBoxSizer(wxVERTICAL);
-	sizerMain->Add(sizerProxy, 						0, wxEXPAND|wxLEFT|wxRIGHT|wxTOP, 			SIZE_BORDER);	
-	sizerMain->Add(sizerCtrlProxyInfoProxyManual, 	0, wxEXPAND|wxLEFT|wxRIGHT|wxTOP, 			SIZE_BORDER);	
-	sizerMain->Add(sizerShowError, 					0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM|wxTOP, 	SIZE_BORDER);
+	sizerMain->Add(sizerProxyAndShowError,			0, wxEXPAND|wxLEFT|wxRIGHT|wxTOP, 			SIZE_BORDER);	
+	sizerMain->Add(sizerCtrlProxyInfoProxyManual, 	0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM|wxTOP, 	SIZE_BORDER);
 	SetSizer(sizerMain);
 	
 	//Bind

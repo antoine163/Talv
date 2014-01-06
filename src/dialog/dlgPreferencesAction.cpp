@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.1
+//! \version 0.2
 //! \date 31.12.2013
 //!
 //! ****************************************************************************
@@ -26,25 +26,39 @@
 // *****************************************************************************
 
 DlgPreferencesAction::DlgPreferencesAction(wxWindow* parent)
+: DlgPreferencesAction(parent, ShortcutKey(), nullptr)
+{		
+	
+}
+
+DlgPreferencesAction::DlgPreferencesAction(wxWindow* parent, ShortcutKey const& shortcutKey, Action const* action)
 : 	wxDialog(parent, wxID_ANY, _("Preferences action"), wxDefaultPosition, wxDefaultSize,
 	wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER)
-{		
+{
 	//Icônes
 	SetIcon(ManGeneral::get().getIconApp(ICON_SIZE_16X16));
 	
 	//Création de la listbook.
 	_listbook = new wxListbook(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLB_LEFT);
 	
-	std::vector<Action*> allActions = Action::createAllActions();
-	for(auto it: allActions)
+	std::vector<Action*> _allActions = Action::createAllActions();
+	for(size_t i = 0; i < _allActions.size(); i++)
 	{
-		_listbook->AddPage(it->newEditWindow(_listbook), it->getName());
+		if(action != nullptr && action->getActTypeName() == _allActions[i]->getActTypeName())
+		{
+			delete _allActions[i];
+			_allActions[i] = action->newClone();
+			
+			_listbook->AddPage(_allActions[i]->newEditWindow(_listbook), _allActions[i]->getName(), true);
+		}
+		else
+			_listbook->AddPage(_allActions[i]->newEditWindow(_listbook), _allActions[i]->getName());
 	}
 	
 	//Création du wxStaticText.
 	wxStaticText* staticTextShortcut = new wxStaticText(this, wxID_ANY, _("Pick your shortcut:"));
 	//Création du CtrlPickShortcutKey
-	_ctrlPickShortcutKey = new CtrlPickShortcutKey(this, ShortcutKey(), true);
+	_ctrlPickShortcutKey = new CtrlPickShortcutKey(this, shortcutKey, true);
 	
 	//Mise en forme dans un sizer.
 	wxSizer* sizerShortcut = new wxBoxSizer(wxHORIZONTAL);
@@ -67,51 +81,24 @@ DlgPreferencesAction::DlgPreferencesAction(wxWindow* parent)
 	sizerMain->Add(buttons, 		0, 	wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);
 	
 	SetSizerAndFit(sizerMain);
-	
-	//Bind des boutons
-	Bind(wxEVT_BUTTON, &DlgPreferencesAction::onButtonClickCancel, 	this, wxID_CANCEL);
-	Bind(wxEVT_BUTTON, &DlgPreferencesAction::onButtonClickOK, 		this, wxID_OK);
-	
-	//_notebook->Bind(wxEVT_NOTEBOOK_PAGE_CHANGED, &DlgPreferences::onNotebookChanged, this);
-	//Bind(wxEVT_CLOSE_WINDOW, &DlgPreferences::onClose, this);
 
 	Centre();
 }
 
 DlgPreferencesAction::~DlgPreferencesAction()
-{
-	//Unbind des boutons
-	Unbind(wxEVT_BUTTON, &DlgPreferencesAction::onButtonClickCancel, 	this, wxID_CANCEL);
-	Unbind(wxEVT_BUTTON, &DlgPreferencesAction::onButtonClickOK, 		this, wxID_OK);
-	
-	//_notebook->Unbind(wxEVT_NOTEBOOK_PAGE_CHANGED, &DlgPreferences::onNotebookChanged, this);
-	//Unbind(wxEVT_CLOSE_WINDOW, &DlgPreferences::onClose, this);
+{	
+	for(auto it: _allActions)
+		delete it;
 }
 
-void DlgPreferencesAction::onListbookChanged(wxBookCtrlEvent&)
+ShortcutKey DlgPreferencesAction::getShortcutKey()
 {
-	//if(_windowActive != nullptr)
-		//static_cast<WinManager*>(_windowActive)->refreshManagerFromGui();
-	
-	//_windowActive = _notebook->GetCurrentPage();
-	//static_cast<WinManager*>(_windowActive)->refreshGuiFromManager();
+	return _ctrlPickShortcutKey->getShortcutKey();
 }
 
-void DlgPreferencesAction::onClose(wxCloseEvent& event)
+Action* DlgPreferencesAction::newCloneAction()
 {
-	//Manager::loadManagers();
-	event.Skip();
-}
-
-void DlgPreferencesAction::onButtonClickCancel(wxCommandEvent& event)
-{
-	event.Skip();
-}
-
-void DlgPreferencesAction::onButtonClickOK(wxCommandEvent& event)
-{
-	//static_cast<WinManager*>(_windowActive)->refreshManagerFromGui();
-	//Manager::saveManagers();
-	event.Skip();
+	wxWindow* windowActive = _listbook->GetCurrentPage();
+	return static_cast<WinAction*>(windowActive)->newCloneAction();
 }
 		

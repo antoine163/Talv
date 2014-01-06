@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.1
+//! \version 0.2
 //! \date 31.12.2013
 //!
 //! ****************************************************************************
@@ -13,6 +13,8 @@
 #define DLG_PREFERENCES_ACTION_H
 
 //App
+#include "action.hpp"
+#include "shortcut.hpp"
 #include "control/ctrlPickShortcutKey.hpp"
 
 //WxWidgets
@@ -30,29 +32,20 @@ class DlgPreferencesAction : public wxDialog
 		
 		//! \brief Constructeur.
 		DlgPreferencesAction(wxWindow* parent);
-		//DlgPreferencesAction(wxWindow* parent, ShortcutKey const& shortcutKey, Action const& Action);
+		//! \brief Constructeur.
+		DlgPreferencesAction(wxWindow* parent, ShortcutKey const& shortcutKey, Action const* action);
 		//! \brief Destructeur.
 		~DlgPreferencesAction();
 		
-		//ShortcutKey getShortcutKey();
-		//Action* newCloneAction();
+		ShortcutKey getShortcutKey();
+		Action* newCloneAction();
 		
 	private:
-		//! \brief CallBack lorsque le listbook a changer de page.
-		void onListbookChanged(wxBookCtrlEvent& event);
-		
-		//! \brief CallBack lorsque le dialogue est fermer.
-		void onClose(wxCloseEvent& event);
-		
-		//! \brief CallBack lorsque le bouton \b Cancel à été cliquet.
-		void onButtonClickCancel(wxCommandEvent& event);
-		//! \brief CallBack lorsque le bouton \b OK à été cliquet.
-		void onButtonClickOK(wxCommandEvent& event);
-	
 		//! \brief listbook du dialogue.
 		wxListbook* _listbook;
 		
 		CtrlPickShortcutKey* _ctrlPickShortcutKey;
+		std::vector<Action*> _allActions;
 };
 
 #endif //DLG_PREFERENCES_ACTION_H

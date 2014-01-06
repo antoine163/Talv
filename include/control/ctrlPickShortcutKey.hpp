@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.2
+//! \version 0.3
 //! \date 27.12.2013
 //!
 //! ****************************************************************************
@@ -47,7 +47,6 @@ class CtrlPickShortcutKey : public wxWindow
 		void onSetFocus(wxFocusEvent& event);
 		void onKillFocus(wxFocusEvent& event);
 		
-		//void updateTextCtrl(wxKeyEvent& event);
 		void checkInManAction();
 		
 		bool _shortKeyIsValide;

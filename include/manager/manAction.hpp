@@ -109,13 +109,18 @@ class WinManAction : public WinManager
 		void onItemEditingStarted(wxDataViewEvent& event);
 		void onItemEditingDone(wxDataViewEvent& event);
 		
-		//Cette méthode pose la question si l'utilisateur veux supprimer le newShortcut si il existe.
+		
 		void changeSelectedShortcut(ShortcutKey newShortcut);
+		//Cette méthode pose la question a l'utilisateur pour supprimer les
+		//raccourcis équivalent si il existe.
+		bool checkAndDeleteShortcut(ShortcutKey shortcut, int ignoreRow = wxNOT_FOUND);
+		
+		bool ensureVisible(ShortcutKey shortcut);
 		
 		//Élément du gui.
 		CtrlDataList* _ctrlDataList;
 		
-		wxString _itemOldShortcut;
+		wxString _itemOldShortcutEditing;
 };
 
 
