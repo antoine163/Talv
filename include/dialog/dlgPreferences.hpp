@@ -34,12 +34,18 @@ class DlgPreferences : public wxDialog
 		//! \brief Destructeur.
 		~DlgPreferences();
 		
+		//! \brief mis a jour du manager depuis le GUI. (Les autre manager sont, 
+		//! mis a jour quand l'utilisateur change de GUI).
+		//! Typiquement cette méthode est a appeler quand on veux sauvegarder les 
+		//! manager via \ref Manager::saveManagers().
+		void applyGuiToManager();
+		
+		//! \brief Obtenir le code de retour du dialog.
+		int GetReturnCode()const;
+		
 	private:
 		//! \brief CallBack lorsque le notebook a changer de page.
 		void onNotebookChanged(wxBookCtrlEvent& event);
-		
-		//! \brief CallBack lorsque le dialogue est fermer.
-		void onClose(wxCloseEvent& event);
 		
 		//! \brief CallBack lorsque le bouton \b Apply à été cliquet.
 		void onButtonClickApply(wxCommandEvent& event);
@@ -54,7 +60,10 @@ class DlgPreferences : public wxDialog
 		wxWindow* _windowActive;
 		
 		//! \brief Pour savoir si les raccourcis été activer au lancement de ce dialog.
-		bool _previouslyshortcutsIsEnable;
+		bool _previouslyShortcutsIsEnable;
+		
+		//! \brief Le code de retour; 
+		int _returnCode;
 };
 
 #endif //DLG_PREFERENCES_H

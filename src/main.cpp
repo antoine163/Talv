@@ -231,6 +231,14 @@ void App::onPreferencesColse(wxCloseEvent&)
 {
 	_dlgPrefPtr->Unbind(wxEVT_CLOSE_WINDOW, &App::onPreferencesColse, this);
 	
+	if(_dlgPrefPtr->GetReturnCode() == wxID_OK)
+	{
+		_dlgPrefPtr->applyGuiToManager();
+		Manager::saveManagers();
+	}
+	else
+		Manager::loadManagers();
+	
 	delete _dlgPrefPtr;
 	_dlgPrefPtr = nullptr;
 }

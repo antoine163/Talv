@@ -30,7 +30,7 @@
 DlgPreferences::DlgPreferences()
 : 	wxDialog(nullptr, wxID_ANY, _("Preferences"), wxDefaultPosition, wxDefaultSize,
 	wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxSTAY_ON_TOP|wxDIALOG_NO_PARENT),
-	_windowActive(nullptr)
+	_windowActive(nullptr), _returnCode(wxID_ANY)
 {	
 	//Désactivassions du menue dans la bar de notification.
 	ManGeneral::get().enableTaskIcon(false);
@@ -91,12 +91,12 @@ DlgPreferences::DlgPreferences()
 	Bind(wxEVT_BUTTON, &DlgPreferences::onButtonClickOK, 		this, wxID_OK);
 	
 	_notebook->Bind(wxEVT_NOTEBOOK_PAGE_CHANGED, &DlgPreferences::onNotebookChanged, this);
-	Bind(wxEVT_CLOSE_WINDOW, &DlgPreferences::onClose, this);
+	//Bind(wxEVT_CLOSE_WINDOW, &DlgPreferences::onClose, this);
 
 	Centre();
 	
 	//On désactive les raccourcies.
-	_previouslyshortcutsIsEnable = ManAction::get().shortcutsIsEnable();
+	_previouslyShortcutsIsEnable = ManAction::get().shortcutsIsEnable();
 	ManAction::get().shortcutsEnable(false);
 }
 
@@ -108,45 +108,48 @@ DlgPreferences::~DlgPreferences()
 	Unbind(wxEVT_BUTTON, &DlgPreferences::onButtonClickOK, 		this, wxID_OK);
 	
 	_notebook->Unbind(wxEVT_NOTEBOOK_PAGE_CHANGED, &DlgPreferences::onNotebookChanged, this);
-	Unbind(wxEVT_CLOSE_WINDOW, &DlgPreferences::onClose, this);
 	
 	//Activation du menue dans la bar de notification.
 	ManGeneral::get().enableTaskIcon();
 	
 	//On réactive les raccourcis (ou pas).
-	ManAction::get().shortcutsEnable(_previouslyshortcutsIsEnable);
+	ManAction::get().shortcutsEnable(_previouslyShortcutsIsEnable);
+}
+
+void DlgPreferences::applyGuiToManager()
+{
+	static_cast<WinManager*>(_windowActive)->refreshManagerFromGui();
+}
+
+int DlgPreferences::GetReturnCode()const
+{
+	return _returnCode;
 }
 
 void DlgPreferences::onNotebookChanged(wxBookCtrlEvent&)
 {
 	if(_windowActive != nullptr)
-		static_cast<WinManager*>(_windowActive)->refreshManagerFromGui();
+		applyGuiToManager();
 	
 	_windowActive = _notebook->GetCurrentPage();
 	static_cast<WinManager*>(_windowActive)->refreshGuiFromManager();
 }
 
-void DlgPreferences::onClose(wxCloseEvent& event)
-{
-	Manager::loadManagers();
-	event.Skip();
-}
-
 void DlgPreferences::onButtonClickApply(wxCommandEvent&)
 {
-	static_cast<WinManager*>(_windowActive)->refreshManagerFromGui();
+	applyGuiToManager();
 	Manager::saveManagers();
 }
 
 void DlgPreferences::onButtonClickCancel(wxCommandEvent&)
 {
+	_returnCode = wxID_CANCEL;
 	Close();
 }
 
 void DlgPreferences::onButtonClickOK(wxCommandEvent&)
 {
-	static_cast<WinManager*>(_windowActive)->refreshManagerFromGui();
-	Manager::saveManagers();
+	_returnCode = wxID_OK;
 	Close();
 }
 		
