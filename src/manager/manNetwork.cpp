@@ -24,7 +24,7 @@
 // *****************************************************************************
 
 ManNetwork::ManNetwork()
-: _useProxy(USE_PROXY_NO)
+: _showError(SHOW_ERROR_IN_NOTIFICATION), _useProxy(USE_PROXY_NO)
 {
 }
 
@@ -33,6 +33,16 @@ ManNetwork::~ManNetwork()
 }
 
 IMPLEMENT_MANAGER(ManNetwork);
+
+ShowError_e ManNetwork::getShowError()const
+{
+	return _showError;
+}
+
+void ManNetwork::setShowError(ShowError_e showError)
+{
+	_showError = showError;
+}
 
 UseProxy_e ManNetwork::getUseProxy()const
 {
@@ -52,8 +62,8 @@ void ManNetwork::setUseProxy(UseProxy_e useProxy)
 		case USE_PROXY_SYSTEM:
 		_url.SetProxy(getProxyInfoSystem());
 		break;
-		case USE_PROXY_AUTO_DETECT:
-		break;
+		//case USE_PROXY_AUTO_DETECT:
+		//break;
 		case USE_PROXY_MANUAL:
 		_url.SetProxy(_proxyInfoManual.toString());
 		break;
@@ -81,7 +91,8 @@ WinManager* ManNetwork::newEditWindow(wxWindow* parent)
 	return new WinManNetwork(parent);
 }
 
-wxURLError ManNetwork::downloadFromUrlToStringl(wxString const& url, wxString* pString)
+//! \todo Afficher les erreurs.
+wxURLError ManNetwork::downloadFromUrlToString(wxString const& url, wxString* ptrString)
 {
 	_url.SetURL(url);
 	
@@ -97,7 +108,7 @@ wxURLError ManNetwork::downloadFromUrlToStringl(wxString const& url, wxString* p
 	if (_url.GetError() != wxURL_NOERR)
 		return _url.GetError();
 	
-	wxStringOutputStream stringOutputStream(pString);
+	wxStringOutputStream stringOutputStream(ptrString);
 	inputStreamFromUrl->Read(stringOutputStream);
 	delete inputStreamFromUrl;
 	
@@ -120,12 +131,32 @@ wxString ManNetwork::getProxyInfoSystem()const
 	return proxy;
 }
 
-void ManNetwork::manLoad(wxFileConfig&)
+void ManNetwork::manLoad(wxFileConfig& fileConfig)
 {
+	fileConfig.SetPath("proxyInfoManual/");
+		_proxyInfoManual.setProxy(fileConfig.Read("proxy", wxEmptyString));
+		_proxyInfoManual.setPort(fileConfig.ReadLong("port", (long)80));
+		_proxyInfoManual.useAuthentication(fileConfig.ReadBool("useAuthentication", false));
+		_proxyInfoManual.setUsername(fileConfig.Read("username", wxEmptyString));
+		_proxyInfoManual.setPassword(fileConfig.Read("password", wxEmptyString));
+	fileConfig.SetPath("..");
+	
+	setShowError((ShowError_e)fileConfig.ReadLong("showError", (long)SHOW_ERROR_IN_NOTIFICATION));
+	setUseProxy((UseProxy_e)fileConfig.ReadLong("useProxy", (long)USE_PROXY_NO));
 }
 
-void ManNetwork::manSave(wxFileConfig&)const
+void ManNetwork::manSave(wxFileConfig& fileConfig)const
 {
+	fileConfig.Write("showError", (long)_showError);
+	fileConfig.Write("useProxy", (long)_useProxy);
+	
+	fileConfig.SetPath("proxyInfoManual/");
+		fileConfig.Write("proxy", _proxyInfoManual.getProxy());
+		fileConfig.Write("port", (long)_proxyInfoManual.getPort());
+		fileConfig.Write("useAuthentication", _proxyInfoManual.AuthenticationIsUsed());
+		fileConfig.Write("username", _proxyInfoManual.getUsername());
+		fileConfig.Write("password", _proxyInfoManual.getPassword());
+	fileConfig.SetPath("..");
 }
 
 // *****************************************************************************
@@ -195,29 +226,62 @@ void WinManNetwork::refreshGuiFromManager()
 {
 	_ctrlProxyInfoProxyManual->setProxyInfo(ManNetwork::get().getProxyInfoManual());
 	
-	wxCommandEvent event(wxEVT_RADIOBUTTON);
-	onRadioButtonProxy(event);
-	
-	////Sélection du radioButton
-	//switch(ManNetwork::get().getUseProxy())
-	//{
-		//case USE_PROXY_NO:
-			//_radioButtonNoProxy->SetValue(true);
-		//break;
-		//case USE_PROXY_SYSTEM:
-			//_radioButtonSystemProxy->SetValue(true);
-		//break;
+	//Sélection du radioButton du proxy
+	switch(ManNetwork::get().getUseProxy())
+	{
+		case USE_PROXY_NO:
+			_radioButtonProxyNo->SetValue(true);
+			_staticBoxProxyManual->Enable(false);
+		break;
+		case USE_PROXY_SYSTEM:
+			_radioButtonProxySystem->SetValue(true);
+			_staticBoxProxyManual->Enable(false);
+		break;
 		//case USE_PROXY_AUTO_DETECT:
-			////_radioButtonAutoDetectProxy->SetValue(true);
+			//_radioButtonProxyAutoDetect->SetValue(true);
 		//break;
-		//case USE_PROXY_MANUAL:
-			//_radioButtonManualProxy->SetValue(true);
-		//break;
-	//}
+		case USE_PROXY_MANUAL:
+			_radioButtonProxyManual->SetValue(true);
+			_staticBoxProxyManual->Enable();
+		break;
+	}
+	
+	//Sélection du radioButton des erreurs
+	switch(ManNetwork::get().getShowError())
+	{
+		case SHOW_ERROR_NO:
+			_radioButtonShowErrorNo->SetValue(true);
+		break;
+		case SHOW_ERROR_IN_NOTIFICATION:
+			_radioButtonShowErrorInNotification->SetValue(true);
+		break;
+		case SHOW_ERROR_IN_DIALOG:
+			_radioButtonShowErrorInDialog->SetValue(true);
+		break;
+	}
 }
 
 void WinManNetwork::refreshManagerFromGui()const
 {
+	ManNetwork::get().setProxyInfoManual(_ctrlProxyInfoProxyManual->getProxyInfo());
+	
+	//Quelle proxy utiliser ?
+	if(_radioButtonProxyNo->GetValue())
+		ManNetwork::get().setUseProxy(USE_PROXY_NO);
+	else if(_radioButtonProxySystem->GetValue())
+		ManNetwork::get().setUseProxy(USE_PROXY_SYSTEM);
+	//else if(_radioButtonProxyAutoDetect->GetValue())
+		//ManNetwork::get().setUseProxy(USE_PROXY_AUTO_DETECT);
+	else if(_radioButtonProxyManual->GetValue())
+		ManNetwork::get().setUseProxy(USE_PROXY_MANUAL);
+		
+	//les erreurs
+	if(_radioButtonShowErrorNo->GetValue())
+		ManNetwork::get().setShowError(SHOW_ERROR_NO);
+	else if(_radioButtonShowErrorInNotification->GetValue())
+		ManNetwork::get().setShowError(SHOW_ERROR_IN_NOTIFICATION);
+	else if(_radioButtonShowErrorInDialog->GetValue())
+		ManNetwork::get().setShowError(SHOW_ERROR_IN_DIALOG);
 }
 
 void WinManNetwork::onRadioButtonProxy(wxCommandEvent&)

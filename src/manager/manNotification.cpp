@@ -302,14 +302,14 @@ void ManNotification::manLoad(wxFileConfig& fileConfig)
 	//On détruis les fenêtres de notification au préalable.
 	deleteAllFramesNotify();
 	
-	_useNotification = (UseNotification_e)fileConfig.Read("useNotification", (long)USE_NOTIFICATION_RICH);
-	_notificationPosition = (NotificationPosition_e)fileConfig.Read("notificationPosition", (long)NOTIFICATION_POSITION_TOP_RIGHT);
-	_nearCursor = fileConfig.Read("nearCursor", true);
-	_multipleNotifications = fileConfig.Read("multipleNotifications", true);
-	_border = fileConfig.Read("border", (long)SIZE_BORDER);
+	_useNotification = (UseNotification_e)fileConfig.ReadLong("useNotification", (long)USE_NOTIFICATION_RICH);
+	_notificationPosition = (NotificationPosition_e)fileConfig.ReadLong("notificationPosition", (long)NOTIFICATION_POSITION_TOP_RIGHT);
+	_nearCursor = fileConfig.ReadBool("nearCursor", true);
+	_multipleNotifications = fileConfig.ReadBool("multipleNotifications", true);
+	_border = fileConfig.ReadLong("border", (long)SIZE_BORDER);
 		
-	_colourBackground.SetRGB(fileConfig.Read("colourBackground", (long)0x000000));
-	_colourText.SetRGB(fileConfig.Read("colourText", (long)0xd2d2d2));
+	_colourBackground.SetRGB(fileConfig.ReadLong("colourBackground", (long)0x000000));
+	_colourText.SetRGB(fileConfig.ReadLong("colourText", (long)0xd2d2d2));
 	
 	
 	fileConfig.SetPath("workarea/");
@@ -318,22 +318,22 @@ void ManNotification::manLoad(wxFileConfig& fileConfig)
 	_workarea = wxDisplay().GetGeometry();
 	long readVal = -1;
 	
-		readVal = fileConfig.Read("x", -1);
+		readVal = fileConfig.ReadLong("x", -1);
 		if(readVal != -1)
 			_workarea.x = readVal;
 			
-		readVal = fileConfig.Read("y", -1);
+		readVal = fileConfig.ReadLong("y", -1);
 		if(readVal != -1)
 			_workarea.y = readVal;
 			
 			
-		readVal = fileConfig.Read("height", -1);
+		readVal = fileConfig.ReadLong("height", -1);
 		if(readVal != -1)
 			_workarea.height = readVal;
 		else
 			_workarea.height -= _workarea.y;
 			
-		readVal = fileConfig.Read("width", -1);
+		readVal = fileConfig.ReadLong("width", -1);
 		if(readVal != -1)
 			_workarea.width = readVal;
 		else

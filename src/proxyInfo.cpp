@@ -81,9 +81,12 @@ void ProxyInfo::setPassword(wxString const& password)
 
 wxString ProxyInfo::toString()const
 {
+	if(_proxy.IsEmpty())
+		return wxEmptyString;
+		
 	wxString proxy;
 	
-	if(_useAuthentication)
+	if(_useAuthentication && !_username.IsEmpty())
 	{
 		proxy << _username;
 		proxy << ':';

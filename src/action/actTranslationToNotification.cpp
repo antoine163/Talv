@@ -12,12 +12,15 @@
 //App
 #include "action/actTranslationToNotification.hpp"
 #include "manager/manNotification.hpp"
+#include "manager/manGeneral.hpp"
 #include "defs.hpp"
 
 //WxWidgets
 #include <wx/intl.h>
 #include <wx/sizer.h>
 
+//Test
+#include "manager/manNetwork.hpp"
 
 // *****************************************************************************
 // Class ActTranslationToNotification
@@ -45,6 +48,11 @@ ActTranslationToNotification::ActTranslationToNotification()
 		_lgsrc = wxLANGUAGE_FRENCH;
 	else
 		_lgsrc = wxLANGUAGE_ENGLISH;
+		
+		
+		//Test
+		_lgsrc = wxLANGUAGE_ENGLISH;
+		_lgto = wxLANGUAGE_FRENCH;
 }
 
 ActTranslationToNotification::~ActTranslationToNotification()
@@ -67,7 +75,19 @@ wxString ActTranslationToNotification::getStringPreferences()const
 
 void ActTranslationToNotification::execute()
 {
-	ManNotification::get().notify("ActTranslationToNotification::execute", getStringPreferences(), wxICON_INFORMATION, true);
+	//On récupère le texte de la presse papier a traduire.
+	wxString text = ManGeneral::get().getClipboard();
+	
+	wxString url;
+	url << "http://translate.google.com/translate_a/t?ie=UTF-8&oe=UTF-8&client=x";
+	url << "&text=" << text;
+	url << "&hl=" << wxLocale::GetLanguageCanonicalName(_lgto);
+	url << "&sl=" << wxLocale::GetLanguageCanonicalName(_lgsrc);
+	url << "&tl=" << wxLocale::GetLanguageCanonicalName(_lgto);
+	
+	wxString json;
+	std::cout << ManNetwork::get().downloadFromUrlToString(url, &json) << std::endl;
+	ManNotification::get().notify("ActTranslationToNotification::execute", json, wxICON_NONE, true);
 }
 
 void ActTranslationToNotification::actLoad(wxFileConfig&)

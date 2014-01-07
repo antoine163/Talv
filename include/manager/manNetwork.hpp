@@ -29,8 +29,18 @@ enum UseProxy_e
 {
 	USE_PROXY_NO,
 	USE_PROXY_SYSTEM,
-	USE_PROXY_AUTO_DETECT,
+	//USE_PROXY_AUTO_DETECT,
 	USE_PROXY_MANUAL
+};
+
+// *****************************************************************************
+// Enum ShowError_e
+// *****************************************************************************
+enum ShowError_e
+{
+	SHOW_ERROR_NO,
+	SHOW_ERROR_IN_NOTIFICATION,
+	SHOW_ERROR_IN_DIALOG
 };
 
 // *****************************************************************************
@@ -39,11 +49,16 @@ enum UseProxy_e
 
 //! \ingroup manager
 //! \brief ManNetwork
+//! \todo Ajouter le mode auto détecte pour le proxy.
 class ManNetwork : public Manager
 {
 	DECLARE_MANAGER(ManNetwork);
 	
 	public:
+		//Show error
+		ShowError_e getShowError()const;
+		void setShowError(ShowError_e showError);
+		
 		//use Proxy
 		UseProxy_e getUseProxy()const;
 		void setUseProxy(UseProxy_e useProxy);
@@ -53,7 +68,7 @@ class ManNetwork : public Manager
 		void setProxyInfoManual(ProxyInfo const& proxy);
 
 		//Le contenue de l'url doit être coder en utf-8
-		wxURLError downloadFromUrlToStringl(wxString const& url, wxString* pString);
+		wxURLError downloadFromUrlToString(wxString const& url, wxString* ptrString);
 				
 		virtual WinManager* newEditWindow(wxWindow* parent);
 	
@@ -63,6 +78,7 @@ class ManNetwork : public Manager
 		virtual void manLoad(wxFileConfig& fileConfig);
 		virtual void manSave(wxFileConfig& fileConfig)const;
 		
+		ShowError_e _showError;
 		UseProxy_e _useProxy;
 		ProxyInfo _proxyInfoManual;
 		wxURL _url;
