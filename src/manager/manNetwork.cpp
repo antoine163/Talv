@@ -4,13 +4,14 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.1
+//! \version 0.2
 //! \date 08.12.2013
 //!
 //! ****************************************************************************
 
 //App
 #include "manager/manNetwork.hpp"
+#include "manager/manNotification.hpp"
 #include "defs.hpp"
 
 //WxWidgets
@@ -18,6 +19,8 @@
 #include <wx/stattext.h>
 #include <wx/utils.h> 
 #include <wx/sstream.h>
+#include <wx/log.h> 
+#include <wx/msgdlg.h>
 
 // *****************************************************************************
 // Class ManNetwork
@@ -51,9 +54,29 @@ UseProxy_e ManNetwork::getUseProxy()const
 
 void ManNetwork::setUseProxy(UseProxy_e useProxy)
 {
-	_url.SetURL(wxEmptyString);
-	
 	_useProxy = useProxy;
+}
+
+ProxyInfo ManNetwork::getProxyInfoManual()const
+{
+	return _proxyInfoManual;
+}
+
+void ManNetwork::setProxyInfoManual(ProxyInfo const& proxy)
+{
+	_proxyInfoManual = proxy;
+}
+
+WinManager* ManNetwork::newEditWindow(wxWindow* parent)
+{
+	return new WinManNetwork(parent);
+}
+
+wxURLError ManNetwork::downloadFromUrlToString(wxString const& url, wxString* ptrString)
+{
+	wxURL _url(url);
+	
+	//On installe le proxy.
 	switch(_useProxy)
 	{
 		case USE_PROXY_NO:
@@ -68,50 +91,31 @@ void ManNetwork::setUseProxy(UseProxy_e useProxy)
 		_url.SetProxy(_proxyInfoManual.toString());
 		break;
 	}
-}
-
-ProxyInfo ManNetwork::getProxyInfoManual()const
-{
-	return _proxyInfoManual;
-}
-
-void ManNetwork::setProxyInfoManual(ProxyInfo const& proxy)
-{
-	_proxyInfoManual = proxy;
-	
-	if(_useProxy == USE_PROXY_MANUAL)
-	{
-		_url.SetURL(wxEmptyString);
-		_url.SetProxy(_proxyInfoManual.toString());
-	}
-}
-
-WinManager* ManNetwork::newEditWindow(wxWindow* parent)
-{
-	return new WinManNetwork(parent);
-}
-
-//! \todo Afficher les erreurs.
-wxURLError ManNetwork::downloadFromUrlToString(wxString const& url, wxString* ptrString)
-{
-	_url.SetURL(url);
 	
 	//Erreur au niveau de l'url ?
 	if (_url.GetError() != wxURL_NOERR)
+	{
+		showError(_url.GetError(), url);
 		return _url.GetError();
+	}
 		
 	//3s de Timeout
-	_url.GetProtocol().SetTimeout(3);
+	_url.GetProtocol().SetDefaultTimeout(3);
 	
 	//Récupère le string.
 	wxInputStream *inputStreamFromUrl = _url.GetInputStream();
 	if (_url.GetError() != wxURL_NOERR)
+	{
+		showError(_url.GetError(), url);
 		return _url.GetError();
+	}
 	
 	wxStringOutputStream stringOutputStream(ptrString);
 	inputStreamFromUrl->Read(stringOutputStream);
 	delete inputStreamFromUrl;
 	
+	if (_url.GetError() != wxURL_NOERR)
+		showError(_url.GetError(), url);
 	return _url.GetError();
 }
 
@@ -129,6 +133,49 @@ wxString ManNetwork::getProxyInfoSystem()const
 	proxy.Replace("/", wxEmptyString);
 		
 	return proxy;
+}
+
+void ManNetwork::showError(wxURLError err, wxString const& url)const
+{
+	wxString mess;
+	switch(err)
+	{
+		case wxURL_SNTXERR:
+		wxLogError("Syntax error from the URL: %s", url);
+		break;
+		case wxURL_NOPROTO:
+		wxLogError("Found no protocol which can get the URL: %s", url);
+		break;
+		case wxURL_NOHOST:
+		wxLogError("A host name is required for the protocol from the URL: %s", url);
+		mess = _("No access to internet.");
+		break;
+		case wxURL_NOPATH:
+		wxLogError("A path is required for the protocol from the URL: %s", url);
+		break;
+		case wxURL_CONNERR:
+		wxLogError("Connection error, URL: %s");
+		break;
+		case wxURL_PROTOERR:
+		wxLogError("A path is required for the protocol from the URL: %s", url);
+		mess = _("Bad connection or bad configuration.");
+		break;
+		default:
+		break;
+	}
+	
+	switch(_showError)
+	{
+		case SHOW_ERROR_NO:
+		break;
+		case SHOW_ERROR_IN_NOTIFICATION:
+		ManNotification::get().notify(_("Network error"), mess, wxICON_ERROR);
+		break;
+		case SHOW_ERROR_IN_DIALOG:
+		wxMessageDialog dlg(nullptr, mess, _("Network error"), wxOK|wxICON_ERROR|wxCENTRE);
+		dlg.ShowModal();
+		break;
+	}
 }
 
 void ManNetwork::manLoad(wxFileConfig& fileConfig)

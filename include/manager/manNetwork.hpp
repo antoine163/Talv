@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.1
+//! \version 0.2
 //! \date 08.12.2013
 //!
 //! ****************************************************************************
@@ -74,6 +74,7 @@ class ManNetwork : public Manager
 	
 	private:	
 		wxString getProxyInfoSystem()const;
+		void showError(wxURLError err, wxString const& url)const;
 	
 		virtual void manLoad(wxFileConfig& fileConfig);
 		virtual void manSave(wxFileConfig& fileConfig)const;
@@ -81,7 +82,6 @@ class ManNetwork : public Manager
 		ShowError_e _showError;
 		UseProxy_e _useProxy;
 		ProxyInfo _proxyInfoManual;
-		wxURL _url;
 };
 
 // *****************************************************************************

@@ -86,7 +86,7 @@ void ActTranslationToNotification::execute()
 	url << "&tl=" << wxLocale::GetLanguageCanonicalName(_lgto);
 	
 	wxString json;
-	//std::cout << ManNetwork::get().downloadFromUrlToString(url, &json) << std::endl;
+	std::cout << "URL error: " << ManNetwork::get().downloadFromUrlToString(url, &json) << std::endl;
 	ManNotification::get().notify("ActTranslationToNotification::execute", json, wxICON_NONE, true);
 }
 
