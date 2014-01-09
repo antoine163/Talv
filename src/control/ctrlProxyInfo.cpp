@@ -12,6 +12,7 @@
 //App
 #include "control/ctrlProxyInfo.hpp"
 #include "defs.hpp"
+#include "utils.hpp"
 
 //WxWidgets
 #include <wx/sizer.h>
@@ -91,6 +92,11 @@ ProxyInfo CtrlProxyInfo::getProxyInfo()
 						_checkBoxUseAuthentication->GetValue(),
 						_ctrlAuthentication->getUsername(),
 						_ctrlAuthentication->getPassword());
+}
+
+bool CtrlProxyInfo::Enable(bool enable)
+{
+	enableWindowsFromSizer(GetSizer(), enable);
 }
 
 void CtrlProxyInfo::onCheckBoxUseAuthentication(wxCommandEvent&)
