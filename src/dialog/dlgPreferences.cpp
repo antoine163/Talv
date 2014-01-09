@@ -12,6 +12,7 @@
 //App
 #include "dialog/dlgPreferences.hpp"
 #include "defs.hpp"
+#include "utils.hpp"
 #include "manager.hpp"
 #include "manager/manGeneral.hpp"
 #include "manager/manAction.hpp"
@@ -22,15 +23,16 @@
 #include <wx/bannerwindow.h>
 #include <wx/statbmp.h>
 #include <wx/settings.h>
+#include <wx/stattext.h>
 
 // *****************************************************************************
 // Class DlgPreferences
 // *****************************************************************************
 
 DlgPreferences::DlgPreferences()
-: 	wxDialog(nullptr, wxID_ANY, _("Preferences"), wxDefaultPosition, wxDefaultSize,
-	wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxSTAY_ON_TOP|wxDIALOG_NO_PARENT),
-	_windowActive(nullptr), _returnCode(wxID_ANY)
+: 	WithDialogInlayDialog(nullptr, ID_DIALOG_PREFERENCES, _("Preferences"), wxDefaultPosition, wxDefaultSize,
+	wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxDIALOG_NO_PARENT),
+	_windowActive(nullptr)
 {	
 	//Désactivassions du menue dans la bar de notification.
 	ManGeneral::get().enableTaskIcon(false);
@@ -70,18 +72,22 @@ DlgPreferences::DlgPreferences()
 	_windowActive = _notebook->GetCurrentPage();
 	static_cast<WinManager*>(_windowActive)->refreshGuiFromManager();
 	
+	//Creation du sizer de travail avec le _notebook par défaut.
+	_sizerWork = new wxBoxSizer(wxVERTICAL);
+	_sizerWork->Add(_notebook, 1, wxEXPAND);
+	
 	//Création de la statice line.
 	wxStaticLine* staticLine = new wxStaticLine(this);
 	
 	//Créations des boutons.
-	wxSizer* buttons = CreateButtonSizer(wxAPPLY|wxCANCEL|wxOK);
+	_sizerButtons = CreateButtonSizer(wxAPPLY|wxCANCEL|wxOK);
 	
 	//Mise en forme du GUI avec un sizer.
 	wxSizer* sizerMain = new wxBoxSizer(wxVERTICAL);
-	sizerMain->Add(banner, 		0, 	wxEXPAND);
-	sizerMain->Add(_notebook, 	1, 	wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);
-	sizerMain->Add(staticLine, 	0, 	wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);
-	sizerMain->Add(buttons, 	0, 	wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);
+	sizerMain->Add(banner, 			0, 	wxEXPAND);
+	sizerMain->Add(_sizerWork, 		1, 	wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);
+	sizerMain->Add(staticLine, 		0, 	wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);
+	sizerMain->Add(_sizerButtons, 	0, 	wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);
 	
 	SetSizerAndFit(sizerMain);
 	
@@ -91,7 +97,6 @@ DlgPreferences::DlgPreferences()
 	Bind(wxEVT_BUTTON, &DlgPreferences::onButtonClickOK, 		this, wxID_OK);
 	
 	_notebook->Bind(wxEVT_NOTEBOOK_PAGE_CHANGED, &DlgPreferences::onNotebookChanged, this);
-	//Bind(wxEVT_CLOSE_WINDOW, &DlgPreferences::onClose, this);
 
 	Centre();
 	
@@ -116,40 +121,91 @@ DlgPreferences::~DlgPreferences()
 	ManAction::get().shortcutsEnable(_previouslyShortcutsIsEnable);
 }
 
-void DlgPreferences::applyGuiToManager()
-{
-	static_cast<WinManager*>(_windowActive)->refreshManagerFromGui();
-}
-
-int DlgPreferences::GetReturnCode()const
-{
-	return _returnCode;
+int DlgPreferences::dialogShowModal(DialogInlay* dlg)
+{	
+	_dialogInlay = dlg;
+	SetLabel(_("Preferences")+" -> "+dlg->GetName());
+	
+	//Créations du titre
+	wxStaticText staticTextDialogTitle(this, wxID_ANY, wxEmptyString);
+	staticTextDialogTitle.SetLabelMarkup("<b><big>"+dlg->GetName()+"</big></b>");
+	
+	//Création de la line.
+	wxStaticLine staticLine(this);
+	
+	//Installation du dialogue
+	disableWindowsFromSizer(_sizerButtons);
+	dlg->Show();
+	_notebook->Show(false);
+	_sizerWork->Prepend(dlg, 0, wxALIGN_CENTER);
+	_sizerWork->PrependSpacer(4*SIZE_BORDER);
+	_sizerWork->Prepend(&staticLine, 0, wxEXPAND|wxLEFT|wxRIGHT);
+	_sizerWork->PrependSpacer(2*SIZE_BORDER);
+	_sizerWork->Prepend(&staticTextDialogTitle, 0, wxALIGN_CENTER);
+	_sizerWork->PrependSpacer(2*SIZE_BORDER);
+	GetSizer()->Layout();
+	
+	//On exécute le dialogue.
+	int returnCode = dlg->run();
+	
+	//Déinstallation du dialogue.
+	SetLabel(_("Preferences"));
+	_sizerWork->Remove(0);
+	_sizerWork->Remove(0);
+	_sizerWork->Remove(0);
+	_sizerWork->Remove(0);
+	_sizerWork->Remove(0);
+	_sizerWork->Remove(0);
+	dlg->Show(false);
+	_notebook->Show();
+	enableWindowsFromSizer(_sizerButtons);
+	GetSizer()->Layout();
+	
+	_dialogInlay = nullptr;
+	return returnCode;
 }
 
 void DlgPreferences::onNotebookChanged(wxBookCtrlEvent&)
 {
 	if(_windowActive != nullptr)
-		applyGuiToManager();
+		static_cast<WinManager*>(_windowActive)->refreshManagerFromGui();
 	
 	_windowActive = _notebook->GetCurrentPage();
 	static_cast<WinManager*>(_windowActive)->refreshGuiFromManager();
 }
 
+void DlgPreferences::onClose(wxCloseEvent& event)
+{
+	if(_dialogInlay)
+	{
+		_dialogInlay->exit(wxID_CLOSE);
+		return;
+	}
+	
+	if(GetReturnCode() == wxID_OK)
+		Manager::saveManagers();
+	else
+		Manager::loadManagers();
+	
+	event.Skip();
+}
+
 void DlgPreferences::onButtonClickApply(wxCommandEvent&)
 {
-	applyGuiToManager();
+	static_cast<WinManager*>(_windowActive)->refreshManagerFromGui();
 	Manager::saveManagers();
 }
 
 void DlgPreferences::onButtonClickCancel(wxCommandEvent&)
 {
-	_returnCode = wxID_CANCEL;
+	SetReturnCode(wxID_CLOSE);
 	Close();
 }
 
 void DlgPreferences::onButtonClickOK(wxCommandEvent&)
 {
-	_returnCode = wxID_OK;
+	static_cast<WinManager*>(_windowActive)->refreshManagerFromGui();
+	SetReturnCode(wxID_OK);
 	Close();
 }
 		

@@ -12,8 +12,10 @@
 #ifndef DLG_PREFERENCES_H
 #define DLG_PREFERENCES_H
 
+//App
+#include "dialogInlay.hpp"
+
 //WxWidgets
-#include <wx/dialog.h>
 #include <wx/notebook.h>
 #include <wx/window.h>
 
@@ -25,23 +27,18 @@
 //!
 //! Se dialogue va appeler  \ref Manager::newEditWindow() de touts les managers
 //! et les insérais dans un \b wxNotebook.
-class DlgPreferences : public wxDialog 
+class DlgPreferences : public WithDialogInlayDialog
 {
 	public:
-		
 		//! \brief Constructeur.
 		DlgPreferences();
 		//! \brief Destructeur.
 		~DlgPreferences();
 		
-		//! \brief mis a jour du manager depuis le GUI. (Les autre manager sont, 
-		//! mis a jour quand l'utilisateur change de GUI).
-		//! Typiquement cette méthode est a appeler quand on veux sauvegarder les 
-		//! manager via \ref Manager::saveManagers().
-		void applyGuiToManager();
+		int dialogShowModal(DialogInlay* dlg);
 		
-		//! \brief Obtenir le code de retour du dialog.
-		int GetReturnCode()const;
+		//! \brief CallBack lorsque le dialogue est fermer
+		void onClose(wxCloseEvent& event);
 		
 	private:
 		//! \brief CallBack lorsque le notebook a changer de page.
@@ -58,12 +55,14 @@ class DlgPreferences : public wxDialog
 		wxNotebook* _notebook;
 		//! \brief Page actuelle sélection dans le notebook.
 		wxWindow* _windowActive;
+		//! \brief Sizer de travail. On y place le notebook et les InlayDialogs
+		//! quand il y en a.
+		wxSizer* _sizerWork;
+		//! \brief Sizer des boutons.
+		wxSizer* _sizerButtons;
 		
 		//! \brief Pour savoir si les raccourcis été activer au lancement de ce dialog.
 		bool _previouslyShortcutsIsEnable;
-		
-		//! \brief Le code de retour; 
-		int _returnCode;
 };
 
 #endif //DLG_PREFERENCES_H

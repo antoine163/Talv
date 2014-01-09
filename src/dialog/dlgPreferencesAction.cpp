@@ -12,7 +12,6 @@
 //App
 #include "dialog/dlgPreferencesAction.hpp"
 #include "action.hpp"
-#include "manager/manGeneral.hpp"
 #include "defs.hpp"
 
 //WxWidgets
@@ -32,11 +31,10 @@ DlgPreferencesAction::DlgPreferencesAction(wxWindow* parent)
 }
 
 DlgPreferencesAction::DlgPreferencesAction(wxWindow* parent, ShortcutKey const& shortcutKey, Action const* action)
-: 	wxDialog(parent, wxID_ANY, _("Preferences action"), wxDefaultPosition, wxDefaultSize,
-	wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER)
-{
-	//Icônes
-	SetIcon(ManGeneral::get().getIconApp(ICON_SIZE_16X16));
+: DialogInlay(parent, _("Preferences action"))
+{	
+	if(action == nullptr)
+		SetName(_("Add action"));
 	
 	//Création de la listbook.
 	_listbook = new wxListbook(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLB_LEFT);
@@ -70,19 +68,19 @@ DlgPreferencesAction::DlgPreferencesAction(wxWindow* parent, ShortcutKey const& 
 	wxStaticLine* staticLine2 = new wxStaticLine(this);
 	
 	//Créations des boutons.
-	wxSizer* buttons = CreateButtonSizer(wxCANCEL|wxOK);
+	wxSizer* buttons = createButtonSizer(wxCANCEL|wxOK);
 	
 	//Mise en forme du GUI avec un sizer.
 	wxSizer* sizerMain = new wxBoxSizer(wxVERTICAL);
 	sizerMain->Add(sizerShortcut,	0, 	wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM|wxTOP,	SIZE_BORDER);
 	sizerMain->Add(staticLine1,		0, 	wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);
-	sizerMain->Add(_listbook, 		1, 	wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);
+	sizerMain->Add(_listbook, 		0, 	wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);
 	sizerMain->Add(staticLine2,		0, 	wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);
 	sizerMain->Add(buttons, 		0, 	wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);
 	
-	SetSizerAndFit(sizerMain);
-
-	Centre();
+	
+	//SetSizerAndFit(sizerMain);
+	SetSizer(sizerMain);
 }
 
 DlgPreferencesAction::~DlgPreferencesAction()

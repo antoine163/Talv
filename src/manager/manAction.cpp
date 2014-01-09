@@ -246,8 +246,8 @@ void WinManAction::refreshManagerFromGui()const
 
 void WinManAction::onAdd(wxCommandEvent&)
 {
-	DlgPreferencesAction dlg(this);
-	while(dlg.ShowModal() == wxID_OK)
+	DlgPreferencesAction dlg(DialogInlay::findParent());
+	while(dlg.showModal() == wxID_OK)
 	{
 		//On récupère le nouveau raccourcie.
 		ShortcutKey newShortcut = dlg.getShortcutKey();
@@ -293,8 +293,8 @@ void WinManAction::onPreferences(wxCommandEvent&)
 	//On récupère l'action depuis le manager.
 	Action const* action = ManAction::get().getAction(oldShortcut);
 	
-	DlgPreferencesAction dlg(this, oldShortcut, action);
-	while(dlg.ShowModal() == wxID_OK)
+	DlgPreferencesAction dlg(DialogInlay::findParent(), oldShortcut, action);
+	while(dlg.showModal() == wxID_OK)
 	{
 		//On récupère le nouveau raccourcie.
 		ShortcutKey newShortcut = dlg.getShortcutKey();

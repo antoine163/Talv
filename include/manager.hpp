@@ -106,7 +106,6 @@ class Manager
 		
 		virtual WinManager* newEditWindow(wxWindow* parent);
 		
-		
 		static void createManagers();
 		static void killManagers();
 		static void loadManagers();

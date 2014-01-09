@@ -52,6 +52,7 @@ SRC=../src/main.cpp
 
 #Divers
 SRC+=../src/taskIcon.cpp
+SRC+=../src/utils.cpp
 SRC+=../src/proxyInfo.cpp
 SRC+=../src/shortcut.cpp
 
@@ -67,6 +68,7 @@ SRC+=../src/control/ctrlPickShortcutKey.cpp
 SRC+=../src/control/ctrlPickLanguages.cpp
 
 #Dialogs
+SRC+=../src/dialogInlay.cpp
 SRC+=../src/dialog/dlgPreferences.cpp
 SRC+=../src/dialog/dlgPreferencesAction.cpp
 SRC+=../src/dialog/dlgPickShortcutKey.cpp

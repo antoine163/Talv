@@ -13,12 +13,12 @@
 #define DLG_PREFERENCES_ACTION_H
 
 //App
+#include "dialogInlay.hpp"
 #include "action.hpp"
 #include "shortcut.hpp"
 #include "control/ctrlPickShortcutKey.hpp"
 
 //WxWidgets
-#include <wx/dialog.h>
 #include <wx/listbook.h>
 #include <wx/window.h>
 
@@ -26,10 +26,9 @@
 // Class DlgPreferencesAction
 // *****************************************************************************
 
-class DlgPreferencesAction : public wxDialog 
+class DlgPreferencesAction : public DialogInlay 
 {
 	public:
-		
 		//! \brief Constructeur.
 		DlgPreferencesAction(wxWindow* parent);
 		//! \brief Constructeur.

@@ -209,6 +209,7 @@ void App::onPreferences(wxCommandEvent&)
 	{
 		wxLogWarning("The preferences dialog is already running ...");
 		_dlgPrefPtr->SetFocus();
+		_dlgPrefPtr->RequestUserAttention();
 		return;
 	}
 		
@@ -217,6 +218,7 @@ void App::onPreferences(wxCommandEvent&)
 
 	//Bind close
 	_dlgPrefPtr->Bind(wxEVT_CLOSE_WINDOW, &App::onPreferencesColse, this);
+	_dlgPrefPtr->Bind(wxEVT_CLOSE_WINDOW, &DlgPreferences::onClose, _dlgPrefPtr);
 
 	//Affichage du dialog.
 	_dlgPrefPtr->Show();
@@ -230,14 +232,7 @@ void App::onEnableShortcuts(wxCommandEvent& event)
 void App::onPreferencesColse(wxCloseEvent&)
 {
 	_dlgPrefPtr->Unbind(wxEVT_CLOSE_WINDOW, &App::onPreferencesColse, this);
-	
-	if(_dlgPrefPtr->GetReturnCode() == wxID_OK)
-	{
-		_dlgPrefPtr->applyGuiToManager();
-		Manager::saveManagers();
-	}
-	else
-		Manager::loadManagers();
+	_dlgPrefPtr->Unbind(wxEVT_CLOSE_WINDOW, &DlgPreferences::onClose, _dlgPrefPtr);
 	
 	delete _dlgPrefPtr;
 	_dlgPrefPtr = nullptr;
