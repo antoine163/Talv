@@ -12,6 +12,7 @@
 //App
 #include "control/ctrlAuthentication.hpp"
 #include "defs.hpp"
+#include "utils.hpp"
 
 //WxWidgets
 #include <wx/sizer.h>
@@ -81,6 +82,12 @@ wxString CtrlAuthentication::getPassword()const
 void CtrlAuthentication::setPassword(wxString const& password)
 {
 	_textCtrlPassword->SetValue(password);
+}
+
+bool CtrlAuthentication::Enable(bool enable)
+{
+	enableWindowsFromSizer(GetSizer(), enable);
+	return true;
 }
 
 void CtrlAuthentication::onToggleButtonShow(wxCommandEvent& event)

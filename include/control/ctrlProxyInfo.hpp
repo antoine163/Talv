@@ -41,7 +41,7 @@ class CtrlProxyInfo : public wxWindow
 		void setProxyInfo(ProxyInfo const& proxyInfo);
 		ProxyInfo getProxyInfo();
 		
-		bool Enable(bool enable);
+		bool Enable(bool enable = true);
 
 	private:
 		void onCheckBoxUseAuthentication(wxCommandEvent& event);

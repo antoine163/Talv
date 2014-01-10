@@ -19,7 +19,6 @@
 //WxWidgets
 #include <wx/string.h>
 #include <wx/radiobut.h>
-#include <wx/statbox.h>
 #include <wx/url.h>
 
 // *****************************************************************************
@@ -110,7 +109,7 @@ class WinManNetwork : public WinManager
 		wxRadioButton* _radioButtonShowErrorInNotification; 
 		wxRadioButton* _radioButtonShowErrorInDialog;
 		
-		wxStaticBox* _staticBoxProxyManual;
+		wxSizer* _sizerCtrlProxyInfoProxyManual;
 		CtrlProxyInfo* _ctrlProxyInfoProxyManual;
 };
 

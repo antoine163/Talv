@@ -16,8 +16,8 @@
 #include "manager.hpp"
 
 //WxWidgets
+#include <wx/sizer.h>
 #include <wx/radiobut.h>
-#include <wx/statbox.h>
 #include <wx/choice.h>
 #include <wx/checkbox.h>
 #include <wx/clrpicker.h>
@@ -144,7 +144,7 @@ class WinManNotification : public WinManager
 		//Élément graphique.
 		wxRadioButton* _radioButtonPickNotificationNative;
 		wxRadioButton* _radioButtonPickNotificationRich; 
-		wxStaticBox* _staticBoxNotificationSetting;
+		wxSizer* _sizerNotificationSetting;
 		wxChoice* _choicePosition;
 		wxCheckBox* _checkBoxShowNearCursor;
 		wxCheckBox* _checkBoxMultipleNotifications;

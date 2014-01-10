@@ -43,7 +43,7 @@ CtrlProxyInfo::CtrlProxyInfo(	wxWindow* parent,
 	
 	//Créations wxCheckBox et du CtrlAuthentication
 	_checkBoxUseAuthentication = 	new wxCheckBox(			this, wxID_ANY, _("Use authentication:"));
-	_ctrlAuthentication = 			new CtrlAuthentication(	this, wxEmptyString, wxEmptyString, wxBORDER_SUNKEN);
+	_ctrlAuthentication = 			new CtrlAuthentication(	this);
 	_ctrlAuthentication->Enable(false);
 	
 	//Mise en forme avec des sizers.
@@ -97,6 +97,11 @@ ProxyInfo CtrlProxyInfo::getProxyInfo()
 bool CtrlProxyInfo::Enable(bool enable)
 {
 	enableWindowsFromSizer(GetSizer(), enable);
+	
+	if(!_checkBoxUseAuthentication->IsChecked())
+		_ctrlAuthentication->Enable(false);
+	
+	return true;
 }
 
 void CtrlProxyInfo::onCheckBoxUseAuthentication(wxCommandEvent&)

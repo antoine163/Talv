@@ -13,6 +13,7 @@
 #include "manager/manNetwork.hpp"
 #include "manager/manNotification.hpp"
 #include "defs.hpp"
+#include "utils.hpp"
 
 //WxWidgets
 #include <wx/sizer.h>
@@ -21,6 +22,7 @@
 #include <wx/sstream.h>
 #include <wx/log.h> 
 #include <wx/msgdlg.h>
+#include <wx/statbox.h>
 
 // *****************************************************************************
 // Class ManNetwork
@@ -245,18 +247,18 @@ WinManNetwork::WinManNetwork(wxWindow* parent)
 	sizerProxyAndShowError->Add(sizerShowError, 1);
 	
 	//Créations du contrôle ProxyInfo
-	_staticBoxProxyManual = new wxStaticBox(this, wxID_ANY, _("Manual proxy setting:"));
-	_ctrlProxyInfoProxyManual = new CtrlProxyInfo(_staticBoxProxyManual);
-	_staticBoxProxyManual->Enable(false);
+	wxStaticBox* staticBoxProxyManual = new wxStaticBox(this, wxID_ANY, _("Manual proxy setting:"));
+	_ctrlProxyInfoProxyManual = new CtrlProxyInfo(staticBoxProxyManual);
 	
 	//Mise en forme dans un sizer
-	wxSizer* sizerCtrlProxyInfoProxyManual = new wxStaticBoxSizer(_staticBoxProxyManual, wxVERTICAL);
-	sizerCtrlProxyInfoProxyManual->Add(_ctrlProxyInfoProxyManual, 0, wxEXPAND|wxRIGHT|wxLEFT|wxTOP|wxBOTTOM);		
+	_sizerCtrlProxyInfoProxyManual = new wxStaticBoxSizer(staticBoxProxyManual, wxVERTICAL);
+	_sizerCtrlProxyInfoProxyManual->Add(_ctrlProxyInfoProxyManual, 0, wxEXPAND|wxRIGHT|wxLEFT|wxTOP|wxBOTTOM);
+	enableWindowsFromSizer(_sizerCtrlProxyInfoProxyManual, false);		
 	
 	//Mise en forme du GUI avec un sizer.
 	wxSizer* sizerMain = new wxBoxSizer(wxVERTICAL);
 	sizerMain->Add(sizerProxyAndShowError,			0, wxEXPAND|wxLEFT|wxRIGHT|wxTOP, 			SIZE_BORDER);	
-	sizerMain->Add(sizerCtrlProxyInfoProxyManual, 	0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM|wxTOP, 	SIZE_BORDER);
+	sizerMain->Add(_sizerCtrlProxyInfoProxyManual, 	0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM|wxTOP, 	SIZE_BORDER);
 	SetSizer(sizerMain);
 	
 	//Bind
@@ -278,18 +280,19 @@ void WinManNetwork::refreshGuiFromManager()
 	{
 		case USE_PROXY_NO:
 			_radioButtonProxyNo->SetValue(true);
-			_staticBoxProxyManual->Enable(false);
+			enableWindowsFromSizer(_sizerCtrlProxyInfoProxyManual, false);
 		break;
 		case USE_PROXY_SYSTEM:
 			_radioButtonProxySystem->SetValue(true);
-			_staticBoxProxyManual->Enable(false);
+			enableWindowsFromSizer(_sizerCtrlProxyInfoProxyManual, false);
 		break;
 		//case USE_PROXY_AUTO_DETECT:
 			//_radioButtonProxyAutoDetect->SetValue(true);
+			//enableWindowsFromSizer(_sizerCtrlProxyInfoProxyManual, false);
 		//break;
 		case USE_PROXY_MANUAL:
 			_radioButtonProxyManual->SetValue(true);
-			_staticBoxProxyManual->Enable();
+			enableWindowsFromSizer(_sizerCtrlProxyInfoProxyManual);
 		break;
 	}
 	
@@ -334,8 +337,8 @@ void WinManNetwork::refreshManagerFromGui()const
 void WinManNetwork::onRadioButtonProxy(wxCommandEvent&)
 {
 	if(_radioButtonProxyManual->GetValue())
-		_staticBoxProxyManual->Enable();
+		enableWindowsFromSizer(_sizerCtrlProxyInfoProxyManual);
 	else
-		_staticBoxProxyManual->Enable(false);
+		enableWindowsFromSizer(_sizerCtrlProxyInfoProxyManual, false);
 }
 

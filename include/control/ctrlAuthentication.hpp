@@ -39,6 +39,8 @@ class CtrlAuthentication : public wxWindow
 		
 		wxString getPassword()const;
 		void setPassword(wxString const& password);
+		
+		bool Enable(bool enable = true);
 
 	private:
 		void onToggleButtonShow(wxCommandEvent& event);
