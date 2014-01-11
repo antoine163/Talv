@@ -144,61 +144,64 @@ WinManNotification::WinManNotification(wxWindow* parent)
 : WinManager(parent, _("Notification"))	
 {
 	//Créations des buttons radios pour choisie le type de notification à utiliser.
-	wxStaticBox* staticBoxPickNotification = 	new wxStaticBox(this, wxID_ANY, _("Use notification:"));
+	StaticBox* staticBoxPickNotification = 		new StaticBox(this, wxID_ANY, _("Use notification:"));
 	_radioButtonPickNotificationNative = 		new wxRadioButton(staticBoxPickNotification, 	wxID_ANY, _("Native notification"));
 	_radioButtonPickNotificationRich = 			new wxRadioButton(staticBoxPickNotification, 	wxID_ANY, _("Rich notification"));
 	
 	//Mise en forme des buttons radios avec un sizer.
-	wxSizer* sizerPickNotification = new wxStaticBoxSizer(staticBoxPickNotification, wxVERTICAL);
+	wxSizer* sizerPickNotification = new wxBoxSizer(wxVERTICAL);
 	sizerPickNotification->Add(_radioButtonPickNotificationNative,	0, wxEXPAND|wxRIGHT|wxLEFT|wxTOP,		SIZE_BORDER);	
 	sizerPickNotification->Add(_radioButtonPickNotificationRich, 	0, wxEXPAND|wxRIGHT|wxLEFT|wxBOTTOM, 	SIZE_BORDER);
+	staticBoxPickNotification->SetSizer(sizerPickNotification);
 	
 	//Créations du wxStaticBox "Rich notification setting:"
-	wxStaticBox* staticBoxNotificationSetting = new wxStaticBox(this, wxID_ANY, _("Rich notification setting:"));
+	_staticBoxNotificationSetting = 		new StaticBox(this, wxID_ANY, _("Rich notification setting:"));
+	wxStaticText* staticTextchoicePosition =new wxStaticText(	_staticBoxNotificationSetting, wxID_ANY, _("Choose the position where show the notifications:"));
 	wxString choicePositionString[] = {_("In top to left"), _("In top to right"), _("In bottom to left"), _("In bottom to right")};
-	_choicePosition = 					new wxChoice(		staticBoxNotificationSetting, wxID_ANY, wxDefaultPosition, wxDefaultSize, 4, choicePositionString);
-	_checkBoxShowNearCursor = 			new wxCheckBox(		staticBoxNotificationSetting, wxID_ANY, _("Show the notification near cursor when is appropriate."));
-	_checkBoxMultipleNotifications = 	new wxCheckBox(		staticBoxNotificationSetting, wxID_ANY, _("Authorize to show multiple notifications."));
-	
-	//Créations staticTextBorder
-	wxStaticText* staticTextBorder = 	new wxStaticText(	staticBoxNotificationSetting, wxID_ANY, _("Size of the notifications border:"));
-	_spinCtrlBorder = 					new wxSpinCtrl(		staticBoxNotificationSetting, wxID_ANY);
+	_choicePosition = 						new wxChoice(		_staticBoxNotificationSetting, wxID_ANY, wxDefaultPosition, wxDefaultSize, 4, choicePositionString);
+	_checkBoxShowNearCursor = 				new wxCheckBox(		_staticBoxNotificationSetting, wxID_ANY, _("Show the notification near cursor when is appropriate."));
+	_checkBoxMultipleNotifications = 		new wxCheckBox(		_staticBoxNotificationSetting, wxID_ANY, _("Authorize to show multiple notifications."));
+		
+	//Créations staticTextBorder	
+	wxStaticText* staticTextBorder = 		new wxStaticText(	_staticBoxNotificationSetting, wxID_ANY, _("Size of the notifications border:"));
+	_spinCtrlBorder = 						new wxSpinCtrl(		_staticBoxNotificationSetting, wxID_ANY);
 	
 	//Mise en forme avec un sizer.
-	wxSizer* sizerBorder = new wxBoxSizer(wxHORIZONTAL);
-	sizerBorder->Add(staticTextBorder, 	0, wxALIGN_CENTER_VERTICAL|wxRIGHT, 2*SIZE_BORDER);
-	sizerBorder->Add(_spinCtrlBorder, 	0, wxALIGN_CENTER_VERTICAL);
-
+	wxFlexGridSizer* flexGridSizerNotificationSetting = new wxFlexGridSizer(2, 2, SIZE_BORDER, SIZE_BORDER);
+	flexGridSizerNotificationSetting->AddGrowableCol(1, 1);
+	flexGridSizerNotificationSetting->Add(staticTextchoicePosition, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT);
+	flexGridSizerNotificationSetting->Add(_choicePosition,			0, wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL);	
+	flexGridSizerNotificationSetting->Add(staticTextBorder, 		0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT);
+	flexGridSizerNotificationSetting->Add(_spinCtrlBorder,			0, wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL);	
 	
 	//Créations du wxStaticBox "Pick colors:"
-	wxStaticBox* staticBoxPickColors = new wxStaticBox(staticBoxNotificationSetting, wxID_ANY, _("Pick colors:"));
+	StaticBox* staticBoxPickColors = new StaticBox(_staticBoxNotificationSetting, wxID_ANY, _("Pick colors:"));
 	wxStaticText* staticTextBackground =new wxStaticText(		staticBoxPickColors, wxID_ANY, 	_("Pick a color for the background of notification:"));
 	_colourPickerCtrlBackground = 		new wxColourPickerCtrl(	staticBoxPickColors, wxID_ANY);
 	wxStaticText* staticTextText = 		new wxStaticText(		staticBoxPickColors, wxID_ANY, 	_("Pick a color for the text of notification:"));
 	_colourPickerCtrlText = 			new wxColourPickerCtrl(	staticBoxPickColors, wxID_ANY);
 	
 	//Mise en forme du wxStaticBox "Pick colors:" avec des sizers.
-	wxSizer* sizerPickColors = new wxStaticBoxSizer(staticBoxPickColors, wxVERTICAL);
-	wxSizer* flexGridSizerPickColors = new wxFlexGridSizer(2, 2, 0, 0);
-	flexGridSizerPickColors->Add(staticTextBackground,			0, wxALIGN_CENTER_VERTICAL|wxRIGHT, 2*SIZE_BORDER);	
-	flexGridSizerPickColors->Add(_colourPickerCtrlBackground,	0, wxALIGN_CENTER_VERTICAL|wxRIGHT, SIZE_BORDER);	    
-	flexGridSizerPickColors->Add(staticTextText,				0, wxALIGN_CENTER_VERTICAL|wxRIGHT, 2*SIZE_BORDER);	
-	flexGridSizerPickColors->Add(_colourPickerCtrlText,			0, wxALIGN_CENTER_VERTICAL|wxRIGHT, SIZE_BORDER);	
-	sizerPickColors->Add(flexGridSizerPickColors, 0, wxEXPAND|wxLEFT|wxRIGHT, SIZE_BORDER);	
+	wxFlexGridSizer* flexGridSizerPickColors = new wxFlexGridSizer(2, 2, SIZE_BORDER, SIZE_BORDER);
+	flexGridSizerPickColors->AddGrowableCol(1, 1);
+	flexGridSizerPickColors->Add(staticTextBackground,			0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT);	
+	flexGridSizerPickColors->Add(_colourPickerCtrlBackground,	0, wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL);	    
+	flexGridSizerPickColors->Add(staticTextText,				0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT);	
+	flexGridSizerPickColors->Add(_colourPickerCtrlText,			0, wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL);
+	staticBoxPickColors->SetSizer(flexGridSizerPickColors);
 
 	//Mise en forme du wxStaticBox "Rich notification setting:" avec un sizer.
-	wxSizer* sizerNotificationSetting = new wxStaticBoxSizer(staticBoxNotificationSetting, wxVERTICAL);
-	sizerNotificationSetting->Add(_choicePosition,					0, wxEXPAND|wxLEFT|wxTOP|wxRIGHT,	SIZE_BORDER);	
+	wxSizer* sizerNotificationSetting = new wxBoxSizer(wxVERTICAL);
+	sizerNotificationSetting->Add(flexGridSizerNotificationSetting,	0, wxEXPAND|wxLEFT|wxTOP|wxRIGHT,	SIZE_BORDER);	
 	sizerNotificationSetting->Add(_checkBoxShowNearCursor, 			0, wxEXPAND|wxLEFT,					SIZE_BORDER);
 	sizerNotificationSetting->Add(_checkBoxMultipleNotifications, 	0, wxEXPAND|wxLEFT|wxBOTTOM,		SIZE_BORDER);
-	sizerNotificationSetting->Add(sizerBorder, 						0, wxEXPAND|wxLEFT|wxBOTTOM,		SIZE_BORDER);
-	sizerNotificationSetting->Add(sizerPickColors, 					0, wxEXPAND|wxLEFT|wxBOTTOM,		SIZE_BORDER);
-	
+	sizerNotificationSetting->Add(staticBoxPickColors,				0, wxEXPAND|wxLEFT|wxBOTTOM,		SIZE_BORDER);
+	_staticBoxNotificationSetting->SetSizer(sizerNotificationSetting);
 	
 	//Mise en forme du GUI avec un sizer.
 	wxSizer* sizerMain = new wxBoxSizer(wxVERTICAL);
-	sizerMain->Add(sizerPickNotification, 		0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM|wxTOP, 	SIZE_BORDER);	
-	sizerMain->Add(sizerNotificationSetting, 	0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);	
+	sizerMain->Add(staticBoxPickNotification, 		0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM|wxTOP, 	SIZE_BORDER);	
+	sizerMain->Add(_staticBoxNotificationSetting, 	0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);	
 	SetSizer(sizerMain);
 	
 	//Bind
@@ -214,18 +217,18 @@ WinManNotification::~WinManNotification()
 void WinManNotification::refreshGuiFromManager()
 {
 	//Sélection du bon radioButton
-	//switch(ManNotification::get().getUseNotification())
-	//{
-		//case USE_NOTIFICATION_NATIVE:
-		//_radioButtonPickNotificationNative->SetValue(true);
-		//_staticBoxNotificationSetting->Enable(false);
-		//break;
+	switch(ManNotification::get().getUseNotification())
+	{
+		case USE_NOTIFICATION_NATIVE:
+		_radioButtonPickNotificationNative->SetValue(true);
+		_staticBoxNotificationSetting->Enable(false);
+		break;
 		
-		//case USE_NOTIFICATION_RICH:
-		//_radioButtonPickNotificationRich->SetValue(true);
-		//_staticBoxNotificationSetting->Enable();
-		//break;
-	//}
+		case USE_NOTIFICATION_RICH:
+		_radioButtonPickNotificationRich->SetValue(true);
+		_staticBoxNotificationSetting->Enable();
+		break;
+	}
 	
 	_choicePosition->SetSelection(				ManNotification::get().getNotificationPosition());
 	_checkBoxShowNearCursor->SetValue(			ManNotification::get().getNearCursor());
@@ -252,10 +255,10 @@ void WinManNotification::refreshManagerFromGui()const
 
 void WinManNotification::onRadioButtonPickNotification(wxCommandEvent&)
 {
-	//if(_radioButtonPickNotificationRich->GetValue())
-		//_staticBoxNotificationSetting->Enable();
-	//else
-		//_staticBoxNotificationSetting->Enable(false);
+	if(_radioButtonPickNotificationRich->GetValue())
+		_staticBoxNotificationSetting->Enable();
+	else
+		_staticBoxNotificationSetting->Enable(false);
 }
 
 // *****************************************************************************

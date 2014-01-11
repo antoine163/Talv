@@ -14,6 +14,7 @@
 
 //App
 #include "manager.hpp"
+#include "staticBox.hpp"
 
 //WxWidgets
 #include <wx/sizer.h>
@@ -144,7 +145,7 @@ class WinManNotification : public WinManager
 		//Élément graphique.
 		wxRadioButton* _radioButtonPickNotificationNative;
 		wxRadioButton* _radioButtonPickNotificationRich; 
-		wxSizer* _sizerNotificationSetting;
+		StaticBox* _staticBoxNotificationSetting;
 		wxChoice* _choicePosition;
 		wxCheckBox* _checkBoxShowNearCursor;
 		wxCheckBox* _checkBoxMultipleNotifications;

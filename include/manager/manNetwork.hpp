@@ -14,6 +14,7 @@
 
 //App
 #include "manager.hpp"
+#include "staticBox.hpp"
 #include "control/ctrlProxyInfo.hpp"
 
 //WxWidgets
@@ -109,7 +110,7 @@ class WinManNetwork : public WinManager
 		wxRadioButton* _radioButtonShowErrorInNotification; 
 		wxRadioButton* _radioButtonShowErrorInDialog;
 		
-		wxSizer* _sizerCtrlProxyInfoProxyManual;
+		StaticBox* _staticBoxProxyManual;
 		CtrlProxyInfo* _ctrlProxyInfoProxyManual;
 };
 

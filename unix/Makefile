@@ -53,6 +53,7 @@ SRC=../src/main.cpp
 #Divers
 SRC+=../src/taskIcon.cpp
 SRC+=../src/utils.cpp
+SRC+=../src/staticBox.cpp
 SRC+=../src/proxyInfo.cpp
 SRC+=../src/shortcut.cpp
 
@@ -92,40 +93,6 @@ SRC+=../src/action/actTranslationToList.cpp
 
 #Tts
 #SRC+=../src/tts.cpp
-
-
-#SRC+=../src/managerCache.cpp	
-#SRC+=../src/shortcut.cpp
-#SRC+=../src/managerAction.cpp
-#SRC+=../src/action.cpp
-#SRC+=../src/managerList.cpp
-#SRC+=../src/listBase.cpp
-#SRC+=../src/list.cpp
-#SRC+=../src/cache.cpp
-#SRC+=../src/dataText.cpp
-#SRC+=../src/resource.cpp
-
-#Notification
-#SRC+=../src/notification.cpp
-#ifeq ($(EMULATE_NOTIFICATION), yes)
-#SRC+=../gui/guiFrameNotification.cpp
-#endif
-#Action
-#SRC+=../src/action/actLearn.cpp
-#SRC+=../gui/action/guiPanelActLearn.cpp
-#SRC+=../src/action/actTranslation.cpp
-#SRC+=../gui/action/guiPanelActTranslation.cpp
-#SRC+=../src/action/actTranslationToList.cpp
-#SRC+=../gui/action/guiPanelActTranslationToList.cpp
-#GUI
-#SRC+=../gui/guiPanelDataList.cpp
-#SRC+=../src/panelDataList.cpp
-#SRC+=../gui/guiDialogPreferences.cpp
-#SRC+=../src/dialogPreferences.cpp
-#SRC+=../gui/guiDialogActionPreferences.cpp
-#SRC+=../src/dialogActionPreferences.cpp
-#SRC+=../gui/guiDialogListAdd.cpp
-#SRC+=../src/dialogListAdd.cpp
 
 
 ################################################################################
@@ -192,9 +159,17 @@ run:
 # Exécute le programme avec gdb.
 ################################################################################
 .PHONY: rungdb
-rungdb: debug
+rungdb:
 	@echo "run : $(EXEC_NAME)"
 	@cd ../ && gdb $(EXEC_NAME)
+	
+################################################################################
+# Exécute le programme avec nemiver (gui pour gdb).
+################################################################################
+.PHONY: runnemiver
+runnemiver:
+	@echo "run : $(EXEC_NAME)"
+	@cd ../ && nemiver $(EXEC_NAME)
 
 
 ################################################################################

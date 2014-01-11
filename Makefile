@@ -3,7 +3,7 @@
 #	Makfile.
 #
 # - author 	:	Antoine Maleyrie : antoine.maleyrie@gmail.com
-# - version	:	1.7
+# - version	:	1.8
 # - date 	:	24/11/2012
 #
 ################################################################################
@@ -102,6 +102,17 @@ ifeq ($(OS_NAME),msw)
 	@echo "Sorry, run gdb is not possible."
 else
 	@cd $(OS_NAME) && $(MAKE) rungdb
+endif
+
+################################################################################
+# Exécute le programme avec nemiver (gui pour gdb).
+################################################################################
+.PHONY: runnemiver
+runnemiver:	
+ifeq ($(OS_NAME),msw)
+	@echo "Sorry, run nemiver is not possible."
+else
+	@cd $(OS_NAME) && $(MAKE) runnemiver
 endif
 	
 	

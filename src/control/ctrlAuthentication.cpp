@@ -32,27 +32,33 @@ CtrlAuthentication::CtrlAuthentication(	wxWindow* parent,
 	wxStaticText* staticTextUsername = new wxStaticText(this, wxID_ANY, _("Username:"));
 	_textCtrlUsername = new wxTextCtrl(this, wxID_ANY, username);
 		
-	//Mise en forme avec un sizer.
-	wxSizer* sizerUsername = new wxBoxSizer(wxHORIZONTAL);
-	sizerUsername->Add(staticTextUsername, 	0, wxALIGN_CENTER_VERTICAL|wxRIGHT, 2*SIZE_BORDER);	
-	sizerUsername->Add(_textCtrlUsername, 	1, wxEXPAND|wxALIGN_CENTER_VERTICAL);	
+	////Mise en forme avec un sizer.
+	//wxSizer* sizerUsername = new wxBoxSizer(wxHORIZONTAL);
+	//sizerUsername->Add(staticTextUsername, 	0, wxALIGN_CENTER_VERTICAL|wxRIGHT, 2*SIZE_BORDER);	
+	//sizerUsername->Add(_textCtrlUsername, 	1, wxEXPAND|wxALIGN_CENTER_VERTICAL);	
 	
 	//Créations du chant password.
 	wxStaticText* staticTextPassword = new wxStaticText(this, wxID_ANY, _("Password:"));
 	_textCtrlPassword = new wxTextCtrl(this, wxID_ANY, password, wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD);
 	wxToggleButton* toggleButtonShow = new wxToggleButton(this, wxID_ANY, _("Show"));
 		
-	//Mise en forme avec un sizer.
+	//Mise en forme de _textCtrlPassword et toggleButtonShow dans un sizer.
 	wxSizer* sizerPassword = new wxBoxSizer(wxHORIZONTAL);
-	sizerPassword->Add(staticTextPassword, 	0, wxALIGN_CENTER_VERTICAL|wxRIGHT, 			2*SIZE_BORDER);	
-	sizerPassword->Add(_textCtrlPassword, 	1, wxEXPAND|wxALIGN_CENTER_VERTICAL|wxRIGHT, 	2*SIZE_BORDER);	
-	sizerPassword->Add(toggleButtonShow, 	0, wxEXPAND|wxALIGN_CENTER_VERTICAL);	
+	sizerPassword->Add(_textCtrlPassword, 	1, wxALIGN_CENTER_VERTICAL|wxRIGHT, SIZE_BORDER);	
+	sizerPassword->Add(toggleButtonShow, 	0, wxALIGN_CENTER_VERTICAL|wxEXPAND);	
 	
 	//Mise en forme du GUI avec un sizer.
-	wxSizer* sizerMain = new wxBoxSizer(wxVERTICAL);
-	sizerMain->Add(sizerUsername, 0, wxEXPAND|wxBOTTOM|wxLEFT|wxRIGHT|wxTOP, 	SIZE_BORDER);	
-	sizerMain->Add(sizerPassword, 0, wxEXPAND|wxBOTTOM|wxLEFT|wxRIGHT, 			SIZE_BORDER);	
+	wxFlexGridSizer* sizerMain = new wxFlexGridSizer(2, 2, SIZE_BORDER, SIZE_BORDER);
+	sizerMain->AddGrowableCol(1, 1); 
+	sizerMain->Add(staticTextUsername, 	0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT);	
+	sizerMain->Add(_textCtrlUsername, 	1, wxALIGN_CENTER_VERTICAL|wxEXPAND);
+	sizerMain->Add(staticTextPassword, 	0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT);	
+	sizerMain->Add(sizerPassword, 		1, wxALIGN_CENTER_VERTICAL|wxEXPAND);
 	SetSizerAndFit(sizerMain);
+	//wxSizer* sizerMain = new wxBoxSizer(wxVERTICAL);
+	//sizerMain->Add(sizerUsername, 0, wxEXPAND|wxBOTTOM|wxLEFT|wxRIGHT|wxTOP, 	SIZE_BORDER);	
+	//sizerMain->Add(sizerPassword, 0, wxEXPAND|wxBOTTOM|wxLEFT|wxRIGHT, 			SIZE_BORDER);	
+	//SetSizerAndFit(sizerMain);
 	
 	//Bind
 	Bind(wxEVT_TOGGLEBUTTON, &CtrlAuthentication::onToggleButtonShow, this);

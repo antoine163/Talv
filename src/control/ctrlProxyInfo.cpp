@@ -41,46 +41,33 @@ CtrlProxyInfo::CtrlProxyInfo(	wxWindow* parent,
 	sizerProxyAndPort->Add(staticTextPort, 		0, wxALIGN_CENTER_VERTICAL|wxRIGHT, SIZE_BORDER);	
 	sizerProxyAndPort->Add(_spinCtrlPort,		0, wxALIGN_CENTER_VERTICAL);
 	
-	//Créations wxCheckBox et du CtrlAuthentication
-	_checkBoxUseAuthentication = 	new wxCheckBox(			this, wxID_ANY, _("Use authentication:"));
-	_ctrlAuthentication = 			new CtrlAuthentication(	this);
-	_ctrlAuthentication->Enable(false);
+	//Créations StaticBox et du CtrlAuthentication
+	_staticBoxAuthentication = 	new StaticBox(this, wxID_ANY, _("Use authentication:"), true);
+	_ctrlAuthentication = 		new CtrlAuthentication(_staticBoxAuthentication);
 	
 	//Mise en forme avec des sizers.
 	wxSizer* sizerAuthentication = new wxBoxSizer(wxVERTICAL);
-	sizerAuthentication->Add(_checkBoxUseAuthentication, 	0, wxEXPAND|wxBOTTOM, 	SIZE_BORDER);
-	sizerAuthentication->Add(_ctrlAuthentication, 			0, wxEXPAND|wxLEFT, 	8*SIZE_BORDER);
-	
-	wxSizer* sizerAuthenticationMargin = new wxBoxSizer(wxHORIZONTAL);
-	sizerAuthenticationMargin->AddSpacer(8*SIZE_BORDER);
-	sizerAuthenticationMargin->Add(sizerAuthentication, 1);
+	sizerAuthentication->Add(_ctrlAuthentication, 1, wxEXPAND);
+	_staticBoxAuthentication->SetSizer(sizerAuthentication);
 	
 	//Mise en forme du GUI avec un sizer.
 	wxSizer* sizerMain = new wxBoxSizer(wxVERTICAL);
 	sizerMain->Add(sizerProxyAndPort, 			0, wxEXPAND|wxBOTTOM|wxLEFT|wxRIGHT|wxTOP, 	SIZE_BORDER);	
-	sizerMain->Add(sizerAuthenticationMargin, 	0, wxEXPAND|wxBOTTOM|wxLEFT|wxRIGHT, 		SIZE_BORDER);	
+	sizerMain->Add(_staticBoxAuthentication, 	0, wxEXPAND|wxBOTTOM|wxLEFT|wxRIGHT, 		SIZE_BORDER);	
 	SetSizerAndFit(sizerMain);
-	
-	//Bind
-	_checkBoxUseAuthentication->Bind(wxEVT_CHECKBOX, &CtrlProxyInfo::onCheckBoxUseAuthentication, this);
 	
 	setProxyInfo(proxy);
 }
 
 CtrlProxyInfo::~CtrlProxyInfo()
 {
-	//Unbind
-	_checkBoxUseAuthentication->Unbind(wxEVT_CHECKBOX, &CtrlProxyInfo::onCheckBoxUseAuthentication, this);
 }
 
 void CtrlProxyInfo::setProxyInfo(ProxyInfo const& proxyInfo)
 {
 	_textCtrlProxy->SetValue(proxyInfo.getProxy());
 	_spinCtrlPort->SetValue(proxyInfo.getPort());
-	_checkBoxUseAuthentication->SetValue(proxyInfo.AuthenticationIsUsed());
-	wxCommandEvent event(wxEVT_CHECKBOX);
-	onCheckBoxUseAuthentication(event);
-	
+	_staticBoxAuthentication->setChecked(proxyInfo.AuthenticationIsUsed());
 	_ctrlAuthentication->setUsername(proxyInfo.getUsername());
 	_ctrlAuthentication->setPassword(proxyInfo.getPassword());
 }
@@ -89,7 +76,7 @@ ProxyInfo CtrlProxyInfo::getProxyInfo()
 {	
 	return ProxyInfo(	_textCtrlProxy->GetValue(),
 						_spinCtrlPort->GetValue(),
-						_checkBoxUseAuthentication->GetValue(),
+						_staticBoxAuthentication->IsChecked(),
 						_ctrlAuthentication->getUsername(),
 						_ctrlAuthentication->getPassword());
 }
@@ -97,18 +84,6 @@ ProxyInfo CtrlProxyInfo::getProxyInfo()
 bool CtrlProxyInfo::Enable(bool enable)
 {
 	enableWindowsFromSizer(GetSizer(), enable);
-	
-	if(!_checkBoxUseAuthentication->IsChecked())
-		_ctrlAuthentication->Enable(false);
-	
 	return true;
-}
-
-void CtrlProxyInfo::onCheckBoxUseAuthentication(wxCommandEvent&)
-{
-	if(_checkBoxUseAuthentication->IsChecked())
-		_ctrlAuthentication->Enable();
-	else
-		_ctrlAuthentication->Enable(false);
 }
 		

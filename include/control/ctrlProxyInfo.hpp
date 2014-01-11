@@ -14,12 +14,12 @@
 
 //App
 #include "proxyInfo.hpp"
+#include "staticBox.hpp"
 #include "control/ctrlAuthentication.hpp"
 
 //WxWidgets
 #include <wx/window.h>
 #include <wx/string.h>
-#include <wx/checkbox.h>
 #include <wx/textctrl.h>
 #include <wx/spinctrl.h>
 
@@ -44,12 +44,9 @@ class CtrlProxyInfo : public wxWindow
 		bool Enable(bool enable = true);
 
 	private:
-		void onCheckBoxUseAuthentication(wxCommandEvent& event);
-		
-		
 		wxTextCtrl* _textCtrlProxy;
 		wxSpinCtrl* _spinCtrlPort;
-		wxCheckBox* _checkBoxUseAuthentication;
+		StaticBox* _staticBoxAuthentication;
 
 		CtrlAuthentication* _ctrlAuthentication;
 };
