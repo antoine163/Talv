@@ -41,6 +41,11 @@ ActTranslationToList::ActTranslationToList()
 		_lgsrc = wxLANGUAGE_FRENCH;
 	else
 		_lgsrc = wxLANGUAGE_ENGLISH;
+		
+		
+		//Test
+		_lgsrc = wxLANGUAGE_ENGLISH;
+		_lgto = wxLANGUAGE_FRENCH;
 }
 
 ActTranslationToList::~ActTranslationToList()

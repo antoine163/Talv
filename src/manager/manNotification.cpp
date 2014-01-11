@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.1
+//! \version 1.2
 //! \date 12.04.2013
 //!
 //! ********************************************************************
@@ -150,8 +150,8 @@ WinManNotification::WinManNotification(wxWindow* parent)
 	
 	//Mise en forme des buttons radios avec un sizer.
 	wxSizer* sizerPickNotification = new wxBoxSizer(wxVERTICAL);
-	sizerPickNotification->Add(_radioButtonPickNotificationNative,	0, wxEXPAND|wxRIGHT|wxLEFT|wxTOP,		SIZE_BORDER);	
-	sizerPickNotification->Add(_radioButtonPickNotificationRich, 	0, wxEXPAND|wxRIGHT|wxLEFT|wxBOTTOM, 	SIZE_BORDER);
+	sizerPickNotification->Add(_radioButtonPickNotificationNative,	0, wxEXPAND|wxRIGHT|wxTOP,		SIZE_BORDER);	
+	sizerPickNotification->Add(_radioButtonPickNotificationRich, 	0, wxEXPAND|wxRIGHT|wxBOTTOM, 	SIZE_BORDER);
 	staticBoxPickNotification->SetSizer(sizerPickNotification);
 	
 	//Créations du wxStaticBox "Rich notification setting:"
@@ -168,11 +168,10 @@ WinManNotification::WinManNotification(wxWindow* parent)
 	
 	//Mise en forme avec un sizer.
 	wxFlexGridSizer* flexGridSizerNotificationSetting = new wxFlexGridSizer(2, 2, SIZE_BORDER, SIZE_BORDER);
-	flexGridSizerNotificationSetting->AddGrowableCol(1, 1);
 	flexGridSizerNotificationSetting->Add(staticTextchoicePosition, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT);
-	flexGridSizerNotificationSetting->Add(_choicePosition,			0, wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL);	
+	flexGridSizerNotificationSetting->Add(_choicePosition,			0, wxALIGN_CENTER_VERTICAL|wxALIGN_LEFT|wxEXPAND);	
 	flexGridSizerNotificationSetting->Add(staticTextBorder, 		0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT);
-	flexGridSizerNotificationSetting->Add(_spinCtrlBorder,			0, wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL);	
+	flexGridSizerNotificationSetting->Add(_spinCtrlBorder,			0, wxALIGN_CENTER_VERTICAL|wxALIGN_LEFT|wxEXPAND);	
 	
 	//Créations du wxStaticBox "Pick colors:"
 	StaticBox* staticBoxPickColors = new StaticBox(_staticBoxNotificationSetting, wxID_ANY, _("Pick colors:"));
@@ -183,19 +182,18 @@ WinManNotification::WinManNotification(wxWindow* parent)
 	
 	//Mise en forme du wxStaticBox "Pick colors:" avec des sizers.
 	wxFlexGridSizer* flexGridSizerPickColors = new wxFlexGridSizer(2, 2, SIZE_BORDER, SIZE_BORDER);
-	flexGridSizerPickColors->AddGrowableCol(1, 1);
 	flexGridSizerPickColors->Add(staticTextBackground,			0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT);	
-	flexGridSizerPickColors->Add(_colourPickerCtrlBackground,	0, wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL);	    
+	flexGridSizerPickColors->Add(_colourPickerCtrlBackground,	0, wxALIGN_CENTER_VERTICAL|wxALIGN_LEFT|wxEXPAND);	    
 	flexGridSizerPickColors->Add(staticTextText,				0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT);	
-	flexGridSizerPickColors->Add(_colourPickerCtrlText,			0, wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL);
+	flexGridSizerPickColors->Add(_colourPickerCtrlText,			0, wxALIGN_CENTER_VERTICAL|wxALIGN_LEFT|wxEXPAND);
 	staticBoxPickColors->SetSizer(flexGridSizerPickColors);
 
 	//Mise en forme du wxStaticBox "Rich notification setting:" avec un sizer.
 	wxSizer* sizerNotificationSetting = new wxBoxSizer(wxVERTICAL);
-	sizerNotificationSetting->Add(flexGridSizerNotificationSetting,	0, wxEXPAND|wxLEFT|wxTOP|wxRIGHT,	SIZE_BORDER);	
-	sizerNotificationSetting->Add(_checkBoxShowNearCursor, 			0, wxEXPAND|wxLEFT,					SIZE_BORDER);
-	sizerNotificationSetting->Add(_checkBoxMultipleNotifications, 	0, wxEXPAND|wxLEFT|wxBOTTOM,		SIZE_BORDER);
-	sizerNotificationSetting->Add(staticBoxPickColors,				0, wxEXPAND|wxLEFT|wxBOTTOM,		SIZE_BORDER);
+	sizerNotificationSetting->Add(flexGridSizerNotificationSetting,	0, wxEXPAND|wxTOP|wxRIGHT,	SIZE_BORDER);	
+	sizerNotificationSetting->Add(_checkBoxShowNearCursor, 			0, wxEXPAND,				SIZE_BORDER);
+	sizerNotificationSetting->Add(_checkBoxMultipleNotifications, 	0, wxEXPAND|wxBOTTOM,		SIZE_BORDER);
+	sizerNotificationSetting->Add(staticBoxPickColors,				0, wxEXPAND|wxBOTTOM,		SIZE_BORDER);
 	_staticBoxNotificationSetting->SetSizer(sizerNotificationSetting);
 	
 	//Mise en forme du GUI avec un sizer.

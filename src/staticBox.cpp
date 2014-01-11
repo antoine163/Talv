@@ -23,7 +23,7 @@
 // *****************************************************************************
 
 StaticBox::StaticBox(wxWindow *parent, wxWindowID id, const wxString &label, bool withCheckBox, const wxPoint &pos, const wxSize &size, long style, const wxString &name)
-: wxWindow(parent, id, pos, size, style, name), _sizerWork(nullptr), _checkBox(nullptr)
+: wxWindow(parent, id, pos, size, style, name), _sizerMain(nullptr), _sizerWork(nullptr), _checkBox(nullptr)
 {	
 	//Création de la statice line.
 	wxStaticLine* staticLine = new wxStaticLine(this);

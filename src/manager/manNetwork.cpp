@@ -224,10 +224,10 @@ WinManNetwork::WinManNetwork(wxWindow* parent)
 	
 	//Mise en forme des buttons radios avec un sizer.
 	wxSizer* sizerProxy = new wxBoxSizer(wxVERTICAL);
-	sizerProxy->Add(_radioButtonProxyNo,			0, wxEXPAND|wxRIGHT,	SIZE_BORDER);	
-	sizerProxy->Add(_radioButtonProxySystem, 		0, wxEXPAND|wxRIGHT, 	SIZE_BORDER);	
-	//sizerProxy->Add(_radioButtonProxyAutoDetect, 	0, wxEXPAND|wxRIGHT, 	SIZE_BORDER);	
-	sizerProxy->Add(_radioButtonProxyManual, 		0, wxEXPAND|wxRIGHT,	SIZE_BORDER);
+	sizerProxy->Add(_radioButtonProxyNo,			0, wxEXPAND,	SIZE_BORDER);	
+	sizerProxy->Add(_radioButtonProxySystem, 		0, wxEXPAND, 	SIZE_BORDER);	
+	//sizerProxy->Add(_radioButtonProxyAutoDetect, 	0, wxEXPAND, 	SIZE_BORDER);	
+	sizerProxy->Add(_radioButtonProxyManual, 		0, wxEXPAND,	SIZE_BORDER);
 	staticBoxProxySetting->SetSizer(sizerProxy);
 	
 	//Créations des buttons radios pour afficher les erreurs.
@@ -238,9 +238,9 @@ WinManNetwork::WinManNetwork(wxWindow* parent)
 	
 	//Mise en forme dans un sizer
 	wxSizer* sizerShowError = new wxBoxSizer(wxVERTICAL);
-	sizerShowError->Add(_radioButtonShowErrorNo,			0, wxEXPAND|wxRIGHT,	SIZE_BORDER);	
-	sizerShowError->Add(_radioButtonShowErrorInNotification,0, wxEXPAND|wxRIGHT, 	SIZE_BORDER);	
-	sizerShowError->Add(_radioButtonShowErrorInDialog, 		0, wxEXPAND|wxRIGHT,	SIZE_BORDER);
+	sizerShowError->Add(_radioButtonShowErrorNo,			0, wxEXPAND,	SIZE_BORDER);	
+	sizerShowError->Add(_radioButtonShowErrorInNotification,0, wxEXPAND, 	SIZE_BORDER);	
+	sizerShowError->Add(_radioButtonShowErrorInDialog, 		0, wxEXPAND,	SIZE_BORDER);
 	staticBoxShowError->SetSizer(sizerShowError);
 	
 	//Mise en forme des StaticBox dans un sizer.
@@ -254,7 +254,7 @@ WinManNetwork::WinManNetwork(wxWindow* parent)
 	
 	//Mise en forme dans un sizer
 	wxSizer* sizerCtrlProxyInfoProxyManual = new wxBoxSizer(wxVERTICAL);
-	sizerCtrlProxyInfoProxyManual->Add(_ctrlProxyInfoProxyManual, 0, wxEXPAND|wxRIGHT);
+	sizerCtrlProxyInfoProxyManual->Add(_ctrlProxyInfoProxyManual, 0, wxEXPAND);
 	_staticBoxProxyManual->SetSizer(sizerCtrlProxyInfoProxyManual);
 	
 	//Mise en forme du GUI avec un sizer.
