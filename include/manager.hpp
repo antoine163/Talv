@@ -18,9 +18,8 @@
 //! Les classes dans cette section sont des gestionnaires de données ou des
 //! utilitaires.
 //! Les classes préfixer par \b Man sont touts basée sur la classe \ref Manager.
-
-//! \defgroup winmanager Window manager
-//! \brief Liste des windows managers
+//! \todo détailler ...
+//! \todo Crées la page pageCreateTranslator
 
 //Stl
 #include <vector>
@@ -94,26 +93,43 @@ class WinManager : public wxWindow
 class Manager
 {	
 	public:
-		//! \brief Charger la configuration du manager.
-		//! Pas forcement dans le fichier de config.
-		//! Implémenter dans IMPLEMENT_MANAGER.
+		//! \brief Chargement de la configuration du manager.
+		//!
+		//! Cette méthode est implémenter dans la define \b IMPLEMENT_MANAGER.
+		//!  Dans les classe enfant, Vous devais tout de même définir et
+		//! implémenter la méthode de prototype:
+		//! \code
+		//! virtual void manLoad(wxFileConfig& fileConfig); 
+		//! \endcode 
 		virtual void load(wxFileConfig& fileConfig)=0;
 		
-		//! \brief Sauvegarde la configuration du manager.
-		//! Pas forcement dans le fichier de config.
-		//! Implémenter dans IMPLEMENT_MANAGER.
+		//! \brief Sauvegarde de la configuration du manager.
+		//!
+		//! Cette méthode est implémenter dans la define \b IMPLEMENT_MANAGER.
+		//! Dans les classe enfant, vous devais tout de même définir et
+		//! implémenter la méthode de prototype:
+		//! \code
+		//! virtual void manSave(wxFileConfig& fileConfig); 
+		//! \endcode 
 		virtual void save(wxFileConfig& fileConfig)const=0;
 		
 		virtual WinManager* newEditWindow(wxWindow* parent);
 		
+		//! \brief Créations de tous les managers de l'app.
 		static void createManagers();
+		//! \brief Suppression de tous les managers de l'app.
 		static void killManagers();
+		//! \brief Chargement de la configuration de tous les managers de l'app.
 		static void loadManagers();
+		//! \brief Sauvegarde de la configuration de tous les managers de l'app.
 		static void saveManagers();
+		//! \brief Obtenir l"instance de tous les managers de l'app.
 		static std::vector<Manager*>& getManagers();
 		
 	protected:
+		//! \brief Constructeur.
 		Manager();
+		//! \brief Destructeur.
 		virtual ~Manager();
 		
 		virtual void manLoad(wxFileConfig& fileConfig)=0;

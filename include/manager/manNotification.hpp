@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.2
+//! \version 1.3
 //! \date 12.04.2013
 //!
 //! ********************************************************************
@@ -66,17 +66,21 @@ class FrameNotification : public wxFrame
 		//! \param icon l'icône à afficher. Seul les valeurs \b wxICON_NONE ou
 		//! \b wxICON_ERROR ou \b wxICON_INFORMATION ou \b wxICON_WARNING peut
 		//! être passer en paramètre.
+		//! \param maxwidth taille maximum de la notification en largeur.
 		FrameNotification(	wxString const& title,
 							wxString const& message,
-							long icon = wxICON_NONE);
+							long icon = wxICON_NONE,
+							int	maxWidth = -1);
 							
 		//! \brief Constructeur.
 		//! \param title est le titre de la notification.
 		//! \param message est le message de la notification.
 		//! \param bitmap le bitmap à afficher.
+		//! \param maxwidth taille maximum de la notification en largeur.
 		FrameNotification(	wxString const& title,
 							wxString const& message,
-							wxBitmap const& bitmap);
+							wxBitmap const& bitmap,
+							int	maxWidth = -1);
 							
 		//! \brief Destructeur.
 		~FrameNotification();
@@ -101,9 +105,11 @@ class FrameNotification : public wxFrame
 		//! \param title est le titre de la notification.
 		//! \param message est le message de la notification.
 		//! \param bitmap le bitmap a afficher.
+		//! \param maxwidth taille maximum de la notification en largeur.
 		void create(	wxString const& title,
 						wxString const& message,
-						wxBitmap const& bitmap);
+						wxBitmap const& bitmap,
+						int	maxWidth);
 							
 		//! \brief Timer de la notification.
 		wxTimer _timeout;

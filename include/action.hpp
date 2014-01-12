@@ -107,6 +107,8 @@ class Action
 		void save(wxFileConfig& fileConfig)const;
 		
 		//! \brief Créées des actions pour tout les type d'actions connue.
+		//!
+		//! Penser a libérer la mémoire.
 		static std::vector<Action*> createAllActions();
 		
 		//! \brief Crée une action a partir de son non de classe.

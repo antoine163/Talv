@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.2
+//! \version 1.3
 //! \date 12.04.2013
 //!
 //! ********************************************************************
@@ -38,26 +38,29 @@
 
 FrameNotification::FrameNotification(	wxString const& title,
 										wxString const& message,
-										long icon)
+										long icon,
+										int	maxWidth)
 : wxFrame(nullptr, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSTAY_ON_TOP|wxFRAME_NO_TASKBAR), _timeout(this) 
 {
 	if(icon == wxICON_NONE)
-		create(title, message, wxBitmap());
+		create(title, message, wxBitmap(), maxWidth);
 	else
-		create(title, message, wxArtProvider::GetBitmap(wxArtProvider::GetMessageBoxIconId(icon), wxART_MESSAGE_BOX));
+		create(title, message, wxArtProvider::GetBitmap(wxArtProvider::GetMessageBoxIconId(icon), wxART_MESSAGE_BOX), maxWidth);
 }
 
 FrameNotification::FrameNotification(	wxString const& title,
 										wxString const& message,
-										wxBitmap const& bitmap)
+										wxBitmap const& bitmap,
+										int	maxWidth)
 : wxFrame(nullptr, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSTAY_ON_TOP|wxFRAME_NO_TASKBAR), _timeout(this) 
 {
-	create(title, message, bitmap);
+	create(title, message, bitmap, maxWidth);
 }
 
 void FrameNotification::create(	wxString const& title,
 								wxString const& message,
-								wxBitmap const& bitmap)
+								wxBitmap const& bitmap,
+								int	maxWidth)
 {
 	//Création du titre et du message.
 	_staticTextTitle = new wxStaticText(this, wxID_ANY, wxEmptyString);
@@ -65,20 +68,26 @@ void FrameNotification::create(	wxString const& title,
 	_staticTextMessage = new wxStaticText(this, wxID_ANY, wxEmptyString);
 	_staticTextMessage->SetLabelMarkup(message);
 	
+	
 	//Création de la statice line.
 	_staticLine = new wxStaticLine(this);
+	
+	//Créations du wxStaticBitmap
+	_staticBitmap = nullptr;
+	if(bitmap.IsOk())
+	{
+		_staticBitmap = new wxStaticBitmap(this, wxID_ANY, bitmap);
+		maxWidth -= _staticBitmap->GetSize().GetWidth()+SIZE_BORDER;
+	}
+	
+	//Wrap le TextMessage
+	_staticTextMessage->Wrap(maxWidth-5*SIZE_BORDER);
 	
 	//Mise en forme titre et du message avec un sizer.
 	wxSizer* sizerNotification = new wxBoxSizer(wxVERTICAL);
 	sizerNotification->Add(_staticTextTitle, 	0, wxEXPAND|wxLEFT, 		2*SIZE_BORDER);	
 	sizerNotification->Add(_staticLine, 		0, wxEXPAND|wxTOP|wxBOTTOM,	SIZE_BORDER);	
 	sizerNotification->Add(_staticTextMessage, 	0, wxEXPAND|wxLEFT, 		4*SIZE_BORDER);
-	
-	//Créations du wxStaticBitmap
-	_staticBitmap = nullptr;
-	if(bitmap.IsOk())
-		_staticBitmap = new wxStaticBitmap(this, wxID_ANY, bitmap);
-	
 	
 	//Mise en forme du GUI avec un sizer.
 	wxSizer* sizerMain = new wxBoxSizer(wxHORIZONTAL);
@@ -575,7 +584,7 @@ void ManNotification::notify(	wxString const& title,
 		case USE_NOTIFICATION_RICH:
 		{
 			//Création de la fenêtre de notification.
-			FrameNotification *newFrameNotify = new FrameNotification(title, message, icon);
+			FrameNotification *newFrameNotify = new FrameNotification(title, message, icon, _workarea.GetWidth()-2*_border);
 				
 			//On doit afficher la position près du curseur ?
 			if(_nearCursor && nearCursor)

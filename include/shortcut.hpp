@@ -2280,11 +2280,10 @@ class Shortcut
 		//! \brief Créé un nouveau raccourci.
 		//! \code
 		//! //Création d'un raccourci, touche "super+ctrl+a" 
-		//! 	id = _shortcut->creat(KEY_MODIFIER_SUPER|KEY_MODIFIER_CONTROL), 'a');
+		//! 	id = _shortcut->creat(MODIFIER_SUPER|MODIFIER_CONTROL), KEY_A);
 		//! \endcode
 		//! \param modifiers Le modificateur lier au raccourci, peut être une combinaison de \ref Modifier_e.
-		//! \param key la touche du racourci.
-		//! \return un nouveau id lier au raccourci. L'id est générer avec wxNewId().
+		//! \param key la touche du raccourci.
 		void creat(Modifier_e modifiers, Key_e key);
 		
 		//! \brief Créé un nouveau raccourci.

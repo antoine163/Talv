@@ -25,7 +25,7 @@
 // Class ManAction
 // *****************************************************************************
 
-//! \ingroup manager, action
+//! \ingroup manager
 //! \brief ManAction
 class ManAction : public Manager, public wxEvtHandler
 {
