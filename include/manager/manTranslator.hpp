@@ -25,7 +25,10 @@
 #include <wx/string.h>
 #include <wx/arrstr.h>
 #include <wx/window.h>
+#include <wx/stattext.h>
 #include <wx/listbox.h>
+#include <wx/hyperlink.h>
+#include <wx/button.h>
 
 // *****************************************************************************
 // Class ManTranslator
@@ -51,7 +54,9 @@ class ManTranslator : public Manager
 						wxLanguage lgsrc,
 						wxLanguage lgto);
 						
-		wxArrayString getNamesTranslators();
+		wxArrayString getOrderTranslators()const;
+		void setOrderTranslators(wxArrayString const& names);
+		Translator const* getTranslator(wxString const& name)const;
 						
 		virtual WinManager* newEditWindow(wxWindow* parent);
 		
@@ -77,7 +82,17 @@ class WinManTranslator : public WinManager
 		virtual void refreshManagerFromGui()const;
 	
 	private:
+		void onListBox(wxCommandEvent& event);
+		void onButton(wxCommandEvent& event);
+		
+		void swapInList(unsigned int itemFirst, unsigned int itemSecond);
+		void updateButtons();
+		
 		wxListBox* _listBoxTranslator;
+		wxStaticText* _staticTextDescription;
+		wxHyperlinkCtrl* _hyperlinkCtrlSee;
+		wxButton* _buttonUp;
+		wxButton* _buttonDown;
 };
 
 #endif //MAN_TRANSLATOR_H

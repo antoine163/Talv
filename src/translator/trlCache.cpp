@@ -27,7 +27,12 @@ TrlCache::~TrlCache()
 {
 }
 
-IMPLEMENT_TRANSLATOR(TrlCache, _("Cache"), _("Translation a text from the caches files. (work without network).\nThis is a particular translator. because the words you did never translated with auther translator don"), wxEmptyString);
+IMPLEMENT_TRANSLATOR(TrlCache,
+					_("Cache"),
+					_("Translation a text from the caches files. (work without network).\n"
+					"This is a particular translator.\n"
+					"Because the words you did never translated with a author translator,\n"
+					"can't will be translate by this translator."), wxEmptyString);
 
 wxString TrlCache::getTranslations(	std::map<wxString, wxArrayString>* translations,
 									wxString const& text,
