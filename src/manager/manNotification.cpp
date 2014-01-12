@@ -63,9 +63,9 @@ void FrameNotification::create(	wxString const& title,
 								int	maxWidth)
 {
 	//Création du titre et du message.
-	_staticTextTitle = new wxStaticText(this, wxID_ANY, wxEmptyString);
+	_staticTextTitle = new wxStaticText(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxST_ELLIPSIZE_END);
 	_staticTextTitle->SetLabelMarkup("<big><b>"+title+"</b></big>");
-	_staticTextMessage = new wxStaticText(this, wxID_ANY, wxEmptyString);
+	_staticTextMessage = new wxStaticText(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxST_ELLIPSIZE_END);
 	_staticTextMessage->SetLabelMarkup(message);
 	
 	
@@ -81,7 +81,7 @@ void FrameNotification::create(	wxString const& title,
 	}
 	
 	//Wrap le TextMessage
-	_staticTextMessage->Wrap(maxWidth-5*SIZE_BORDER);
+	//_staticTextMessage->Wrap(maxWidth-5*SIZE_BORDER);
 	
 	//Mise en forme titre et du message avec un sizer.
 	wxSizer* sizerNotification = new wxBoxSizer(wxVERTICAL);

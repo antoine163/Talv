@@ -16,6 +16,8 @@
 
 //WwWidgets
 #include <wx/sizer.h>
+#include <wx/language.h>
+#include <wx/log.h> 
 
 
 // *****************************************************************************
@@ -35,14 +37,28 @@ ManTranslator::~ManTranslator()
 
 IMPLEMENT_MANAGER(ManTranslator);
 
+//! \todo a implémenter avec les caches
 wxString ManTranslator::getTranslations(
 						std::map<wxString, wxArrayString>* translations,
 						wxString const& text,
 						wxLanguage lgsrc,
 						wxLanguage lgto)
 {	
+	if(text.IsEmpty())
+	{
+		wxLogMessage("No test at tranlate.");
+		return wxEmptyString;
+	}
 	
-	
+	for(auto it: _translators)
+	{
+		wxString translation = it->getTranslations(translations, text, lgsrc, lgto);
+		if(translation.IsEmpty())
+			wxLogMessage("The %s text \"%s\" could not be translate to %s from the tranlator: %s",
+						wxLocale::GetLanguageName(lgsrc), text, wxLocale::GetLanguageName(lgto), it->getName());
+		else
+			return translation;
+	}
 	
 	return wxEmptyString;
 }

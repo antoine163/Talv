@@ -11,6 +11,11 @@
 
 //App
 #include "translator/trlGoogle.hpp"
+#include "manager/manNetwork.hpp"
+
+//WxJson
+#include <wx/jsonval.h>
+#include <wx/jsonreader.h>
 
 //WxWidgets
 #include <wx/intl.h> 
@@ -34,6 +39,53 @@ wxString TrlGoogle::getTranslations(std::map<wxString, wxArrayString>* translati
 									wxLanguage lgsrc,
 									wxLanguage lgto)
 {
-	return wxEmptyString;
+	//Représentent la traduction au forma json
+	wxString jsonText;
+	
+	//Construction de l'url
+	wxString url;
+	url << "http://translate.google.com/translate_a/t?ie=UTF-8&oe=UTF-8&client=x";
+	url << "&text=" << text;
+	url << "&hl=" << wxLocale::GetLanguageCanonicalName(lgto);
+	url << "&sl=" << wxLocale::GetLanguageCanonicalName(lgsrc);
+	url << "&tl=" << wxLocale::GetLanguageCanonicalName(lgto);
+	
+	//On récupère la réponse de google.
+	wxString json;
+	if(ManNetwork::get().downloadFromUrlToString(url, &json) != wxURL_NOERR)
+		return wxEmptyString;
+			
+	//Variable qui va contenir la traduction.
+	wxString trans;
+
+	//Variable pour la lecture du JSON
+	wxJSONValue root;
+	wxJSONReader reader;
+	
+	//Lecture du JSON
+	reader.Parse(json, &root);
+	
+	//Récupère la phrase.
+	wxJSONValue& sentences = root["sentences"];
+	
+	//Récupère la traduction (principale).
+	for(int i = 0; i < sentences.Size(); i++)
+		trans << sentences[i]["trans"].AsString();
+		
+	//Récupère le dictionnaire (Les autres traductions).
+	wxJSONValue& dict = root["dict"];
+	
+	for(int i = 0; i < dict.Size(); i++)
+	{
+		wxString pos = dict[i]["pos"].AsString();
+		wxJSONValue& terms = dict[i]["terms"];
+		
+		for(int i = 0; i < terms.Size(); i++)
+		{
+			(*translations)[pos].Add(terms[i].AsString());
+		}
+	}
+
+	return trans;
 }
 

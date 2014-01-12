@@ -13,14 +13,12 @@
 #include "action/actTranslationToNotification.hpp"
 #include "manager/manNotification.hpp"
 #include "manager/manGeneral.hpp"
+#include "manager/manTranslator.hpp"
 #include "defs.hpp"
 
 //WxWidgets
 #include <wx/intl.h>
 #include <wx/sizer.h>
-
-//Test
-#include "manager/manNetwork.hpp"
 
 // *****************************************************************************
 // Class ActTranslationToNotification
@@ -73,21 +71,46 @@ wxString ActTranslationToNotification::getStringPreferences()const
 			wxLocale::GetLanguageName(_lgto);
 }
 
+//! \todo ajouter le compter de traduction
 void ActTranslationToNotification::execute()
 {
 	//On récupère le texte de la presse papier a traduire.
-	wxString text = ManGeneral::get().getClipboard();
+	wxString clipboard = ManGeneral::get().getClipboard();
 	
-	wxString url;
-	url << "http://translate.google.com/translate_a/t?ie=UTF-8&oe=UTF-8&client=x";
-	url << "&text=" << text;
-	url << "&hl=" << wxLocale::GetLanguageCanonicalName(_lgto);
-	url << "&sl=" << wxLocale::GetLanguageCanonicalName(_lgsrc);
-	url << "&tl=" << wxLocale::GetLanguageCanonicalName(_lgto);
+	//La presse papier est t'elle vide ?
+	if(clipboard.IsEmpty())
+	{
+		//Pas de texte à traduire
+		ManNotification::get().notify(_("Nothing at translate"), _("Your clipboard is empty."), wxICON_INFORMATION);
+		return;
+	}
 	
-	wxString json;
-	std::cout << "URL error: " << ManNetwork::get().downloadFromUrlToString(url, &json) << std::endl;
-	ManNotification::get().notify("ActTranslationToNotification::execute", json, wxICON_NONE, true);
+	//On récupère le texte traduit
+	std::map<wxString, wxArrayString> translations;
+	wxString mainTranslate = ManTranslator::get().getTranslations(&translations, clipboard, _lgsrc, _lgto);
+	//On vérifie si une traduction existe.
+	if(mainTranslate.IsEmpty())
+	{
+		ManNotification::get().notify(_("No translation"), _("Sorry, there is no translation for the text: \""+clipboard+"\""), wxICON_INFORMATION);
+		return;
+	}
+	
+	//On mes en forme la traduction dans un wxString
+	wxString translationsNotify;
+	translationsNotify << "\n==&gt; <big>" << mainTranslate << "</big>";
+	
+	for(auto &it: translations)
+	{		
+		translationsNotify << "\n\n<i>" << it.first << ":</i>";
+		for(auto &itt: it.second)
+		{
+			translationsNotify << "\n\t" << itt;
+		}
+	}
+	
+	//On affiche la traduction
+	ManNotification::get().notify(
+		wxString::Format(_("Clipboard translation to %s:"), wxLocale::GetLanguageName(_lgto)), translationsNotify, wxICON_NONE, true);
 }
 
 void ActTranslationToNotification::actLoad(wxFileConfig&)
