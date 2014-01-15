@@ -113,6 +113,18 @@ void ActTranslationToNotification::execute()
 		wxString::Format(_("Clipboard translation to %s:"), wxLocale::GetLanguageName(_lgto)), translationsNotify, wxICON_NONE, true);
 }
 
+void ActTranslationToNotification::getLanguages(wxLanguage* lgsrc, wxLanguage* lgto)const
+{
+	*lgsrc = _lgsrc;
+	*lgto = _lgto;
+}
+
+void ActTranslationToNotification::setLanguages(wxLanguage lgsrc, wxLanguage lgto)
+{
+	_lgsrc = lgsrc;
+	_lgto = lgto;
+}
+
 void ActTranslationToNotification::actLoad(wxFileConfig&)
 {
 	//On récupère les préférence.
@@ -134,7 +146,10 @@ WinActTranslationToNotification::WinActTranslationToNotification(wxWindow* paren
 : WinAction(parent, act)
 {
 	//Créations du CtrlPickLanguages.
-	_ctrlPickLanguages = new CtrlPickLanguages(this);
+	wxLanguage lgsrc;
+	wxLanguage lgto;
+	static_cast<ActTranslationToNotification*>(_act)->getLanguages(&lgsrc, &lgto);
+	_ctrlPickLanguages = new CtrlPickLanguages(this, lgsrc, lgto);
 	
 	GetSizer()->Add(_ctrlPickLanguages, 0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 	SIZE_BORDER);
 }
@@ -145,5 +160,9 @@ WinActTranslationToNotification::~WinActTranslationToNotification()
 
 void WinActTranslationToNotification::refreshActionFromGui()
 {
+	wxLanguage lgsrc;
+	wxLanguage lgto;
+	_ctrlPickLanguages->getLanguages(&lgsrc, &lgto);
+	static_cast<ActTranslationToNotification*>(_act)->setLanguages(lgsrc, lgto);
 }
 

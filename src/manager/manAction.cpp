@@ -33,8 +33,8 @@ ManAction::ManAction()
 {
 	Bind(EVT_SHORTCUT, &ManAction::onShortcut, this);
 	
-	add(ShortcutKey::stringToShortcutKey("ctrl+f"), Action::createAction("ActTranslationToNotification"));
-	add(ShortcutKey::stringToShortcutKey("ctrl+e"), Action::createAction("ActTranslationToList"));
+	add(ShortcutKey::stringToShortcutKey("altgr+f"), Action::createAction("ActTranslationToNotification"));
+	add(ShortcutKey::stringToShortcutKey("altgr+e"), Action::createAction("ActTranslationToList"));
 }
 
 ManAction::~ManAction()

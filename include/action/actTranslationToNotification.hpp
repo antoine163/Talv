@@ -46,6 +46,9 @@ class ActTranslationToNotification : public Action
 		//! \brief Exécuter l'action.
 		void execute();
 		
+		void getLanguages(wxLanguage* lgsrc, wxLanguage* lgto)const;
+		void setLanguages(wxLanguage lgsrc, wxLanguage lgto);
+		
 	protected:		
 		//! \brief Permet de charger les préférences de l'action à partir du wxFileConfig.
 		//! \param fileConfig fichier à partir du quelle l'action doit être charger.

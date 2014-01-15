@@ -3102,6 +3102,7 @@ void ShortcutThread::halt()
 	while(IsRunning());
 }
 
+//! \todo utiliser wxMutex
 wxThread::ExitCode ShortcutThread::Entry()
 {
 	bool run = true;
