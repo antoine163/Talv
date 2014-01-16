@@ -1,4 +1,4 @@
-//! \file **************************************************************
+//! \file **********************************************************************
 //! \brief Source Cache
 //! 
 //! - Compilateur : GCC,MinGW
@@ -7,20 +7,14 @@
 //! \version 0.1
 //! \date 16.11.2013
 //!
-//! ********************************************************************
+//! ****************************************************************************
 
-/*
-*	Copyright © 2013 - Antoine Maleyrie.
-*/
-
+//App
 #include "cache.hpp"
 
-//TEST
-#include <iostream>
-
-// *********************************************************************
+// *****************************************************************************
 // Class Cache
-// *********************************************************************
+// *****************************************************************************
 
 Cache::Cache()
 {
@@ -33,11 +27,11 @@ Cache::~Cache()
 Status_e Cache::existText(wxString const& text)const
 {
 	if(!_fileName.HasName())
-		return FILE_NO_NAME;
+		return STATUS_FILE_NO_NAME;
 		
 	wxFile file;
 	if(!file.Open(_fileName.GetFullPath(), wxFile::read))
-		return FILE_OPEN_FAILED;
+		return STATUS_FILE_OPEN_FAILED;
 		
 	Status_e valReturn = findOffsetTextAndDataTextInFile(file, text, nullptr, nullptr);
 		
@@ -49,7 +43,7 @@ Status_e Cache::addText(wxString const& text, DataText const& dataText)
 {
 	Status_e valReturn = existText(text);
 	
-	if(valReturn != TEXT_NO_EXIST)
+	if(valReturn != STATUS_TEXT_NO_EXIST)
 		return valReturn;
 	
 	std::map<wxString, DataText> texts;
@@ -60,17 +54,17 @@ Status_e Cache::addText(wxString const& text, DataText const& dataText)
 Status_e Cache::updateText(wxString const& text, DataText const& dataText)
 {
 	if(!_fileName.HasName())
-		return FILE_NO_NAME;
+		return STATUS_FILE_NO_NAME;
 		
 	wxFile file;
 	if(!file.Open(_fileName.GetFullPath(), wxFile::read_write))
-		return FILE_OPEN_FAILED;
+		return STATUS_FILE_OPEN_FAILED;
 		
 	//On cherche le texte
 	wxFileOffset offsetText;
 	wxFileOffset offsetDataText;
 	Status_e valReturn = findOffsetTextAndDataTextInFile(file, text, &offsetText, &offsetDataText);
-	if(valReturn != TEXT_EXIST)
+	if(valReturn != STATUS_TEXT_EXIST)
 	{
 		file.Close();
 		return valReturn;
@@ -79,7 +73,7 @@ Status_e Cache::updateText(wxString const& text, DataText const& dataText)
 	//On récupère les données du texte.
 	DataText tmpDataText;
 	valReturn = readDataTextInFile(file, &tmpDataText);
-	if(valReturn != SUCCESS)
+	if(valReturn != STATUS_SUCCESS)
 	{
 		file.Close();
 		return valReturn;
@@ -107,7 +101,7 @@ Status_e Cache::updateText(wxString const& text, DataText const& dataText)
 		if((size_t)file.Read(bottomFile.GetWriteBuf(sizeRead), sizeRead) != sizeRead)
 		{
 			file.Close();
-			return FILE_READ_ERROR;
+			return STATUS_FILE_READ_ERROR;
 		}
 		bottomFile.UngetWriteBuf(sizeRead);
 		
@@ -117,14 +111,14 @@ Status_e Cache::updateText(wxString const& text, DataText const& dataText)
 		if((size_t)file.Read(topFile.GetWriteBuf(sizeRead), sizeRead) != sizeRead)
 		{
 			file.Close();
-			return FILE_READ_ERROR;
+			return STATUS_FILE_READ_ERROR;
 		}
 		topFile.UngetWriteBuf(sizeRead);
 		
 		//On ferme le fichier et on en crée un nouveau.
 		file.Close();
 		if(!file.Create(_fileName.GetFullPath(), true))
-			valReturn = FILE_CREATE_FAILED;
+			valReturn = STATUS_FILE_CREATE_FAILED;
 		else
 		{
 			//On écris les données précédemment lu (mais bien sur sen le
@@ -134,19 +128,19 @@ Status_e Cache::updateText(wxString const& text, DataText const& dataText)
 			if(file.Write(topFile.GetData(), sizeWrite) != sizeWrite)
 			{
 				file.Close();
-				return FILE_WRITE_ERROR;
+				return STATUS_FILE_WRITE_ERROR;
 			}
 			
 			sizeWrite = bottomFile.GetDataLen();
 			if(file.Write(bottomFile.GetData(), sizeWrite) != sizeWrite)
 			{
 				file.Close();
-				return FILE_WRITE_ERROR;
+				return STATUS_FILE_WRITE_ERROR;
 			}
 			
 			//On fini par écrire le texte et les données du texte.
 			valReturn = writeStringInFile(file, text);
-			if(valReturn != SUCCESS)
+			if(valReturn != STATUS_SUCCESS)
 			{
 				file.Close();
 				return valReturn;
@@ -166,19 +160,19 @@ Status_e Cache::replaceTexts(std::map<wxString, DataText> const& texts)
 	wxString lgsrc;
 	wxString lgto;
 	Status_e valReturn = getLanguages(&lgsrc, &lgto);
-	if(valReturn != SUCCESS)
+	if(valReturn != STATUS_SUCCESS)
 		return valReturn;
 		
 	wxFileName tmpFileName = _fileName;
 	
 	valReturn = clear();
-	if(valReturn != SUCCESS)
+	if(valReturn != STATUS_SUCCESS)
 		return valReturn;
 	
 	_fileName = tmpFileName;
 	
 	valReturn = setLanguages(lgsrc, lgto);
-	if(valReturn != SUCCESS)
+	if(valReturn != STATUS_SUCCESS)
 		return valReturn;
 	
 	return addTexts(texts);
@@ -189,11 +183,11 @@ Status_e Cache::getTexts(	wxArrayString* texts,
 							unsigned int nbTranslationFilter)const
 {
 	if(!_fileName.HasName())
-		return FILE_NO_NAME;
+		return STATUS_FILE_NO_NAME;
 		
 	wxFile file;
 	if(!file.Open(_fileName.GetFullPath(), wxFile::read))
-		return FILE_OPEN_FAILED;
+		return STATUS_FILE_OPEN_FAILED;
 		
 	Status_e valReturn = filePointerAfterHeader(file);
 	
@@ -202,15 +196,15 @@ Status_e Cache::getTexts(	wxArrayString* texts,
 	wxString tmpText;
 	Knowledge_e tmpDataTextKnowledge = KNOWLEDGE_UNKNOWN;
 	unsigned int tmpDataTextnbTranslation = 0;
-	while(valReturn == SUCCESS && !file.Eof())
+	while(valReturn == STATUS_SUCCESS && !file.Eof())
 	{
 		valReturn = readStringInFile(file, &tmpText);
-		if(valReturn != SUCCESS)
+		if(valReturn != STATUS_SUCCESS)
 			break;
 			
 		valReturn = readDataTextInFile(file, 	&tmpDataTextKnowledge,
 												&tmpDataTextnbTranslation);
-		if(valReturn != SUCCESS)
+		if(valReturn != STATUS_SUCCESS)
 			break;
 			
 		//Ajout le texte lus si ok avec les filtres.
@@ -230,11 +224,11 @@ Status_e Cache::getTextsAndData(	std::map<wxString, DataText>* texts,
 									unsigned int nbTranslationFilter)const
 {
 	if(!_fileName.HasName())
-		return FILE_NO_NAME;
+		return STATUS_FILE_NO_NAME;
 		
 	wxFile file;
 	if(!file.Open(_fileName.GetFullPath(), wxFile::read))
-		return FILE_OPEN_FAILED;
+		return STATUS_FILE_OPEN_FAILED;
 		
 	Status_e valReturn = filePointerAfterHeader(file);
 	
@@ -242,20 +236,20 @@ Status_e Cache::getTextsAndData(	std::map<wxString, DataText>* texts,
 	//est pas arriver a la fin du fichier.
 	wxString tmpText;
 	DataText tmpDataText;
-	while(valReturn == SUCCESS && !file.Eof())
+	while(valReturn == STATUS_SUCCESS && !file.Eof())
 	{
 		valReturn = readStringInFile(file, &tmpText);
-		if(valReturn != SUCCESS)
+		if(valReturn != STATUS_SUCCESS)
 			break;
 			
 		tmpDataText.clear();
 		valReturn = readDataTextInFile(file, &tmpDataText);
-		if(valReturn != SUCCESS)
+		if(valReturn != STATUS_SUCCESS)
 			break;
 			
 		//Ajout le texte lus si ok avec les filtres.
-		if(	tmpDataText._knowledge & KnowledgeFilter &&
-			tmpDataText._nbTranslation >= nbTranslationFilter)
+		if(	tmpDataText.getKnowledge() & KnowledgeFilter &&
+			tmpDataText.getNbTranslation() >= nbTranslationFilter)
 		{
 			(*texts)[tmpText] = tmpDataText;
 		}
@@ -268,24 +262,24 @@ Status_e Cache::getTextsAndData(	std::map<wxString, DataText>* texts,
 Status_e Cache::addTexts(std::map<wxString, DataText> const& texts)
 {
 	if(!_fileName.HasName())
-		return FILE_NO_NAME;
+		return STATUS_FILE_NO_NAME;
 		
 	wxFile file;
 	if(!file.Open(_fileName.GetFullPath(), wxFile::write_append))
-		return FILE_OPEN_FAILED;
+		return STATUS_FILE_OPEN_FAILED;
 		
-	Status_e valReturn = SUCCESS;
+	Status_e valReturn = STATUS_SUCCESS;
 	for(auto& it: texts)
 	{
 		
 		//Écriture du texte.
 		valReturn = writeStringInFile(file, it.first);
-		if(valReturn != SUCCESS)
+		if(valReturn != STATUS_SUCCESS)
 			break;
 			
 		//Écriture des données du texte.
 		valReturn = writeDataTextInFile(file, it.second);
-		if(valReturn != SUCCESS)
+		if(valReturn != STATUS_SUCCESS)
 			break;
 	}
 		
@@ -303,7 +297,7 @@ Status_e Cache::findOffsetTextAndDataTextInFile(	wxFile& file,
 	//On lie les textes tend que la lecture réussi et que l'on
 	//est pas arriver a la fin du fichier.
 	wxString tmpText;
-	while(valReturn == SUCCESS && !file.Eof())
+	while(valReturn == STATUS_SUCCESS && !file.Eof())
 	{	
 		//On mémorise l'offset du texte.
 		if(offsetText != nullptr)
@@ -311,7 +305,7 @@ Status_e Cache::findOffsetTextAndDataTextInFile(	wxFile& file,
 		
 		//Lecture du texte.
 		valReturn = readStringInFile(file, &tmpText);
-		if(valReturn != SUCCESS)
+		if(valReturn != STATUS_SUCCESS)
 			break;
 			
 		//On mémorise l'offset des données du texte.
@@ -321,7 +315,7 @@ Status_e Cache::findOffsetTextAndDataTextInFile(	wxFile& file,
 		//C'est le texte que l'on recherche ?
 		if(tmpText == text)
 		{
-			valReturn = TEXT_EXIST;
+			valReturn = STATUS_TEXT_EXIST;
 			break;
 		}
 			
@@ -329,7 +323,7 @@ Status_e Cache::findOffsetTextAndDataTextInFile(	wxFile& file,
 		//Lecture de la taille totale.
 		if(file.Read(&totalSize, sizeof totalSize) != sizeof totalSize)
 		{
-			valReturn = FILE_READ_ERROR;
+			valReturn = STATUS_FILE_READ_ERROR;
 			break;
 		}
 		
@@ -338,8 +332,8 @@ Status_e Cache::findOffsetTextAndDataTextInFile(	wxFile& file,
 	}
 	
 	//Si SUCCESS c'est que le texte n'a pas été trouver.
-	if(valReturn == SUCCESS)
-		valReturn = TEXT_NO_EXIST;
+	if(valReturn == STATUS_SUCCESS)
+		valReturn = STATUS_TEXT_NO_EXIST;
 	
 	return valReturn;
 }
@@ -352,19 +346,25 @@ Status_e Cache::readDataTextInFile(wxFile& file, DataText* data)const
 	
 	//Lecture de la taille totale.
 	if(file.Read(&totalSize, sizeof totalSize) != sizeof totalSize)
-		return FILE_READ_ERROR;
+		return STATUS_FILE_READ_ERROR;
 	
 	//Lecture de la connaissance.
-	if(file.Read((uint8_t*)&data->_knowledge, sizeof(uint8_t)) != sizeof(uint8_t))
-		return FILE_READ_ERROR;
+	Knowledge_e knowledge;
+	if(file.Read((uint8_t*)&knowledge, sizeof(uint8_t)) != sizeof(uint8_t))
+		return STATUS_FILE_READ_ERROR;
+	data->setKnowledge(knowledge);
 	
 	//Lecture du nombre de traduction.
-	if(file.Read((uint8_t*)&data->_nbTranslation, sizeof(uint8_t)) != sizeof(uint8_t))
-		return FILE_READ_ERROR;
+	unsigned int nbTranslation;
+	if(file.Read((uint8_t*)&nbTranslation, sizeof(uint8_t)) != sizeof(uint8_t))
+		return STATUS_FILE_READ_ERROR;
+	data->setNbTranslation(nbTranslation);
 		
 	//Lecture de la traduction principale.
-	if(readStringInFile(file, &data->_mainTranslation) != SUCCESS)
-		return FILE_READ_ERROR;
+	wxString mainTranslation;
+	if(readStringInFile(file, &mainTranslation) != STATUS_SUCCESS)
+		return STATUS_FILE_READ_ERROR;
+	data->setMainTranslation(mainTranslation);
 			
 	//Lecture des autres traductions.
 	wxString tmpNature;
@@ -374,23 +374,23 @@ Status_e Cache::readDataTextInFile(wxFile& file, DataText* data)const
 		//Lecture du nombre de traduction dans une nature.
 		uint8_t nbTrInNature;
 		if(file.Read(&nbTrInNature, sizeof nbTrInNature) != sizeof nbTrInNature)
-			return FILE_READ_ERROR;
+			return STATUS_FILE_READ_ERROR;
 						
 		//Nature
-		if(readStringInFile(file, &tmpNature) != SUCCESS)
-			return FILE_READ_ERROR;
+		if(readStringInFile(file, &tmpNature) != STATUS_SUCCESS)
+			return STATUS_FILE_READ_ERROR;
 					
 		//Traductions
 		for(int8_t i = 0; i < nbTrInNature; i++)
 		{
-			if(readStringInFile(file, &tmpTranslation) != SUCCESS)
-				return FILE_READ_ERROR;
+			if(readStringInFile(file, &tmpTranslation) != STATUS_SUCCESS)
+				return STATUS_FILE_READ_ERROR;
 			
 			data->addTranslation(tmpNature, tmpTranslation);
 		}
 	}
 
-	return SUCCESS;
+	return STATUS_SUCCESS;
 }
 
 Status_e Cache::readDataTextInFile(wxFile& file, 	Knowledge_e* dataKnowledge,
@@ -401,20 +401,20 @@ Status_e Cache::readDataTextInFile(wxFile& file, 	Knowledge_e* dataKnowledge,
 	
 	//Lecture de la taille totale.
 	if(file.Read(&totalSize, sizeof totalSize) != sizeof totalSize)
-		return FILE_READ_ERROR;
+		return STATUS_FILE_READ_ERROR;
 	
 	//Lecture de la connaissance.
 	if(file.Read((uint8_t*)dataKnowledge, sizeof(uint8_t)) != sizeof(uint8_t))
-		return FILE_READ_ERROR;
+		return STATUS_FILE_READ_ERROR;
 	
 	//Lecture du nombre de traduction.
 	if(file.Read((uint8_t*)nbTranslation, sizeof(uint8_t)) != sizeof(uint8_t))
-		return FILE_READ_ERROR;
+		return STATUS_FILE_READ_ERROR;
 		
 	//Positionne le curseur sur le prochain texte ou la fin du fichier.
 	file.Seek(fileOffsetStartData+2+totalSize);
 
-	return SUCCESS;
+	return STATUS_SUCCESS;
 }
 									
 Status_e Cache::writeDataTextInFile(wxFile& file, DataText const& data)
@@ -423,10 +423,11 @@ Status_e Cache::writeDataTextInFile(wxFile& file, DataText const& data)
 	uint16_t totalSize = 1+1;
 	
 	//Taille de la traduction principale
-	totalSize += 1+strlen(data._mainTranslation.fn_str());
+	totalSize += 1+strlen(data.getMainTranslation().fn_str());
 	
 	//Taille des autre traductions.
-	for(auto &itNature: data._translations)
+	auto traductions = data.getTranslations();
+	for(auto &itNature: traductions)
 	{
 		totalSize += 1+1+strlen(itNature.first.fn_str());
 		for(auto &it: itNature.second)
@@ -435,41 +436,44 @@ Status_e Cache::writeDataTextInFile(wxFile& file, DataText const& data)
 	
 	//Écriture de la taille totale.
 	if(file.Write(&totalSize, sizeof totalSize) != sizeof totalSize)
-		return FILE_WRITE_ERROR;
+		return STATUS_FILE_WRITE_ERROR;
 		
 	//Écriture de la connaissance.
-	if(file.Write((uint8_t*)&data._knowledge, sizeof(uint8_t)) != sizeof(uint8_t))
-		return FILE_WRITE_ERROR;
+	Knowledge_e knowledge = data.getKnowledge();
+	if(file.Write((uint8_t*)&knowledge, sizeof(uint8_t)) != sizeof(uint8_t))
+		return STATUS_FILE_WRITE_ERROR;
 	
 	//Écriture du nombre de traduction.
-	if(file.Write((uint8_t*)&data._nbTranslation, sizeof(uint8_t)) != sizeof(uint8_t))
-		return FILE_WRITE_ERROR;
+	unsigned int nbTranslation = data.getNbTranslation();
+	if(file.Write((uint8_t*)&nbTranslation, sizeof(uint8_t)) != sizeof(uint8_t))
+		return STATUS_FILE_WRITE_ERROR;
 		
 	//Écriture de la traduction principale.
-	if(writeStringInFile(file, data._mainTranslation) != SUCCESS)
-		return FILE_WRITE_ERROR;
+	if(writeStringInFile(file, data.getMainTranslation()) != STATUS_SUCCESS)
+		return STATUS_FILE_WRITE_ERROR;
 		
 	//Écriture des autres traductions.
-	for(auto &itNature: data._translations)
+	auto translations = data.getTranslations();
+	for(auto &itNature: translations)
 	{
 		//Nombre de traductions dans une nature.
 		uint8_t nbTrInNature = itNature.second.GetCount();
 		if(file.Write(&nbTrInNature, sizeof nbTrInNature) != sizeof nbTrInNature)
-			return FILE_WRITE_ERROR;
+			return STATUS_FILE_WRITE_ERROR;
 		
 		//Nature
-		if(writeStringInFile(file, itNature.first) != SUCCESS)
-			return FILE_WRITE_ERROR;
+		if(writeStringInFile(file, itNature.first) != STATUS_SUCCESS)
+			return STATUS_FILE_WRITE_ERROR;
 
 		//Traductions
 		for(auto &it: itNature.second)
 		{
-			if(writeStringInFile(file, it) != SUCCESS)
-				return FILE_WRITE_ERROR;
+			if(writeStringInFile(file, it) != STATUS_SUCCESS)
+				return STATUS_FILE_WRITE_ERROR;
 		}
 	}
 	
-	return SUCCESS;
+	return STATUS_SUCCESS;
 }
 
 Status_e Cache::writeDataTextInFile(wxFile& file, 	Knowledge_e dataKnowledge,
@@ -480,19 +484,19 @@ Status_e Cache::writeDataTextInFile(wxFile& file, 	Knowledge_e dataKnowledge,
 	
 	//Lecture de la taille totale.
 	if(file.Read(&totalSize, sizeof totalSize) != sizeof totalSize)
-		return FILE_READ_ERROR;
+		return STATUS_FILE_READ_ERROR;
 	
 	//Écriture de la connaissance.
 	if(file.Write((uint8_t*)&dataKnowledge, sizeof(uint8_t)) != sizeof(uint8_t))
-		return FILE_WRITE_ERROR;
+		return STATUS_FILE_WRITE_ERROR;
 	
 	//Écriture du nombre de traduction.
 	if(file.Write((uint8_t*)&dataNbTranslation, sizeof(uint8_t)) != sizeof(uint8_t))
-		return FILE_WRITE_ERROR;
+		return STATUS_FILE_WRITE_ERROR;
 		
 	//Positionne le curseur sur le prochain texte ou la fin du fichier.
 	file.Seek(fileOffsetStartData+2+totalSize);
 	
-	return SUCCESS;
+	return STATUS_SUCCESS;
 }
 

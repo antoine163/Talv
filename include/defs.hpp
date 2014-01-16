@@ -12,6 +12,9 @@
 #ifndef DEF_H
 #define DEF_H
 
+//WxWidgets
+#include <wx/defs.h>
+
 //! \brief Taille des bordures
 #define SIZE_BORDER 4
 

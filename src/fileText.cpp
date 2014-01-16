@@ -1,5 +1,5 @@
-//! \file **************************************************************
-//! \brief Source ListBase
+//! \file **********************************************************************
+//! \brief Source FileTextFileText
 //! 
 //! - Compilateur : GCC,MinGW
 //!
@@ -7,58 +7,55 @@
 //! \version 0.2
 //! \date 17.11.2013
 //!
-//! ********************************************************************
+//! ****************************************************************************
 
-/*
-*	Copyright © 2013 - Antoine Maleyrie.
-*/
+//App
+#include "fileText.hpp"
 
-#include "listBase.hpp"
+// *****************************************************************************
+// Class FileText
+// *****************************************************************************
 
-// *********************************************************************
-// Class ListBase
-// *********************************************************************
-
-ListBase::ListBase()
+FileText::FileText()
 {
 }
 
-ListBase::~ListBase()
+FileText::~FileText()
 {
 }
 
-Status_e ListBase::getLanguages(wxString* lgsrc, wxString* lgto)const
+Status_e FileText::getLanguages(wxString* lgsrc, wxString* lgto)const
 {
 	if(!_fileName.HasName())
-		return FILE_NO_NAME;
+		return STATUS_FILE_NO_NAME;
 		
 	wxFile file;
 	if(!file.Open(_fileName.GetFullPath(), wxFile::read))
-		return FILE_OPEN_FAILED;
+		return STATUS_FILE_OPEN_FAILED;
 	
-	Status_e valReturn = SUCCESS;
+	Status_e valReturn = STATUS_SUCCESS;
 	
 	//Lecture du langage source.
 	valReturn = readStringInFile(file, lgsrc);
 	
 	//Si ok. Lecture de l'autre langage.
-	if(valReturn == SUCCESS)
+	if(valReturn == STATUS_SUCCESS)
 		valReturn = readStringInFile(file, lgto);
 		
 	file.Close();
 	return valReturn;
 }
 
-Status_e ListBase::setLanguages(wxString const& lgsrc, wxString const& lgto)
+Status_e FileText::setLanguages(wxString const& lgsrc, wxString const& lgto)
 {
 	if(!_fileName.HasName())
-		return FILE_NO_NAME;
+		return STATUS_FILE_NO_NAME;
 		
-	Status_e valReturn = SUCCESS;
+	Status_e valReturn = STATUS_SUCCESS;
 	
 	//On vérifie si la liste est vide
 	valReturn = isEmpty();
-	if(valReturn != EMPTY)
+	if(valReturn != STATUS_EMPTY)
 		return valReturn;
 		
 	
@@ -66,13 +63,13 @@ Status_e ListBase::setLanguages(wxString const& lgsrc, wxString const& lgto)
 	//On crées un nouveau fichier, en écrasant
 	//au préalable l'ancien.
 	if(!file.Create(_fileName.GetFullPath(), true))
-		valReturn = FILE_CREATE_FAILED;
+		valReturn = STATUS_FILE_CREATE_FAILED;
 	else
 	{
 		//Écriture du langage source.
 		valReturn = writeStringInFile(file, lgsrc);
 		//Si ok. Écriture de l'autre langage.
-		if(valReturn == SUCCESS)
+		if(valReturn == STATUS_SUCCESS)
 			valReturn = writeStringInFile(file, lgto);
 	}
 		
@@ -80,108 +77,108 @@ Status_e ListBase::setLanguages(wxString const& lgsrc, wxString const& lgto)
 	return valReturn;
 }
 
-Status_e ListBase::isEmpty()const
+Status_e FileText::isEmpty()const
 {
 	if(!_fileName.HasName())
-		return FILE_NO_NAME;
+		return STATUS_FILE_NO_NAME;
 		
 	if(!_fileName.FileExists())
-		return EMPTY;
+		return STATUS_EMPTY;
 		
 	wxFile file;
 	if(!file.Open(_fileName.GetFullPath(), wxFile::read))
-		return FILE_OPEN_FAILED;
+		return STATUS_FILE_OPEN_FAILED;
 		
 	//Positionne le curseur Après les langages.
 	Status_e valReturn = filePointerAfterHeader(file);
-	if(valReturn == SUCCESS)
+	if(valReturn == STATUS_SUCCESS)
 	{
 		if(file.Eof())
-			valReturn = EMPTY;
+			valReturn = STATUS_EMPTY;
 		else
-			valReturn = NO_EMPTY;
+			valReturn = STATUS_NO_EMPTY;
 	}
 		
 	file.Close();
 	return valReturn;
 }
 
-Status_e ListBase::clear()
+Status_e FileText::clear()
 {
 	if(!_fileName.HasName())
-		return FILE_NO_NAME;
+		return STATUS_FILE_NO_NAME;
 		
 	if(!wxRemoveFile(_fileName.GetFullPath()))
-		return FILE_NO_REMOVE;
+		return STATUS_FILE_NO_REMOVE;
 		
 	_fileName.Clear();
 		
-	return SUCCESS;
+	return STATUS_SUCCESS;
 }
 
-wxFileName ListBase::getFileName()const
+wxFileName FileText::getFileName()const
 {
 	return _fileName;
 }
 
-void ListBase::setFileName(wxFileName const& fileName)
+void FileText::setFileName(wxFileName const& fileName)
 {
 	_fileName = fileName;
 }
 
-Status_e ListBase::filePointerAfterHeader(wxFile& file)const
+Status_e FileText::filePointerAfterHeader(wxFile& file)const
 {
 	uint8_t sizelg;
 	
 	//Lecture de la taille du premier langage.
 	if(file.Read(&sizelg, sizeof sizelg) != sizeof sizelg)
-		return FILE_READ_ERROR;
+		return STATUS_FILE_READ_ERROR;
 		
 	//Pointer sur la taille du deuxième langage.
 	if(file.Seek(sizelg, wxFromCurrent) ==  wxInvalidOffset)
-		return FILE_READ_ERROR;
+		return STATUS_FILE_READ_ERROR;
 	
 	//Lecture de la taille du deuxième langage.
 	if(file.Read(&sizelg, sizeof sizelg) != sizeof sizelg)
-		return FILE_READ_ERROR;
+		return STATUS_FILE_READ_ERROR;
 		
 	//Pointer sur la taille du premier texte ou la fin du fichier
 	file.Seek(sizelg, wxFromCurrent);
 	
-	return SUCCESS;
+	return STATUS_SUCCESS;
 }
 
-Status_e ListBase::readStringInFile(wxFile& file, wxString* str)const
+Status_e FileText::readStringInFile(wxFile& file, wxString* str)const
 {
 	uint8_t sizeStr;
 	
 	//Lecture de la taille du texte.
 	if(file.Read(&sizeStr, sizeof sizeStr) != sizeof sizeStr)
-		return FILE_READ_ERROR;
+		return STATUS_FILE_READ_ERROR;
 	
 	//Lecture du texte.
 	wxMemoryBuffer buffer;
 	if(file.Read(buffer.GetWriteBuf(sizeStr), sizeStr) != sizeStr)
-		return FILE_READ_ERROR;
+		return STATUS_FILE_READ_ERROR;
 	buffer.UngetWriteBuf(sizeStr);
 		
 	str->Clear();
 	str->Append(wxString::FromUTF8Unchecked((const char *)buffer.GetData(), buffer.GetDataLen()));
 	
-	return SUCCESS;
+	return STATUS_SUCCESS;
 }
 
-Status_e ListBase::writeStringInFile(wxFile& file, wxString const& str)
+Status_e FileText::writeStringInFile(wxFile& file, wxString const& str)
 {
 	uint8_t sizeStr = strlen(str.fn_str());
 	
 	//Écriture de la taille du texte.
 	if(file.Write(&sizeStr, sizeof sizeStr) != sizeof sizeStr)
-		return FILE_WRITE_ERROR;
+		return STATUS_FILE_WRITE_ERROR;
 	
 	//Écriture du texte.
 	if(!file.Write(str))
-		return FILE_WRITE_ERROR;
+		return STATUS_FILE_WRITE_ERROR;
 	
-	return SUCCESS;
+	return STATUS_SUCCESS;
 }

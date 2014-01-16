@@ -1,4 +1,4 @@
-//! \file **************************************************************
+//! \file **********************************************************************
 //! \brief Header Cache
 //! 
 //! - Compilateur : GCC,MinGW
@@ -7,27 +7,25 @@
 //! \version 0.1
 //! \date 16.11.2013
 //!
-//! ********************************************************************
-
-/*
-*	Copyright © 2013 - Antoine Maleyrie.
-*/
+//! ****************************************************************************
 
 #ifndef CACHE_H
 #define CACHE_H
 
-
+//App
 #include "dataText.hpp"
-#include "listBase.hpp"
+#include "fileText.hpp"
 
+//Stl
+#include <map>
+
+//WxWidgets
 #include <wx/filename.h>
 #include <wx/file.h>
 
-#include <map>
-
-// *********************************************************************
+// *****************************************************************************
 // Class Cache
-// *********************************************************************
+// *****************************************************************************
 
 //! \brief Manipulation de donnée de texte.
 //!
@@ -36,7 +34,7 @@
 //! Pour crée un cache vous devais commencer par renseigner le non du fichier
 //! avec \ref setFileName(). Ensuit vous dévirez appeler \ref setLanguages() dans 
 //! quele cas le fichier ne sera pas crée sur le disque.
-class Cache : public ListBase
+class Cache : public FileText
 {
 	public:		
 		//! \brief Constructeur.
@@ -47,35 +45,35 @@ class Cache : public ListBase
 		
 		//! \brief Savoir si un texte est déjà existent dans le fichier.
 		//! \param text Le texte rechercher.
-		//! \return \ref TEXT_EXIST, \ref TEXT_NO_EXIST, 
-		//! \ref FILE_OPEN_FAILED, \ref FILE_READ_ERROR, \ref FILE_NO_NAME
+		//! \return \ref STATUS_TEXT_EXIST, \ref STATUS_TEXT_NO_EXIST, 
+		//! \ref STATUS_FILE_OPEN_FAILED, \ref STATUS_FILE_READ_ERROR, \ref STATUS_FILE_NO_NAME
 		//!
-		//! - Si \ref FILE_NO_NAME vous devriez appeler \ref setFileName()
+		//! - Si \ref STATUS_FILE_NO_NAME vous devriez appeler \ref setFileName()
 		Status_e existText(wxString const& text)const;
 		
 		//! \brief Ajout un texte et c'est données à la liste si il
 		//! n'est pas déjà existent.
 		//! \param text le texte à ajouter.
 		//! \param dataText les données du texte à ajouter.
-		//! \return \ref SUCCESS, \ref TEXT_EXIST, \ref FILE_OPEN_FAILED,
-		//! \ref FILE_READ_ERROR, \ref FILE_WRITE_ERROR, \ref FILE_NO_NAME
+		//! \return \ref STATUS_SUCCESS, \ref STATUS_TEXT_EXIST, \ref STATUS_FILE_OPEN_FAILED,
+		//! \ref STATUS_FILE_READ_ERROR, \ref STATUS_FILE_WRITE_ERROR, \ref STATUS_FILE_NO_NAME
 		//!
-		//! - Si \ref FILE_NO_NAME vous devriez appeler \ref setFileName()
+		//! - Si \ref STATUS_FILE_NO_NAME vous devriez appeler \ref setFileName()
 		Status_e addText(wxString const& text, DataText const& dataText);
 		
 		//! \brief Mise a jour des données d'un texte.
 		//! \param text le texte à mètre à jour.
 		//! \param dataText les nouvelle données du texte.
-		//! \return \ref SUCCESS, \ref TEXT_NO_EXIST, \ref FILE_OPEN_FAILED,
-		//! \ref FILE_READ_ERROR, \ref FILE_WRITE_ERROR, \ref FILE_NO_NAME
+		//! \return \ref STATUS_SUCCESS, \ref STATUS_TEXT_NO_EXIST, \ref STATUS_FILE_OPEN_FAILED,
+		//! \ref STATUS_FILE_READ_ERROR, \ref STATUS_FILE_WRITE_ERROR, \ref STATUS_FILE_NO_NAME
 		//!
 		//! - Si \ref FILE_NO_NAME vous devriez appeler \ref setFileName()
 		Status_e updateText(wxString const& text, DataText const& dataText);
 		
 		//! \brief Remplace touts les textes et leur données pas de nouveaux.
 		//! \param texts les textes et données à ajouter.
-		//! \return \ref SUCCESS, \ref FILE_OPEN_FAILED,
-		//! \ref FILE_WRITE_ERROR, \ref FILE_READ_ERROR, \ref FILE_NO_NAME
+		//! \return \ref STATUS_SUCCESS, \ref STATUS_FILE_OPEN_FAILED,
+		//! \ref STATUS_FILE_WRITE_ERROR, \ref STATUS_FILE_READ_ERROR, \ref STATUS_FILE_NO_NAME
 		//!
 		//! - Si \ref FILE_NO_NAME vous devriez appeler \ref setFileName()
 		Status_e replaceTexts(std::map<wxString, DataText> const& texts);
@@ -93,10 +91,10 @@ class Cache : public ListBase
 		//! \b >= à un nombre de traduction. Par exemple si vous voulez
 		//! récupérer que les textes avec un nombre de traductions 
 		//! supérieur ou égale a 7. Il vous faudra passer 7 comme argument.
-		//! \return \ref SUCCESS, \ref FILE_OPEN_FAILED, 
-		//! \ref FILE_READ_ERROR, \ref FILE_NO_NAME
+		//! \return \ref STATUS_SUCCESS, \ref STATUS_FILE_OPEN_FAILED, 
+		//! \ref STATUS_FILE_READ_ERROR, \ref STATUS_FILE_NO_NAME
 		//!
-		//! - Si \ref FILE_NO_NAME vous devriez appeler \ref setFileName()
+		//! - Si \ref STATUS_FILE_NO_NAME vous devriez appeler \ref setFileName()
 		Status_e getTexts(	wxArrayString* texts,
 							Knowledge_e KnowledgeFilter = KNOWLEDGE_ALL,
 							unsigned int nbTranslationFilter = 0)const;
@@ -113,19 +111,19 @@ class Cache : public ListBase
 		//! \b >= à un nombre de traduction. Par exemple si vous voulez
 		//! récupérer que les textes avec un nombre de traductions 
 		//! supérieur ou égale a 7. Il vous faudra passer 7 comme argument.
-		//! \return \ref SUCCESS, \ref FILE_OPEN_FAILED, 
-		//! \ref FILE_READ_ERROR, \ref FILE_NO_NAME
+		//! \return \ref STATUS_SUCCESS, \ref STATUS_FILE_OPEN_FAILED, 
+		//! \ref STATUS_FILE_READ_ERROR, \ref STATUS_FILE_NO_NAME
 		//!
-		//! - Si \ref FILE_NO_NAME vous devriez appeler \ref setFileName()
+		//! - Si \ref STATUS_FILE_NO_NAME vous devriez appeler \ref setFileName()
 		Status_e getTextsAndData(	std::map<wxString, DataText>* texts,
 									Knowledge_e KnowledgeFilter = KNOWLEDGE_ALL,
 									unsigned int nbTranslationFilter = 0)const;								
 	protected:
-		//! \brief Ajoute des textes et leur données à la liste.
+		//! \brief Ajoute des textes et leur données au cache.
 		//! Ne vérifie pas si les textes son déjà existent.
 		//! \param texts les text et leur données à ajouter.
-		//! \return \ref SUCCESS, \ref FILE_OPEN_FAILED,
-		//! \ref FILE_WRITE_ERROR, \ref FILE_NO_NAME
+		//! \return \ref STATUS_SUCCESS, \ref STATUS_FILE_OPEN_FAILED,
+		//! \ref STATUS_FILE_WRITE_ERROR, \ref STATUS_FILE_NO_NAME
 		virtual Status_e addTexts(std::map<wxString, DataText> const& texts);
 		
 		//! \brief Cherche l'offset d'un texte et de c'est données dans
@@ -140,7 +138,7 @@ class Cache : public ListBase
 		//! \param offsetDataText Là où sera stoker l'offset où se trouve le 
 		//! les données du texte. Vous pouvez passer nullptr si
 		//! l'informations ne vous intéresse pas.
-		//! \return \ref TEXT_EXIST, \ref TEXT_NO_EXIST, \ref FILE_READ_ERROR
+		//! \return \ref STATUS_TEXT_EXIST, \ref STATUS_TEXT_NO_EXIST, \ref STATUS_FILE_READ_ERROR
 		//!
 		//! \note La valeur des offsets peuvent avoir été modifier même si le texte
 		//! na pas été trouver.
@@ -162,7 +160,7 @@ class Cache : public ListBase
 		//! \param file Le fichier où lire les données du texte.
 		//! \param data là ou sera stoker le résulta de la lecture.
 		//! Doit être un pointeur valide.
-		//! \return \ref SUCCESS, \ref FILE_READ_ERROR
+		//! \return \ref STATUS_SUCCESS, \ref STATUS_FILE_READ_ERROR
 		//!
 		//! Après l'appelle de cette méthode, le curseur du fichier
 		//! pointera sur là position juste après les données (l'octet
@@ -180,7 +178,7 @@ class Cache : public ListBase
 		//! Doit être un pointeur valide.
 		//! \param nbTranslation là ou sera stoker le nombre de traductions.
 		//! Doit être un pointeur valide.
-		//! \return \ref SUCCESS, \ref FILE_READ_ERROR
+		//! \return \ref STATUS_SUCCESS, \ref STATUS_FILE_READ_ERROR
 		//!
 		//! Après l'appelle de cette méthode, le curseur du fichier
 		//! pointera sur là position juste après les données (l'octet
@@ -196,7 +194,7 @@ class Cache : public ListBase
 		//! Le fichier devra déjà être ouvert en écriture. 
 		//! \param file Le fichier où écrire les données.
 		//! \param data les données à écrie.
-		//! \return \ref SUCCESS, \ref FILE_WRITE_ERROR
+		//! \return \ref STATUS_SUCCESS, \ref STATUS_FILE_WRITE_ERROR
 		//!
 		//! Après l'appelle de cette méthode, le curseur du fichier
 		//! pointera sur là position juste après les données (l'octet
@@ -211,8 +209,8 @@ class Cache : public ListBase
 		//! \param file Le fichier où écrire le texte.
 		//! \param dataKnowledge la connaissance a écrier.
 		//! \param dataNbTranslation le nombre d traduction a écrier.
-		//! \return \ref SUCCESS, \ref FILE_READ_ERROR,
-		//! \ref FILE_WRITE_ERROR
+		//! \return \ref STATUS_SUCCESS, \ref STATUS_FILE_READ_ERROR,
+		//! \ref STATUS_FILE_WRITE_ERROR
 		//!
 		//! Après l'appelle de cette méthode, le curseur du fichier
 		//! pointera sur là position juste après les données (l'octet
