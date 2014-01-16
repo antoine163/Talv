@@ -12,6 +12,10 @@
 #ifndef TRANSLATOR_H
 #define TRANSLATOR_H
 
+//App
+#include "translator.hpp"
+#include "dataText.hpp"
+
 //Std
 #include <map>
 #include <vector>
@@ -61,12 +65,10 @@ class Translator
 		//! \param text est le textes à traduire.
 		//! \param lgsrc Langue du texte.
 		//! \param lgto Langue de traduction.
-		//! \return La traduction principale. (elle et aussi présente dans \p translations)
-		virtual wxString getTranslations(
-						std::map<wxString, wxArrayString>* translations,
-						wxString const& text,
-						wxLanguage lgsrc,
-						wxLanguage lgto)=0;
+		virtual void getTranslations(	DataText* translations,
+										wxString const& text,
+										wxLanguage lgsrc,
+										wxLanguage lgto)=0;
 	
 		//! @name Auto implémenter
 		//!

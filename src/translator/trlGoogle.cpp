@@ -34,11 +34,11 @@ TrlGoogle::~TrlGoogle()
 
 IMPLEMENT_TRANSLATOR(TrlGoogle, _("Google"), _("Translation a text from \"Google Translate.\""), "http://translate.google.com/");
 
-wxString TrlGoogle::getTranslations(std::map<wxString, wxArrayString>* translations,
+void TrlGoogle::getTranslations(	DataText* translations,
 									wxString const& text,
 									wxLanguage lgsrc,
 									wxLanguage lgto)
-{
+{	
 	//Représentent la traduction au forma json
 	wxString jsonText;
 	
@@ -53,10 +53,7 @@ wxString TrlGoogle::getTranslations(std::map<wxString, wxArrayString>* translati
 	//On récupère la réponse de google.
 	wxString json;
 	if(ManNetwork::get().downloadFromUrlToString(url, &json) != wxURL_NOERR)
-		return wxEmptyString;
-			
-	//Variable qui va contenir la traduction.
-	wxString trans;
+		return;
 
 	//Variable pour la lecture du JSON
 	wxJSONValue root;
@@ -70,7 +67,7 @@ wxString TrlGoogle::getTranslations(std::map<wxString, wxArrayString>* translati
 	
 	//Récupère la traduction (principale).
 	for(int i = 0; i < sentences.Size(); i++)
-		trans << sentences[i]["trans"].AsString();
+		translations->setMainTranslation(sentences[i]["trans"].AsString());
 		
 	//Récupère le dictionnaire (Les autres traductions).
 	wxJSONValue& dict = root["dict"];
@@ -81,11 +78,7 @@ wxString TrlGoogle::getTranslations(std::map<wxString, wxArrayString>* translati
 		wxJSONValue& terms = dict[i]["terms"];
 		
 		for(int i = 0; i < terms.Size(); i++)
-		{
-			(*translations)[pos].Add(terms[i].AsString());
-		}
+			translations->addTranslation(pos, terms[i].AsString());
 	}
-
-	return trans;
 }
 

@@ -1,4 +1,4 @@
-//! \file **************************************************************
+//! \file **********************************************************************
 //! \brief Header DataText
 //! 
 //! - Compilateur : GCC,MinGW
@@ -7,28 +7,22 @@
 //! \version 0.3
 //! \date 19.11.2013
 //!
-//! ********************************************************************
-
-/*
-*	Copyright © 2013 - Antoine Maleyrie.
-*/
+//! ****************************************************************************
 
 #ifndef DATA_TEXT_H
 #define DATA_TEXT_H
 
+//Stl
 #include <map>
 
+//WxWidgets
 #include <wx/string.h>
 #include <wx/arrstr.h>
 #include <wx/file.h>
 
-#include "def.hpp"
-
-class Cache;
-
-// *********************************************************************
+// *****************************************************************************
 // Enum Knowledge_e
-// *********************************************************************
+// *****************************************************************************
 //! \brief Les différentes connaissances.
 enum Knowledge_e
 {
@@ -45,15 +39,13 @@ inline Knowledge_e operator|(Knowledge_e val1, Knowledge_e val2)
 	return static_cast<Knowledge_e>(val);
 }
 
-// *********************************************************************
+// *****************************************************************************
 // Class DataText
-// *********************************************************************
+// *****************************************************************************
 
 //! \brief classe représentent les données d'un texte traduit.
 class DataText
-{
-	friend class Cache;
-	
+{	
 	public:		
 		//! \brief Constructeur.
 		DataText();
@@ -99,7 +91,7 @@ class DataText
 		
 	private:
 		wxString _mainTranslation;
-		std::map<wxString, wxArrayString> _translations;revoire le conténére ?
+		std::map<wxString, wxArrayString> _translations;
 		
 		Knowledge_e _knowledge;
 		unsigned int _nbTranslation;

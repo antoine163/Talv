@@ -56,6 +56,7 @@ SRC+=../src/utils.cpp
 SRC+=../src/staticBox.cpp
 SRC+=../src/proxyInfo.cpp
 SRC+=../src/shortcut.cpp
+SRC+=../src/dataText.cpp
 
 #wxJSON
 SRC+=../src/wxJSON/jsonval.cpp

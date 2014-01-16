@@ -34,11 +34,9 @@ IMPLEMENT_TRANSLATOR(TrlCache,
 					"Because the words you did never translated with a author translator,\n"
 					"can't will be translate by this translator."), wxEmptyString);
 
-wxString TrlCache::getTranslations(	std::map<wxString, wxArrayString>* translations,
-									wxString const& text,
-									wxLanguage lgsrc,
-									wxLanguage lgto)
+void TrlCache::getTranslations(	DataText* translations,
+								wxString const& text,
+								wxLanguage lgsrc,
+								wxLanguage lgto)
 {
-	return wxEmptyString;
 }
-

@@ -26,8 +26,8 @@ enum Status_e
 	STATUS_FILE_NO_REMOVE,		//!< Le fichier n'a pas pu être supprimer. Peut être qu'il existe pas.
 	STATUS_FILE_OPEN_FAILED, 	//!< Le fichier n'a pas pu être ouvert. Peut être qu'il existe pas.
 	STATUS_FILE_CREATE_FAILED,	//!< Le fichier n'a pas pu être créé.
-	STATUS_FILE_READ_ERROR,		//!< Erreur l'or d'une écriture dans le fichier.
-	STATUS_FILE_WRITE_ERROR,	//!< Erreur l'or d'une lecture dans le fichier.
+	STATUS_FILE_READ_ERROR,		//!< Erreur l'or d'une lecture dans le fichier.
+	STATUS_FILE_WRITE_ERROR,	//!< Erreur l'or d'une écriture dans le fichier.
 
 
 	STATUS_EMPTY,				//!< Le conteneur est vide.

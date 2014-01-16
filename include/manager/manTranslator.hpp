@@ -15,6 +15,7 @@
 //App
 #include "manager.hpp"
 #include "translator.hpp"
+#include "dataText.hpp"
 
 //Std
 #include <vector>
@@ -47,12 +48,10 @@ class ManTranslator : public Manager
 		//! \param text est le textes à traduire.
 		//! \param lgsrc Langue du texte.
 		//! \param lgto Langue de traduction.
-		//! \return La traduction principale. (elle et aussi présente dans \p translations)
-		wxString getTranslations(
-						std::map<wxString, wxArrayString>* translations,
-						wxString const& text,
-						wxLanguage lgsrc,
-						wxLanguage lgto);
+			void getTranslations(	DataText* translations,
+									wxString const& text,
+									wxLanguage lgsrc,
+									wxLanguage lgto);
 						
 		wxArrayString getOrderTranslators()const;
 		void setOrderTranslators(wxArrayString const& names);

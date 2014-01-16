@@ -31,16 +31,15 @@ class TrlCache : public Translator
 		//! \brief Destructeur.
 		~TrlCache();
 		
-		//! \brief Obtenir la traduction d'un texte a partir des cache.
+		//! \brief Obtenir la traduction d'un texte.
 		//! \param translations variable de retour contenant la traduction du texte.
 		//! \param text est le textes à traduire.
 		//! \param lgsrc Langue du texte.
 		//! \param lgto Langue de traduction.
-		//! \return La traduction principale. (elle et aussi présente dans \p translations)
-		virtual wxString getTranslations( 	std::map<wxString, wxArrayString>* translations,
-											wxString const& text,
-											wxLanguage lgsrc,
-											wxLanguage lgto);
+		virtual void getTranslations(	DataText* translations,
+										wxString const& text,
+										wxLanguage lgsrc,
+										wxLanguage lgto);
 };
 
 #endif //TRANSLATOR_CACHE_H

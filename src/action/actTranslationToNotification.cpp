@@ -14,6 +14,7 @@
 #include "manager/manNotification.hpp"
 #include "manager/manGeneral.hpp"
 #include "manager/manTranslator.hpp"
+#include "dataText.hpp"
 #include "defs.hpp"
 
 //WxWidgets
@@ -66,10 +67,10 @@ void ActTranslationToNotification::execute()
 	}
 	
 	//On récupère le texte traduit
-	std::map<wxString, wxArrayString> translations;
-	wxString mainTranslate = ManTranslator::get().getTranslations(&translations, clipboard, _lgsrc, _lgto);
+	DataText translations;
+	ManTranslator::get().getTranslations(&translations, clipboard, _lgsrc, _lgto);
 	//On vérifie si une traduction existe.
-	if(mainTranslate.IsEmpty())
+	if(translations.getMainTranslation().IsEmpty())
 	{
 		ManNotification::get().notify(_("No translation"), _("Sorry, there is no translation for the text: \""+clipboard+"\""), wxICON_INFORMATION);
 		return;
@@ -77,9 +78,10 @@ void ActTranslationToNotification::execute()
 	
 	//On mes en forme la traduction dans un wxString
 	wxString translationsNotify;
-	translationsNotify << "\n==&gt; <big>" << mainTranslate << "</big>";
+	translationsNotify << "\n==&gt; <big>" << translations.getMainTranslation() << "</big>";
 	
-	for(auto &it: translations)
+	auto trls = translations.getTranslations();
+	for(auto &it: trls)
 	{		
 		translationsNotify << "\n\n<i>" << it.first << ":</i>";
 		for(auto &itt: it.second)
