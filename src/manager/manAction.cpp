@@ -32,15 +32,11 @@ ManAction::ManAction()
 : _shortcut(this)
 {
 	Bind(EVT_SHORTCUT, &ManAction::onShortcut, this);
-	
-	add(ShortcutKey::stringToShortcutKey("altgr+f"), Action::createAction("ActTranslationToNotification"));
-	add(ShortcutKey::stringToShortcutKey("altgr+e"), Action::createAction("ActTranslationToList"));
 }
 
 ManAction::~ManAction()
 {
 	Unbind(EVT_SHORTCUT, &ManAction::onShortcut, this);
-	
 	removeAll();
 }
 
@@ -120,13 +116,64 @@ std::map<ShortcutKey, Action*>const& ManAction::getShortcutKeysActions()const
 {
 	return _shortcutKeysActions;
 }
-
-void ManAction::manLoad(wxFileConfig&)
+#include <iostream>
+void ManAction::manLoad(wxFileConfig& fileConfig)
 {
+	wxString stringShortcut;
+	long lIndex;
+	
+	//Avent de charger quoi que se soi on supprime tout les raccourcis/actions
+	removeAll();
+	
+	//On récupère le premier raccourci.
+	if(!fileConfig.GetFirstGroup(stringShortcut, lIndex))
+		return;
+		
+	do
+	{	
+		//On positionne le path
+		fileConfig.SetPath(stringShortcut+"/");
+		
+		//Récupérer le type de l'action.
+		wxString actTypeName;
+		fileConfig.Read("ActTypeName", &actTypeName);
+		
+		//Création d'une action a partir de son nom.
+		Action* tmpAct = Action::createAction(actTypeName);
+		
+		//Si la création de l'action a réussie, alor on l'ajoute.
+		if(tmpAct)
+		{
+			//Chargement des préférences de l'action à partir du fichier de configuration.
+			tmpAct->load(fileConfig);
+			//Ajout de l'action.
+			add(ShortcutKey::stringToShortcutKey(stringShortcut), tmpAct);
+		}
+		
+		//On positionne le path
+		fileConfig.SetPath("..");
+		
+	}//Puis tous les autres
+	while(fileConfig.GetNextGroup(stringShortcut, lIndex));
 }
 
-void ManAction::manSave(wxFileConfig&)const
+void ManAction::manSave(wxFileConfig& fileConfig)const
 {
+	for(auto &it: _shortcutKeysActions)
+	{
+		//Obtenir la version string du raccourci.
+		wxString stringShortcut = ShortcutKey::shortcutKeyToString(it.first);
+		//Crée un groupe pour ce raccourci.
+		fileConfig.SetPath(stringShortcut+"/");
+		
+		//Sauvegarde le type de l'action.
+		fileConfig.Write("ActTypeName", it.second->getActTypeName());
+		//Sauvegarde de l'action.
+		it.second->save(fileConfig);
+		
+		//On positionne le path
+		fileConfig.SetPath("..");
+	}
 }	
 
 void ManAction::onShortcut(ShortcutEvent& event)

@@ -20,6 +20,7 @@
 #include <wx/icon.h>
 #include <wx/string.h>
 #include <wx/arrstr.h>
+#include <wx/language.h>
 
 // *****************************************************************************
 // Enum SizeIcon_e
@@ -43,6 +44,7 @@ class ManGeneral : public Manager
 	public:
 		//Langage
 		wxArrayString getLanguages()const;
+		wxLanguage getSystemLanguage()const;
 		
 		//Presse papier
 		wxString getClipboard()const;
@@ -60,7 +62,6 @@ class ManGeneral : public Manager
 		wxIcon getIconApp(IconSize_e size)const;
 		wxString getPathIcons()const;
 		wxString getPathIcons(IconSize_e size)const;
-		
 		
 	
 		virtual WinManager* newEditWindow(wxWindow* parent);

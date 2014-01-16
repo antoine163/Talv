@@ -42,7 +42,7 @@ IMPLEMENT_MANAGER(ManGeneral);
 wxArrayString ManGeneral::getLanguages()const
 {
 	wxArrayString languages;
-	languages.Alloc(143);
+	languages.Alloc(146);
 
 	languages.Add(_("Abkhazian"));
 	languages.Add(_("Afar"));
@@ -131,6 +131,8 @@ wxArrayString ManGeneral::getLanguages()const
 	languages.Add(_("Mongolian"));
 	languages.Add(_("Nauru"));
 	languages.Add(_("Nepali"));
+	languages.Add(_("Northern Sami"));
+	languages.Add(_("Norwegian"));
 	languages.Add(_("Occitan"));
 	languages.Add(_("Oriya"));
 	languages.Add(_("Pashto, Pushto"));
@@ -141,7 +143,6 @@ wxArrayString ManGeneral::getLanguages()const
 	languages.Add(_("Rhaeto-Romance"));
 	languages.Add(_("Romanian"));
 	languages.Add(_("Russian"));
-	languages.Add(_("Northern Sami"));
 	languages.Add(_("Samoan"));
 	languages.Add(_("Sangho"));
 	languages.Add(_("Sanskrit"));
@@ -178,6 +179,7 @@ wxArrayString ManGeneral::getLanguages()const
 	languages.Add(_("Ukrainian"));
 	languages.Add(_("Urdu"));
 	languages.Add(_("Uzbek"));
+	languages.Add(_("Valencian"));
 	languages.Add(_("Vietnamese"));
 	languages.Add(_("Volapuk"));
 	languages.Add(_("Welsh"));
@@ -189,6 +191,138 @@ wxArrayString ManGeneral::getLanguages()const
 	languages.Add(_("Zulu"));
 
 	return languages;
+}
+
+wxLanguage ManGeneral::getSystemLanguage()const
+{
+	wxLanguage lg = (wxLanguage)wxLocale::GetSystemLanguage();
+	if(	lg == wxLANGUAGE_ARABIC ||
+		lg == wxLANGUAGE_ARABIC_ALGERIA ||
+		lg == wxLANGUAGE_ARABIC_BAHRAIN ||
+		lg == wxLANGUAGE_ARABIC_EGYPT ||
+		lg == wxLANGUAGE_ARABIC_IRAQ ||
+		lg == wxLANGUAGE_ARABIC_JORDAN ||
+		lg == wxLANGUAGE_ARABIC_KUWAIT ||
+		lg == wxLANGUAGE_ARABIC_LEBANON ||
+		lg == wxLANGUAGE_ARABIC_LIBYA ||
+		lg == wxLANGUAGE_ARABIC_MOROCCO ||
+		lg == wxLANGUAGE_ARABIC_OMAN ||
+		lg == wxLANGUAGE_ARABIC_QATAR ||
+		lg == wxLANGUAGE_ARABIC_SAUDI_ARABIA ||
+		lg == wxLANGUAGE_ARABIC_SUDAN ||
+		lg == wxLANGUAGE_ARABIC_SYRIA ||
+		lg == wxLANGUAGE_ARABIC_TUNISIA ||
+		lg == wxLANGUAGE_ARABIC_UAE ||
+		lg == wxLANGUAGE_ARABIC_YEMEN)
+		return wxLANGUAGE_ARABIC;
+	if(	lg == wxLANGUAGE_AZERI ||
+		lg == wxLANGUAGE_AZERI_CYRILLIC ||
+		lg == wxLANGUAGE_AZERI_LATIN)
+		return wxLANGUAGE_AZERI;
+	if(	lg == wxLANGUAGE_CHINESE ||
+		lg == wxLANGUAGE_CHINESE_SIMPLIFIED ||
+		lg == wxLANGUAGE_CHINESE_TRADITIONAL ||
+		lg == wxLANGUAGE_CHINESE_HONGKONG ||
+		lg == wxLANGUAGE_CHINESE_MACAU ||
+		lg == wxLANGUAGE_CHINESE_SINGAPORE ||
+		lg == wxLANGUAGE_CHINESE_TAIWAN)
+		return wxLANGUAGE_CHINESE;
+	if(	lg == wxLANGUAGE_DUTCH ||
+		lg == wxLANGUAGE_DUTCH_BELGIAN)
+		return wxLANGUAGE_DUTCH;
+	if(	lg == wxLANGUAGE_ENGLISH ||
+		lg == wxLANGUAGE_ENGLISH_UK ||
+		lg == wxLANGUAGE_ENGLISH_US ||
+		lg == wxLANGUAGE_ENGLISH_AUSTRALIA ||
+		lg == wxLANGUAGE_ENGLISH_BELIZE ||
+		lg == wxLANGUAGE_ENGLISH_BOTSWANA ||
+		lg == wxLANGUAGE_ENGLISH_CANADA ||
+		lg == wxLANGUAGE_ENGLISH_CARIBBEAN ||
+		lg == wxLANGUAGE_ENGLISH_DENMARK ||
+		lg == wxLANGUAGE_ENGLISH_EIRE ||
+		lg == wxLANGUAGE_ENGLISH_JAMAICA ||
+		lg == wxLANGUAGE_ENGLISH_NEW_ZEALAND ||
+		lg == wxLANGUAGE_ENGLISH_PHILIPPINES ||
+		lg == wxLANGUAGE_ENGLISH_SOUTH_AFRICA ||
+		lg == wxLANGUAGE_ENGLISH_TRINIDAD ||
+		lg == wxLANGUAGE_ENGLISH_ZIMBABWE)
+		return wxLANGUAGE_ENGLISH;
+	if(	lg == wxLANGUAGE_FRENCH ||
+		lg == wxLANGUAGE_FRENCH_BELGIAN ||
+		lg == wxLANGUAGE_FRENCH_CANADIAN ||
+		lg == wxLANGUAGE_FRENCH_LUXEMBOURG ||
+		lg == wxLANGUAGE_FRENCH_MONACO ||
+		lg == wxLANGUAGE_FRENCH_SWISS)
+		return wxLANGUAGE_FRENCH;
+	if(	lg == wxLANGUAGE_GERMAN ||
+		lg == wxLANGUAGE_GERMAN_AUSTRIAN ||
+		lg == wxLANGUAGE_GERMAN_BELGIUM ||
+		lg == wxLANGUAGE_GERMAN_LIECHTENSTEIN ||
+		lg == wxLANGUAGE_GERMAN_LUXEMBOURG ||
+		lg == wxLANGUAGE_GERMAN_SWISS)
+		return wxLANGUAGE_GERMAN;
+	if(	lg == wxLANGUAGE_ITALIAN ||
+		lg == wxLANGUAGE_ITALIAN_SWISS)
+		return wxLANGUAGE_ITALIAN;
+	if(	lg == wxLANGUAGE_KASHMIRI ||
+		lg == wxLANGUAGE_KASHMIRI_INDIA)
+		return wxLANGUAGE_KASHMIRI;
+	if(	lg == wxLANGUAGE_MALAY ||
+		lg == wxLANGUAGE_MALAY_BRUNEI_DARUSSALAM ||
+		lg == wxLANGUAGE_MALAY_MALAYSIA)
+		return wxLANGUAGE_MALAY;
+	if(	lg == wxLANGUAGE_NEPALI ||
+		lg == wxLANGUAGE_NEPALI_INDIA)
+		return wxLANGUAGE_NEPALI;
+	if(	lg == wxLANGUAGE_NORWEGIAN_BOKMAL ||
+		lg == wxLANGUAGE_NORWEGIAN_NYNORSK)
+		return wxLANGUAGE_NORWEGIAN_BOKMAL;
+	if(	lg == wxLANGUAGE_PORTUGUESE ||
+		lg == wxLANGUAGE_PORTUGUESE_BRAZILIAN)
+		return wxLANGUAGE_PORTUGUESE;
+	if(	lg == wxLANGUAGE_RUSSIAN ||
+		lg == wxLANGUAGE_RUSSIAN_UKRAINE)
+		return wxLANGUAGE_RUSSIAN;
+	if(	lg == wxLANGUAGE_SERBIAN ||
+		lg == wxLANGUAGE_SERBIAN_CYRILLIC ||
+		lg == wxLANGUAGE_SERBIAN_LATIN ||
+		lg == wxLANGUAGE_SERBIAN_CYRILLIC ||
+		lg == wxLANGUAGE_SERBIAN_LATIN)
+		return wxLANGUAGE_SERBIAN;
+	if(	lg == wxLANGUAGE_SPANISH ||
+		lg == wxLANGUAGE_SPANISH_ARGENTINA ||
+		lg == wxLANGUAGE_SPANISH_BOLIVIA ||
+		lg == wxLANGUAGE_SPANISH_CHILE ||
+		lg == wxLANGUAGE_SPANISH_COLOMBIA ||
+		lg == wxLANGUAGE_SPANISH_COSTA_RICA ||
+		lg == wxLANGUAGE_SPANISH_DOMINICAN_REPUBLIC ||
+		lg == wxLANGUAGE_SPANISH_ECUADOR ||
+		lg == wxLANGUAGE_SPANISH_EL_SALVADOR ||
+		lg == wxLANGUAGE_SPANISH_GUATEMALA ||
+		lg == wxLANGUAGE_SPANISH_HONDURAS ||
+		lg == wxLANGUAGE_SPANISH_MEXICAN ||
+		lg == wxLANGUAGE_SPANISH_MODERN ||
+		lg == wxLANGUAGE_SPANISH_NICARAGUA ||
+		lg == wxLANGUAGE_SPANISH_PANAMA ||
+		lg == wxLANGUAGE_SPANISH_PARAGUAY ||
+		lg == wxLANGUAGE_SPANISH_PERU ||
+		lg == wxLANGUAGE_SPANISH_PUERTO_RICO ||
+		lg == wxLANGUAGE_SPANISH_URUGUAY ||
+		lg == wxLANGUAGE_SPANISH_US ||
+		lg == wxLANGUAGE_SPANISH_VENEZUELA)
+		return wxLANGUAGE_SPANISH;
+	if(	lg == wxLANGUAGE_SWEDISH ||
+		lg == wxLANGUAGE_SWEDISH_FINLAND)
+		return wxLANGUAGE_SWEDISH;
+	if(	lg == wxLANGUAGE_URDU ||
+		lg == wxLANGUAGE_URDU_INDIA ||
+		lg == wxLANGUAGE_URDU_PAKISTAN)
+		return wxLANGUAGE_URDU;
+	if(	lg == wxLANGUAGE_UZBEK ||
+		lg == wxLANGUAGE_UZBEK_CYRILLIC ||
+		lg == wxLANGUAGE_UZBEK_LATIN)
+		return wxLANGUAGE_UZBEK;
+	return lg;
 }
 
 wxString ManGeneral::getClipboard()const
@@ -340,7 +474,7 @@ wxString ManGeneral::getPathIcons()const
 {
 	//Détermination du pach ou se trouve les icônes.
 	#if defined(__UNIX__) //ET Mac ?
-	static wxString _pathIcons;
+	wxString _pathIcons;
 	if(_pathIcons.IsEmpty())
 	{
 		_pathIcons = "./icons";
@@ -348,7 +482,7 @@ wxString ManGeneral::getPathIcons()const
 			_pathIcons = wxStandardPaths::Get().GetDataDir()+"/icons";
 	}
 	#else
-	static wxString _pathIcons = "./icons";
+	wxString _pathIcons = "./icons";
 	#endif
 	
 	return _pathIcons;

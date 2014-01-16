@@ -37,12 +37,14 @@ Action::~Action()
 {
 }
 
-void Action::load(wxFileConfig&)
+void Action::load(wxFileConfig& fileConfig)
 {
+	actLoad(fileConfig);
 }
 	
-void Action::save(wxFileConfig&)const
+void Action::save(wxFileConfig& fileConfig)const
 {
+	actSave(fileConfig);
 }
 
 std::vector<Action*> Action::createAllActions()

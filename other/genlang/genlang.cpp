@@ -1,13 +1,14 @@
 //! \file **********************************************************************
-//! \brief Source pour générer la méthode
-//! wxArrayString ManGeneral::getLanguages().
+//! \brief Source pour générer les méthodes
+//! wxArrayString ManGeneral::getLanguages()
+//! wxLanguage ManGeneral::getSystemLanguage()
 //! 
 //! \note Écrit à la rache.
 //! 
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.1
+//! \version 0.2
 //! \date 01.01.2014
 //!
 //! ****************************************************************************
@@ -16,6 +17,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <map>
 
 int main(int argc, char **argv)
 {
@@ -36,34 +38,47 @@ int main(int argc, char **argv)
 	
 	char c;
 	bool valReading = false;
-	bool valToInclude = true;
+	std::string enumLanguageCurrent;
 	std::string languageCurrent;
-	std::vector<std::string> languages;
+	std::map<std::string, std::vector<std::string>> languages;
 	while(file.good())
 	{
-		file.get(c);
-		if(c == '"')
+		file >> enumLanguageCurrent;
+		
+		languageCurrent.clear();
+		valReading = false;
+		while(file.good())
 		{
-			if(valReading)
+			file.get(c);
+			
+			if(c == '"')
 			{
-				if(!languageCurrent.empty() && valToInclude)
-					languages.push_back(languageCurrent);
-				
-				languageCurrent.clear();
-				valReading = false;
-				valToInclude = true;
+				if(valReading)
+				{
+					languages[languageCurrent].push_back(enumLanguageCurrent);		
+					break;
+				}
+				else
+					valReading = true;
 			}
-			else
-				valReading = true;
+			else if(c == '(')
+			{
+				if(languageCurrent.size() > 0)
+					languageCurrent.pop_back();
+				
+				languages[languageCurrent].push_back(enumLanguageCurrent);		
+				break;
+			}
+			else if(valReading)
+				languageCurrent.push_back(c);
 		}
-		else if(c == '(')
+		
+		while(file.good())
 		{
-			valToInclude = false;
+			file.get(c);
+			if(c == '\n')
+				break;
 		}
-		else if(valReading)
-		{
-			languageCurrent.push_back(c);
-		}		
 	}
 	
 	file.close();
@@ -73,12 +88,30 @@ int main(int argc, char **argv)
 	std::cout << "\twxArrayString languages;" << std::endl;
 	std::cout << "\tlanguages.Alloc(" << languages.size() << ");" << std::endl;
 	std::cout << std::endl;
-	for(unsigned int i = 0; i < languages.size(); i++)
-	{
-		std::cout << "\tlanguages.Add(_(\"" << languages[i] << "\"));" << std::endl;
-	}
+	for(auto it: languages)
+		std::cout << "\tlanguages.Add(_(\"" << it.first << "\"));" << std::endl;
 	std::cout << std::endl;
 	std::cout << "\treturn languages;" << std::endl;
+	std::cout << "}" << std::endl;
+	
+	
+	std::cout << "wxLanguage ManGeneral::getSystemLanguage()const" << std::endl;
+	std::cout << "{" << std::endl;
+	std::cout << "\twxLanguage lg = (wxLanguage)wxLocale::GetSystemLanguage();" << std::endl;
+	for(auto it: languages)
+	{
+		if(it.second.size() == 1)
+			continue;
+			
+		std::cout << "\tif(\tlg == " << it.second[0];
+		for(size_t i = 1; i < it.second.size(); i++)
+		{
+			std::cout << " ||" << std::endl;
+			std::cout << "\t\tlg == " << it.second[i];
+		}
+		std::cout << ")" << std::endl << "\t\treturn " << it.second[0] << ";" << std::endl;
+	}
+	std::cout << "\treturn lg;" << std::endl;
 	std::cout << "}" << std::endl;
 		
 	return EXIT_SUCCESS;

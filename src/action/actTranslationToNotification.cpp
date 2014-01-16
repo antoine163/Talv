@@ -26,31 +26,11 @@
 
 ActTranslationToNotification::ActTranslationToNotification()
 {
-	_lgto = (wxLanguage)wxLocale::GetSystemLanguage();                                  
-	if(	_lgto == wxLANGUAGE_ENGLISH 				||
-		_lgto == wxLANGUAGE_ENGLISH_UK 		        ||
-		_lgto == wxLANGUAGE_ENGLISH_US 		        ||
-		_lgto == wxLANGUAGE_ENGLISH_AUSTRALIA 		||
-		_lgto == wxLANGUAGE_ENGLISH_BELIZE 		    ||
-		_lgto == wxLANGUAGE_ENGLISH_BOTSWANA 		||
-		_lgto == wxLANGUAGE_ENGLISH_CANADA 		    ||
-		_lgto == wxLANGUAGE_ENGLISH_CARIBBEAN 		||
-		_lgto == wxLANGUAGE_ENGLISH_DENMARK 		||
-		_lgto == wxLANGUAGE_ENGLISH_EIRE 		    ||
-		_lgto == wxLANGUAGE_ENGLISH_JAMAICA 		||
-		_lgto == wxLANGUAGE_ENGLISH_NEW_ZEALAND 	||
-		_lgto == wxLANGUAGE_ENGLISH_PHILIPPINES 	||
-		_lgto == wxLANGUAGE_ENGLISH_SOUTH_AFRICA	||
-		_lgto == wxLANGUAGE_ENGLISH_TRINIDAD 		||
-		_lgto == wxLANGUAGE_ENGLISH_ZIMBABWE)
+	_lgto = ManGeneral::get().getSystemLanguage();                                  
+	if(	_lgto == wxLANGUAGE_ENGLISH)
 		_lgsrc = wxLANGUAGE_FRENCH;
 	else
 		_lgsrc = wxLANGUAGE_ENGLISH;
-		
-		
-		//Test
-		_lgsrc = wxLANGUAGE_ENGLISH;
-		_lgto = wxLANGUAGE_FRENCH;
 }
 
 ActTranslationToNotification::~ActTranslationToNotification()
@@ -125,17 +105,23 @@ void ActTranslationToNotification::setLanguages(wxLanguage lgsrc, wxLanguage lgt
 	_lgto = lgto;
 }
 
-void ActTranslationToNotification::actLoad(wxFileConfig&)
+void ActTranslationToNotification::actLoad(wxFileConfig& fileConfig)
 {
+	_lgto = ManGeneral::get().getSystemLanguage();                                  
+	if(	_lgto == wxLANGUAGE_ENGLISH)
+		_lgsrc = wxLANGUAGE_FRENCH;
+	else
+		_lgsrc = wxLANGUAGE_ENGLISH;
+		
 	//On récupère les préférence.
-	//fileConfig.Read("lgsrc", &_lgsrc);
-	//fileConfig.Read("lgto", &_lgto);
+	_lgsrc = (wxLanguage)fileConfig.ReadLong("lgsrc", (long)_lgsrc);
+	_lgto = (wxLanguage)fileConfig.ReadLong("lgto", (long)_lgto);
 }
 		
-void ActTranslationToNotification::actSave(wxFileConfig&)const
+void ActTranslationToNotification::actSave(wxFileConfig& fileConfig)const
 {
-	//fileConfig.Write("lgsrc", _lgsrc);
-	//fileConfig.Write("lgto", _lgto);
+	fileConfig.Write("lgsrc", (long)_lgsrc);
+	fileConfig.Write("lgto", (long)_lgto);
 }
 
 // *****************************************************************************
