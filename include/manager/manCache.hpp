@@ -1,5 +1,5 @@
-//! \file **************************************************************
-//! \brief Header ManagerCache
+//! \file **********************************************************************
+//! \brief Header ManCache
 //! 
 //! - Compilateur : GCC,MinGW
 //!
@@ -7,51 +7,48 @@
 //! \version 0.1
 //! \date 19.11.2013
 //!
-//! ********************************************************************
+//! ****************************************************************************
 
-/*
-*	Copyright © 2013 - Antoine Maleyrie.
-*/
-
-#ifndef MANAGER_CACHE_H
-#define MANAGER_CACHE_H
+#ifndef MAN_CACHE_H
+#define MAN_CACHE_H
 
 //App
-#include "managerBase.hpp"
-#include "singleton.hpp"
-//#include "cache.hpp"
+#include "manager.hpp"
+#include "cache.hpp"
 
-// *********************************************************************
-// Class ManagerCache
-// *********************************************************************
+//WxWidgets
+#include <wx/string.h>
+#include <wx/language.h>
 
-////! \brief Interface utilisateur pour les gestions des caches.
-//class ManagerCache : public ManagerBase, Singleton<ManagerCache>
-//{	
-	//friend class Singleton<ManagerCache>;
+// *****************************************************************************
+// Class ManCache
+// *****************************************************************************
+
+//! \ingroup manager
+//! \brief ManCache
+class ManCache : public Manager
+{		
+	DECLARE_MANAGER(ManCache);
 	
-	//public:
-	
-		//////! \brief Charger la configuration du manager.
-		////void load(wxFileConfig& fileConfig);
+	public:		
+		virtual WinManager* newEditWindow(wxWindow* parent);
 		
-		//////! \brief Sauvegarde la configuration du manager.
-		////void save(wxFileConfig& fileConfig)const;
+		Cache getCache(	wxLanguage const& lgsrc,
+						wxLanguage const& lgto);
+						
+		Cache getCache(	wxString const& name);
 		
-		////Cache getCache(	wxString const& lgsrc,
-						////wxString const& lgto);
+		//! \brief Obtenir le nom de touts les caches.
+		//! \return le nom de tout les caches.
+		wxArrayString getNameCaches()const;
 		
-		//////! \brief Obtenir le nom de touts les caches.
-		//////! \return le nom de tout les caches.
-		////wxArrayString getNameCaches()const;
+		void workToTmp(bool toTmp = true, bool apply = true);
 		
+	private:
+		virtual void manLoad(wxFileConfig& fileConfig);
+		virtual void manSave(wxFileConfig& fileConfig)const;
 		
-	//private:
-		////! \brief Constructeur.
-		//ManagerCache();
-		
-		////! \brief Destructeur.
-		//virtual ~ManagerCache();
-//};
+		bool _workInTmp;
+};
 
-#endif //MANAGER_CACHE_H
+#endif //MAN_CACHE_H

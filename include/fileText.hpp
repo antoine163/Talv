@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.2
+//! \version 0.3
 //! \date 17.11.2013
 //!
 //! ****************************************************************************
@@ -58,6 +58,13 @@ class FileText
 		//! - Si \ref STATUS_FILE_NO_NAME vous devriez appeler \ref setFileName()
 		//! \see isEmpty()
 		Status_e setLanguages(wxString const& lgsrc, wxString const& lgto);
+		
+		//! \brief Pour savoir si la liste est utilisable
+		//! (ou plutôt si le fichier a bien été renseigner).
+		//! \return \ref STATUS_OK, \ref STATUS_FILE_NO_NAME
+		//!
+		//! - Si \ref STATUS_FILE_NO_NAME vous devriez appeler \ref setFileName()
+		Status_e isOk()const;
 		
 		//! \brief Pour savoir si la liste est vide ou pas.
 		//! \return \ref STATUS_EMPTY, \ref STATUS_NO_EMPTY, 

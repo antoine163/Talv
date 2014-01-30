@@ -23,6 +23,7 @@
 // *****************************************************************************
 enum Status_e
 {
+	STATUS_OK,					//!< Ok.
 	STATUS_SUCCESS,				//!< Aucune erreur est survenue.
 
 	STATUS_FILE_NO_NAME,		//!< Vous n'avais pas spécifier de non de fichier.

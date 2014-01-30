@@ -18,8 +18,9 @@
 #include "manager/manList.hpp"	
 #include "manager/manNotification.hpp"	
 #include "manager/manTts.hpp"
-#include "manager/manNetwork.hpp"	
-#include "manager/manTranslator.hpp"	
+#include "manager/manNetwork.hpp"
+#include "manager/manCache.hpp"
+#include "manager/manTranslator.hpp"
 		
 		
 #define MAKE_CREATE_MANAGERS()	CREATE_MANAGER(ManGeneral)		\
@@ -28,6 +29,7 @@
 								CREATE_MANAGER(ManNotification)	\
 								CREATE_MANAGER(ManTts)			\
 								CREATE_MANAGER(ManNetwork)		\
+								CREATE_MANAGER(ManCache)		\
 								CREATE_MANAGER(ManTranslator)
 								
 
@@ -37,6 +39,7 @@
 								KILL_MANAGER(ManNotification)	\
 								KILL_MANAGER(ManTts)			\
 								KILL_MANAGER(ManNetwork)		\
+								KILL_MANAGER(ManCache)			\
 								KILL_MANAGER(ManTranslator)
 
 #endif //MANAGER_DEF_H

@@ -85,6 +85,7 @@ SRC+=../src/manager/manList.cpp
 SRC+=../src/manager/manNotification.cpp
 SRC+=../src/manager/manTts.cpp
 SRC+=../src/manager/manNetwork.cpp
+SRC+=../src/manager/manCache.cpp
 SRC+=../src/manager/manTranslator.cpp
 
 #Actions

@@ -32,9 +32,7 @@ class ManAction : public Manager, public wxEvtHandler
 	DECLARE_MANAGER(ManAction);
 	
 	public:
-		//! \brief newEditWindow
-		//! \return  \ref WinManAction
-		//! \see WinManAction
+
 		virtual WinManager* newEditWindow(wxWindow* parent);
 		
 		//! \brief Ajout d'une action.

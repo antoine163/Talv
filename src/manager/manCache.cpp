@@ -1,5 +1,5 @@
-//! \file **************************************************************
-//! \brief Source ManagerCache
+//! \file **********************************************************************
+//! \brief Source ManCache
 //! 
 //! - Compilateur : GCC,MinGW
 //!
@@ -7,24 +7,52 @@
 //! \version 0.1
 //! \date 19.11.2013
 //!
-//! ********************************************************************
-
-/*
-*	Copyright © 2013 - Antoine Maleyrie.
-*/
+//! ****************************************************************************
 
 //App
-#include "managerCache.hpp"
+#include "manager/manCache.hpp"
 
 
-// *********************************************************************
-// Class ManagerCache
-// *********************************************************************
+// *****************************************************************************
+// Class ManCache
+// *****************************************************************************
 
-//ManagerCache::ManagerCache()
-//{
-//}
+ManCache::ManCache()
+: _workInTmp(false)
+{
+}
 
-//ManagerCache::~ManagerCache()
-//{
-//}
+ManCache::~ManCache()
+{
+}
+
+IMPLEMENT_MANAGER(ManCache);
+
+WinManager* ManCache::newEditWindow(wxWindow* parent)
+{
+	return nullptr;
+}
+
+Cache ManCache::getCache(wxLanguage const& lgsrc, wxLanguage const& lgto)
+{
+}
+
+Cache ManCache::getCache(wxString const& name)
+{
+}
+
+wxArrayString ManCache::getNameCaches()const
+{
+}
+
+void ManCache::workToTmp(bool toTmp, bool apply)
+{
+}
+
+void ManCache::manLoad(wxFileConfig&)
+{
+}
+
+void ManCache::manSave(wxFileConfig&)const
+{
+}
