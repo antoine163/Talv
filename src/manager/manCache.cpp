@@ -27,6 +27,7 @@ ManCache::ManCache()
 : _workInTmp(false)
 {
 	_workDirectory = wxStandardPaths::Get().GetUserDataDir()+"/cache";
+	wxDir::Make(_workDirectory);
 }
 
 ManCache::~ManCache()
@@ -48,7 +49,20 @@ Cache ManCache::getCache(wxLanguage const& lgsrc, wxLanguage const& lgto)
 Cache ManCache::getCache(wxString const& name)
 {
 	Cache rCache;
+	
+	//Extraction des langages.
+	int posTo = name.Find("To");
+	if(posTo == wxNOT_FOUND)
+		return Cache();
+	wxString lgsrc;
+	wxString lgto;
+	lgsrc = name.Left(posTo);
+	lgto = name.Right(name.Len()-posTo-2);
+		
 	rCache.setFileName(_workDirectory+"/"+name+".cac");
+	if(rCache.isOk() == STATUS_FILE_OPEN_FAILED)//Ceci veut dire que le fichier n'existe pas et que l'on a besoin d'appeler setLanguages
+		rCache.setLanguages(lgsrc, lgto);
+	
 	return rCache;
 }
 

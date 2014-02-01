@@ -38,7 +38,6 @@ ManTranslator::~ManTranslator()
 
 IMPLEMENT_MANAGER(ManTranslator);
 
-//! \todo a implémenter avec les caches
 void ManTranslator::getTranslations(	DataText* translations,
 										wxString const& text,
 										wxLanguage lgsrc,

@@ -36,7 +36,8 @@ class ManCache : public Manager
 		Cache getCache(	wxLanguage const& lgsrc,
 						wxLanguage const& lgto);
 						
-		Cache getCache(	wxString const& name);
+		//Si le non n'est pas correcte (ex: "FrenchToEnglish") un Cache vierge sera retourner.
+		Cache getCache(wxString const& name);
 		
 		//! \brief Obtenir le nom de touts les caches.
 		//! \return le nom de tout les caches.
