@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.3
+//! \version 0.4
 //! \date 17.11.2013
 //!
 //! ****************************************************************************
@@ -42,7 +42,7 @@ class FileText
 		//! \ref STATUS_FILE_READ_ERROR, \ref STATUS_FILE_NO_NAME
 		//!
 		//! - Si \ref STATUS_FILE_NO_NAME vous devriez appeler \ref setFileName()
-		//! - Si \ref STATUS_FILE_OPEN_FAILED est retourner il est probablement
+		//! - Si \ref STATUS_FILE_OPEN_FAILED est retourner il est probable
 		//! que vous avez besoin d'appeler \ref setLanguages().
 		Status_e getLanguages(wxString* lgsrc, wxString* lgto)const;
 		
@@ -59,11 +59,13 @@ class FileText
 		//! \see isEmpty()
 		Status_e setLanguages(wxString const& lgsrc, wxString const& lgto);
 		
-		//! \brief Pour savoir si la liste est utilisable
-		//! (ou plutôt si le fichier a bien été renseigner).
-		//! \return \ref STATUS_OK, \ref STATUS_FILE_NO_NAME
+		//! \brief Pour savoir si la liste est utilisable.
+		//!
+		//! \return Si le fichier et les langages ont bien été renseigner alors \ref STATUS_OK est retourné.
+		//! peut aussitôt retourner \ref STATUS_FILE_NO_NAME, STATUS_FILE_OPEN_FAILED
 		//!
 		//! - Si \ref STATUS_FILE_NO_NAME vous devriez appeler \ref setFileName()
+		//! - Si \ref STATUS_FILE_OPEN_FAILED vous devriez appeler \ref setLanguages().
 		Status_e isOk()const;
 		
 		//! \brief Pour savoir si la liste est vide ou pas.

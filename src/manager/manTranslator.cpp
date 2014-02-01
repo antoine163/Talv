@@ -11,6 +11,8 @@
 
 //App
 #include "manager/manTranslator.hpp"
+#include "manager/manCache.hpp"
+#include "cache.hpp"
 #include "defs.hpp"
 #include "staticBox.hpp"
 
@@ -37,7 +39,7 @@ ManTranslator::~ManTranslator()
 IMPLEMENT_MANAGER(ManTranslator);
 
 //! \todo a implémenter avec les caches
-void ManTranslator::getTranslations(DataText* translations,
+void ManTranslator::getTranslations(	DataText* translations,
 										wxString const& text,
 										wxLanguage lgsrc,
 										wxLanguage lgto)
@@ -56,7 +58,13 @@ void ManTranslator::getTranslations(DataText* translations,
 			wxLogMessage("The %s text \"%s\" could not be translate to %s from the tranlator: %s",
 						wxLocale::GetLanguageName(lgsrc), text, wxLocale::GetLanguageName(lgto), it->getName());
 		else
+		{
+			//Ajout de la traduction du texte dans le cache.
+			Cache tmpCache = ManCache::get().getCache(lgsrc, lgto);
+			tmpCache.addText(text, *translations);
+			
 			return;
+		}
 	}
 }
 

@@ -48,10 +48,7 @@ Cache ManCache::getCache(wxLanguage const& lgsrc, wxLanguage const& lgto)
 Cache ManCache::getCache(wxString const& name)
 {
 	Cache rCache;
-	
-	if(wxFileExists(name+".cac"))
-		rCache.setFileName(name+".cac");
-	
+	rCache.setFileName(_workDirectory+"/"+name+".cac");
 	return rCache;
 }
 

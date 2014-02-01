@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.3
+//! \version 0.4
 //! \date 17.11.2013
 //!
 //! ****************************************************************************
@@ -75,6 +75,20 @@ Status_e FileText::setLanguages(wxString const& lgsrc, wxString const& lgto)
 		
 	file.Close();
 	return valReturn;
+}
+
+Status_e FileText::isOk()const
+{
+	if(!_fileName.HasName())
+		return STATUS_FILE_NO_NAME;
+		
+	wxFile file;
+	if(!file.Open(_fileName.GetFullPath(), wxFile::read))
+		return STATUS_FILE_OPEN_FAILED;
+		
+	file.Close();
+	
+	return STATUS_OK;
 }
 
 Status_e FileText::isEmpty()const
