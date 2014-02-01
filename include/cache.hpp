@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.1
+//! \version 0.2
 //! \date 16.11.2013
 //!
 //! ****************************************************************************
@@ -117,7 +117,16 @@ class Cache : public FileText
 		//! - Si \ref STATUS_FILE_NO_NAME vous devriez appeler \ref setFileName()
 		Status_e getTextsAndData(	std::map<wxString, DataText>* texts,
 									Knowledge_e KnowledgeFilter = KNOWLEDGE_ALL,
-									unsigned int nbTranslationFilter = 0)const;								
+									unsigned int nbTranslationFilter = 0)const;		
+					
+		//! \brief Obtenir les données d'un textes contenue dans le fichier.
+		//! \param texts le texte rechercher.
+		//! \param data les données du texte. Ce paramètre de doit pas être a nullptr.
+		//! \return \ref STATUS_SUCCESS, , \ref STATUS_TEXT_NO_EXIST, \ref STATUS_FILE_OPEN_FAILED, 
+		//! \ref STATUS_FILE_READ_ERROR, \ref STATUS_FILE_NO_NAME
+		//!
+		//! - Si \ref STATUS_FILE_NO_NAME vous devriez appeler \ref setFileName()										
+		Status_e getData(wxString const& text, DataText* data)const;								
 	protected:
 		//! \brief Ajoute des textes et leur données au cache.
 		//! Ne vérifie pas si les textes son déjà existent.

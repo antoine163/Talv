@@ -11,6 +11,8 @@
 
 //App
 #include "translator/trlCache.hpp"
+#include "manager/manCache.hpp"
+#include "cache.hpp"
 
 //WxWidgets
 #include <wx/intl.h> 
@@ -39,4 +41,6 @@ void TrlCache::getTranslations(	DataText* translations,
 								wxLanguage lgsrc,
 								wxLanguage lgto)
 {
+	Cache cache = ManCache::get().getCache(lgsrc, lgto);
+	cache.getData(text, translations);
 }

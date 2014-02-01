@@ -27,7 +27,8 @@ ManCache::ManCache()
 : _workInTmp(false)
 {
 	_workDirectory = wxStandardPaths::Get().GetUserDataDir()+"/cache";
-	wxDir::Make(_workDirectory);
+	if(!wxDir::Exists(_workDirectory))
+		wxDir::Make(_workDirectory);
 }
 
 ManCache::~ManCache()

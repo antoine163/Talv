@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.1
+//! \version 0.2
 //! \date 16.11.2013
 //!
 //! ****************************************************************************
@@ -253,6 +253,35 @@ Status_e Cache::getTextsAndData(	std::map<wxString, DataText>* texts,
 		{
 			(*texts)[tmpText] = tmpDataText;
 		}
+	}
+		
+	file.Close();
+	return valReturn;
+}
+
+Status_e Cache::getData(wxString const& text, DataText* data)const
+{
+	if(!_fileName.HasName())
+		return STATUS_FILE_NO_NAME;
+		
+	wxFile file;
+	if(!file.Open(_fileName.GetFullPath(), wxFile::read_write))
+		return STATUS_FILE_OPEN_FAILED;
+		
+	//On cherche le texte
+	Status_e valReturn = findOffsetTextAndDataTextInFile(file, text, nullptr, nullptr);
+	if(valReturn != STATUS_TEXT_EXIST)
+	{
+		file.Close();
+		return valReturn;
+	}
+	
+	//On récupère les données du texte.
+	valReturn = readDataTextInFile(file, data);
+	if(valReturn != STATUS_SUCCESS)
+	{
+		file.Close();
+		return valReturn;
 	}
 		
 	file.Close();

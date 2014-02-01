@@ -21,6 +21,9 @@
 #include <wx/language.h>
 #include <wx/log.h> 
 
+
+#define NB_CHARACTER_MIN_FOR_SENTENCE 20
+
 // *****************************************************************************
 // Class ManTranslator
 // *****************************************************************************
@@ -54,13 +57,16 @@ void ManTranslator::getTranslations(	DataText* translations,
 	{
 		it->getTranslations(translations, text, lgsrc, lgto);
 		if(translations->getMainTranslation().IsEmpty())
-			wxLogMessage("The %s text \"%s\" could not be translate to %s from the tranlator: %s",
-						wxLocale::GetLanguageName(lgsrc), text, wxLocale::GetLanguageName(lgto), it->getName());
+			wxLogMessage("The %s text could not be translate to %s from the translator: %s",
+						wxLocale::GetLanguageName(lgsrc), wxLocale::GetLanguageName(lgto), it->getName());
 		else
 		{
-			//Ajout de la traduction du texte dans le cache.
-			Cache tmpCache = ManCache::get().getCache(lgsrc, lgto);
-			tmpCache.addText(text, *translations);
+			if(text.Len() <= NB_CHARACTER_MIN_FOR_SENTENCE)
+			{
+				//Ajout de la traduction du texte dans le cache.
+				Cache tmpCache = ManCache::get().getCache(lgsrc, lgto);
+				tmpCache.addText(text, *translations);
+			}
 			
 			return;
 		}

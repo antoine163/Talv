@@ -537,7 +537,7 @@ void ManNotification::notify(	wxString const& title,
 								bool nearCursor)
 {
 	//3s par défaut + 1s de plus tout les 10 caractères.
-	int timeout = 3+message.Length()/10;
+	int timeout = 3+message.Len()/10;
 	
 	switch(_useNotification)
 	{
