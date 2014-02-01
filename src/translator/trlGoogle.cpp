@@ -38,10 +38,7 @@ void TrlGoogle::getTranslations(	DataText* translations,
 									wxString const& text,
 									wxLanguage lgsrc,
 									wxLanguage lgto)
-{	
-	//Représentent la traduction au forma json
-	wxString jsonText;
-	
+{		
 	//Construction de l'url
 	wxString url;
 	url << "http://translate.google.com/translate_a/t?ie=UTF-8&oe=UTF-8&client=x";
@@ -54,7 +51,7 @@ void TrlGoogle::getTranslations(	DataText* translations,
 	wxString json;
 	if(ManNetwork::get().downloadFromUrlToString(url, &json) != wxURL_NOERR)
 		return;
-
+		
 	//Variable pour la lecture du JSON
 	wxJSONValue root;
 	wxJSONReader reader;
@@ -66,8 +63,11 @@ void TrlGoogle::getTranslations(	DataText* translations,
 	wxJSONValue& sentences = root["sentences"];
 	
 	//Récupère la traduction (principale).
+	wxString mainTranslation;
 	for(int i = 0; i < sentences.Size(); i++)
-		translations->setMainTranslation(sentences[i]["trans"].AsString());
+		 mainTranslation += sentences[i]["trans"].AsString();
+
+	translations->setMainTranslation(mainTranslation);
 		
 	//Récupère le dictionnaire (Les autres traductions).
 	wxJSONValue& dict = root["dict"];

@@ -19,7 +19,6 @@
 #include <wx/language.h>
 #include <wx/log.h> 
 
-
 // *****************************************************************************
 // Class ManTranslator
 // *****************************************************************************
@@ -109,7 +108,7 @@ WinManager* ManTranslator::newEditWindow(wxWindow* parent)
 {
 	return new WinManTranslator(parent);
 }
-#include <iostream>
+
 void ManTranslator::manLoad(wxFileConfig& fileConfig)
 {
 	wxArrayString tranlatorsOrder(_translators.size(), &wxEmptyString);
@@ -139,7 +138,7 @@ WinManTranslator::WinManTranslator(wxWindow* parent)
 	//Créations staticBoxInformation et de staticTextInformation
 	StaticBox* staticBoxInformation = new StaticBox(this, wxID_ANY, _("Information:"));
 	wxStaticText* staticTextInformation = new wxStaticText(
-		this, wxID_ANY,
+		staticBoxInformation, wxID_ANY,
 		_("Sort your translator by order from your preference.\n"
 		"The first in the list, is first used.\n"
 		"If the translator can not translate the text, the second translator is used..."));
@@ -159,7 +158,7 @@ WinManTranslator::WinManTranslator(wxWindow* parent)
 	
 	//Créations de la description du traducteur sélectionner.
 	StaticBox* staticBoxDescription = new StaticBox(this, wxID_ANY, _("Description:"));
-	_staticTextDescription = new wxStaticText(staticBoxDescription, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxST_ELLIPSIZE_END);
+	_staticTextDescription = new wxStaticText(staticBoxDescription, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize);
 	_hyperlinkCtrlSee = new wxHyperlinkCtrl(staticBoxDescription, wxID_ANY, _("See also: "), wxEmptyString, wxDefaultPosition, wxDefaultSize, wxHL_ALIGN_LEFT|wxHL_CONTEXTMENU|wxBORDER_NONE);
 	//Mise en forme avec un sizer.
 	wxSizer* sizerDescription = new wxBoxSizer(wxVERTICAL);

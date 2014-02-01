@@ -49,6 +49,7 @@ class ManCache : public Manager
 		virtual void manSave(wxFileConfig& fileConfig)const;
 		
 		bool _workInTmp;
+		wxString _workDirectory;
 };
 
 #endif //MAN_CACHE_H

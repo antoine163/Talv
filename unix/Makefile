@@ -3,7 +3,7 @@
 #	Makfile for Linux.
 #
 # - author 	:	Antoine Maleyrie : antoine.maleyrie@gmail.com
-# - version	:	0.16
+# - version	:	0.17
 # - date 	:	10.03.2013
 #
 ################################################################################
@@ -17,7 +17,7 @@ EXEC_NAME=talv
 ################################################################################
 # Nom du script de configuration de WxWidgets.
 ################################################################################
-WX_CONFIG = wx-config-3.0
+WX_CONFIG = wx-config
 
 ################################################################################
 # Flags de compilation pour les libs.

@@ -62,12 +62,13 @@ void FrameNotification::create(	wxString const& title,
 								wxBitmap const& bitmap,
 								int	maxWidth)
 {
-	//Création du titre et du message.
-	_staticTextTitle = new wxStaticText(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxST_ELLIPSIZE_END);
-	_staticTextTitle->SetLabelMarkup("<big><b>"+title+"</b></big>");
-	_staticTextMessage = new wxStaticText(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxST_ELLIPSIZE_END);
-	_staticTextMessage->SetLabelMarkup(message);
+	//SetMaxSize(wxSize(maxWidth, -1));
 	
+	//Création du titre et du message.
+	_staticTextTitle = new wxStaticText(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize);
+	_staticTextTitle->SetLabelMarkup("<big><b>"+title+"</b></big>");
+	_staticTextMessage = new wxStaticText(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize);
+	_staticTextMessage->SetLabelMarkup(message);
 	
 	//Création de la statice line.
 	_staticLine = new wxStaticLine(this);
