@@ -59,6 +59,7 @@ SRC+=../src/shortcut.cpp
 SRC+=../src/dataText.cpp
 SRC+=../src/fileText.cpp
 SRC+=../src/cache.cpp
+SRC+=../src/list.cpp
 
 #wxJSON
 SRC+=../src/wxJSON/jsonval.cpp

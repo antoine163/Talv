@@ -157,8 +157,8 @@ Status_e Cache::updateText(wxString const& text, DataText const& dataText)
 
 Status_e Cache::replaceTexts(std::map<wxString, DataText> const& texts)
 {
-	wxString lgsrc;
-	wxString lgto;
+	wxLanguage lgsrc;
+	wxLanguage lgto;
 	Status_e valReturn = getLanguages(&lgsrc, &lgto);
 	if(valReturn != STATUS_SUCCESS)
 		return valReturn;

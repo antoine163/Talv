@@ -26,7 +26,7 @@
 ManCache::ManCache()
 : _workInTmp(false)
 {
-	_workDirectory = wxStandardPaths::Get().GetUserDataDir()+"/cache";
+	_workDirectory = wxStandardPaths::Get().GetUserDataDir()+"/caches";
 	if(!wxDir::Exists(_workDirectory))
 		wxDir::Make(_workDirectory);
 }
@@ -42,35 +42,48 @@ WinManager* ManCache::newEditWindow(wxWindow*)
 	return nullptr;
 }
 
-Cache ManCache::getCache(wxLanguage const& lgsrc, wxLanguage const& lgto)
+bool ManCache::existCache(wxLanguage lgsrc, wxLanguage lgto)const
 {
-	return getCache(wxLocale::GetLanguageName(lgsrc)+"To"+wxLocale::GetLanguageName(lgto));
+	wxString fileName = wxLocale::GetLanguageName(lgsrc)+"To"+wxLocale::GetLanguageName(lgto)+".cac";
+	return wxFileExists(_workDirectory+"/"+fileName);
+}
+
+bool ManCache::createCache(wxLanguage lgsrc, wxLanguage lgto)
+{
+	if(existCache(lgsrc, lgto))
+		return false;
+		
+	wxString fileName = wxLocale::GetLanguageName(lgsrc)+"To"+wxLocale::GetLanguageName(lgto)+".cac";
+	Cache newCache;
+	newCache.setFileName(_workDirectory+"/"+fileName);
+	newCache.setLanguages(lgsrc, lgto);
+	
+	return true;
+}
+
+Cache ManCache::getCache(wxLanguage lgsrc, wxLanguage lgto)
+{
+	Cache rCache;
+	wxString fileName = wxLocale::GetLanguageName(lgsrc)+"To"+wxLocale::GetLanguageName(lgto)+".cac";
+	rCache.setFileName(_workDirectory+"/"+fileName);
+	return rCache;
 }
 
 Cache ManCache::getCache(wxString const& name)
 {
 	Cache rCache;
-	
-	//Extraction des langages.
-	int posTo = name.Find("To");
-	if(posTo == wxNOT_FOUND)
-		return Cache();
-	wxString lgsrc;
-	wxString lgto;
-	lgsrc = name.Left(posTo);
-	lgto = name.Right(name.Len()-posTo-2);
-		
-	rCache.setFileName(_workDirectory+"/"+name+".cac");
-	if(rCache.isOk() == STATUS_FILE_OPEN_FAILED)//Ceci veut dire que le fichier n'existe pas et que l'on a besoin d'appeler setLanguages
-		rCache.setLanguages(lgsrc, lgto);
-	
-	return rCache;
+	wxString fileName = name+".cac";
+	rCache.setFileName(_workDirectory+"/"+fileName);
+	return  rCache;
 }
 
-wxArrayString ManCache::getNameCaches()const
+wxArrayString ManCache::getNamesCaches()const
 {
 	wxArrayString files;
 	wxDir::GetAllFiles(_workDirectory, &files);
+	
+	for(auto it: files)
+		it = it.BeforeLast('.');
 	
 	return files;
 }
@@ -81,7 +94,7 @@ void ManCache::workToTmp(bool toTmp, bool apply)
 	if(!_workInTmp && toTmp)
 	{
 		wxString workDirectoryOld = _workDirectory;
-		_workDirectory = wxStandardPaths::Get().GetTempDir()+"/"+PROJECT_NAME+"/cache";
+		_workDirectory = wxStandardPaths::Get().GetTempDir()+"/"+PROJECT_NAME+"/caches";
 		wxDir::Make(_workDirectory);
 		
 		if(apply)
@@ -97,7 +110,7 @@ void ManCache::workToTmp(bool toTmp, bool apply)
 	else if(_workInTmp && !toTmp)
 	{
 		wxString workDirectoryOld = _workDirectory;
-		_workDirectory = wxStandardPaths::Get().GetUserDataDir()+"/cache";
+		_workDirectory = wxStandardPaths::Get().GetUserDataDir()+"/caches";
 		
 		if(apply)
 		{

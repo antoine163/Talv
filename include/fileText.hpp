@@ -18,6 +18,7 @@
 //WxWidgets
 #include <wx/string.h>
 #include <wx/filename.h>
+#include <wx/language.h>
 
 // *****************************************************************************
 // Class FileText
@@ -44,7 +45,7 @@ class FileText
 		//! - Si \ref STATUS_FILE_NO_NAME vous devriez appeler \ref setFileName()
 		//! - Si \ref STATUS_FILE_OPEN_FAILED est retourner il est probable
 		//! que vous avez besoin d'appeler \ref setLanguages().
-		Status_e getLanguages(wxString* lgsrc, wxString* lgto)const;
+		Status_e getLanguages(wxLanguage* lgsrc, wxLanguage* lgto)const;
 		
 		//! \brief Modifier les langages de la liste.
 		//!
@@ -57,7 +58,7 @@ class FileText
 		//!
 		//! - Si \ref STATUS_FILE_NO_NAME vous devriez appeler \ref setFileName()
 		//! \see isEmpty()
-		Status_e setLanguages(wxString const& lgsrc, wxString const& lgto);
+		Status_e setLanguages(wxLanguage lgsrc, wxLanguage lgto);
 		
 		//! \brief Pour savoir si la liste est utilisable.
 		//!

@@ -24,7 +24,7 @@ FileText::~FileText()
 {
 }
 
-Status_e FileText::getLanguages(wxString* lgsrc, wxString* lgto)const
+Status_e FileText::getLanguages(wxLanguage* lgsrc, wxLanguage* lgto)const
 {
 	if(!_fileName.HasName())
 		return STATUS_FILE_NO_NAME;
@@ -35,18 +35,22 @@ Status_e FileText::getLanguages(wxString* lgsrc, wxString* lgto)const
 	
 	Status_e valReturn = STATUS_SUCCESS;
 	
-	//Lecture du langage source.
-	valReturn = readStringInFile(file, lgsrc);
-	
-	//Si ok. Lecture de l'autre langage.
+	wxString lg;
+	valReturn = readStringInFile(file, &lg);
 	if(valReturn == STATUS_SUCCESS)
-		valReturn = readStringInFile(file, lgto);
+	{
+		*lgsrc = (wxLanguage)wxLocale::FindLanguageInfo(lg)->Language;
+		
+		valReturn = readStringInFile(file, &lg);
+		if(valReturn == STATUS_SUCCESS)
+			*lgto = (wxLanguage)wxLocale::FindLanguageInfo(lg)->Language;
+	}
 		
 	file.Close();
 	return valReturn;
 }
 
-Status_e FileText::setLanguages(wxString const& lgsrc, wxString const& lgto)
+Status_e FileText::setLanguages(wxLanguage lgsrc, wxLanguage lgto)
 {
 	if(!_fileName.HasName())
 		return STATUS_FILE_NO_NAME;
@@ -67,10 +71,10 @@ Status_e FileText::setLanguages(wxString const& lgsrc, wxString const& lgto)
 	else
 	{
 		//Écriture du langage source.
-		valReturn = writeStringInFile(file, lgsrc);
+		valReturn = writeStringInFile(file, wxLocale::GetLanguageName(lgsrc));
 		//Si ok. Écriture de l'autre langage.
 		if(valReturn == STATUS_SUCCESS)
-			valReturn = writeStringInFile(file, lgto);
+			valReturn = writeStringInFile(file, wxLocale::GetLanguageName(lgto));
 	}
 		
 	file.Close();

@@ -33,15 +33,16 @@ class ManCache : public Manager
 	public:		
 		virtual WinManager* newEditWindow(wxWindow* parent);
 		
-		Cache getCache(	wxLanguage const& lgsrc,
-						wxLanguage const& lgto);
+		bool existCache(wxLanguage lgsrc, wxLanguage lgto)const;
+		bool createCache(wxLanguage lgsrc, wxLanguage lgto);
+		Cache getCache(wxLanguage lgsrc, wxLanguage lgto);
 						
 		//Si le non n'est pas correcte (ex: "FrenchToEnglish") un Cache vierge sera retourner.
 		Cache getCache(wxString const& name);
 		
 		//! \brief Obtenir le nom de touts les caches.
 		//! \return le nom de tout les caches.
-		wxArrayString getNameCaches()const;
+		wxArrayString getNamesCaches()const;
 		
 		void workToTmp(bool toTmp = true, bool apply = true);
 		

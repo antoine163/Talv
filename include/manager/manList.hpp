@@ -15,6 +15,11 @@
 //App
 #include "manager.hpp"
 #include "control/ctrlDataList.hpp"
+#include "list.hpp"
+
+//WxWidgets
+#include <wx/string.h>
+#include <wx/language.h>
 
 // *****************************************************************************
 // Class ManList
@@ -28,10 +33,21 @@ class ManList : public Manager
 	
 	public:
 		virtual WinManager* newEditWindow(wxWindow* parent);
+		
+		bool existList(wxString const& name)const;
+		bool createList(wxString const& name, wxLanguage lgsrc, wxLanguage lgto);
+		wxArrayString getNamesLists()const;
+		wxArrayString getNamesLists(wxLanguage lgsrc, wxLanguage lgto)const;
+		List getList(wxString const& name)const;
+									
+		void workToTmp(bool toTmp = true, bool apply = true);
 	
 	private:
 		virtual void manLoad(wxFileConfig& fileConfig);
 		virtual void manSave(wxFileConfig& fileConfig)const;
+		
+		bool _workInTmp;
+		wxString _workDirectory;
 };
 
 // *****************************************************************************

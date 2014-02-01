@@ -15,13 +15,21 @@
 
 //WxWidgets
 #include <wx/sizer.h>
+#include <wx/dir.h>
+#include <wx/filefn.h> 
+#include <wx/stdpaths.h>
+#include <wx/arrstr.h>
 
 // *****************************************************************************
 // Class ManList
 // *****************************************************************************
 
 ManList::ManList()
+: _workInTmp(false)
 {
+	_workDirectory = wxStandardPaths::Get().GetUserDataDir()+"/lists";
+	if(!wxDir::Exists(_workDirectory))
+		wxDir::Make(_workDirectory);
 }
 
 ManList::~ManList()
@@ -33,6 +41,104 @@ IMPLEMENT_MANAGER(ManList);
 WinManager* ManList::newEditWindow(wxWindow* parent)
 {
 	return new WinManList(parent);
+}
+
+bool ManList::existList(wxString const& name)const
+{
+	wxString fileName = name+".lis";
+	return wxFileExists(_workDirectory+"/"+fileName);
+}
+
+bool ManList::createList(wxString const& name, wxLanguage lgsrc, wxLanguage lgto)
+{
+	if(existList(name))
+		return false;
+		
+	wxString fileName = name+".lis";
+	List newList;
+	newList.setFileName(_workDirectory+"/"+fileName);
+	newList.setLanguages(lgsrc, lgto);
+	
+	return true;
+}
+
+wxArrayString ManList::getNamesLists()const
+{
+	wxArrayString files;
+	wxDir::GetAllFiles(_workDirectory, &files);
+	
+	for(auto it: files)
+		it = it.BeforeLast('.');
+	
+	return files;
+}
+
+wxArrayString ManList::getNamesLists(wxLanguage lgsrc, wxLanguage lgto)const
+{
+	wxArrayString lists = getNamesLists();
+	wxArrayString tmpLists;
+	wxLanguage tmpLgsrc;
+	wxLanguage tmpLgto;
+	for(auto it: lists)
+	{
+		getList(it).getLanguages(&tmpLgsrc, &tmpLgto);
+		if(lgsrc == tmpLgsrc && lgto == tmpLgto)
+			tmpLists.Add(it);
+	}
+	
+	return tmpLists;
+}
+
+List ManList::getList(wxString const& name)const
+{
+	List rList;
+	wxString fileName = name+".lis";
+	rList.setFileName(_workDirectory+"/"+fileName);
+	return rList;
+}
+
+void ManList::workToTmp(bool toTmp, bool apply)
+{
+	//To Tmp
+	if(!_workInTmp && toTmp)
+	{
+		wxString workDirectoryOld = _workDirectory;
+		_workDirectory = wxStandardPaths::Get().GetTempDir()+"/"+PROJECT_NAME+"/cache";
+		wxDir::Make(_workDirectory);
+		
+		if(apply)
+		{
+			wxArrayString files;
+			wxDir::GetAllFiles(workDirectoryOld, &files);
+			
+			for(auto it: files)
+				wxCopyFile(workDirectoryOld+"/"+it, _workDirectory+"/"+it);
+		}
+	}
+	//From Tmp
+	else if(_workInTmp && !toTmp)
+	{
+		wxString workDirectoryOld = _workDirectory;
+		_workDirectory = wxStandardPaths::Get().GetUserDataDir()+"/cache";
+		
+		if(apply)
+		{
+			wxDir::Remove(_workDirectory, wxPATH_RMDIR_FULL);
+			wxDir::Make(_workDirectory);
+			
+			wxArrayString files;
+			wxDir::GetAllFiles(workDirectoryOld, &files);
+			
+			for(auto it: files)
+				wxCopyFile(workDirectoryOld+"/"+it, _workDirectory+"/"+it);
+		}
+		
+		wxDir::Remove(workDirectoryOld, wxPATH_RMDIR_FULL);
+	}
+	else
+		return;
+	
+	_workInTmp = toTmp;
 }
 
 void ManList::manLoad(wxFileConfig&)

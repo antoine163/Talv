@@ -63,6 +63,10 @@ void ManTranslator::getTranslations(	DataText* translations,
 		{
 			if(text.Len() <= NB_CHARACTER_MIN_FOR_SENTENCE)
 			{
+				//Si le cache n'existe pas on le crée.
+				if(!ManCache::get().existCache(lgsrc, lgto))
+					ManCache::get().createCache(lgsrc, lgto);
+					
 				//Ajout de la traduction du texte dans le cache.
 				Cache tmpCache = ManCache::get().getCache(lgsrc, lgto);
 				tmpCache.addText(text, *translations);

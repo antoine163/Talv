@@ -70,7 +70,7 @@ class Cache : public FileText
 		//! - Si \ref FILE_NO_NAME vous devriez appeler \ref setFileName()
 		Status_e updateText(wxString const& text, DataText const& dataText);
 		
-		//! \brief Remplace touts les textes et leur données pas de nouveaux.
+		//! \brief Remplace touts les textes et leur données.
 		//! \param texts les textes et données à ajouter.
 		//! \return \ref STATUS_SUCCESS, \ref STATUS_FILE_OPEN_FAILED,
 		//! \ref STATUS_FILE_WRITE_ERROR, \ref STATUS_FILE_READ_ERROR, \ref STATUS_FILE_NO_NAME
