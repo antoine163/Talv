@@ -11,6 +11,7 @@
 
 //App
 #include "manager/manList.hpp"
+#include "manager/manCache.hpp"
 #include "defs.hpp"
 
 //WxWidgets
@@ -19,6 +20,7 @@
 #include <wx/filefn.h> 
 #include <wx/stdpaths.h>
 #include <wx/arrstr.h>
+#include <wx/filename.h>
 
 // *****************************************************************************
 // Class ManList
@@ -27,7 +29,10 @@
 ManList::ManList()
 : _workInTmp(false)
 {
-	_workDirectory = wxStandardPaths::Get().GetUserDataDir()+"/lists";
+	_directoryUser = wxStandardPaths::Get().GetUserDataDir()+"/lists";
+	_directoryTmp = wxStandardPaths::Get().GetTempDir()+"/"+PROJECT_NAME+"/lists";
+	
+	_workDirectory = _directoryUser;
 	if(!wxDir::Exists(_workDirectory))
 		wxDir::Make(_workDirectory);
 }
@@ -65,12 +70,17 @@ bool ManList::createList(wxString const& name, wxLanguage lgsrc, wxLanguage lgto
 wxArrayString ManList::getNamesLists()const
 {
 	wxArrayString files;
+	wxArrayString nameFiles;
 	wxDir::GetAllFiles(_workDirectory, &files);
 	
+	wxFileName file;
 	for(auto it: files)
-		it = it.BeforeLast('.');
+	{
+		file.Assign(it);
+		nameFiles.Add(file.GetName());
+	}
 	
-	return files;
+	return nameFiles;
 }
 
 wxArrayString ManList::getNamesLists(wxLanguage lgsrc, wxLanguage lgto)const
@@ -97,48 +107,42 @@ List ManList::getList(wxString const& name)const
 	return rList;
 }
 
-void ManList::workToTmp(bool toTmp, bool apply)
+void ManList::workToTmp(bool toTmp)
 {
 	//To Tmp
 	if(!_workInTmp && toTmp)
 	{
-		wxString workDirectoryOld = _workDirectory;
-		_workDirectory = wxStandardPaths::Get().GetTempDir()+"/"+PROJECT_NAME+"/cache";
-		wxDir::Make(_workDirectory);
+		wxDir::Make(_directoryTmp, wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
+
+		wxArrayString files = getNamesLists();
+		for(auto it: files)
+			wxCopyFile(_directoryUser+"/"+it+".lis", _directoryTmp+"/"+it+".lis");
 		
-		if(apply)
-		{
-			wxArrayString files;
-			wxDir::GetAllFiles(workDirectoryOld, &files);
-			
-			for(auto it: files)
-				wxCopyFile(workDirectoryOld+"/"+it, _workDirectory+"/"+it);
-		}
+		_workDirectory = _directoryTmp;
 	}
 	//From Tmp
 	else if(_workInTmp && !toTmp)
 	{
-		wxString workDirectoryOld = _workDirectory;
-		_workDirectory = wxStandardPaths::Get().GetUserDataDir()+"/cache";
-		
-		if(apply)
-		{
-			wxDir::Remove(_workDirectory, wxPATH_RMDIR_FULL);
-			wxDir::Make(_workDirectory);
-			
-			wxArrayString files;
-			wxDir::GetAllFiles(workDirectoryOld, &files);
-			
-			for(auto it: files)
-				wxCopyFile(workDirectoryOld+"/"+it, _workDirectory+"/"+it);
-		}
-		
-		wxDir::Remove(workDirectoryOld, wxPATH_RMDIR_FULL);
+		wxDir::Remove(_directoryTmp, wxPATH_RMDIR_FULL|wxPATH_RMDIR_RECURSIVE);
+		_workDirectory = _directoryUser;
 	}
 	else
 		return;
 	
 	_workInTmp = toTmp;
+}
+
+void ManList::applyTmp()const
+{
+	if(_workInTmp)
+	{
+		wxDir::Remove(_directoryUser, wxPATH_RMDIR_FULL|wxPATH_RMDIR_RECURSIVE);
+		wxDir::Make(_directoryUser);
+		
+		wxArrayString files = getNamesLists();
+		for(auto it: files)
+			wxCopyFile(_directoryTmp+"/"+it+".lis", _directoryUser+"/"+it+".lis");
+	}
 }
 
 void ManList::manLoad(wxFileConfig&)
@@ -147,6 +151,7 @@ void ManList::manLoad(wxFileConfig&)
 
 void ManList::manSave(wxFileConfig&)const
 {
+	applyTmp();
 }
 
 // *****************************************************************************
@@ -156,6 +161,10 @@ void ManList::manSave(wxFileConfig&)const
 WinManList::WinManList(wxWindow* parent)
 : WinManager(parent, _("Lists"))
 {
+	//On travaille dans le dossier temporaire.
+	ManList::get().workToTmp();
+	ManCache::get().workToTmp();
+	
 	//Creation de la liste.
 	_ctrlDataList = new CtrlDataList(this);
 	
@@ -163,23 +172,6 @@ WinManList::WinManList(wxWindow* parent)
 	_ctrlDataList->AppendTextColumn(_("List name"), 			wxDATAVIEW_CELL_INERT, 150, wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE|wxDATAVIEW_COL_SORTABLE);	
 	_ctrlDataList->AppendTextColumn(_("Source language"), 		wxDATAVIEW_CELL_INERT, 150, wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE|wxDATAVIEW_COL_SORTABLE);
 	_ctrlDataList->AppendTextColumn(_("Translation language"), 	wxDATAVIEW_CELL_INERT, -1, 	wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE|wxDATAVIEW_COL_SORTABLE);
-							
-	//Remplissage de la liste.(TMP)
-	wxVector<wxVariant> data;
-	data.push_back( wxVariant("List1") );
-	data.push_back( wxVariant("en") );
-	data.push_back( wxVariant("fr") );
-	_ctrlDataList->AppendItem( data );
-	data.clear();
-	data.push_back( wxVariant("List2") );
-	data.push_back( wxVariant("fr") );
-	data.push_back( wxVariant("en") );
-	_ctrlDataList->AppendItem( data );
-	data.clear();
-	data.push_back( wxVariant("Cache") );
-	data.push_back( wxVariant("en") );
-	data.push_back( wxVariant("fr") );
-	_ctrlDataList->AppendItem( data );
 							
 	//Créations du menu.
 	_ctrlDataList->addMenuItem(wxID_NEW, 	wxEmptyString, ENABLE_ANYTIME);
@@ -222,10 +214,44 @@ WinManList::WinManList(wxWindow* parent)
 
 WinManList::~WinManList()
 {
+	//On travaille dans le dossier utilisateur.
+	ManList::get().workToTmp(false);
+	ManCache::get().workToTmp(false);
 }
 
 void WinManList::refreshGuiFromManager()
 {
+	//On commence par tout effacer.
+	_ctrlDataList->DeleteAllItems();
+	
+	//Récupération des Lists.
+	wxArrayString lists = ManList::get().getNamesLists();
+	//Récupération des Caches.
+	wxArrayString caches = ManCache::get().getNamesCaches();
+	
+	wxVector<wxVariant> data;
+	wxLanguage lgsrc;
+	wxLanguage lgto;
+	for(auto it: lists)
+	{
+		ManList::get().getList(it).getLanguages(&lgsrc, &lgto);
+		
+		data.clear();
+		data.push_back(wxVariant(it));
+		data.push_back(wxVariant(wxLocale::GetLanguageName(lgsrc)));
+		data.push_back(wxVariant(wxLocale::GetLanguageName(lgto)));
+		_ctrlDataList->AppendItem(data);
+	}
+	for(auto it: caches)
+	{
+		ManList::get().getList(it).getLanguages(&lgsrc, &lgto);
+		
+		data.clear();
+		data.push_back(wxVariant(it));
+		data.push_back(wxVariant(wxLocale::GetLanguageName(lgsrc)));
+		data.push_back(wxVariant(wxLocale::GetLanguageName(lgto)));
+		_ctrlDataList->AppendItem(data);
+	}
 }
 
 void WinManList::refreshManagerFromGui()const

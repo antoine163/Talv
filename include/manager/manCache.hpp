@@ -44,7 +44,8 @@ class ManCache : public Manager
 		//! \return le nom de tout les caches.
 		wxArrayString getNamesCaches()const;
 		
-		void workToTmp(bool toTmp = true, bool apply = true);
+		void workToTmp(bool toTmp = true);
+		void applyTmp()const;
 		
 	private:
 		virtual void manLoad(wxFileConfig& fileConfig);
@@ -52,6 +53,8 @@ class ManCache : public Manager
 		
 		bool _workInTmp;
 		wxString _workDirectory;
+		wxString _directoryUser;
+		wxString _directoryTmp;
 };
 
 #endif //MAN_CACHE_H

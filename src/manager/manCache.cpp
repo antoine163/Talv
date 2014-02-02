@@ -17,6 +17,7 @@
 #include <wx/filefn.h> 
 #include <wx/stdpaths.h>
 #include <wx/arrstr.h>
+#include <wx/filename.h>
 
 
 // *****************************************************************************
@@ -26,7 +27,10 @@
 ManCache::ManCache()
 : _workInTmp(false)
 {
-	_workDirectory = wxStandardPaths::Get().GetUserDataDir()+"/caches";
+	_directoryUser = wxStandardPaths::Get().GetUserDataDir()+"/caches";
+	_directoryTmp = wxStandardPaths::Get().GetTempDir()+"/"+PROJECT_NAME+"/caches";
+	
+	_workDirectory = _directoryUser;
 	if(!wxDir::Exists(_workDirectory))
 		wxDir::Make(_workDirectory);
 }
@@ -80,56 +84,55 @@ Cache ManCache::getCache(wxString const& name)
 wxArrayString ManCache::getNamesCaches()const
 {
 	wxArrayString files;
+	wxArrayString nameFiles;
 	wxDir::GetAllFiles(_workDirectory, &files);
 	
+	wxFileName file;
 	for(auto it: files)
-		it = it.BeforeLast('.');
+	{
+		file.Assign(it);
+		nameFiles.Add(file.GetName());
+	}
 	
-	return files;
+	return nameFiles;
 }
 
-void ManCache::workToTmp(bool toTmp, bool apply)
+void ManCache::workToTmp(bool toTmp)
 {
 	//To Tmp
 	if(!_workInTmp && toTmp)
 	{
-		wxString workDirectoryOld = _workDirectory;
-		_workDirectory = wxStandardPaths::Get().GetTempDir()+"/"+PROJECT_NAME+"/caches";
-		wxDir::Make(_workDirectory);
+		wxDir::Make(_directoryTmp, wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
+
+		wxArrayString files = getNamesCaches();
+		for(auto it: files)
+			wxCopyFile(_directoryUser+"/"+it+".cac", _directoryTmp+"/"+it+".cac");
 		
-		if(apply)
-		{
-			wxArrayString files;
-			wxDir::GetAllFiles(workDirectoryOld, &files);
-			
-			for(auto it: files)
-				wxCopyFile(workDirectoryOld+"/"+it, _workDirectory+"/"+it);
-		}
+		_workDirectory = _directoryTmp;
 	}
 	//From Tmp
 	else if(_workInTmp && !toTmp)
 	{
-		wxString workDirectoryOld = _workDirectory;
-		_workDirectory = wxStandardPaths::Get().GetUserDataDir()+"/caches";
-		
-		if(apply)
-		{
-			wxDir::Remove(_workDirectory, wxPATH_RMDIR_FULL);
-			wxDir::Make(_workDirectory);
-			
-			wxArrayString files;
-			wxDir::GetAllFiles(workDirectoryOld, &files);
-			
-			for(auto it: files)
-				wxCopyFile(workDirectoryOld+"/"+it, _workDirectory+"/"+it);
-		}
-		
-		wxDir::Remove(workDirectoryOld, wxPATH_RMDIR_FULL);
+		wxDir::Remove(_directoryTmp, wxPATH_RMDIR_FULL|wxPATH_RMDIR_RECURSIVE);
+		_workDirectory = _directoryUser;
 	}
 	else
 		return;
 	
 	_workInTmp = toTmp;
+}
+
+void ManCache::applyTmp()const
+{
+	if(_workInTmp)
+	{
+		wxDir::Remove(_directoryUser, wxPATH_RMDIR_FULL|wxPATH_RMDIR_RECURSIVE);
+		wxDir::Make(_directoryUser);
+		
+		wxArrayString files = getNamesCaches();
+		for(auto it: files)
+			wxCopyFile(_directoryTmp+"/"+it+".cac", _directoryUser+"/"+it+".cac");
+	}
 }
 
 void ManCache::manLoad(wxFileConfig&)
@@ -138,4 +141,5 @@ void ManCache::manLoad(wxFileConfig&)
 
 void ManCache::manSave(wxFileConfig&)const
 {
+	applyTmp();
 }

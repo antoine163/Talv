@@ -40,7 +40,8 @@ class ManList : public Manager
 		wxArrayString getNamesLists(wxLanguage lgsrc, wxLanguage lgto)const;
 		List getList(wxString const& name)const;
 									
-		void workToTmp(bool toTmp = true, bool apply = true);
+		void workToTmp(bool toTmp = true);
+		void applyTmp()const;
 	
 	private:
 		virtual void manLoad(wxFileConfig& fileConfig);
@@ -48,6 +49,8 @@ class ManList : public Manager
 		
 		bool _workInTmp;
 		wxString _workDirectory;
+		wxString _directoryUser;
+		wxString _directoryTmp;
 };
 
 // *****************************************************************************

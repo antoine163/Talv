@@ -41,6 +41,10 @@ void TrlCache::getTranslations(	DataText* translations,
 								wxLanguage lgsrc,
 								wxLanguage lgto)
 {
+	//Si le cache n'existe on fait rien.
+	if(!ManCache::get().existCache(lgsrc, lgto))
+		return;
+					
 	Cache cache = ManCache::get().getCache(lgsrc, lgto);
 	cache.getData(text, translations);
 }
