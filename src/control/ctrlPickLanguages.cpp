@@ -24,6 +24,21 @@
 // Class CtrlPickLanguages
 // *****************************************************************************
 
+CtrlPickLanguages::CtrlPickLanguages(wxWindow* parent)
+: CtrlPickLanguages(parent, wxLANGUAGE_ENGLISH, wxLANGUAGE_FRENCH)
+{
+	wxLanguage lgto;
+	wxLanguage lgsrc;
+	
+	lgto = ManGeneral::get().getSystemLanguage();                                  
+	if(	lgto == wxLANGUAGE_ENGLISH)
+		lgsrc = wxLANGUAGE_FRENCH;
+	else
+		lgsrc = wxLANGUAGE_ENGLISH;
+		
+	setLanguages(lgsrc, lgto);
+}
+
 CtrlPickLanguages::CtrlPickLanguages(	wxWindow* parent,
 										wxLanguage lgsrc,
 										wxLanguage lgto)

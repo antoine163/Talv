@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.2
+//! \version 0.1
 //! \date 01.01.2014
 //!
 //! ****************************************************************************
@@ -26,6 +26,8 @@
 class CtrlPickLanguages : public wxWindow
 {
 	public:
+		//! \brief Constructeur.
+		CtrlPickLanguages(wxWindow* parent);
 		//! \brief Constructeur.
 		CtrlPickLanguages(	wxWindow* parent,
 							wxLanguage lgsrc,

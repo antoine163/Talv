@@ -12,6 +12,7 @@
 //App
 #include "manager/manList.hpp"
 #include "manager/manCache.hpp"
+#include "dialog/dlgNewList.hpp"
 #include "defs.hpp"
 
 //WxWidgets
@@ -21,6 +22,7 @@
 #include <wx/stdpaths.h>
 #include <wx/arrstr.h>
 #include <wx/filename.h>
+#include <wx/msgdlg.h>
 
 // *****************************************************************************
 // Class ManList
@@ -183,6 +185,9 @@ WinManList::WinManList(wxWindow* parent)
 	_ctrlDataList->addMenuItemSeparator();
 	_ctrlDataList->addMenuItem(ID_EXPORT, 	_("Export"), ENABLE_SELECTING_ITEMS);
 	_ctrlDataList->addMenuItem(ID_IMPORT, 	_("Import"));
+	_ctrlDataList->addMenuItemSeparator();
+	_ctrlDataList->addMenuItem(wxID_PREVIEW, 	wxEmptyString, ENABLE_SELECTING_ITEMS);
+	_ctrlDataList->addMenuItem(wxID_PRINT, 		wxEmptyString, ENABLE_SELECTING_ITEMS);
 	
 	//Créations des boutons.
 	wxButton* buttonDelete =	new wxButton(this, wxID_DELETE);
@@ -201,7 +206,7 @@ WinManList::WinManList(wxWindow* parent)
 	wxSizer* sizeButtons = new wxBoxSizer(wxHORIZONTAL);
 	sizeButtons->Add(buttonDelete,	 	0, wxEXPAND);
 	sizeButtons->AddStretchSpacer(1);
-	sizeButtons->Add(buttonImport, 		0, wxEXPAND|wxRIGHT, SIZE_BORDER);//ajouter bordure
+	sizeButtons->Add(buttonImport, 		0, wxEXPAND|wxRIGHT, SIZE_BORDER);
 	sizeButtons->Add(buttonEdit, 		0, wxEXPAND|wxRIGHT, SIZE_BORDER);
 	sizeButtons->Add(buttonNew, 		0, wxEXPAND);
 	
@@ -210,6 +215,31 @@ WinManList::WinManList(wxWindow* parent)
 	sizerMain->Add(_ctrlDataList, 	1, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM|wxTOP, 	SIZE_BORDER);
 	sizerMain->Add(sizeButtons,		0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);	
 	SetSizer(sizerMain);
+	
+	//Bind
+	Bind(wxEVT_COMMAND_MENU_SELECTED, 	&WinManList::onNew, 	this, wxID_NEW);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, 	&WinManList::onEdit,	this, wxID_EDIT);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, 	&WinManList::onFind, 	this, wxID_FIND);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, 	&WinManList::onDelete, 	this, wxID_DELETE);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, 	&WinManList::onLearn, 	this, ID_LEARN);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, 	&WinManList::onExport, 	this, ID_EXPORT);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, 	&WinManList::onImport, 	this, ID_IMPORT);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, 	&WinManList::onPreview, this, wxID_PREVIEW);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, 	&WinManList::onPrint, 	this, wxID_PRINT);
+	
+	Bind(wxEVT_BUTTON, 					&WinManList::onDelete, 	this, wxID_DELETE);
+	Bind(wxEVT_BUTTON, 					&WinManList::onImport,	this, ID_IMPORT);
+	Bind(wxEVT_BUTTON, 					&WinManList::onEdit,	this, wxID_EDIT);
+	Bind(wxEVT_BUTTON, 					&WinManList::onNew, 	this, wxID_NEW);
+	
+	//Accélérateurs
+	wxAcceleratorEntry entries[4];
+    entries[0].Set(wxACCEL_CTRL, 	(int) 'F', 		wxID_FIND);
+    entries[1].Set(wxACCEL_CTRL, 	(int) 'N', 		wxID_NEW);
+    entries[2].Set(wxACCEL_CTRL, 	(int) 'P', 		wxID_PRINT);
+    entries[3].Set(wxACCEL_NORMAL,	 WXK_DELETE, 	wxID_DELETE);
+    wxAcceleratorTable accel(4, entries);
+    SetAcceleratorTable(accel);
 }
 
 WinManList::~WinManList()
@@ -217,6 +247,22 @@ WinManList::~WinManList()
 	//On travaille dans le dossier utilisateur.
 	ManList::get().workToTmp(false);
 	ManCache::get().workToTmp(false);
+	
+	//Unbind
+	Unbind(wxEVT_COMMAND_MENU_SELECTED, 	&WinManList::onNew, 	this, wxID_NEW);
+	Unbind(wxEVT_COMMAND_MENU_SELECTED, 	&WinManList::onEdit,	this, wxID_EDIT);
+	Unbind(wxEVT_COMMAND_MENU_SELECTED, 	&WinManList::onFind, 	this, wxID_FIND);
+	Unbind(wxEVT_COMMAND_MENU_SELECTED, 	&WinManList::onDelete, 	this, wxID_DELETE);
+	Unbind(wxEVT_COMMAND_MENU_SELECTED, 	&WinManList::onLearn, 	this, ID_LEARN);
+	Unbind(wxEVT_COMMAND_MENU_SELECTED, 	&WinManList::onExport, 	this, ID_EXPORT);
+	Unbind(wxEVT_COMMAND_MENU_SELECTED, 	&WinManList::onImport, 	this, ID_IMPORT);
+	Unbind(wxEVT_COMMAND_MENU_SELECTED, 	&WinManList::onPreview, this, wxID_PREVIEW);
+	Unbind(wxEVT_COMMAND_MENU_SELECTED, 	&WinManList::onPrint, 	this, wxID_PRINT);
+	
+	Unbind(wxEVT_BUTTON, 					&WinManList::onDelete, 	this, wxID_DELETE);
+	Unbind(wxEVT_BUTTON, 					&WinManList::onImport,	this, ID_IMPORT);
+	Unbind(wxEVT_BUTTON, 					&WinManList::onEdit,	this, wxID_EDIT);
+	Unbind(wxEVT_BUTTON, 					&WinManList::onNew, 	this, wxID_NEW);
 }
 
 void WinManList::refreshGuiFromManager()
@@ -242,18 +288,111 @@ void WinManList::refreshGuiFromManager()
 		data.push_back(wxVariant(wxLocale::GetLanguageName(lgto)));
 		_ctrlDataList->AppendItem(data);
 	}
-	for(auto it: caches)
-	{
-		ManList::get().getList(it).getLanguages(&lgsrc, &lgto);
-		
-		data.clear();
-		data.push_back(wxVariant(it));
-		data.push_back(wxVariant(wxLocale::GetLanguageName(lgsrc)));
-		data.push_back(wxVariant(wxLocale::GetLanguageName(lgto)));
-		_ctrlDataList->AppendItem(data);
-	}
 }
 
 void WinManList::refreshManagerFromGui()const
 {
+}
+#include <iostream>
+void WinManList::onNew(wxCommandEvent&)
+{
+	DlgNewList dlg(DialogInlay::findParent());
+	while(dlg.showModal() == wxID_OK)
+	{
+		//On vérifie si la liste n'est pas existante.
+		if(dlg.getNameList().IsEmpty())
+		{
+			wxMessageDialog dlgm(this,
+					_("You didn't chose a new list name!"),
+					_("List no name"),
+					wxOK|wxICON_INFORMATION|wxCENTRE);
+			dlgm.ShowModal();
+		}
+		else if(ManList::get().existList(dlg.getNameList()))
+		{
+			wxMessageDialog dlgm(this,
+					_("The list is already existing!"),
+					_("List existing"),
+					wxOK|wxICON_INFORMATION|wxCENTRE);
+			dlgm.ShowModal();
+		}
+		else
+		{
+			//Creation et ajoute de la list. 
+			wxLanguage lgsrc;
+			wxLanguage lgto;
+			dlg.getLanguages(&lgsrc, &lgto);
+			ManList::get().createList(dlg.getNameList(), lgsrc, lgto);
+			
+			wxVector<wxVariant> data;
+			data.clear();
+			data.push_back(wxVariant(dlg.getNameList()));
+			data.push_back(wxVariant(wxLocale::GetLanguageName(lgsrc)));
+			data.push_back(wxVariant(wxLocale::GetLanguageName(lgto)));
+			_ctrlDataList->AppendItem(data);
+			
+			ensureVisible(dlg.getNameList());
+			break;
+		}
+	}
+}
+
+void WinManList::onEdit(wxCommandEvent&)
+{
+	std::cout << "WinManList::onEdit" << std::endl;
+}
+
+void WinManList::onFind(wxCommandEvent&)
+{
+	std::cout << "WinManList::onFind" << std::endl;
+}
+
+void WinManList::onDelete(wxCommandEvent&)
+{
+	std::cout << "WinManList::onDelete" << std::endl;
+}
+
+void WinManList::onLearn(wxCommandEvent&)
+{
+	std::cout << "WinManList::onLearn" << std::endl;
+}
+
+void WinManList::onExport(wxCommandEvent&)
+{
+	std::cout << "WinManList::onExport" << std::endl;
+}
+
+void WinManList::onImport(wxCommandEvent&)
+{
+	std::cout << "WinManList::onImport" << std::endl;
+}
+
+void WinManList::onPreview(wxCommandEvent&)
+{
+	std::cout << "WinManList::onPreview" << std::endl;
+}
+
+void WinManList::onPrint(wxCommandEvent&)
+{
+	std::cout << "WinManList::onPrint" << std::endl;
+}
+
+bool WinManList::ensureVisible(wxString nameList)
+{
+	_ctrlDataList->UnselectAll();
+	
+	//On cherche le raccourcie dans le _ctrlDataList
+	for(int i = 0; i<_ctrlDataList->GetItemCount(); i++)
+	{
+		//Si on a trouver, on le rend visible.
+		if(_ctrlDataList->GetTextValue(i, 0) == nameList)		
+		{			
+			_ctrlDataList->EnsureVisible(_ctrlDataList->RowToItem(i));
+			_ctrlDataList->SelectRow(i);
+			_ctrlDataList->updateEnableElements();
+			return true;
+		}	
+	}
+	
+	return false;
 }

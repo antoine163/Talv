@@ -68,6 +68,18 @@ class WinManList : public WinManager
 		virtual void refreshManagerFromGui()const;
 	
 	private:
+		void onNew(wxCommandEvent& event);
+		void onEdit(wxCommandEvent& event);
+		void onFind(wxCommandEvent& event);
+		void onDelete(wxCommandEvent& event);
+		void onLearn(wxCommandEvent& event);
+		void onExport(wxCommandEvent& event);
+		void onImport(wxCommandEvent& event);
+		void onPreview(wxCommandEvent& event);
+		void onPrint(wxCommandEvent& event);
+		
+		bool ensureVisible(wxString nameList);
+		
 		CtrlDataList* _ctrlDataList;
 };
 

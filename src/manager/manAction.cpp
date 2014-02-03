@@ -551,7 +551,7 @@ bool WinManAction::ensureVisible(ShortcutKey shortcut)
 	//On cherche le raccourcie dans le _ctrlDataList
 	for(int i = 0; i<_ctrlDataList->GetItemCount(); i++)
 	{
-		//Si on n'a trouver, on le rend visible.
+		//Si on a trouver, on le rend visible.
 		if(ShortcutKey::stringToShortcutKey(_ctrlDataList->GetTextValue(i, 0)) == shortcut)		
 		{			
 			_ctrlDataList->EnsureVisible(_ctrlDataList->RowToItem(i));

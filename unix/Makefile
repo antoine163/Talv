@@ -77,6 +77,7 @@ SRC+=../src/dialogInlay.cpp
 SRC+=../src/dialog/dlgPreferences.cpp
 SRC+=../src/dialog/dlgPreferencesAction.cpp
 SRC+=../src/dialog/dlgPickShortcutKey.cpp
+SRC+=../src/dialog/dlgNewList.cpp
 
 #Managers
 SRC+=../src/manager.cpp	
