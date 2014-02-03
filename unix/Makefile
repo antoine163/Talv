@@ -94,6 +94,7 @@ SRC+=../src/manager/manTranslator.cpp
 SRC+=../src/action.cpp
 SRC+=../src/action/actTranslationToNotification.cpp
 SRC+=../src/action/actTranslationToList.cpp
+SRC+=../src/action/actLauncher.cpp
 
 #Translators
 SRC+=../src/translator.cpp

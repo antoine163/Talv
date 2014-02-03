@@ -15,9 +15,11 @@
 
 #include "action/actTranslationToNotification.hpp"
 #include "action/actTranslationToList.hpp"
+#include "action/actLauncher.hpp"
 
 #define MAKE_CREATE_ACTION()	CREATE_ACTION(ActTranslationToNotification)	\
-								CREATE_ACTION(ActTranslationToList)
+								CREATE_ACTION(ActTranslationToList)			\
+								CREATE_ACTION(ActLauncher)
 
 
 #endif //ACTION_DEF_H
