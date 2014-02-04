@@ -72,7 +72,7 @@ void ActTranslationToNotification::execute()
 	//On vérifie si une traduction existe.
 	if(translations.getMainTranslation().IsEmpty())
 	{
-		ManNotification::get().notify(_("No translation"), _("Sorry, there is no translation for the text: \""+clipboard+"\""), wxICON_INFORMATION);
+		ManNotification::get().notify(_("No translation"), _("Sorry, there is no translation for the text!"), wxICON_INFORMATION);
 		return;
 	}
 	
@@ -113,17 +113,20 @@ void ActTranslationToNotification::actLoad(wxFileConfig& fileConfig)
 	if(	_lgto == wxLANGUAGE_ENGLISH)
 		_lgsrc = wxLANGUAGE_FRENCH;
 	else
-		_lgsrc = wxLANGUAGE_ENGLISH;
-		
-	//On récupère les préférence.
-	_lgsrc = (wxLanguage)fileConfig.ReadLong("lgsrc", (long)_lgsrc);
-	_lgto = (wxLanguage)fileConfig.ReadLong("lgto", (long)_lgto);
+		_lgsrc = wxLANGUAGE_ENGLISH;	
+	
+	//On récupère les préférences.
+	wxString lg;
+	lg = fileConfig.Read("lgsrc", wxLocale::GetLanguageName(_lgsrc));
+	_lgsrc = (wxLanguage)wxLocale::FindLanguageInfo(lg)->Language;
+	lg = fileConfig.Read("lgto", wxLocale::GetLanguageName(_lgto));
+	_lgto = (wxLanguage)wxLocale::FindLanguageInfo(lg)->Language;
 }
-		
+
 void ActTranslationToNotification::actSave(wxFileConfig& fileConfig)const
 {
-	fileConfig.Write("lgsrc", (long)_lgsrc);
-	fileConfig.Write("lgto", (long)_lgto);
+	fileConfig.Write("lgsrc", wxLocale::GetLanguageName(_lgsrc));
+	fileConfig.Write("lgto", wxLocale::GetLanguageName(_lgto));
 }
 
 // *****************************************************************************
