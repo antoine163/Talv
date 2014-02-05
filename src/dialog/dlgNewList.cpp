@@ -32,7 +32,7 @@ DlgNewList::DlgNewList(wxWindow* parent)
 	
 	//Mise en forme avec un sizer.
 	wxSizer* sizerNameList = new wxBoxSizer(wxVERTICAL);
-	sizerNameList->Add(_textCtrlNameList, 0, wxEXPAND, SIZE_BORDER);	
+	sizerNameList->Add(_textCtrlNameList, 0, wxEXPAND|wxTOP, SIZE_BORDER);	
 	staticBoxNameList->SetSizer(sizerNameList);
 	
 	//Créations du ctrlPickLanguages. 
@@ -46,10 +46,10 @@ DlgNewList::DlgNewList(wxWindow* parent)
 	
 	//Mise en forme du GUI avec un sizer.
 	wxSizer* sizerMain = new wxBoxSizer(wxVERTICAL);
-	sizerMain->Add(staticBoxNameList,	0, 	wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM|wxTOP,	SIZE_BORDER);
-	sizerMain->Add(_ctrlPickLanguages,		0, 	wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);
-	sizerMain->Add(staticLine,		0, 	wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);
-	sizerMain->Add(buttons, 		0, 	wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);
+	sizerMain->Add(staticBoxNameList,	0, 	wxEXPAND|wxLEFT|wxRIGHT|wxTOP,		SIZE_BORDER);
+	sizerMain->Add(_ctrlPickLanguages,	0, 	wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 	SIZE_BORDER);
+	sizerMain->Add(staticLine,			0, 	wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 	SIZE_BORDER);
+	sizerMain->Add(buttons, 			0, 	wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 	SIZE_BORDER);
 	
 	SetSizer(sizerMain);
 }

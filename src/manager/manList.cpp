@@ -13,6 +13,7 @@
 #include "manager/manList.hpp"
 #include "manager/manCache.hpp"
 #include "dialog/dlgNewList.hpp"
+#include "dialog/dlgFind.hpp"
 #include "defs.hpp"
 
 //WxWidgets
@@ -344,7 +345,9 @@ void WinManList::onEdit(wxCommandEvent&)
 
 void WinManList::onFind(wxCommandEvent&)
 {
-	std::cout << "WinManList::onFind" << std::endl;
+	DlgFind dlg(this, _("Find a list"), ManList::get().getNamesLists());
+	if(dlg.ShowModal() == wxID_OK)
+		ensureVisible(dlg.getValue());
 }
 
 void WinManList::onDelete(wxCommandEvent&)
