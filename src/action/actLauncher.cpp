@@ -81,7 +81,7 @@ WinActLauncher::WinActLauncher(wxWindow* parent, ActLauncher const* act)
 	
 	StaticBox* staticBoxCommand = new StaticBox(this, wxID_ANY, _("Chose your commend line:"));
 	_textCtrlCommand = 		new wxTextCtrl	(staticBoxCommand, wxID_ANY, command);
-	_buttonPickExeFile =	new wxButton	(staticBoxCommand, wxID_ANY, _("Pick a executable"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
+	_buttonPickExeFile =	new wxButton	(staticBoxCommand, wxID_ANY, _("Pick a executable"));
 	
 	wxSizer* sizerMain = new wxBoxSizer(wxHORIZONTAL);
 	sizerMain->Add(_textCtrlCommand, 	1, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxTOP, 	SIZE_BORDER);

@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.21
+//! \version 1.0
 //! \date 31.03.2013
 //!
 //! ****************************************************************************
@@ -14,9 +14,12 @@
 
 //App
 #include "action.hpp"
+#include "control/ctrlPickLanguages.hpp"
 
 //WxWidgets
 #include <wx/language.h>
+#include <wx/checkbox.h>
+#include <wx/combobox.h>
 
 // *****************************************************************************
 // Class ActTranslationToList
@@ -48,6 +51,16 @@ class ActTranslationToList : public Action
 		//! \brief Permet de savoir si une liste est utiliser pas l'action.
 		bool listIsUsed(wxString const& listName);
 		
+		void getLanguages(wxLanguage* lgsrc, wxLanguage* lgto)const;
+		void setLanguages(wxLanguage lgsrc, wxLanguage lgto);
+		
+		wxString getList()const;
+		void setList(wxString const& listName);
+		
+		bool IsUsedDlgPick()const;
+		void UseDlgPick(bool use = true);
+		
+		
 	protected:		
 		//! \brief Permet de charger les préférences de l'action à partir du wxFileConfig.
 		//! \param fileConfig fichier à partir du quelle l'action doit être charger.
@@ -62,6 +75,35 @@ class ActTranslationToList : public Action
 		wxLanguage _lgsrc;
 		//! \brief Lange de traduction.
 		wxLanguage _lgto;
+		//! \brief Le nom de la liste à utiliser.
+		wxString _listName;
+		//! \brief true pour dessiner le dialogue de chois de la traduction.
+		bool _dlgPick;
+};
+
+// *****************************************************************************
+// Class WinActTranslationToList
+// *****************************************************************************
+
+//! \brief GUI pour la modification des préférences des actions qui envoi la traductions dans une liste\ref ActTranslationToList.
+class WinActTranslationToList : public WinAction
+{
+	public:
+		//! \brief Constructeur.
+		WinActTranslationToList(wxWindow* parent, ActTranslationToList const* act);
+		//! \brief Destructeur.
+		~WinActTranslationToList();
+		
+		virtual void refreshActionFromGui();
+	
+	private:
+		void onText(wxCommandEvent& event);
+		
+		void updateCtrlPickLanguages();
+	
+		wxComboBox* _comboBoxList;
+		wxCheckBox* _checkBoxShowDlgPick;
+		CtrlPickLanguages* _ctrlPickLanguages;
 };
 
 #endif //ACTION_TRANSLATION_TO_LIST_H
