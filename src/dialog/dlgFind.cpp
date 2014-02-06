@@ -53,6 +53,8 @@ DlgFind::DlgFind(wxWindow* parent, wxString const& title, wxArrayString const& c
 	sizerMain->Add(buttons, 	0, 	wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);
 	SetSizerAndFit(sizerMain);
 	Center();
+	
+	_textCtrlFind->SetFocus();
 }
 
 DlgFind::~DlgFind()

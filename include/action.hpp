@@ -71,6 +71,9 @@ class Action
 		
 		//! \brief Permet d'exécuter l'action.
 		virtual void execute()=0;
+		
+		//! \brief Permet de savoir si une liste est utiliser pas l'action.
+		virtual bool listIsUsed(wxString const& listName);
 	
 		//! @name Auto implémenter
 		//!

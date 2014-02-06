@@ -78,9 +78,10 @@ DlgPreferencesAction::DlgPreferencesAction(wxWindow* parent, ShortcutKey const& 
 	sizerMain->Add(staticLine2,		0, 	wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);
 	sizerMain->Add(buttons, 		0, 	wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 		SIZE_BORDER);
 	
-	
 	//SetSizerAndFit(sizerMain);
 	SetSizer(sizerMain);
+	
+	_ctrlPickShortcutKey->SetFocus();
 }
 
 DlgPreferencesAction::~DlgPreferencesAction()

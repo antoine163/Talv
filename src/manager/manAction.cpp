@@ -413,7 +413,7 @@ void WinManAction::onDelete(wxCommandEvent&)
 {
 	wxMessageDialog dlg(this, _("Is you sure to want delete the actions selected?"), _("Delete actions"), wxYES_NO|wxICON_QUESTION|wxCENTRE);
 			
-	//On doit supprimer Les actions?
+	//On doit supprimer les actions?
 	if(dlg.ShowModal() == wxID_YES)//Oui
 	{	
 		wxDataViewItemArray itemsSelected;

@@ -45,6 +45,9 @@ class ActTranslationToList : public Action
 		//! \brief Exécuter l'action.
 		void execute();
 		
+		//! \brief Permet de savoir si une liste est utiliser pas l'action.
+		bool listIsUsed(wxString const& listName);
+		
 	protected:		
 		//! \brief Permet de charger les préférences de l'action à partir du wxFileConfig.
 		//! \param fileConfig fichier à partir du quelle l'action doit être charger.

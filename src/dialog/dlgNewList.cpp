@@ -52,6 +52,8 @@ DlgNewList::DlgNewList(wxWindow* parent)
 	sizerMain->Add(buttons, 			0, 	wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM, 	SIZE_BORDER);
 	
 	SetSizer(sizerMain);
+	
+	_textCtrlNameList->SetFocus();
 }
 
 DlgNewList::~DlgNewList()

@@ -11,10 +11,15 @@
 
 //App
 #include "manager/manList.hpp"
+#include "manager/manAction.hpp"
 #include "manager/manCache.hpp"
 #include "dialog/dlgNewList.hpp"
 #include "dialog/dlgFind.hpp"
+#include "shortcut.hpp"
 #include "defs.hpp"
+
+//Stl
+#include <vector>
 
 //WxWidgets
 #include <wx/sizer.h>
@@ -108,6 +113,19 @@ List ManList::getList(wxString const& name)const
 	wxString fileName = name+".lis";
 	rList.setFileName(_workDirectory+"/"+fileName);
 	return rList;
+}
+
+bool ManList::remove(wxString const& name)
+{
+	List list = getList(name);
+	
+	if(list.isOk() != STATUS_OK)
+		return false;
+		
+	if(list.clear() == STATUS_SUCCESS)
+		return true;
+		
+	return false;
 }
 
 void ManList::workToTmp(bool toTmp)
@@ -352,7 +370,49 @@ void WinManList::onFind(wxCommandEvent&)
 
 void WinManList::onDelete(wxCommandEvent&)
 {
-	std::cout << "WinManList::onDelete" << std::endl;
+	wxMessageDialog dlg(this, _("Is you sure to want delete the lists selected?"), _("Delete lists"), wxYES_NO|wxICON_QUESTION|wxCENTRE);
+			
+	//On doit supprimer les listes?
+	if(dlg.ShowModal() == wxID_YES)//Oui
+	{	
+		wxDataViewItemArray itemsSelected;
+		_ctrlDataList->GetSelections(itemsSelected);
+		
+		for(auto it: itemsSelected)
+		{
+			int row = _ctrlDataList->ItemToRow(it);
+			wxString tmpList = _ctrlDataList->GetTextValue(row, 0);
+			
+			std::vector<ShortcutKey> tmpShortcut;
+			
+			//Récupéret les actions qui sont utilise par la liste.
+			for(auto ita: ManAction::get().getShortcutKeysActions())
+			{
+				if(ita.second->listIsUsed(tmpList))
+					tmpShortcut.push_back(ita.first);
+			}
+			
+			//Des action utilise cette liste ?
+			if(tmpShortcut.size() > 0)
+			{
+				wxMessageDialog dlg(this,
+									wxString::Format(_("There are actions used this list \"%s\".\nDo you want delete the list and the actions?"), tmpList),
+									_("Delete action"),
+									wxYES_NO|wxICON_QUESTION|wxCENTRE);
+									
+				if(dlg.ShowModal() == wxID_NO)
+					continue;
+			}
+			
+			//On supprime les actions
+			for(auto its: tmpShortcut)
+				ManAction::get().remove(its);
+			
+			//On supprime la liste
+			ManList::get().remove(tmpList);
+			_ctrlDataList->DeleteItem(row);
+		}
+	}
 }
 
 void WinManList::onLearn(wxCommandEvent&)

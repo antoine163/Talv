@@ -37,6 +37,11 @@ Action::~Action()
 {
 }
 
+bool Action::listIsUsed(wxString const& listName)
+{
+	return false;
+}
+
 void Action::load(wxFileConfig& fileConfig)
 {
 	actLoad(fileConfig);

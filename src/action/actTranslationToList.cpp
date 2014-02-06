@@ -52,6 +52,11 @@ void ActTranslationToList::execute()
 	ManNotification::get().notify("ActTranslationToList::execute", getStringPreferences(), wxICON_INFORMATION, true);
 }
 
+bool ActTranslationToList::listIsUsed(wxString const& listName)
+{
+	return true;
+}
+
 void ActTranslationToList::actLoad(wxFileConfig&)
 {
 	//On récupère les préférence.

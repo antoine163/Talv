@@ -39,6 +39,7 @@ class ManList : public Manager
 		wxArrayString getNamesLists()const;
 		wxArrayString getNamesLists(wxLanguage lgsrc, wxLanguage lgto)const;
 		List getList(wxString const& name)const;
+		bool remove(wxString const& name);
 									
 		void workToTmp(bool toTmp = true);
 		void applyTmp()const;

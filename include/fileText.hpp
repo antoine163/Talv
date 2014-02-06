@@ -63,7 +63,7 @@ class FileText
 		//! \brief Pour savoir si la liste est utilisable.
 		//!
 		//! \return Si le fichier et les langages ont bien été renseigner alors \ref STATUS_OK est retourné.
-		//! peut aussitôt retourner \ref STATUS_FILE_NO_NAME, STATUS_FILE_OPEN_FAILED
+		//! peut aussi retourner \ref STATUS_FILE_NO_NAME, \ref STATUS_FILE_OPEN_FAILED
 		//!
 		//! - Si \ref STATUS_FILE_NO_NAME vous devriez appeler \ref setFileName()
 		//! - Si \ref STATUS_FILE_OPEN_FAILED vous devriez appeler \ref setLanguages().

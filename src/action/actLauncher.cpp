@@ -84,8 +84,8 @@ WinActLauncher::WinActLauncher(wxWindow* parent, ActLauncher const* act)
 	_buttonPickExeFile =	new wxButton	(staticBoxCommand, wxID_ANY, _("Pick a executable"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
 	
 	wxSizer* sizerMain = new wxBoxSizer(wxHORIZONTAL);
-	sizerMain->Add(_textCtrlCommand, 	1, wxALIGN_CENTER_VERTICAL|wxRIGHT, 	SIZE_BORDER);
-	sizerMain->Add(_buttonPickExeFile, 	0, wxALIGN_CENTER_VERTICAL);
+	sizerMain->Add(_textCtrlCommand, 	1, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxTOP, 	SIZE_BORDER);
+	sizerMain->Add(_buttonPickExeFile, 	0, wxALIGN_CENTER_VERTICAL|wxTOP, 			SIZE_BORDER);
 	staticBoxCommand->SetSizer(sizerMain);
 	
 	GetSizer()->Add(staticBoxCommand, 0, wxEXPAND|wxLEFT|wxRIGHT|wxBOTTOM|wxTOP, 	SIZE_BORDER);
