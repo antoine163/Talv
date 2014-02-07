@@ -18,6 +18,9 @@
 //! \brief Taille des bordures
 #define SIZE_BORDER 4
 
+//! \brief Nombre de caractère minimum pour considérer une phrase.
+#define NB_CHARACTER_MIN_FOR_SENTENCE 20
+
 // *****************************************************************************
 // Enum Status_e
 // *****************************************************************************

@@ -11,8 +11,8 @@
 
 //App
 #include "dialog/dlgPickShortcutKey.hpp"
-#include "defs.hpp"
 #include "manager/manGeneral.hpp"
+#include "defs.hpp"
 
 //WxWidgets
 #include <wx/sizer.h>

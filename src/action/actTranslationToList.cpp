@@ -12,7 +12,10 @@
 #include "action/actTranslationToList.hpp"
 #include "manager/manGeneral.hpp"
 #include "manager/manList.hpp"
+#include "manager/manTranslator.hpp"
 #include "manager/manNotification.hpp"
+#include "dialog/dlgPickTranslation.hpp"
+#include "dataText.hpp"
 #include "list.hpp"
 #include "defs.hpp"
 
@@ -56,7 +59,57 @@ wxString ActTranslationToList::getStringPreferences()const
 
 void ActTranslationToList::execute()
 {
-	ManNotification::get().notify("ActTranslationToList::execute", getStringPreferences(), wxICON_INFORMATION, true);
+	//On récupère le texte de la presse papier a traduire.
+	wxString clipboard = ManGeneral::get().getClipboard();
+	
+	//La presse papier est t'elle vide ?
+	if(clipboard.IsEmpty())
+	{
+		//Pas de texte à traduire
+		ManNotification::get().notify(_("Nothing at translate"), _("Your clipboard is empty."), wxICON_WARNING);
+		return;
+	}
+	
+	//Si le textes est trop long on ne l'enregistre pas.
+	if(clipboard.Len() >= NB_CHARACTER_MIN_FOR_SENTENCE)
+	{
+		ManNotification::get().notify(_("Text too long"), _("The selected text is too long for save in a list."), wxICON_WARNING);
+		return;
+	}
+	
+	//On vérifie si le texte n'est pas déjà existent.
+	if(ManList::get().getList(_listName).existText(clipboard) == STATUS_TEXT_EXIST)
+	{
+		ManNotification::get().notify(	_("The text is already saved"),
+									wxString::Format(_("The text: \"%s\" is already saved in \"%s\"."), clipboard, _listName),
+									wxICON_INFORMATION);
+									
+		return;
+	}
+	
+	//On récupère le texte traduit
+	DataText translations;
+	ManTranslator::get().getTranslations(&translations, clipboard, _lgsrc, _lgto);
+	//On vérifie si une traduction existe.
+	if(translations.getMainTranslation().IsEmpty())
+	{
+		ManNotification::get().notify(_("No translation"), _("Sorry, there is no translation for the text!"), wxICON_WARNING);
+		return;
+	}
+	
+	//Affiche le dialogue pour choisir la traduction principale.
+	if(_dlgPick)
+	{
+		DlgPickTranslation dlg(nullptr, clipboard, translations);
+		if(dlg.ShowModal() != wxID_OK)
+			return;
+	}
+	
+	//Sauvegarde du test.
+	ManList::get().getList(_listName).addText(clipboard);
+	ManNotification::get().notify(	_("The text is saved"),
+									wxString::Format(_("The text: \"%s\" is saved in \"%s\"."), clipboard, _listName),
+									wxICON_INFORMATION);
 }
 
 bool ActTranslationToList::listIsUsed(wxString const& listName)

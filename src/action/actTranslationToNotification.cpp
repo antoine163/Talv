@@ -62,7 +62,7 @@ void ActTranslationToNotification::execute()
 	if(clipboard.IsEmpty())
 	{
 		//Pas de texte à traduire
-		ManNotification::get().notify(_("Nothing at translate"), _("Your clipboard is empty."), wxICON_INFORMATION);
+		ManNotification::get().notify(_("Nothing at translate"), _("Your clipboard is empty."), wxICON_WARNING);
 		return;
 	}
 	
@@ -72,7 +72,7 @@ void ActTranslationToNotification::execute()
 	//On vérifie si une traduction existe.
 	if(translations.getMainTranslation().IsEmpty())
 	{
-		ManNotification::get().notify(_("No translation"), _("Sorry, there is no translation for the text!"), wxICON_INFORMATION);
+		ManNotification::get().notify(_("No translation"), _("Sorry, there is no translation for the text!"), wxICON_WARNING);
 		return;
 	}
 	
