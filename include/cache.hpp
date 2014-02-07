@@ -15,6 +15,7 @@
 //App
 #include "dataText.hpp"
 #include "fileText.hpp"
+#include "textFilter.hpp"
 
 //Stl
 #include <map>
@@ -82,42 +83,24 @@ class Cache : public FileText
 		//! dans le fichier.
 		//! \param texts là où seront stoker les texte.
 		//! Ce paramètre ne doit pas être nullptr.
-		//! \param KnowledgeFilter filtre pour récupérer que les textes
-		//! avec une certaine connaissance. Vous pouvez utiliser le \b |.
-		//! Par exemple, si vous voulez récupère que les textes inconnue et
-		//! connue, vous pouvez écrire : \p KNOWLEDGE_UNKNOWN \b |
-		//! \p KNOWLEDGE_KNOWN
-		//! \param nbTranslationFilter filtre pour récupérer que les textes
-		//! \b >= à un nombre de traduction. Par exemple si vous voulez
-		//! récupérer que les textes avec un nombre de traductions 
-		//! supérieur ou égale a 7. Il vous faudra passer 7 comme argument.
+		//! \param filter filtre pour exclure certain texte. Par défaut touts
+		//! les textes sont récupérer.
 		//! \return \ref STATUS_SUCCESS, \ref STATUS_FILE_OPEN_FAILED, 
 		//! \ref STATUS_FILE_READ_ERROR, \ref STATUS_FILE_NO_NAME
 		//!
 		//! - Si \ref STATUS_FILE_NO_NAME vous devriez appeler \ref setFileName()
-		Status_e getTexts(	wxArrayString* texts,
-							Knowledge_e KnowledgeFilter = KNOWLEDGE_ALL,
-							unsigned int nbTranslationFilter = 0)const;
+		Status_e getTexts(wxArrayString* texts, TextFilter filter = TextFilter(KNOWLEDGE_ALL, 0))const;
 							
 		//! \brief Obtenir tout les textes contenue dans le fichier.
 		//! \param texts là où seront stoker les texte et les données.
 		//! Ce paramètre ne doit pas être nullptr.
-		//! \param KnowledgeFilter filtre pour récupérer que les textes
-		//! avec une certaine connaissance. Vous pouvez utiliser le \b |.
-		//! Par exemple, si vous voulez récupère que les textes inconnue et
-		//! connue, vous pouvez écrire : \p KNOWLEDGE_UNKNOWN \b |
-		//! \p KNOWLEDGE_KNOWN
-		//! \param nbTranslationFilter filtre pour récupérer que les textes
-		//! \b >= à un nombre de traduction. Par exemple si vous voulez
-		//! récupérer que les textes avec un nombre de traductions 
-		//! supérieur ou égale a 7. Il vous faudra passer 7 comme argument.
+		//! \param filter filtre pour exclure certain texte. Par défaut touts
+		//! les textes sont récupérer.
 		//! \return \ref STATUS_SUCCESS, \ref STATUS_FILE_OPEN_FAILED, 
 		//! \ref STATUS_FILE_READ_ERROR, \ref STATUS_FILE_NO_NAME
 		//!
 		//! - Si \ref STATUS_FILE_NO_NAME vous devriez appeler \ref setFileName()
-		Status_e getTextsAndData(	std::map<wxString, DataText>* texts,
-									Knowledge_e KnowledgeFilter = KNOWLEDGE_ALL,
-									unsigned int nbTranslationFilter = 0)const;		
+		Status_e getTextsAndData(std::map<wxString, DataText>* texts, TextFilter filter = TextFilter(KNOWLEDGE_ALL, 0))const;		
 					
 		//! \brief Obtenir les données d'un textes contenue dans le fichier.
 		//! \param texts le texte rechercher.
@@ -183,9 +166,9 @@ class Cache : public FileText
 		//!
 		//! Le fichier devra déjà être ouvert en lecture. 
 		//! \param file Le fichier où lire les données du texte.
-		//! \param dataKnowledge là ou sera stoker la connaissance.
+		//! \param dataKnowledge là où sera stoker la connaissance.
 		//! Doit être un pointeur valide.
-		//! \param nbTranslation là ou sera stoker le nombre de traductions.
+		//! \param dataWeight là où sera stoker le poids.
 		//! Doit être un pointeur valide.
 		//! \return \ref STATUS_SUCCESS, \ref STATUS_FILE_READ_ERROR
 		//!
@@ -195,7 +178,7 @@ class Cache : public FileText
 		//! du fichier).
 		virtual Status_e readDataTextInFile(wxFile& file, 
 											Knowledge_e* dataKnowledge,
-											unsigned int* nbTranslation)const;
+											unsigned int* dataWeight)const;
 		
 		//! \brief Écrire les données d'un texte a partir du curseur
 		//! actuelle du fichier.
@@ -216,8 +199,8 @@ class Cache : public FileText
 		//!
 		//! Le fichier devra déjà être ouvert en écriture et lecture. 
 		//! \param file Le fichier où écrire le texte.
-		//! \param dataKnowledge la connaissance a écrier.
-		//! \param dataNbTranslation le nombre d traduction a écrier.
+		//! \param dataKnowledge la connaissance à écrier.
+		//! \param dataWeight le poids à écrier.
 		//! \return \ref STATUS_SUCCESS, \ref STATUS_FILE_READ_ERROR,
 		//! \ref STATUS_FILE_WRITE_ERROR
 		//!
@@ -226,7 +209,7 @@ class Cache : public FileText
 		//! juste après les données sa peut être aussi la fin du fichier).
 		virtual Status_e writeDataTextInFile(	wxFile& file,
 												Knowledge_e dataKnowledge,
-												unsigned int dataNbTranslation);
+												unsigned int dataWeight);
 	private:
 };
 

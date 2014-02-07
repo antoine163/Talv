@@ -79,12 +79,12 @@ class DataText
 		//! \brief Pour modifier le niveau de connaissance.
 		void setKnowledge(Knowledge_e knowledge);
 		
-		//! \brief Pour récupérer la nombre traduction.
-		unsigned int getNbTranslation()const;
-		//! \brief Pour modifier le nombre traduction.
-		void setNbTranslation(unsigned int nbTranslation);
-		//! \brief Pour incrementer le nombre de traduction.
-		void incrementNbTranslation();
+		//! \brief Pour récupérer le poids.
+		unsigned int getWeight()const;
+		//! \brief Pour modifier le poids.
+		void setWeight(unsigned int weight);
+		//! \brief Pour incrementer le poids.
+		void incrementWeight(int increment = 1);
 		
 		//! \brief Remise à zéro de tous les paramètres.
 		void clear();
@@ -94,7 +94,7 @@ class DataText
 		std::map<wxString, wxArrayString> _translations;
 		
 		Knowledge_e _knowledge;
-		unsigned int _nbTranslation;
+		unsigned int _weight;
 };
 
 #endif //DATA_TEXT_H

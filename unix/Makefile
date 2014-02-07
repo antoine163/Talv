@@ -58,6 +58,7 @@ SRC+=../src/proxyInfo.cpp
 SRC+=../src/shortcut.cpp
 SRC+=../src/dataText.cpp
 SRC+=../src/fileText.cpp
+SRC+=../src/textFilter.cpp
 SRC+=../src/cache.cpp
 SRC+=../src/list.cpp
 

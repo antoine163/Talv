@@ -18,14 +18,14 @@
 DataText::DataText()
 {
 	_knowledge = KNOWLEDGE_UNKNOWN;
-	_nbTranslation = 0;
+	_weight = 0;
 }
 
 DataText::DataText(wxString const& translation)
 {
 	_mainTranslation = translation;
 	_knowledge = KNOWLEDGE_UNKNOWN;
-	_nbTranslation = 0;
+	_weight = 0;
 }
 
 DataText::~DataText()
@@ -79,19 +79,19 @@ void DataText::setKnowledge(Knowledge_e knowledge)
 	_knowledge = knowledge;
 }
 
-unsigned int DataText::getNbTranslation()const
+unsigned int DataText::getWeight()const
 {
-	return _nbTranslation;
+	return _weight;
 }
 
-void DataText::setNbTranslation(unsigned int nbTranslation)
+void DataText::setWeight(unsigned int weight)
 {
-	_nbTranslation = nbTranslation;
+	_weight = weight;
 }
 
-void DataText::incrementNbTranslation()
+void DataText::incrementWeight(int increment)
 {
-	_nbTranslation++;
+	_weight += increment;
 }
 
 void DataText::clear()
@@ -99,5 +99,5 @@ void DataText::clear()
 	_mainTranslation.Clear();
 	_translations.clear();
 	_knowledge = KNOWLEDGE_UNKNOWN;
-	_nbTranslation = 0;
+	_weight = 0;
 }
