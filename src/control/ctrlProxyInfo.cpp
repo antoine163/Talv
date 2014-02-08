@@ -54,7 +54,7 @@ CtrlProxyInfo::CtrlProxyInfo(	wxWindow* parent,
 	wxSizer* sizerMain = new wxBoxSizer(wxVERTICAL);
 	sizerMain->Add(sizerProxyAndPort, 			0, wxEXPAND|wxBOTTOM|wxLEFT|wxRIGHT|wxTOP, 	SIZE_BORDER);	
 	sizerMain->Add(_staticBoxAuthentication, 	0, wxEXPAND|wxBOTTOM|wxLEFT|wxRIGHT, 		SIZE_BORDER);	
-	SetSizerAndFit(sizerMain);
+	SetSizer(sizerMain);
 	
 	setProxyInfo(proxy);
 }

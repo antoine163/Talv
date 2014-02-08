@@ -39,6 +39,22 @@ inline Knowledge_e operator|(Knowledge_e val1, Knowledge_e val2)
 	return static_cast<Knowledge_e>(val);
 }
 
+inline Knowledge_e operator&(Knowledge_e val1, Knowledge_e val2)
+{
+	unsigned int val = (unsigned int)val1&(unsigned int)val2;
+	return static_cast<Knowledge_e>(val);
+}
+
+inline Knowledge_e& operator|=(Knowledge_e& val1, Knowledge_e val2)
+{
+	return val1 = val1|val2;
+}
+
+inline Knowledge_e& operator&=(Knowledge_e& val1, Knowledge_e val2)
+{
+	return val1 = val1&val2;
+}
+
 // *****************************************************************************
 // Class DataText
 // *****************************************************************************

@@ -54,11 +54,7 @@ CtrlAuthentication::CtrlAuthentication(	wxWindow* parent,
 	sizerMain->Add(_textCtrlUsername, 	1, wxALIGN_CENTER_VERTICAL|wxEXPAND);
 	sizerMain->Add(staticTextPassword, 	0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT);	
 	sizerMain->Add(sizerPassword, 		1, wxALIGN_CENTER_VERTICAL|wxEXPAND);
-	SetSizerAndFit(sizerMain);
-	//wxSizer* sizerMain = new wxBoxSizer(wxVERTICAL);
-	//sizerMain->Add(sizerUsername, 0, wxEXPAND|wxBOTTOM|wxLEFT|wxRIGHT|wxTOP, 	SIZE_BORDER);	
-	//sizerMain->Add(sizerPassword, 0, wxEXPAND|wxBOTTOM|wxLEFT|wxRIGHT, 			SIZE_BORDER);	
-	//SetSizerAndFit(sizerMain);
+	SetSizer(sizerMain);
 	
 	//Bind
 	Bind(wxEVT_TOGGLEBUTTON, &CtrlAuthentication::onToggleButtonShow, this);

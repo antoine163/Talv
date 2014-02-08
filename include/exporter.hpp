@@ -29,9 +29,12 @@ class Exporter
 		//! \brief destructeur.
 		virtual ~Exporter();
 		
+		virtual WinAction* newEditWindow(WinExporter* parent)=0;
+		
 		virtual void appendList(wxString const& listName, wxLanguage lgsrc, wxLanguage lgto)=0;
 		virtual void appendText(wxString const& text, DataText const& dataText)=0;
 		
+		static std::vector<Exporter*> createAllExporters();
 	private:
 };
 

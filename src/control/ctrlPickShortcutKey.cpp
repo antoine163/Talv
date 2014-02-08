@@ -36,7 +36,7 @@ CtrlPickShortcutKey::CtrlPickShortcutKey(wxWindow* parent, ShortcutKey const& sh
 	//Mise en forme du GUI avec un sizer.
 	wxSizer* sizerMain = new wxBoxSizer(wxVERTICAL);
 	sizerMain->Add(_textCtrlShortcutKey, 1, wxEXPAND);
-	SetSizerAndFit(sizerMain);
+	SetSizer(sizerMain);
 	
 	//Installation du raccourcie.
 	_shortcutKeyFault = shortcutKey;

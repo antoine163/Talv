@@ -25,7 +25,7 @@ TextFilter::~TextFilter()
 {
 }
 
-Knowledge_e TextFilter::getKnowledge()
+Knowledge_e TextFilter::getKnowledge()const
 {
 	return _knowledge;
 }
@@ -35,7 +35,7 @@ void TextFilter::setKnowledge(Knowledge_e knowledge)
 	_knowledge = knowledge;
 }
 
-unsigned int TextFilter::getWeight()
+unsigned int TextFilter::getWeight()const
 {
 	return _weight;
 }

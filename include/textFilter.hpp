@@ -35,10 +35,10 @@ class TextFilter
 		//! \brief Destructeur.
 		virtual ~TextFilter();
 		
-		Knowledge_e getKnowledge();
+		Knowledge_e getKnowledge()const;
 		void setKnowledge(Knowledge_e knowledge);
 		
-		unsigned int getWeight();
+		unsigned int getWeight()const;
 		void setWeight(unsigned int weight);
 
 	private:
