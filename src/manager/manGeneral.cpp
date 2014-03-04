@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.1
+//! \version 0.2
 //! \date 04.12.2013
 //!
 //! ****************************************************************************
@@ -418,6 +418,22 @@ wxString ManGeneral::getClipboard()const
 	text.EndsWith('\n', &text);
 
 	return text;
+}
+
+void ManGeneral::setClipboard(wxString const& text)
+{
+	//Écrire le texte dans presse papier
+	if (wxTheClipboard->Open())
+	{
+		#if defined(__UNIX__)
+		//Écrire le text qui ce trouvent dans la presse papier primére et seconder.
+		wxTheClipboard->UsePrimarySelection(true);
+		wxTheClipboard->SetData(new wxTextDataObject(text));
+		wxTheClipboard->UsePrimarySelection(false);
+		#endif
+		wxTheClipboard->SetData(new wxTextDataObject(text));
+		wxTheClipboard->Close();
+	}
 }
 
 void ManGeneral::showTaskIcon(bool show)

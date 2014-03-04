@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 0.1
+//! \version 0.2
 //! \date 04.12.2013
 //!
 //! ****************************************************************************
@@ -48,6 +48,7 @@ class ManGeneral : public Manager
 		
 		//Presse papier
 		wxString getClipboard()const;
+		void setClipboard(wxString const& text);
 		
 		//TaskIcon
 		void showTaskIcon(bool show = true);

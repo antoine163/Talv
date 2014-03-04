@@ -14,10 +14,12 @@
 #define ACTION_DEF_H
 
 #include "action/actTranslationToNotification.hpp"
+#include "action/actTranslationToClipboard.hpp"
 #include "action/actTranslationToList.hpp"
 #include "action/actLauncher.hpp"
 
 #define MAKE_CREATE_ACTION()	CREATE_ACTION(ActTranslationToNotification)	\
+								CREATE_ACTION(ActTranslationToClipboard)	\
 								CREATE_ACTION(ActTranslationToList)			\
 								CREATE_ACTION(ActLauncher)
 

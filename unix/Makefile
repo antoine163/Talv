@@ -34,7 +34,7 @@ CXX_FLAGS+=`pkg-config --cflags libnotify`
 # Flags pour wxWidgets
 LD_FLAGS+=`$(WX_CONFIG) --libs base,core,adv,net`
 # Flags pour la xlib
-LD_FLAGS+=-lX11
+LD_FLAGS+=`pkg-config --libs x11`
 # Flags pour libnotify
 LD_FLAGS+=`pkg-config --libs libnotify`
 
@@ -97,6 +97,7 @@ SRC+=../src/manager/manTranslator.cpp
 #Actions
 SRC+=../src/action.cpp
 SRC+=../src/action/actTranslationToNotification.cpp
+SRC+=../src/action/actTranslationToClipboard.cpp
 SRC+=../src/action/actTranslationToList.cpp
 SRC+=../src/action/actLauncher.cpp
 
