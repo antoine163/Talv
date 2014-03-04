@@ -4,7 +4,7 @@
 //! - Compilateur : GCC,MinGW
 //!
 //! \author Antoine Maleyrie
-//! \version 1.O
+//! \version 1.1
 //! \date 31.03.2013
 //!
 //! ****************************************************************************
@@ -101,7 +101,9 @@ void ActTranslationToList::execute()
 	if(_dlgPick)
 	{
 		DlgPickTranslation dlg(nullptr, clipboard, translations);
-		if(dlg.ShowModal() != wxID_OK)
+		if(dlg.ShowModal() == wxID_OK)
+			translations.setMainTranslation(dlg.getTranslation());
+		else
 			return;
 	}
 	
