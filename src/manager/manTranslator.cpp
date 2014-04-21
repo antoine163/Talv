@@ -264,7 +264,7 @@ void WinManTranslator::onListBox(wxCommandEvent&)
 	else
 	{
 		_hyperlinkCtrlSee->Show(true);
-		_hyperlinkCtrlSee->SetLabel(("See also: ")+translator->getURL());
+		_hyperlinkCtrlSee->SetLabel(_("See also: ")+translator->getURL());
 		_hyperlinkCtrlSee->SetURL(translator->getURL());
 	}
 	Layout();

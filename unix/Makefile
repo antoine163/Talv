@@ -99,6 +99,7 @@ SRC+=../src/action.cpp
 SRC+=../src/action/actTranslationToNotification.cpp
 SRC+=../src/action/actTranslationToClipboard.cpp
 SRC+=../src/action/actTranslationToList.cpp
+SRC+=../src/action/actTextToSpeech.cpp
 SRC+=../src/action/actLauncher.cpp
 
 #Translators

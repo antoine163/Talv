@@ -85,11 +85,13 @@ wxURLError ManNetwork::downloadFromUrlToString(wxString const& url, wxString* pt
 		_url.SetProxy(wxEmptyString);
 		break;
 		case USE_PROXY_SYSTEM:
+		//wxLogError("Proxy: %s", getProxyInfoSystem());
 		_url.SetProxy(getProxyInfoSystem());
 		break;
 		//case USE_PROXY_AUTO_DETECT:
 		//break;
 		case USE_PROXY_MANUAL:
+		//wxLogError("Proxy: %s", _proxyInfoManual.toString());
 		_url.SetProxy(_proxyInfoManual.toString());
 		break;
 	}
